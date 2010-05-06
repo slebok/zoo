@@ -38,8 +38,6 @@ end tokens
 %   | punctuation_connector
 %   | other_format
 
-
-
 % define 'id' lexical type (identifier)
 tokens
     id          "\a\i*"
@@ -83,8 +81,6 @@ end tokens
 % extended_digit ::=
 %     digit | A | B | C | D | E | F
 
-
-
 % define 'number' lexical type (numeric_literal),
 % define also 'floatnumber' (decimal_literal with explicit exponent),
 % 'decimalnumber' (decimal_literal with explicit decimal part),
@@ -103,8 +99,6 @@ end tokens
 % character_literal ::=
 %     'graphic_character'
 
-
-
 % define 'charlit' lexical type (character_literal)
 tokens
     charlit     "'#''"
@@ -120,8 +114,6 @@ end tokens
 % string_element ::=
 %     "" | non_quotation_mark_graphic_character
 
-
-
 % define 'stringlit' lexical type (string_literal)
 tokens
     stringlit   "\"[(\\\c)(\"\")#\"]*\""
@@ -132,8 +124,6 @@ end tokens
 % 2.7
 % comment ::=
 %     --{non_end_of_line_character}
-
-
 
 % define Ada convention for comments
 comments
@@ -146,9 +136,6 @@ end comments
 % pragma ::=
 %     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
 
-
-
-% define 'pragma' non-terminal
 define pragma
     'pragma [id] ;
     | 'pragma [id] ( [pragma_argument_association,+] ) ;
@@ -161,9 +148,6 @@ end define
 %     [pragma_argument_identifier =>] name
 %   | [pragma_argument_identifier =>] expression
 
-
-
-% define 'pragma_argument_association' non-terminal
 define pragma_argument_association
     [name]
     | [id] => [name]
