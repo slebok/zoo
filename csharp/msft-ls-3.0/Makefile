@@ -1,6 +1,9 @@
 all:
-	../../../../shared/tools/pdf2bgf msft-ls-3.0-annex.txt msft-output.bgf banned-lines.lst keywords.lst
+	../../../../shared/tools/pdf2bgf msft-ls-annex.txt msft-output.bgf banned-lines.lst keywords.lst
 	../../../../shared/tools/checkxml bgf msft-output.bgf
-	../../../../shared/tools/normbgf msft-output.bgf msft-ls-3.0-grammar.bgf
-	../../../../shared/tools/bgf2bnf msft-ls-3.0-grammar.bgf msft-ls-3.0.bnf
+	../../../../shared/tools/normbgf msft-output.bgf msft-ls-grammar.bgf
+	../../../../shared/tools/bgf2bnf msft-ls-grammar.bgf msft-ls.bnf
 	rm -f msft-output.bgf
+
+clean:
+	rm -f msft-output.bgf msft-ls-grammar.bgf msft-ls.bnf

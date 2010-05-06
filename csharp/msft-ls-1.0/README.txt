@@ -2,6 +2,8 @@ C#
 Language Specification
 Version 1.0
 
+http://download.microsoft.com/download/a/9/e/a9e229b9-fee5-4c3e-8476-917dee385062/CSharp%20Language%20Specification%20v1.0.doc
+
 Copyright © Microsoft Corporation 1999-2002. All Rights Reserved.
 Please send corrections, comments,  and other feedback to sharp@microsoft.com
 
