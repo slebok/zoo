@@ -1,0 +1,541 @@
+<html>
+<head>
+<title>  Syntax</title>
+<meta name="collection" content="community">
+</head>
+<body BGCOLOR=#eeeeff text=#000000 LINK=#0000ff VLINK=#000077 ALINK=#ff0000>
+
+<table border="0" width="100%">
+<tr>
+<td><a href="j3TOC.html">Contents</a> | <a href="memory.html">Prev</a> | <a href="j3IX.html">Next</a> | <a href="j3IX.html">Index</a></td>
+<td align=right><i>Java Language Specification</i><br>
+<font size="-1">Third Edition</font></td></tr></table>
+<hr><br>
+
+<a name="62330"></a>
+<p><strong>
+CHAPTER
+ 18 </strong></p>
+<a name="62335"></a>
+<h1> Syntax</h1>
+<hr><p>
+<a name="26238"></a>
+This chapter presents a grammar for the Java programming language. <p>
+<a name="26239"></a>
+The grammar presented piecemeal in the preceding chapters is much better for exposition, but it is not well suited as a basis for a parser. The grammar presented in this chapter is the basis for the reference implementation. Note that it is not an LL(1) grammar, though in many cases it minimizes the necessary look ahead.<p>
+<a name="57494"></a>
+The grammar below uses the following BNF-style conventions:<p>
+<ul><a name="57488"></a>
+<li><em>[x]</em> denotes zero or one occurrences of <em>x</em>.
+<a name="57492"></a>
+<li><em>{x}</em> denotes zero or more occurrences of <em>x</em>.
+</ul><a name="61885"></a>
+<em>x | y</em> means one of either <em>x</em> or <em>y</em>.<p>
+<a name="44467"></a>
+<a name="18.1"></a>
+<h2>18.1    The Grammar of the Java Programming Language</h2>
+<blockquote><pre><em>
+Identifier:
+        IDENTIFIER
+
+QualifiedIdentifier:
+        Identifier { . Identifier }
+
+Literal:
+        IntegerLiteral
+        FloatingPointLiteral
+        CharacterLiteral
+        StringLiteral
+        BooleanLiteral
+        NullLiteral
+
+Expression:
+        Expression1 [AssignmentOperator Expression1]]
+
+AssignmentOperator: </em>
+        =
+        +=
+        -=
+        *=
+        /=
+        &amp;=
+        |=
+        ^=
+        %=
+        &lt;&lt;=
+        &gt;&gt;=
+        &gt;&gt;&gt;=
+
+<em>Type:
+        Identifier [TypeArguments]{   .   Identifier [TypeArguments]} {</em>[]<em>}
+        BasicType
+
+TypeArguments:
+        &lt; TypeArgument {, TypeArgument} &gt;
+
+TypeArgument:
+        Type
+        </em><code>? </code><em>[( </em><code>extends</code> |<code>super</code></em> ) Type]
+
+StatementExpression:
+        Expression
+
+ConstantExpression:
+        Expression
+
+Expression1:
+        Expression2 [Expression1Rest]
+
+Expression1Rest:
+        </em>? <em>  Expression  </em> :<em>   Expression1
+
+Expression2 :
+        Expression3 [Expression2Rest]
+
+Expression2Rest:
+        {InfixOp Expression3}
+        Expression3 instanceof Type
+
+InfixOp:</em>
+        ||
+        &amp;&amp;
+        |
+        ^
+        &amp;
+        ==
+        !=
+        &lt;
+        &gt;
+        &lt;=
+        &gt;=
+        &lt;&lt;
+        &gt;&gt;
+        &gt;&gt;&gt;
+        +
+        -
+        *
+        /
+        %</em><em>
+
+Expression3:
+        PrefixOp Expression3
+        </em>(<em>   Expression</em> |<em> Type  </em> ) <em>  Expression3
+        Primary {Selector} {PostfixOp}
+
+Primary:
+        ParExpression
+        NonWildcardTypeArguments (ExplicitGenericInvocationSuffix</em> | <code>this</code><em>
+Arguments)</em>
+<code>  this</code> <em>[Arguments]</em>
+<code>  super</code> <em>SuperSuffix
+        Literal</em>
+<code>  new</code> <em>Creator
+        Identifier { . Identifier }[ IdentifierSuffix]
+        BasicType {</em>[]<em>} .</em><code>class
+</code><code>   void.</code><code>class<em>
+</code>
+IdentifierSuffix:</em>
+        [ <em>(</em> ] <em>{</em>[]<em>}</em> .   <code>class</code> | <em>Expression </em>]<em>)
+        Arguments
+        .   ( </em><code>class</code> | <em>ExplicitGenericInvocation </em>| <code>this</code> | <code>super</code> <em>Arguments</em> | <code>new</code>
+<em>[NonWildcardTypeArguments] InnerCreator )
+
+ExplicitGenericInvocation:
+        NonWildcardTypeArguments ExplicitGenericInvocationSuffix
+
+NonWildcardTypeArguments:
+        &lt; TypeList &gt;
+
+
+ExplicitGenericInvocationSuffix:
+</em><code>     super</code><em> SuperSuffix
+        Identifier Arguments
+
+
+PrefixOp:</em>
+        ++
+        --
+        !
+        ~
+        +
+        -<em>
+
+PostfixOp:</em>
+        ++
+        --<em>
+
+Selector: Selector:
+        . Identifier [Arguments]
+        . ExplicitGenericInvocation
+        . </em><code>this
+</code><code>   .</code> <code>super</code><em> SuperSuffix</em>
+        . <code>new</code><em> [NonWildcardTypeArguments] InnerCreator
+        [ Expression ]
+
+SuperSuffix:
+        Arguments
+        . Identifier [Arguments]
+
+BasicType:</em>
+<code>  byte</code>
+<code>  short</code>
+<code>  char</code>
+<code>  int</code>
+<code>  long</code>
+<code>  float</code>
+<code>  double</code>
+<code>  boolean
+</code><em>
+Arguments:
+        ( [Expression { , Expression }] )
+
+Creator:
+        [NonWildcardTypeArguments] CreatedName ( ArrayCreatorRest  |
+ClassCreatorRest )
+
+CreatedName:
+        Identifier [NonWildcardTypeArguments] {. Identifier
+[NonWildcardTypeArguments]}
+
+InnerCreator:
+        Identifier ClassCreatorRest
+
+ArrayCreatorRest:
+        </em>[<em> ( </em>]<em> {</em>[]<em>} ArrayInitializer</em> |<em> Expression </em>]<em> {</em>[<em> Expression</em> ]<em>} {</em>[]<em>} )
+
+ClassCreatorRest:
+         Arguments [ClassBody]
+
+ArrayInitializer:
+        { [VariableInitializer {, VariableInitializer} [,]] }
+
+VariableInitializer:
+        ArrayInitializer
+        Expression
+
+ParExpression:
+        ( Expression )
+
+Block:
+        { BlockStatements }
+
+BlockStatements:
+        { BlockStatement }
+
+BlockStatement :
+        LocalVariableDeclarationStatement
+        ClassOrInterfaceDeclaration
+        [Identifier :] Statement
+
+LocalVariableDeclarationStatement:
+        [</em><code>final</code><em>] Type VariableDeclarators   </em>;<em>
+
+Statement:
+        Block
+        </em><code>assert </code><em>Expression [ </em>:<em> Expression] </em>;<em>
+</em><code>     if</code><em> ParExpression Statement [</em><code>else</code><em> Statement]
+</em><code>     for</code><em> ( ForControl ) Statement
+</em><code>     while</code><em> ParExpression Statement
+</em><code>     do</code><em> Statement </em><code>while</code><em> ParExpression   ;
+</em><code>     try</code><em> Block ( Catches </em>|<em> [Catches] </em><code>finally</code><em> Block )
+</em><code>     switch</code><em> ParExpression </em>{<em> SwitchBlockStatementGroups </em>}<em>
+</em><code>     synchronized</code><em> ParExpression Block
+</em><code>     return</code><em> [Expression]</em> ;<em>
+</em><code>     throw</code><em> Expression  </em> ;<em>
+</em><code>     break</code><em> [Identifier]
+</em><code>     continue</code><em> [Identifier]
+        </em>;<em>
+        StatementExpression </em>;<em>
+        Identifier   </em>: <em>  Statement
+
+Catches:
+        CatchClause {CatchClause}
+
+CatchClause:
+</em><code>     catch</code><em> ( FormalParameter ) Block
+
+SwitchBlockStatementGroups:
+        { SwitchBlockStatementGroup }
+
+SwitchBlockStatementGroup:
+        SwitchLabel BlockStatements
+
+SwitchLabel:
+</em><code>     case</code><em> ConstantExpression   </em>:<em>
+        </em>case<em> EnumConstantName </em>:<em>
+        default   :
+
+MoreStatementExpressions:
+        { <code>,</code> StatementExpression }
+
+ForControl:
+        ForVarControl
+        ForInit;   [Expression]   ; [ForUpdate]
+
+ForVarControl
+        [</em><code>final</code><em>] [Annotations] Type Identifier ForVarControlRest
+
+Annotations:
+        Annotation [Annotations]
+
+Annotation:
+        </em><code>@</code><em> TypeName [<code>(</code> [Identifier <code>=</code>] ElementValue<code>)</code>]
+
+ElementValue:
+        ConditionalExpression
+        Annotation
+        ElementValueArrayInitializer
+
+ConditionalExpression:
+        Expression2 Expression1Rest
+
+    ElementValueArrayInitializer:
+        </em><code>{</code><em> [ElementValues] [<code>,</code>] </em><code>}
+</code><em>
+    ElementValues:
+        ElementValue [ElementValues]
+
+ForVarControlRest:
+        VariableDeclaratorsRest;   [Expression]   ;   [ForUpdate]
+        <code>:</code> Expression
+
+ForInit:
+        StatementExpression Expressions
+
+Modifier:
+<code>  </code>Annotation</em>
+<code>  public</code>
+<code>  protected</code>
+<code>  private</code>
+<code>  static</code>
+<code>  abstract</code>
+<code>  final</code>
+<code>  native</code>
+<code>  synchronized</code>
+<code>  transient</code>
+<code>  volatile
+        strictfp
+</code><em>
+VariableDeclarators:
+        VariableDeclarator { ,   VariableDeclarator }
+
+VariableDeclaratorsRest:
+        VariableDeclaratorRest { ,   VariableDeclarator }
+
+ConstantDeclaratorsRest:
+        ConstantDeclaratorRest { ,   ConstantDeclarator }
+
+VariableDeclarator:
+        Identifier VariableDeclaratorRest
+
+ConstantDeclarator:
+        Identifier ConstantDeclaratorRest
+
+VariableDeclaratorRest:
+        {</em>[]<em>} [  =   VariableInitializer]
+
+ConstantDeclaratorRest:
+        {</em>[]<em>} =   VariableInitializer
+
+VariableDeclaratorId:
+        Identifier {</em>[]<em>}
+
+CompilationUnit:
+        [[Annotations] </em><code>package</code><em> QualifiedIdentifier   ;  ] {ImportDeclaration}
+{TypeDeclaration}
+
+ImportDeclaration:
+</em><code>     import</code><em> [ </em>static<em>] Identifier {   .   Identifier } [   .     *   ] ;
+
+TypeDeclaration:
+        ClassOrInterfaceDeclaration
+        ;
+
+ClassOrInterfaceDeclaration:
+        {Modifier} (ClassDeclaration </em>|<em> InterfaceDeclaration)
+
+ClassDeclaration:
+        NormalClassDeclaration
+        EnumDeclaration
+
+NormalClassDeclaration:
+</em><code>     class</code><em> Identifier [<em>TypeParameters]</em> [</em><code>extends</code><em> Type] [</em><code>implements</code><em> TypeList]
+ClassBody
+
+TypeParameters:
+        &lt; TypeParameter {, TypeParameter} &gt;
+
+TypeParameter:
+        Identifier [</em>extends<em> Bound]
+
+Bound:
+         Type {&amp; Type}
+
+
+EnumDeclaration:
+        </em>enum<em> Identifier [</em><code>implements</code><em> TypeList] EnumBody
+
+EnumBody:
+        { [EnumConstants] [,] [EnumBodyDeclarations] }
+
+EnumConstants:
+        EnumConstant
+        EnumConstants , EnumConstant
+
+EnumConstant:
+        Annotations Identifier [Arguments] [ClassBody]
+
+EnumBodyDeclarations:
+        ; {ClassBodyDeclaration}
+
+InterfaceDeclaration:
+        NormalInterfaceDeclaration
+        AnnotationTypeDeclaration
+
+NormalInterfaceDeclaration:
+</em><code>     interface</code><em> Identifier [ TypeParameters] [</em><code>extends</code><em> TypeList] InterfaceBody
+
+TypeList:
+        Type {  ,   Type}
+
+AnnotationTypeDeclaration:
+        </em>@<em> interface Identifier AnnotationTypeBody
+
+    AnnotationTypeBody:
+        { [AnnotationTypeElementDeclarations] }
+
+    AnnotationTypeElementDeclarations:
+        AnnotationTypeElementDeclaration
+        AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
+
+AnnotationTypeElementDeclaration:
+        {Modifier} AnnotationTypeElementRest
+
+AnnotationTypeElementRest:
+         Type Identifier AnnotationMethodOrConstantRest;
+        ClassDeclaration
+        InterfaceDeclaration
+        EnumDeclaration
+        AnnotationTypeDeclaration
+
+        AnnotationMethodOrConstantRest:
+        AnnotationMethodRest
+        AnnotationConstantRest
+
+AnnotationMethodRest:
+        ( ) [DefaultValue]
+
+AnnotationConstantRest:
+        VariableDeclarators
+
+
+    DefaultValue:
+        </em><code>default</code><em> ElementValue
+
+ClassBody:
+        </em>{<em> {ClassBodyDeclaration} </em>}<em>
+
+InterfaceBody:
+        </em>{<em> {InterfaceBodyDeclaration} </em>}<em>
+
+ClassBodyDeclaration:
+        </em>;<em>
+        [</em><code>static</code><em>] Block
+        {Modifier} MemberDecl
+
+MemberDecl:
+        GenericMethodOrConstructorDecl
+        MethodOrFieldDecl
+        </em><code>void</code><em> Identifier VoidMethodDeclaratorRest
+        Identifier ConstructorDeclaratorRest
+        InterfaceDeclaration
+        ClassDeclaration
+
+GenericMethodOrConstructorDecl:
+        TypeParameters GenericMethodOrConstructorRest
+
+GenericMethodOrConstructorRest:
+        (Type </em>| <code>void</code><em>) Identifier MethodDeclaratorRest
+        Identifier ConstructorDeclaratorRest
+
+MethodOrFieldDecl:
+        Type Identifier MethodOrFieldRest
+
+MethodOrFieldRest:
+        VariableDeclaratorRest
+        MethodDeclaratorRest
+
+InterfaceBodyDeclaration:
+        </em>;<em>
+        {Modifier} InterfaceMemberDecl
+
+InterfaceMemberDecl:
+        InterfaceMethodOrFieldDecl
+        InterfaceGenericMethodDecl
+        </em><code>void</code><em> Identifier VoidInterfaceMethodDeclaratorRest
+        InterfaceDeclaration
+        ClassDeclaration
+
+InterfaceMethodOrFieldDecl:
+        Type Identifier InterfaceMethodOrFieldRest
+
+InterfaceMethodOrFieldRest:
+        ConstantDeclaratorsRest ;
+        InterfaceMethodDeclaratorRest
+
+MethodDeclaratorRest:
+        FormalParameters {</em>[]<em>} [</em><code>throws</code> <em>QualifiedIdentifierList] ( MethodBody </em>|   ;<em>
+)
+
+VoidMethodDeclaratorRest:
+        FormalParameters [</em><code>throws</code><em> QualifiedIdentifierList] ( MethodBody </em>|   ;<em>  )
+
+InterfaceMethodDeclaratorRest:
+        FormalParameters {</em>[]<em>} [</em><code>throws</code> <em>QualifiedIdentifierList]  </em> ;<em>
+
+InterfaceGenericMethodDecl:
+        TypeParameters (Type </em>| <code>void</code><em>) Identifier InterfaceMethodDeclaratorRest
+
+VoidInterfaceMethodDeclaratorRest:
+        FormalParameters [</em><code>throws</code><em> QualifiedIdentifierList]   </em>;<em>
+
+ConstructorDeclaratorRest:
+        FormalParameters [</em><code>throws</code><em> QualifiedIdentifierList] MethodBody
+
+QualifiedIdentifierList:
+        QualifiedIdentifier {  ,   QualifiedIdentifier}
+
+FormalParameters:
+        ( [FormalParameterDecls] )
+
+FormalParameterDecls:
+        [</em><code>final</code><em>] [Annotations] Type FormalParameterDeclsRest]
+
+FormalParameterDeclsRest:
+        VariableDeclaratorId [ , FormalParameterDecls]
+        <code>...</code> VariableDeclaratorId
+
+MethodBody:
+        Block
+
+EnumConstantName:
+        Identifier</em>
+</pre></blockquote><a name="63805"></a>
+<p>
+
+
+<hr>
+<!-- This inserts footnotes--><p>
+<table border="0" width="100%">
+<tr>
+<td><a href="j3TOC.html">Contents</a> | <a href="memory.html">Prev</a> | <a href="j3IX.html">Next</a> | <a href="j3IX.html">Index</a></td>
+<td align=right><i>Java Language Specification</i><br>
+<font size="-1">Third Edition</font></td></tr></table>
+<p>
+<font size=-1>
+<i><a href="jcopyright.html">Copyright</a> &#169 1996-2005 Sun Microsystems, Inc.
+All rights reserved</i>
+<br>
+Please send any comments or corrections via our <a href="http://developers.sun.com/contact/feedback.jsp?&category=doc&mailsubject=Java%20Language%20Specification%20Feedback">feedback form</a>
+</font>
+<script language="JavaScript" src="/js/omi/jsc/s_code_remote.js"></script></body></html>

@@ -1,0 +1,399 @@
+<html>
+<head>
+<title>  Syntax</title>
+<meta name="collection" content="exclude">
+
+</head>
+<body BGCOLOR=#eeeeff text=#000000 LINK=#0000ff VLINK=#000077 ALINK=#ff0000>
+ 
+<table border="0" width="100%">
+<tr>
+<td><a href="jTOC.doc.html">Contents</a> | <a href="memory.doc.html">Prev</a> | <a href="jIX.fm.html">Next</a> | <a href="jIX.fm.html">Index</a></td>
+<td align=right><i>Java Language Specification</i><br>
+<font size="-1">Second Edition</font></td></tr></table>
+<hr><br>
+ 
+<a name="52994"></a>
+<p><strong>
+CHAPTER
+ 18 </strong></p>
+<a name="52996"></a>
+<h1> Syntax</h1>
+<hr><p>
+<a name="26238"></a>
+This chapter presents a grammar for the Java programming language. <p>
+<a name="26239"></a>
+The grammar presented piecemeal in the preceding chapters is much better for exposition, but it is not ideally suited as a basis for a parser. The grammar presented in this chapter is the basis for the reference implementation. <p>
+<a name="57494"></a>
+The grammar below uses the following BNF-style conventions:<p>
+<ul><a name="57488"></a>
+<li><i>[x]</i> denotes zero or one occurrences of <i>x</i>.
+<a name="57492"></a>
+<li><i>{x}</i> denotes zero or more occurrences of <i>x</i>.
+<a name="57493"></a>
+<li><i>x </i>|<i> y</i> means one of either <i>x</i> or <i>y</i>.
+</ul><a name="44467"></a>
+<h2>18.1    The Grammar of the Java Programming Language</h2>
+<ul><pre>
+<i>Identifier:
+	IDENTIFIER
+
+QualifiedIdentifier:
+	Identifier { </i>.<i> Identifier }
+
+Literal:
+	IntegerLiteral 	
+	FloatingPointLiteral 	
+	CharacterLiteral 	
+	StringLiteral 	
+	BooleanLiteral
+	NullLiteral
+
+Expression: 
+	Expression1 [AssignmentOperator Expression1]]
+
+AssignmentOperator: </i>
+	= 
+	+= 
+	-= 
+	*= 
+	/= 
+	&amp;= 
+	|= 
+	^= 
+	%= 
+	&lt;&lt;= 
+	&gt;&gt;= 
+	&gt;&gt;&gt;= 
+
+<i>Type: 
+	Identifier {   </i>.<i>   Identifier } BracketsOpt
+	BasicType
+
+StatementExpression: 
+	Expression
+
+ConstantExpression: 
+	Expression
+
+Expression1: 
+	Expression2 [Expression1Rest]
+
+Expression1Rest: 
+	[  </i>?<i>   Expression   </i>:<i>   Expression1]
+
+Expression2 : 
+	Expression3 [Expression2Rest]
+
+Expression2Rest: 
+	{Infixop Expression3}
+	Expression3 </i>instanceof<i> Type
+
+Infixop:<!-- </i> -->
+</i>	||<i> 
+</i>	&amp;&amp;<i> 
+</i>	|<i> 
+	^ 
+</i>	&amp;<i> 
+</i>	==<i> 
+</i>	!=<i> 
+</i>	&lt;<i> 
+</i>	&gt;<i> 
+</i>	&lt;=<i> 
+</i>	&gt;=<i> 
+</i>	&lt;&lt;<i> 
+</i>	&gt;&gt;<i> 
+</i>	&gt;&gt;&gt;<i> 
+</i>	+<i> 
+</i>	-<i> 
+</i>	*<i> 
+</i>	/<i> 
+</i>	%<i> 
+</i>
+<i>Expression3: 
+	PrefixOp Expression3
+</i>	(<i>   Expr </i>|<i> Type   </i>)<i>   Expression3
+	Primary {Selector} {PostfixOp}
+
+Primary: 
+</i>	(<i> Expression </i>)
+<i>	</i>this<i> [Arguments]
+	</i>super<i> SuperSuffix
+	Literal
+	</i>new <i>Creator
+	Identifier { </i>.<i> Identifier }[ IdentifierSuffix]
+	BasicType BracketsOpt </i>.<i>class
+</i>	void.class
+
+<i>IdentifierSuffix:
+</i>	[<i> ( </i>]<i> BracketsOpt   .   </i>class | <i>Expression</i> ]<i>)
+	Arguments
+	</i>.<i>   </i>(<i> class </i>|<i> this </i>|<i></i> super <i>Arguments </i>| new <i>InnerCreator )
+
+PrefixOp:
+</i>	++<i> 
+</i>	--<i> 
+</i>	!<i> 
+</i>	~<i> 
+</i>	+<i> 
+</i>	-<i> 
+</i>
+<i>PostfixOp: 
+</i>	++<i> 
+</i>	--<i> 
+
+Selector: 
+</i>	.<i> Identifier [Arguments]
+</i>	. this
+	. super <i>SuperSuffix
+</i>	.<i> </i>new<i> InnerCreator
+</i>	[<i> Expression </i>]<i>
+
+SuperSuffix: 
+	Arguments 
+</i>	.<i> Identifier [Arguments]
+
+BasicType:</i> 
+	byte 
+	short 
+	char 
+	int 
+	long 
+	float 
+	double 
+	boolean
+<i>
+ArgumentsOpt: 
+	[ Arguments ]
+
+Arguments: 
+</i>	(<i> [Expression { </i>,<i> Expression }] </i>)<i>
+
+BracketsOpt: 
+	{</i>[]<i>}
+
+Creator: 
+	QualifiedIdentifier ( ArrayCreatorRest  </i>|<i> ClassCreatorRest )
+
+InnerCreator: 
+	Identifier ClassCreatorRest
+
+ArrayCreatorRest: 
+</i>	[<i> ( </i>]<i> BracketsOpt ArrayInitializer </i>|<i> Expression </i>]<i> {</i>[<i> Expression </i>]<i>} 
+BracketsOpt )
+
+ClassCreatorRest: 
+	Arguments [ClassBody]
+
+ArrayInitializer: 
+</i>	{ <i>[VariableInitializer {</i>,<i> VariableInitializer} [</i>,<i>]] </i>}
+<i>
+VariableInitializer: 
+	ArrayInitializer
+	Expression
+
+ParExpression: 
+</i>	(<i> Expression </i>)
+<i>
+Block: 
+</i>	{<i> BlockStatements </i>}
+<i>
+BlockStatements: 
+	{ BlockStatement }
+
+BlockStatement : 
+	LocalVariableDeclarationStatement
+	ClassOrInterfaceDeclaration
+	[Identifier </i>:<i>] Statement
+
+LocalVariableDeclarationStatement:
+	[</i>final<i>] Type VariableDeclarators   </i>;<i>  
+
+Statement:
+	Block
+	</i>if<i> ParExpression Statement [</i>else<i> Statement]
+	</i>for <i></i>(<i> ForInitOpt   </i>;<i>   [Expression]   </i>;<i>   ForUpdateOpt </i>)<i> Statement
+	</i>while<i> ParExpression Statement
+	</i>do<i> Statement </i>while<i> ParExpression   </i>;<i> 
+	</i>try<i> Block ( Catches </i>|<i> [Catches] </i>finally<i> Block )
+</i>	switch<i> ParExpression </i>{<i> SwitchBlockStatementGroups </i>}
+<i>	</i>synchronized<i> ParExpression Block
+</i>	return<i> [Expression] </i>;<i> 
+	</i>throw<i> Expression   </i>;<i> 
+	</i>break<i> [Identifier]
+	</i>continue<i> [Identifier]
+</i>	;<i> 
+	ExpressionStatement
+	Identifier   </i>:<i>   Statement
+
+Catches:
+	CatchClause {CatchClause}
+
+CatchClause: 
+</i>	catch<i> </i>(<i> FormalParameter </i>)<i> Block
+
+SwitchBlockStatementGroups: 
+	{ SwitchBlockStatementGroup }
+
+SwitchBlockStatementGroup: 
+	SwitchLabel BlockStatements
+
+SwitchLabel: 
+</i>	case<i> ConstantExpression   </i>:
+<i>	default:  
+
+MoreStatementExpressions: 
+	{ , StatementExpression }
+
+ForInit: 
+	StatementExpression MoreStatementExpressions
+	[</i>final<i>] Type VariableDeclarators
+
+ForUpdate: 
+	StatementExpression MoreStatementExpressions
+
+ModifiersOpt: 
+	{ Modifier }
+
+Modifier:</i> 
+	public 
+	protected 
+	private 
+	static 
+	abstract 
+	final 
+	native 
+	synchronized 
+	transient 
+	volatile
+	strictfp
+<i>
+VariableDeclarators: 
+	VariableDeclarator { </i>,<i>   VariableDeclarator }
+
+VariableDeclaratorsRest: 
+	VariableDeclaratorRest { </i>,<i>   VariableDeclarator }
+
+ConstantDeclaratorsRest: 
+	ConstantDeclaratorRest { </i>,<i>   ConstantDeclarator }
+
+VariableDeclarator: 
+	Identifier VariableDeclaratorRest
+
+ConstantDeclarator: 
+	Identifier ConstantDeclaratorRest
+
+VariableDeclaratorRest: 
+	BracketsOpt [  </i>=<i>   VariableInitializer]
+
+ConstantDeclaratorRest: 
+	BracketsOpt   </i>=<i>   VariableInitializer
+
+VariableDeclaratorId: 
+	Identifier BracketsOpt
+
+CompilationUnit: 
+	[</i>package<i> QualifiedIdentifier   </i>;<i>  ] {ImportDeclaration} 
+{TypeDeclaration}
+
+ImportDeclaration: 
+	</i>import<i> Identifier {   </i>.<i>   Identifier } [  </i> .<i>     </i>*<i>   ] </i>;<i>  
+
+TypeDeclaration: 
+	ClassOrInterfaceDeclaration
+	;
+
+ClassOrInterfaceDeclaration: 
+	ModifiersOpt (ClassDeclaration </i>|<i> InterfaceDeclaration)
+
+ClassDeclaration: 
+	</i>class<i> Identifier [extends Type] [implements TypeList] ClassBody
+
+InterfaceDeclaration: 
+	</i>interface<i> Identifier [extends TypeList] InterfaceBody
+
+TypeList: 
+	Type {  </i>,<i>   Type}
+
+ClassBody: 
+</i>	{<i> {ClassBodyDeclaration} </i>}
+<i>
+InterfaceBody: 
+</i>	{<i> {InterfaceBodyDeclaration} </i>}
+<i>
+ClassBodyDeclaration:
+</i>	; 
+<i>	[</i>static<i>] Block
+	ModifiersOpt MemberDecl
+
+MemberDecl:
+</i>	<i>MethodOrFieldDecl
+	</i>void<i> Identifier MethodDeclaratorRest
+	Identifier ConstructorDeclaratorRest
+	ClassOrInterfaceDeclaration
+
+MethodOrFieldDecl:
+</i>	<i>Type Identifier MethodOrFieldRest
+
+MethodOrFieldRest:
+</i>	<i>VariableDeclaratorRest
+	MethodDeclaratorRest
+
+InterfaceBodyDeclaration:
+</i>	;<i> 
+	ModifiersOpt InterfaceMemberDecl
+
+InterfaceMemberDecl:
+</i>	<i>InterfaceMethodOrFieldDecl
+	</i>void<i> Identifier VoidInterfaceMethodDeclaratorRest
+	ClassOrInterfaceDeclaration
+
+InterfaceMethodOrFieldDecl:
+</i>	<i>Type Identifier InterfaceMethodOrFieldRest
+
+InterfaceMethodOrFieldRest:
+</i>	<i>ConstantDeclaratorsRest </i>;
+<i>	InterfaceMethodDeclaratorRest
+
+MethodDeclaratorRest:
+		FormalParameters BracketsOpt [</i>throws<i> QualifiedIdentifierList] ( 
+MethodBody </i>|<i>   </i>;<i>  )
+
+VoidMethodDeclaratorRest:
+		FormalParameters [</i>throws<i> QualifiedIdentifierList] ( MethodBody </i>|<i>   </i>;<i>  )
+
+InterfaceMethodDeclaratorRest:
+	FormalParameters BracketsOpt [</i>throws<i> QualifiedIdentifierList]   </i>;<i>  
+
+VoidInterfaceMethodDeclaratorRest:
+	FormalParameters [</i>throws<i> QualifiedIdentifierList]   </i>;<i>  
+
+ConstructorDeclaratorRest:
+	FormalParameters [</i>throws<i> QualifiedIdentifierList] MethodBody
+
+QualifiedIdentifierList: 
+	QualifiedIdentifier {  </i>,<i>   QualifiedIdentifier}
+
+FormalParameters: 
+</i>	(<i> [FormalParameter { </i>,<i> FormalParameter}] </i>)
+<i>
+FormalParameter: 
+	[</i>final<i>] Type VariableDeclaratorId
+
+MethodBody:
+	Block
+</pre></ul>
+
+<hr>
+<table border="0" width="100%">
+<tr>
+<td><a href="jTOC.doc.html">Contents</a> | <a href="memory.doc.html">Prev</a> | <a href="jIX.fm.html">Next</a> | <a href="jIX.fm.html">Index</a></td>
+<td align=right><i>Java Language Specification</i><br>
+<font size="-1">Second Edition</font></td></tr></table>
+<i><a href="jcopyright.doc.html">Copyright</a> &#169 2000 Sun Microsystems, Inc.
+All rights reserved</i>
+<br>
+Please send any comments or corrections via our <a href="http://developers.sun.com/contact/feedback.jsp?&category=doc&mailsubject=Java%20Language%20Specification%20Feedback">feedback form</a>
+</font>
+<script language="JavaScript" src="/js/omi/jsc/s_code_remote.js"></script></body></html>
+
