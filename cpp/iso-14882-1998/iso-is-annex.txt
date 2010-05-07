@@ -1,0 +1,537 @@
+[gram.basic] 
+[gram.basic] 
+A.3 Basic concepts 
+translation-unit: 
+declaration-seqopt 
+[gram.expr] 
+A.4 Expressions 
+primary-expression: 
+literal 
+this 
+(expression ) 
+id-expression 
+id-expression: 
+unqualified-id 
+qualified-id 
+unqualified-id: 
+identifier 
+operator-function-id 
+conversion-function-id 
+˜ class-name 
+template-id 
+qualified-id: 
+::opt nested-name-specifier templateopt unqualified-id 
+::identifier 
+::operator-function-id 
+::template-id 
+nested-name-specifier: 
+class-or-namespace-name ::nested-name-specifieropt 
+class-or-namespace-name :: template nested-name-specifier 
+class-or-namespace-name: 
+class-name 
+namespace-name 
+671
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.4 Expressions Annex A Grammar summary 
+postfix-expression: 
+primary-expression 
+postfix-expression [expression ] 
+postfix-expression (expression-listopt ) 
+simple-type-specifier (expression-listopt ) 
+typename ::opt nested-name-specifier identifier ( expression-listopt ) 
+typename ::opt nested-name-specifiertemplateopt template-id ( expression-listopt ) 
+postfix-expression . templateopt id-expression 
+postfix-expression -> templateopt id-expression 
+postfix-expression .pseudo-destructor-name 
+postfix-expression ->pseudo-destructor-name 
+postfix-expression ++ 
+postfix-expression -- 
+dynamic_cast <type-id > (expression ) 
+static_cast <type-id > (expression ) 
+reinterpret_cast <type-id > (expression ) 
+const_cast <type-id > (expression ) 
+typeid (expression ) 
+typeid (type-id ) 
+expression-list: 
+assignment-expression 
+expression-list ,assignment-expression 
+pseudo-destructor-name: 
+::opt nested-name-specifieropt type-name :: ~ type-name 
+::opt nested-name-specifier template template-id :: ~ type-name 
+::opt nested-name-specifieropt ~ type-name 
+unary-expression: 
+postfix-expression 
+++ cast-expression 
+-- cast-expression 
+unary-operator cast-expression 
+sizeofunary-expression 
+sizeof (type-id ) 
+new-expression 
+delete-expression 
+unary-operator: one of 
+* & + - ! ~ 
+new-expression: 
+::opt new new-placementopt new-type-id new-initializeropt 
+::opt new new-placementopt ( type-id )new-initializeropt 
+new-placement: 
+(expression-list ) 
+new-type-id: 
+type-specifier-seq new-declaratoropt 
+new-declarator: 
+ptr-operator new-declaratoropt 
+direct-new-declarator 
+direct-new-declarator: 
+[expression ] 
+direct-new-declarator [constant-expression ] 
+672
+© ISO/IEC ISO/IEC 14882:1998(E) 
+Annex A Grammar summary A.4 Expressions 
+new-initializer: 
+(expression-listopt ) 
+delete-expression: 
+::opt deletecast-expression 
+::opt delete [ ]cast-expression 
+cast-expression: 
+unary-expression 
+(type-id )cast-expression 
+pm-expression: 
+cast-expression 
+pm-expression .*cast-expression 
+pm-expression ->*cast-expression 
+multiplicative-expression: 
+pm-expression 
+multiplicative-expression *pm-expression 
+multiplicative-expression /pm-expression 
+multiplicative-expression %pm-expression 
+additive-expression: 
+multiplicative-expression 
+additive-expression +multiplicative-expression 
+additive-expression -multiplicative-expression 
+shift-expression: 
+additive-expression 
+shift-expression <<additive-expression 
+shift-expression >>additive-expression 
+relational-expression: 
+shift-expression 
+relational-expression <shift-expression 
+relational-expression >shift-expression 
+relational-expression <=shift-expression 
+relational-expression >=shift-expression 
+equality-expression: 
+relational-expression 
+equality-expression ==relational-expression 
+equality-expression !=relational-expression 
+and-expression: 
+equality-expression 
+and-expression &equality-expression 
+exclusive-or-expression: 
+and-expression 
+exclusive-or-expression ^and-expression 
+inclusive-or-expression: 
+exclusive-or-expression 
+inclusive-or-expression |exclusive-or-expression 
+logical-and-expression: 
+inclusive-or-expression 
+logical-and-expression &&inclusive-or-expression 
+673
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.4 Expressions Annex A Grammar summary 
+logical-or-expression: 
+logical-and-expression 
+logical-or-expression ||logical-and-expression 
+conditional-expression: 
+logical-or-expression 
+logical-or-expression ?expression : assignment-expression 
+assignment-expression: 
+conditional-expression 
+logical-or-expression assignment-operator assignment-expression 
+throw-expression 
+assignment-operator:one of 
+= *= /= %= += -= >>= <<= &= ^= |= 
+expression: 
+assignment-expression 
+expression ,assignment-expression 
+constant-expression: 
+conditional-expression 
+[gram.stmt.stmt] 
+A.5 Statements 
+statement: 
+labeled-statement 
+expression-statement 
+compound-statement 
+selection-statement 
+iteration-statement 
+jump-statement 
+declaration-statement 
+try-block 
+labeled-statement: 
+identifier :statement 
+caseconstant-expression :statement 
+default :statement 
+expression-statement: 
+expressionopt ; 
+compound-statement: 
+{statement-seqopt } 
+statement-seq: 
+statement 
+statement-seq statement 
+selection-statement: 
+if (condition )statement 
+if (condition )statement else statement 
+switch (condition )statement 
+condition: 
+expression 
+type-specifier-seq declarator = assignment-expression 
+674
+© ISO/IEC ISO/IEC 14882:1998(E) 
+Annex A Grammar summary A.5 Statements 
+iteration-statement: 
+while (condition )statement 
+dostatement while (expression ) ; 
+for (for-init-statement conditionopt ; expressionopt )statement 
+for-init-statement: 
+expression-statement 
+simple-declaration 
+jump-statement: 
+break ; 
+continue ; 
+returnexpressionopt ; 
+gotoidentifier ; 
+declaration-statement: 
+block-declaration 
+[gram.dcl.dcl] 
+A.6 Declarations 
+declaration-seq: 
+declaration 
+declaration-seq declaration 
+declaration: 
+block-declaration 
+function-definition 
+template-declaration 
+explicit-instantiation 
+explicit-specialization 
+linkage-specification 
+namespace-definition 
+block-declaration: 
+simple-declaration 
+asm-definition 
+namespace-alias-definition 
+using-declaration 
+using-directive 
+simple-declaration: 
+decl-specifier-seqopt init-declarator-listopt ; 
+decl-specifier: 
+storage-class-specifier 
+type-specifier 
+function-specifier 
+friend 
+typedef 
+decl-specifier-seq: 
+decl-specifier-seqopt decl-specifier 
+storage-class-specifier: 
+auto 
+register 
+static 
+extern 
+mutable 
+675
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.6 Declarations Annex A Grammar summary 
+function-specifier: 
+inline 
+virtual 
+explicit 
+typedef-name: 
+identifier 
+type-specifier: 
+simple-type-specifier 
+class-specifier 
+enum-specifier 
+elaborated-type-specifier 
+cv-qualifier 
+simple-type-specifier: 
+::opt nested-name-specifieropt type-name 
+::opt nested-name-specifier template template-id 
+char 
+wchar_t 
+bool 
+short 
+int 
+long 
+signed 
+unsigned 
+float 
+double 
+void 
+type-name: 
+class-name 
+enum-name 
+typedef-name 
+elaborated-type-specifier: 
+class-key ::opt nested-name-specifieropt identifier 
+enum ::opt nested-name-specifieropt identifier 
+typename ::opt nested-name-specifier identifier 
+typename ::opt nested-name-specifiertemplateopt template-id 
+enum-name: 
+identifier 
+enum-specifier: 
+enumidentifieropt {enumerator-listopt } 
+enumerator-list: 
+enumerator-definition 
+enumerator-list ,enumerator-definition 
+enumerator-definition: 
+enumerator 
+enumerator =constant-expression 
+enumerator: 
+identifier 
+676
+© ISO/IEC ISO/IEC 14882:1998(E) 
+Annex A Grammar summary A.6 Declarations 
+namespace-name: 
+original-namespace-name 
+namespace-alias 
+original-namespace-name: 
+identifier 
+namespace-definition: 
+named-namespace-definition 
+unnamed-namespace-definition 
+named-namespace-definition: 
+original-namespace-definition 
+extension-namespace-definition 
+original-namespace-definition: 
+namespaceidentifier {namespace-body } 
+extension-namespace-definition: 
+namespaceoriginal-namespace-name {namespace-body } 
+unnamed-namespace-definition: 
+namespace {namespace-body } 
+namespace-body: 
+declaration-seqopt 
+namespace-alias: 
+identifier 
+namespace-alias-definition: 
+namespaceidentifier =qualified-namespace-specifier ; 
+qualified-namespace-specifier: 
+::opt nested-name-specifieropt namespace-name 
+using-declaration: 
+using typenameopt ::opt nested-name-specifier unqualified-id; 
+using :: unqualified-id; 
+using-directive: 
+using namespace ::opt nested-name-specifieropt namespace-name ; 
+asm-definition: 
+asm (string-literal ) ; 
+linkage-specification: 
+externstring-literal {declaration-seqopt } 
+externstring-literal declaration 
+[gram.dcl.decl] 
+A.7 Declarators 
+init-declarator-list: 
+init-declarator 
+init-declarator-list ,init-declarator 
+init-declarator: 
+declarator initializeropt 
+677
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.7 Declarators Annex A Grammar summary 
+declarator: 
+direct-declarator 
+ptr-operator declarator 
+direct-declarator: 
+declarator-id 
+direct-declarator (parameter-declaration-clause )cv-qualifier-seqopt exception-specificationopt 
+direct-declarator [constant-expressionopt ] 
+(declarator ) 
+ptr-operator: 
+*cv-qualifier-seqopt 
+& 
+::opt nested-name-specifier * cv-qualifier-seqopt 
+cv-qualifier-seq: 
+cv-qualifier cv-qualifier-seqopt 
+cv-qualifier: 
+const 
+volatile 
+declarator-id: 
+id-expression 
+::opt nested-name-specifieropt type-name 
+type-id: 
+type-specifier-seq abstract-declaratoropt 
+type-specifier-seq: 
+type-specifier type-specifier-seqopt 
+abstract-declarator: 
+ptr-operator abstract-declaratoropt 
+direct-abstract-declarator 
+direct-abstract-declarator: 
+direct-abstract-declaratoropt 
+  (parameter-declaration-clause ) cv-qualifier-seqopt exception-specificationopt 
+direct-abstract-declaratoropt [ constant-expressionopt ] 
+(abstract-declarator ) 
+parameter-declaration-clause: 
+parameter-declaration-listopt ...opt 
+parameter-declaration-list , ... 
+parameter-declaration-list: 
+parameter-declaration 
+parameter-declaration-list , parameter-declaration 
+parameter-declaration: 
+decl-specifier-seq declarator 
+decl-specifier-seq declarator =assignment-expression 
+decl-specifier-seq abstract-declaratoropt 
+decl-specifier-seq abstract-declaratoropt =assignment-expression 
+678
+© ISO/IEC ISO/IEC 14882:1998(E) 
+Annex A Grammar summary A.7 Declarators 
+function-definition: 
+decl-specifier-seqopt declarator ctor-initializeropt function-body 
+decl-specifier-seqopt declarator function-try-block 
+function-body: 
+compound-statement 
+initializer: 
+=initializer-clause 
+(expression-list ) 
+initializer-clause: 
+assignment-expression 
+{initializer-list ,opt } 
+{ } 
+initializer-list: 
+initializer-clause 
+initializer-list ,initializer-clause 
+[gram.class] 
+A.8 Classes 
+class-name: 
+identifier 
+template-id 
+class-specifier: 
+class-head {member-specificationopt } 
+class-head: 
+class-key identifieropt base-clauseopt 
+class-key nested-name-specifier identifier base-clauseopt 
+class-key nested-name-specifieropt template-id base-clauseopt 
+class-key: 
+class 
+struct 
+union 
+member-specification: 
+member-declaration member-specificationopt 
+access-specifier :member-specificationopt 
+member-declaration: 
+decl-specifier-seqopt member-declarator-listopt ; 
+function-definition ;opt 
+::opt nested-name-specifier templateopt unqualified-id ; 
+using-declaration 
+template-declaration 
+member-declarator-list: 
+member-declarator 
+member-declarator-list ,member-declarator 
+member-declarator: 
+declarator pure-specifieropt 
+declarator constant-initializeropt 
+identifieropt :constant-expression 
+679
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.8 Classes Annex A Grammar summary 
+pure-specifier: 
+= 0 
+constant-initializer: 
+=constant-expression 
+[gram.class.derived] 
+A.9 Derived classes 
+base-clause: 
+:base-specifier-list 
+base-specifier-list: 
+base-specifier 
+base-specifier-list ,base-specifier 
+base-specifier: 
+::opt nested-name-specifieropt class-name 
+virtual access-specifieropt ::opt nested-name-specifieropt class-name 
+access-specifier virtualopt ::opt nested-name-specifieropt class-name 
+access-specifier: 
+private 
+protected 
+public 
+[gram.special] 
+A.10 Special member functions 
+conversion-function-id: 
+operatorconversion-type-id 
+conversion-type-id: 
+type-specifier-seq conversion-declaratoropt 
+conversion-declarator: 
+ptr-operator conversion-declaratoropt 
+ctor-initializer: 
+:mem-initializer-list 
+mem-initializer-list: 
+mem-initializer 
+mem-initializer ,mem-initializer-list 
+mem-initializer: 
+mem-initializer-id (expression-listopt ) 
+mem-initializer-id: 
+::opt nested-name-specifieropt class-name 
+identifier 
+[gram.over] 
+A.11 Overloading 
+operator-function-id: 
+operatoroperator 
+680
+© ISO/IEC ISO/IEC 14882:1998(E) 
+Annex A Grammar summary A.11 Overloading 
+operator: one of 
+new delete new[] delete[] 
++ - * / % ^ & | ~ 
+! = < > += -= *= /= %= 
+^= &= |= << >> >>= <<= == != 
+<= >= && || ++ -- , ->* -> 
+() [] 
+[gram.temp] 
+A.12 Templates 
+template-declaration: 
+exportopt template <template-parameter-list >declaration 
+template-parameter-list: 
+template-parameter 
+template-parameter-list ,template-parameter 
+template-parameter: 
+type-parameter 
+parameter-declaration 
+type-parameter: 
+classidentifieropt 
+classidentifieropt =type-id 
+typenameidentifieropt 
+typenameidentifieropt =type-id 
+template <template-parameter-list > class identifieropt 
+template <template-parameter-list > class identifieropt =id-expression 
+template-id: 
+template-name <template-argument-listopt > 
+template-name: 
+identifier 
+template-argument-list: 
+template-argument 
+template-argument-list ,template-argument 
+template-argument: 
+assignment-expression 
+type-id 
+id-expression 
+explicit-instantiation: 
+templatedeclaration 
+explicit-specialization: 
+template < >declaration 
+[gram.except] 
+A.13 Exception handling 
+try-block: 
+trycompound-statement handler-seq 
+function-try-block: 
+try ctor-initializeropt function-body handler-seq 
+681
+ISO/IEC 14882:1998(E) © ISO/IEC 
+A.13 Exception handling Annex A Grammar summary 
+handler-seq: 
+handler handler-seqopt 
+handler: 
+catch (exception-declaration ) compound-statement 
+exception-declaration: 
+type-specifier-seq declarator 
+type-specifier-seq abstract-declarator 
+type-specifier-seq 
+... 
+throw-expression: 
+throwassignment-expressionopt 
+exception-specification: 
+throw (type-id-listopt ) 
+type-id-list: 
+type-id 
+type-id-list , type-id
