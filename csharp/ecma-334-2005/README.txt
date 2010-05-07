@@ -1,3 +1,8 @@
+C# Language Specification
+Standard ECMA-334
+3rd Edition
+June 2005
+
 Errors spotted right away:
 
 	page 467 of C# pdf

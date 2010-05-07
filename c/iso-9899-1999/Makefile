@@ -1,4 +1,4 @@
-all:
+build:
 	../../../../shared/tools/pdf2bgf iso-is-annex.txt iso-output.bgf banned-lines.lst keywords.lst
 	../../../../shared/tools/checkxml bgf iso-output.bgf
 	../../../../shared/tools/normbgf iso-output.bgf iso-is-grammar.bgf
@@ -7,3 +7,7 @@ all:
 
 clean:
 	rm -f iso-output.bgf iso-is-grammar.bgf iso-is.bnf
+
+test:
+	make build
+	../../../../shared/tools/gdts iso-is-grammar.bgf extracted-grammar.bgf

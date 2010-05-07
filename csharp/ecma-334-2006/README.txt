@@ -1,3 +1,8 @@
+C# Language Specification
+Standard ECMA-334
+4th Edition
+June 2006
+
 Foreword quote:
 
 This fourth edition cancels and replaces the third edition. Changes from the previous edition were made to 
