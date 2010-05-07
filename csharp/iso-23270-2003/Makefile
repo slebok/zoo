@@ -11,5 +11,5 @@ clean:
 
 test:
 	make build
-	../../../../shared/tools/gdts iso-cs-1-original.bgf extracted-grammar.bgf
-	../../../../shared/tools/gdts iso-cs-1-browsable.bgf recovered-grammar.bgf
+	../../../../shared/tools/gdt iso-cs-1-original.bgf extracted-grammar.bgf
+	../../../../shared/tools/gdt iso-cs-1-browsable.bgf recovered-grammar.bgf

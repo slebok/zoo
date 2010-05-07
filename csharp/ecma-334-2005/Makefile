@@ -10,4 +10,4 @@ clean:
 
 test:
 	make build
-	../../../../shared/tools/gdts ecma-334-grammar.bgf extracted-grammar.bgf
+	../../../../shared/tools/gdt ecma-334-grammar.bgf extracted-grammar.bgf

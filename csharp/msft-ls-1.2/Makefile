@@ -10,4 +10,4 @@ clean:
 
 test:
 	make build
-	../../../../shared/tools/gdts msft-ls-grammar.bgf extracted-grammar.bgf
+	../../../../shared/tools/gdt msft-ls-grammar.bgf extracted-grammar.bgf

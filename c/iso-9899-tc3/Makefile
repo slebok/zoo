@@ -10,4 +10,4 @@ clean:
 
 test:
 	make build
-	../../../../shared/tools/gdts iso-is-grammar.bgf extracted-grammar.bgf
+	../../../../shared/tools/gdt iso-is-grammar.bgf extracted-grammar.bgf
