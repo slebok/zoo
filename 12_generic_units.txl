@@ -129,8 +129,8 @@ end define
 %    defining_identifier_list : mode access_definition [:= default_expression];
 
 define formal_object_declaration
-    [defining_identifier_list] : mode [null_exclusion?] [subtype_mark] [formal_object_declaration_default?] ;
-    | [defining_identifier_list] : mode [access_definition] [formal_object_declaration_default?] ;
+    [defining_identifier_list] : [mode] [null_exclusion?] [subtype_mark] [formal_object_declaration_default?] ;
+    | [defining_identifier_list] : [mode] [access_definition] [formal_object_declaration_default?] ;
 end define
 
 define formal_object_declaration_default
@@ -228,7 +228,7 @@ end define
 %     range <>
 
 define formal_signed_integer_type_definition
-    range <>
+    'range <>
 end define
 
 
@@ -356,7 +356,7 @@ end define
 %     name
 
 define default_name
-    name
+    [name]
 end define
 
 

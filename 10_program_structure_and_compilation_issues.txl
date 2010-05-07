@@ -170,7 +170,7 @@ end define
 %     package body defining_identifier is separate;
 
 define package_body_stub
-    package body [defining_identifier] is separate ;
+    package 'body [defining_identifier] is separate ;
 end define
 
 
@@ -180,7 +180,7 @@ end define
 %     task body defining_identifier is separate;
 
 define task_body_stub
-    task body [defining_identifier] is separate ;
+    task 'body [defining_identifier] is separate ;
 end define
 
 
@@ -190,7 +190,7 @@ end define
 %     protected body defining_identifier is separate;
 
 define protected_body_stub
-    protected body [defining_identifier] is separate ;
+    protected 'body [defining_identifier] is separate ;
 end define
 
 

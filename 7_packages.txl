@@ -49,7 +49,7 @@ end define
 %    end [[parent_unit_name.]identifier];
 
 define package_body
-    package body [defining_program_unit_name] is
+    package 'body [defining_program_unit_name] is
         [declarative_part]
     [package_body_statements?]
     'end [package_body_identifier?] ;

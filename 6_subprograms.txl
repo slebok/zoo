@@ -77,10 +77,10 @@ end define
 %     [parent_unit_name . ]defining_identifier
 
 define defining_program_unit_name
-    [defining_program_unit_name?] [defining_identifier]
+    [defining_program_unit_name_parent?] [defining_identifier]
 end define
 
-define defining_program_unit_name
+define defining_program_unit_name_parent
     [parent_unit_name] .
 end define
 
@@ -100,7 +100,7 @@ end define
 % defining_operator_symbol ::=
 %     operator_symbol
 
-define operator_symbol
+define defining_operator_symbol
     [operator_symbol]
 end define
 

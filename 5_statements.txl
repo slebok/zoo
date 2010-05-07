@@ -145,7 +145,7 @@ end define
 %     boolean_expression
 
 define condition
-    [boolean_expression]
+    [expression]
 end define
 
 
@@ -188,7 +188,7 @@ define loop_statement
     [loop_statement_identifier?]
     [iteration_scheme?] loop
         [sequence_of_statements]
-    'end loop [loop_identifier?] ;
+    'end loop [identifier?] ;
 end define
 
 define loop_statement_identifier
@@ -233,7 +233,7 @@ define block_statement
     [block_statement_declare?]
     begin
         [handled_sequence_of_statements]
-    'end [block_identifier?] ;
+    'end [identifier?] ;
 end define
 
 define block_statement_identifier

@@ -8,7 +8,7 @@
 %     delta static_expression [range_constraint]
 
 define delta_constraint
-    delta expression [range_constraint]
+    delta [expression] [range_constraint]
 end define
 
 

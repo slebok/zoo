@@ -43,6 +43,10 @@ tokens
     id          "\a\i*"
 end tokens
 
+define identifier
+    [id]
+end define
+
 
 
 % 2.4
@@ -65,6 +69,44 @@ end tokens
 % digit ::=
 %     0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
+% define 'number' lexical type (numeric_literal),
+% define also 'floatnumber' (decimal_literal with explicit exponent),
+% 'decimalnumber' (decimal_literal with explicit decimal part),
+% 'integernumber' (integer literal with optional positive exponent)
+tokens
+    number          "\d[_\d]*(.\d[_\d]*)?([eE][+-]?\d[_\d]*)?"     
+    floatnumber     "\d[_\d]*(.\d[_\d]*)?[eE][+-]?\d[_\d]*"
+    decimalnumber   "\d[_\d]*.\d[_\d]*([eE][+-]?\d[_\d]*)?"
+    integernumber   "\d[_\d]*([eE][+]?\d[_\d]*)?"
+end tokens
+
+define numeric_literal
+    [decimal_literal]
+    | [based_literal]
+end define
+
+define decimal_literal
+    [number]
+    | [floatnumber]
+    | [decimalnumber]
+end define
+
+define numeral
+    [integernumber]
+end define
+
+define exponent
+    e [exponent_sign?] [numeral]
+    | E [exponent_sign?] [numeral]
+end define
+
+define exponent_sign
+    +
+    | -
+end define
+
+
+
 % 2.4.2
 % based_literal ::=
 %     base # based_numeral [.based_numeral] # [exponent]
@@ -81,17 +123,30 @@ end tokens
 % extended_digit ::=
 %     digit | A | B | C | D | E | F
 
-% define 'number' lexical type (numeric_literal),
-% define also 'floatnumber' (decimal_literal with explicit exponent),
-% 'decimalnumber' (decimal_literal with explicit decimal part),
-% 'integernumber' (integer literal with optional positive exponent)
-tokens
-    number          "\d[_\d]*(.\d[_\d]*)?([eE][+-]?\d[_\d]*)?"
-                    | "\d[_\d]*\#[\dABCDEFabcdef][_\dABCDEFabcdef]*\#([eE][+-]?\d[_\d]*)?"
-    floatnumber     "\d[_\d]*(.\d[_\d]*)?[eE][+-]?\d[_\d]*"
-    decimalnumber   "\d[_\d]*.\d[_\d]*([eE][+-]?\d[_\d]*)?"
-    integernumber   "\d[_\d]*([eE][+]?\d[_\d]*)?"
-end tokens
+define based_literal
+    [base] # [based_numeral] [based_decimal_part?] # [exponent?]
+end define
+
+define based_decimal_part
+    . [based_numeral]
+end define
+
+define base
+    [numeral]
+end define
+
+define based_numeral
+    [extended_digit] [based_numeral_extended_digit_underscore*]
+end define
+
+define extended_digit
+    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B | C | D | E | F | a | b | c | d | e | f
+end define
+
+define based_numeral_extended_digit_underscore
+    [extended_digit]
+    | _
+end define
 
 
 
@@ -103,6 +158,10 @@ end tokens
 tokens
     charlit     "'#''"
 end tokens
+
+define character_literal
+    [charlit]
+end define
 
 
 
@@ -118,6 +177,10 @@ end tokens
 tokens
     stringlit   "\"[(\\\c)(\"\")#\"]*\""
 end tokens
+
+define string_literal
+    [stringlit]
+end define
 
 
 

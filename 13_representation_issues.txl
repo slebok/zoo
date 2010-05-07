@@ -28,7 +28,7 @@ end define
 define local_name
     [direct_name]
     | [direct_name] '' [attribute_designator]
-    | [library_unit_name]
+    | [name]
 end define
 
 
@@ -83,10 +83,10 @@ end define
 
 % 13.5.1
 % component_clause ::=
-%     component_local_name at position range first_bit .. last_bit;
+%     component_local_name at position 'range first_bit .. last_bit;
 
 define component_clause
-    [local_name] at [position] range [first_bit] ** [last_bit] ;
+    [local_name] at [position] 'range [first_bit] ** [last_bit] ;
 end define
 
 

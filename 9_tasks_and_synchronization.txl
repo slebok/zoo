@@ -89,7 +89,7 @@ end define
 %   end [task_identifier];
 
 define task_body
-    task body [defining_identifier] is
+    task 'body [defining_identifier] is
         [declarative_part]
     begin
         [handled_sequence_of_statements]
@@ -187,7 +187,7 @@ end define
 %  end [protected_identifier];
 
 define protected_body
-    protected body [defining_identifier] is
+    protected 'body [defining_identifier] is
         [protected_operation_item*]
     'end [identifier?] ;
 end define
@@ -316,7 +316,7 @@ end define
 %     entry_name [actual_parameter_part];
 
 define entry_call_statement
-    [name] [actuel_parameter_part?] ;
+    [name] [actual_parameter_part?] ;
 end define
 
 
@@ -326,7 +326,7 @@ end define
 %     requeue entry_name [with abort];
 
 define requeue_statement
-    requeue [entry_name] [requeue_statement_with_abort?] ;
+    requeue [name] [requeue_statement_with_abort?] ;
 end define
 
 define requeue_statement_with_abort
@@ -581,7 +581,7 @@ end define
 %     abort task_name {, task_name};
 
 define abort_statement
-    abort [task_name,+] ;
+    abort [name,+] ;
 end define
 
 

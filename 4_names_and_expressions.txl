@@ -17,7 +17,7 @@ define name
     | [indexed_component]
     | [slice]
     | [selected_component]
-    | [attribute_component]
+    | [attribute_reference]
     | [type_conversion]
     | [function_call]
     | [character_literal]
@@ -214,8 +214,8 @@ end define
 %   | others
 
 define component_choice_list
-    [component_selector_name]
-    | [component_selector_name] | [component_choice_list]
+    [selector_name]
+    | [selector_name] | [component_choice_list]
     | others
 end define
 
@@ -487,8 +487,8 @@ end define
 %  | subtype_mark(name)
 
 define type_conversion
-    subtype_mark ( [expression] )
-    | subtype_mark ( [name] )
+    [subtype_mark] ( [expression] )
+    | [subtype_mark] ( [name] )
 end define
 
 

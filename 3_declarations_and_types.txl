@@ -162,15 +162,15 @@ end define
 %  | single_protected_declaration
 
 define object_declaration
-    [defining_identifier_list] : ['aliased?] ['constant?] subtype_indication [object_declaration_expression?]
-    | [defining_identifier_list] : ['aliased?] ['constant?] access_definition [object_declaration_expression?]
-    | [defining_identifier_list] : ['aliased?] ['constant?] array_type_definition [object_declaration_expression?]
+    [defining_identifier_list] : ['aliased?] ['constant?] [subtype_indication] [object_declaration_expression?]
+    | [defining_identifier_list] : ['aliased?] ['constant?] [access_definition] [object_declaration_expression?]
+    | [defining_identifier_list] : ['aliased?] ['constant?] [array_type_definition] [object_declaration_expression?]
     | [single_task_declaration]
     | [single_protected_declaration]
 end define
 
 define object_declaration_expression
-    := expression
+    := [expression]
 end define
 
 
@@ -200,7 +200,7 @@ end define
 %     [abstract] [limited] new parent_subtype_indication [[and interface_list] record_extension_part]
 
 define derived_type_definition
-    ['abstract?] ['limited?] new [parent_subtype_indication] [interface_and_record_extension_specification?]
+    ['abstract?] ['limited?] new [subtype_indication] [interface_and_record_extension_specification?]
 end define
 
 define interface_and_record_extension_specification
@@ -216,7 +216,7 @@ end define
 %     range range
 
 define range_constraint
-    range [range]
+    'range [range]
 end define
 
 
@@ -280,7 +280,7 @@ end define
 %     range static_simple_expression .. static_simple_expression
 
 define signed_integer_type_definition
-    range [simple_expression] .. [simple_expression]
+    'range [simple_expression] .. [simple_expression]
 end define
 
 
@@ -321,7 +321,7 @@ end define
 %     range static_simple_expression .. static_simple_expression
 
 define real_range_specification
-    range [simple_expression] .. [simple_expression]
+    'range [simple_expression] .. [simple_expression]
 end define
 
 
@@ -393,7 +393,7 @@ end define
 %     subtype_mark range <>
 
 define index_subtype_definition
-    subtype_mark range <>
+    [subtype_mark] 'range <>
 end define
 
 
@@ -509,7 +509,7 @@ end define
 %     expression
 
 define default_expression
-    expression
+    [expression]
 end define
 
 
@@ -533,8 +533,8 @@ define discriminant_association
 end define
 
 define discriminant_selector_name_list
-    [discriminant_selector_name] =>
-    | [discriminant_selector_name] '| [discriminant_selector_name_list]
+    [selector_name] =>
+    | [selector_name] '| [discriminant_selector_name_list]
 end define
 
 
