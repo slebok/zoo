@@ -351,7 +351,7 @@ define simple_expression
     [unary_adding_operator?] [term] [binary_adding_operator_term*]
 end define
 
-define [binary_adding_operator_term]
+define binary_adding_operator_term
     [binary_adding_operator] [term]
 end define
 
@@ -378,7 +378,7 @@ end define
 define factor
     [factor_primary]
     | abs [primary]
-    | not [primary]
+    | 'not [primary]
 end define
 
 define factor_primary
@@ -476,7 +476,7 @@ end define
 define highest_precedence_operator
     **
     | abs
-    | not
+    | 'not
 end define
 
 

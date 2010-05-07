@@ -41,7 +41,7 @@ end define
 %     function defining_designator parameter_and_result_profile
 
 define function_specification
-    function [defining_designator] [parameter_and_result_profile]
+    'function [defining_designator] [parameter_and_result_profile]
 end define
 
 

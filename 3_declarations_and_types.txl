@@ -739,7 +739,7 @@ end define
 %     all | constant
 
 define general_access_modifier
-    all
+    'all
     | constant
 end define
 
@@ -762,7 +762,7 @@ end define
 %     not null
 
 define null_exclusion
-    not null
+    'not null
 end define
 
 
@@ -791,7 +791,7 @@ end define
 
 define incomplete_type_declaration_modifier
     is tagged
-end
+end define
 
 
 
