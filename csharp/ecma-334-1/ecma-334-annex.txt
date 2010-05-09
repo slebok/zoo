@@ -1,0 +1,1675 @@
+345 
+A.2 Syntactic grammar 
+A.2.1 Basic concepts 
+41 
+namespace-name: 
+42 
+namespace-or-type-name 
+43 
+type-name: 
+44 
+namespace-or-type-name 
+4545
+C#LANGUAGESPECIFICATION 
+346 
+namespace-or-type-name: 
+1 
+identifier 
+2 
+namespace-or-type-name . identifier 
+3 
+A.2.2Types 
+4 
+type: 
+5 
+value-type 
+6 
+reference-type 
+7 
+value-type: 
+8 
+struct-type 
+9 
+enum-type 
+10 
+struct-type: 
+11 
+type-name 
+12 
+simple-type 
+13 
+simple-type: 
+14 
+numeric-type 
+15 
+bool 
+16 
+numeric-type: 
+17 
+integral-type 
+18 
+floating-point-type 
+19 
+decimal 
+20 
+integral-type: 
+21 
+sbyte 
+22 
+byte 
+23 
+short 
+24 
+ushort 
+25 
+int 
+26 
+uint 
+27 
+long 
+28 
+ulong 
+29 
+char 
+30 
+floating-point-type: 
+31 
+float 
+32 
+double 
+33 
+enum-type: 
+34 
+type-name 
+35 
+reference-type: 
+36 
+class-type 
+37 
+interface-type 
+38 
+array-type 
+39 
+delegate-type 
+40 
+class-type: 
+41 
+type-name 
+42 
+object 
+43 
+string 
+44 
+interface-type: 
+45 
+type-name 
+46 
+array-type: 
+47 
+non-array-type rank-specifiers 
+48
+AppendixA Grammar 
+347 
+non-array-type: 
+1 
+type 
+2 
+rank-specifiers: 
+3 
+rank-specifier 
+4 
+rank-specifiers rank-specifier 
+5 
+rank-specifier: 
+6 
+[ dim-separatorsopt ] 
+7 
+dim-separators: 
+8 
+, 
+9 
+dim-separators , 
+10 
+delegate-type: 
+11 
+type-name 
+12 
+A.2.3Variables 
+13 
+variable-reference: 
+14 
+expression 
+15 
+A.2.4Expressions 
+16 
+argument-list: 
+17 
+argument 
+18 
+argument-list , argument 
+19 
+argument: 
+20 
+expression 
+21 
+ref variable-reference 
+22 
+out variable-reference 
+23 
+primary-expression: 
+24 
+array-creation-expression 
+25 
+primary-no-array-creation-expression 
+26 
+primary-no-array-creation-expression: 
+27 
+literal 
+28 
+simple-name 
+29 
+parenthesized-expression 
+30 
+member-access 
+31 
+invocation-expression 
+32 
+element-access 
+33 
+this-access 
+34 
+base-access 
+35 
+post-increment-expression 
+36 
+post-decrement-expression 
+37 
+object-creation-expression 
+38 
+delegate-creation-expression 
+39 
+40 
+typeof-expression 
+41 
+42 
+checked-expression 
+43 
+unchecked-expression 
+44 
+simple-name: 
+45 
+identifier 
+46 
+parenthesized-expression: 
+47 
+( expression ) 
+48
+C#LANGUAGESPECIFICATION 
+348 
+member-access: 
+1 
+primary-expression . identifier 
+2 
+predefined-type . identifier 
+3 
+predefined-type: oneof 
+4 
+bool  byte  char  decimal double float  int  long 
+5 
+object sbyte  short  string uint  ulong  ushort 
+6 
+invocation-expression: 
+7 
+primary-expression ( argument-listopt ) 
+8 
+element-access: 
+9 
+primary-no-array-creation-expression [ expression-list ] 
+10 
+expression-list: 
+11 
+expression 
+12 
+expression-list , expression 
+13 
+this-access: 
+14 
+this 
+15 
+base-access: 
+16 
+base . identifier 
+17 
+base [ expression-list ] 
+18 
+post-increment-expression: 
+19 
+primary-expression ++ 
+20 
+post-decrement-expression: 
+21 
+primary-expression -- 
+22 
+object-creation-expression: 
+23 
+new type ( argument-listopt ) 
+24 
+array-creation-expression: 
+25 
+new non-array-type [ expression-list ] rank-specifiersopt array-initializeropt 
+26 
+new array-type array-initializer 
+27 
+delegate-creation-expression: 
+28 
+new delegate-type ( expression ) 
+29 
+typeof-expression: 
+30 
+typeof(type ) 
+31 
+typeof ( void ) 
+32 
+checked-expression: 
+33 
+checked ( expression ) 
+34 
+unchecked-expression: 
+35 
+unchecked ( expression ) 
+36 
+unary-expression: 
+37 
+primary-expression 
+38 
++ unary-expression 
+39 
+- unary-expression 
+40 
+! unary-expression 
+41 
+~ unary-expression 
+42 
+* unary-expression 
+43 
+pre-increment-expression 
+44 
+pre-decrement-expression 
+45 
+cast-expression 
+46 
+pre-increment-expression: 
+47 
+++ unary-expression 
+48
+Appendix A Grammar 
+349 
+pre-decrement-expression: 
+1 
+-- unary-expression 
+2 
+cast-expression: 
+3 
+( type ) unary-expression 
+4 
+multiplicative-expression: 
+5 
+unary-expression 
+6 
+multiplicative-expression * unary-expression 
+7 
+multiplicative-expression / unary-expression 
+8 
+multiplicative-expression % unary-expression 
+9 
+additive-expression: 
+10 
+multiplicative-expression 
+11 
+additive-expression + multiplicative-expression 
+12 
+additive-expression ñ multiplicative-expression 
+13 
+shift-expression: 
+14 
+additive-expression 
+15 
+shift-expression << additive-expression 
+16 
+shift-expression >> additive-expression 
+17 
+relational-expression: 
+18 
+shift-expression 
+19 
+relational-expression < shift-expression 
+20 
+relational-expression > shift-expression 
+21 
+relational-expression <= shift-expression 
+22 
+relational-expression >= shift-expression 
+23 
+relational-expression is type 
+24 
+relational-expression as type 
+25 
+equality-expression: 
+26 
+relational-expression 
+27 
+equality-expression == relational-expression 
+28 
+equality-expression != relational-expression 
+29 
+and-expression: 
+30 
+equality-expression 
+31 
+and-expression & equality-expression 
+32 
+exclusive-or-expression: 
+33 
+and-expression 
+34 
+exclusive-or-expression ^ and-expression 
+35 
+inclusive-or-expression: 
+36 
+exclusive-or-expression 
+37 
+inclusive-or-expression | exclusive-or-expression 
+38 
+conditional-and-expression: 
+39 
+inclusive-or-expression 
+40 
+conditional-and-expression && inclusive-or-expression 
+41 
+conditional-or-expression: 
+42 
+conditional-and-expression 
+43 
+conditional-or-expression || conditional-and-expression 
+44 
+conditional-expression: 
+45 
+conditional-or-expression 
+46 
+conditional-or-expression ? expression : expression 
+47 
+assignment: 
+48 
+unary-expression assignment-operator expression 
+49
+C#LANGUAGESPECIFICATION 
+350 
+assignment-operator: oneof 
+1 
+=   +=   -=   *=   /=   %=   &=   |=   ^=   <<=   >>= 
+2 
+expression: 
+3 
+conditional-expression 
+4 
+assignment 
+5 
+constant-expression: 
+6 
+expression 
+7 
+boolean-expression: 
+8 
+expression 
+9 
+A.2.5Statements 
+10 
+statement: 
+11 
+labeled-statement 
+12 
+declaration-statement 
+13 
+embedded-statement 
+14 
+embedded-statement: 
+15 
+block 
+16 
+empty-statement 
+17 
+expression-statement 
+18 
+selection-statement 
+19 
+iteration-statement 
+20 
+jump-statement 
+21 
+try-statement 
+22 
+checked-statement 
+23 
+unchecked-statement 
+24 
+lock-statement 
+25 
+using-statement 
+26 
+block: 
+27 
+{ statement-listopt } 
+28 
+statement-list: 
+29 
+statement 
+30 
+statement-list statement 
+31 
+empty-statement: 
+32 
+; 
+33 
+labeled-statement: 
+34 
+identifier : statement 
+35 
+declaration-statement: 
+36 
+local-variable-declaration ; 
+37 
+local-constant-declaration ; 
+38 
+local-variable-declaration: 
+39 
+type local-variable-declarators 
+40 
+local-variable-declarators: 
+41 
+local-variable-declarator 
+42 
+local-variable-declarators , local-variable-declarator 
+43 
+local-variable-declarator: 
+44 
+identifier 
+45 
+identifier = local-variable-initializer 
+46
+Appendix A Grammar 
+351 
+local-variable-initializer: 
+1 
+expression 
+2 
+array-initializer 
+3 
+local-constant-declaration: 
+4 
+const type constant-declarators 
+5 
+constant-declarators: 
+6 
+constant-declarator 
+7 
+constant-declarators , constant-declarator 
+8 
+constant-declarator: 
+9 
+identifier = constant-expression 
+10 
+expression-statement: 
+11 
+statement-expression ; 
+12 
+statement-expression: 
+13 
+invocation-expression 
+14 
+object-creation-expression 
+15 
+assignment 
+16 
+post-increment-expression 
+17 
+post-decrement-expression 
+18 
+pre-increment-expression 
+19 
+pre-decrement-expression 
+20 
+selection-statement: 
+21 
+if-statement 
+22 
+switch-statement 
+23 
+if-statement: 
+24 
+if ( boolean-expression ) embedded-statement 
+25 
+if ( boolean-expression ) embedded-statement else embedded-statement 
+26 
+boolean-expression: 
+27 
+expression 
+28 
+switch-statement: 
+29 
+switch ( expression ) switch-block 
+30 
+switch-block: 
+31 
+{ switch-sectionsopt } 
+32 
+switch-sections: 
+33 
+switch-section 
+34 
+switch-sections switch-section 
+35 
+switch-section: 
+36 
+switch-labels statement-list 
+37 
+switch-labels: 
+38 
+switch-label 
+39 
+switch-labels switch-label 
+40 
+switch-label: 
+41 
+case constant-expression : 
+42 
+default : 
+43 
+iteration-statement: 
+44 
+while-statement 
+45 
+do-statement 
+46 
+for-statement 
+47 
+foreach-statement 
+48
+C#LANGUAGESPECIFICATION 
+352 
+while-statement: 
+1 
+while ( boolean-expression ) embedded-statement 
+2 
+do-statement: 
+3 
+do embedded-statement while ( boolean-expression ) ; 
+4 
+for-statement: 
+5 
+for ( for-initializeropt ; for-conditionopt ; for-iteratoropt ) embedded-statement 
+6 
+for-initializer: 
+7 
+local-variable-declaration 
+8 
+statement-expression-list 
+9 
+for-condition: 
+10 
+boolean-expression 
+11 
+for-iterator: 
+12 
+statement-expression-list 
+13 
+statement-expression-list: 
+14 
+statement-expression 
+15 
+statement-expression-list , statement-expression 
+16 
+foreach-statement: 
+17 
+foreach ( type identifier in expression ) embedded-statement 
+18 
+jump-statement: 
+19 
+break-statement 
+20 
+continue-statement 
+21 
+goto-statement 
+22 
+return-statement 
+23 
+throw-statement 
+24 
+break-statement: 
+25 
+break ; 
+26 
+continue-statement: 
+27 
+continue ; 
+28 
+goto-statement: 
+29 
+goto identifier ; 
+30 
+goto case constant-expression ; 
+31 
+goto default ; 
+32 
+return-statement: 
+33 
+return expressionopt ; 
+34 
+throw-statement: 
+35 
+throw expressionopt ; 
+36 
+try-statement: 
+37 
+try block catch-clauses 
+38 
+try block finally-clause 
+39 
+try block catch-clauses finally-clause 
+40 
+catch-clauses: 
+41 
+specific-catch-clauses general-catch-clauseopt 
+42 
+specific-catch-clausesopt general-catch-clause 
+43 
+specific-catch-clauses: 
+44 
+specific-catch-clause 
+45 
+specific-catch-clauses specific-catch-clause 
+46
+Appendix A Grammar 
+353 
+specific-catch-clause: 
+1 
+catch ( class-type identifieropt ) block 
+2 
+general-catch-clause: 
+3 
+catch block 
+4 
+finally-clause: 
+5 
+finally block 
+6 
+checked-statement: 
+7 
+checked block 
+8 
+unchecked-statement: 
+9 
+unchecked block 
+10 
+lock-statement: 
+11 
+lock ( expression ) embedded-statement 
+12 
+using-statement: 
+13 
+using ( resource-acquisition ) embedded-statement 
+14 
+resource-acquisition: 
+15 
+local-variable-declaration 
+16 
+expression 
+17 
+compilation-unit: 
+18 
+using-directivesopt global-attributesopt namespace-member-declarationsopt 
+19 
+namespace-declaration: 
+20 
+namespace qualified-identifier namespace-body ;opt 
+21 
+qualified-identifier: 
+22 
+identifier 
+23 
+qualified-identifier . identifier 
+24 
+namespace-body: 
+25 
+{ using-directivesopt namespace-member-declarationsopt } 
+26 
+using-directives: 
+27 
+using-directive 
+28 
+using-directives using-directive 
+29 
+using-directive: 
+30 
+using-alias-directive 
+31 
+using-namespace-directive 
+32 
+using-alias-directive: 
+33 
+using identifier = namespace-or-type-name ; 
+34 
+using-namespace-directive: 
+35 
+using namespace-name ; 
+36 
+namespace-member-declarations: 
+37 
+namespace-member-declaration 
+38 
+namespace-member-declarations namespace-member-declaration 
+39 
+namespace-member-declaration: 
+40 
+namespace-declaration 
+41 
+type-declaration 
+42
+C#LANGUAGESPECIFICATION 
+354 
+type-declaration: 
+1 
+class-declaration 
+2 
+struct-declaration 
+3 
+interface-declaration 
+4 
+enum-declaration 
+5 
+delegate-declaration 
+6 
+A.2.6Classes 
+7 
+class-declaration: 
+8 
+attributesopt class-modifiersopt class identifier class-baseopt class-body ;opt 
+9 
+class-modifiers: 
+10 
+class-modifier 
+11 
+class-modifiers class-modifier 
+12 
+class-modifier: 
+13 
+new 
+14 
+public 
+15 
+protected 
+16 
+internal 
+17 
+private 
+18 
+abstract 
+19 
+sealed 
+20 
+class-base: 
+21 
+: class-type 
+22 
+: interface-type-list 
+23 
+: class-type , interface-type-list 
+24 
+interface-type-list: 
+25 
+interface-type 
+26 
+interface-type-list , interface-type 
+27 
+class-body: 
+28 
+{ class-member-declarationsopt } 
+29 
+class-member-declarations: 
+30 
+class-member-declaration 
+31 
+class-member-declarations class-member-declaration 
+32 
+class-member-declaration: 
+33 
+constant-declaration 
+34 
+field-declaration 
+35 
+method-declaration 
+36 
+property-declaration 
+37 
+event-declaration 
+38 
+indexer-declaration 
+39 
+operator-declaration 
+40 
+constructor-declaration 
+41 
+destructor-declaration 
+42 
+static-constructor-declaration 
+43 
+type-declaration 
+44 
+constant-declaration: 
+45 
+attributesopt constant-modifiersopt const type constant-declarators ; 
+46 
+constant-modifiers: 
+47 
+constant-modifier 
+48 
+constant-modifiers constant-modifier 
+49
+AppendixA Grammar 
+355 
+constant-modifier: 
+1 
+new 
+2 
+public 
+3 
+protected 
+4 
+internal 
+5 
+private 
+6 
+constant-declarators: 
+7 
+constant-declarator 
+8 
+constant-declarators , constant-declarator 
+9 
+constant-declarator: 
+10 
+identifier = constant-expression 
+11 
+field-declaration: 
+12 
+attributesopt field-modifiersopt type variable-declarators ; 
+13 
+field-modifiers: 
+14 
+field-modifier 
+15 
+field-modifiers field-modifier 
+16 
+field-modifier: 
+17 
+new 
+18 
+public 
+19 
+protected 
+20 
+internal 
+21 
+private 
+22 
+static 
+23 
+readonly 
+24 
+volatile 
+25 
+variable-declarators: 
+26 
+variable-declarator 
+27 
+variable-declarators , variable-declarator 
+28 
+variable-declarator: 
+29 
+identifier 
+30 
+identifier = variable-initializer 
+31 
+variable-initializer: 
+32 
+expression 
+33 
+array-initializer 
+34 
+method-declaration: 
+35 
+method-header method-body 
+36 
+method-header: 
+37 
+attributesopt method-modifiersopt return-type member-name ( formal-parameter-listopt ) 
+38 
+method-modifiers: 
+39 
+method-modifier 
+40 
+method-modifiers method-modifier 
+41
+C#LANGUAGESPECIFICATION 
+356 
+method-modifier: 
+1 
+new 
+2 
+public 
+3 
+protected 
+4 
+internal 
+5 
+private 
+6 
+static 
+7 
+virtual 
+8 
+sealed 
+9 
+override 
+10 
+abstract 
+11 
+extern 
+12 
+return-type: 
+13 
+type 
+14 
+void 
+15 
+member-name: 
+16 
+identifier 
+17 
+interface-type . identifier 
+18 
+method-body: 
+19 
+block 
+20 
+; 
+21 
+formal-parameter-list: 
+22 
+fixed-parameters 
+23 
+fixed-parameters , parameter-array 
+24 
+parameter-array 
+25 
+fixed-parameters: 
+26 
+fixed-parameter 
+27 
+fixed-parameters , fixed-parameter 
+28 
+fixed-parameter: 
+29 
+attributesopt parameter-modifieropt type identifier 
+30 
+parameter-modifier: 
+31 
+ref 
+32 
+out 
+33 
+parameter-array: 
+34 
+attributesopt params array-type identifier 
+35 
+property-declaration: 
+36 
+attributesopt property-modifiersopt type member-name { accessor-declarations } 
+37 
+property-modifiers: 
+38 
+property-modifier 
+39 
+property-modifiers property-modifier 
+40
+AppendixA Grammar 
+357 
+property-modifier: 
+1 
+new 
+2 
+public 
+3 
+protected 
+4 
+internal 
+5 
+private 
+6 
+static 
+7 
+virtual 
+8 
+sealed 
+9 
+override 
+10 
+abstract 
+11 
+extern 
+12 
+member-name: 
+13 
+identifier 
+14 
+interface-type . identifier 
+15 
+accessor-declarations: 
+16 
+get-accessor-declaration set-accessor-declarationopt 
+17 
+set-accessor-declaration get-accessor-declarationopt 
+18 
+get-accessor-declaration: 
+19 
+attributesopt get accessor-body 
+20 
+set-accessor-declaration: 
+21 
+attributesopt set accessor-body 
+22 
+accessor-body: 
+23 
+block 
+24 
+; 
+25 
+event-declaration: 
+26 
+attributesopt event-modifiersopt event type variable-declarators ; 
+27 
+attributesopt event-modifiersopt event type member-name { event-accessor-declarations 
+28 
+} 
+29 
+event-modifiers: 
+30 
+event-modifier 
+31 
+event-modifiers event-modifier 
+32 
+event-modifier: 
+33 
+new 
+34 
+public 
+35 
+protected 
+36 
+internal 
+37 
+private 
+38 
+static 
+39 
+virtual 
+40 
+sealed 
+41 
+override 
+42 
+abstract 
+43 
+extern 
+44 
+event-accessor-declarations: 
+45 
+add-accessor-declaration remove-accessor-declaration 
+46 
+remove-accessor-declaration add-accessor-declaration 
+47 
+add-accessor-declaration: 
+48 
+attributesopt add block 
+49
+C#LANGUAGESPECIFICATION 
+358 
+remove-accessor-declaration: 
+1 
+attributesopt remove block 
+2 
+indexer-declaration: 
+3 
+attributesopt indexer-modifiersopt indexer-declarator { accessor-declarations } 
+4 
+indexer-modifiers: 
+5 
+indexer-modifier 
+6 
+indexer-modifiers indexer-modifier 
+7 
+indexer-modifier: 
+8 
+new 
+9 
+public 
+10 
+protected 
+11 
+internal 
+12 
+private  
+13 
+virtual 
+14 
+sealed 
+15 
+override 
+16 
+abstract 
+17 
+extern 
+18 
+indexer-declarator: 
+19 
+type this [ formal-parameter-list ] 
+20 
+type interface-type . this [ formal-parameter-list ] 
+21 
+operator-declaration: 
+22 
+attributesopt operator-modifiers operator-declarator operator-body 
+23 
+operator-modifiers: 
+24 
+operator-modifier 
+25 
+operator-modifiers operator-modifier 
+26 
+operator-modifier: 
+27 
+public 
+28 
+static 
+29 
+extern 
+30 
+operator-declarator: 
+31 
+unary-operator-declarator 
+32 
+binary-operator-declarator 
+33 
+conversion-operator-declarator 
+34 
+unary-operator-declarator: 
+35 
+type operator overloadable-unary-operator ( type identifier ) 
+36 
+overloadable-unary-operator:oneof 
+37 
++   -   !   ~   ++   --   true   false 
+38 
+binary-operator-declarator: 
+39 
+type operator overloadable-binary-operator ( type identifier , type identifier ) 
+40 
+overloadable-binary-operator:oneof 
+41 
++   -   *   /   %   &   |   ^   <<   >>   ==   !=   >   <   >=   <= 
+42 
+conversion-operator-declarator: 
+43 
+implicit operator type ( type identifier ) 
+44 
+explicit operator type ( type identifier ) 
+45 
+operator-body: 
+46 
+block 
+47 
+; 
+48
+AppendixA Grammar 
+359 
+constructor-declaration: 
+1 
+attributesopt constructor-modifiersopt constructor-declarator constructor-body 
+2 
+constructor-modifiers: 
+3 
+constructor-modifier 
+4 
+constructor-modifiers constructor-modifier 
+5 
+constructor-modifier: 
+6 
+public 
+7 
+protected 
+8 
+internal 
+9 
+private 
+10 
+extern 
+11 
+constructor-declarator: 
+12 
+identifier ( formal-parameter-listopt ) constructor-initializeropt 
+13 
+constructor-initializer: 
+14 
+: base ( argument-listopt ) 
+15 
+: this ( argument-listopt ) 
+16 
+constructor-body: 
+17 
+block 
+18 
+; 
+19 
+static-constructor-declaration: 
+20 
+attributesopt static-constructor-modifiers identifier ( ) static-constructor-body 
+21 
+static-constructor-modifiers: 
+22 
+externopt static 
+23 
+static externopt 
+24 
+static-constructor-body: 
+25 
+block 
+26 
+; 
+27 
+destructor-declaration: 
+28 
+attributesopt externopt ~ identifier ( ) destructor-body 
+29 
+destructor-body: 
+30 
+block 
+31 
+; 
+32 
+A.2.7Structs 
+33 
+struct-declaration: 
+34 
+attributesopt struct-modifiersopt struct identifier struct-interfacesopt struct-body ;opt 
+35 
+struct-modifiers: 
+36 
+struct-modifier 
+37 
+struct-modifiers struct-modifier 
+38 
+struct-modifier: 
+39 
+new 
+40 
+public 
+41 
+protected 
+42 
+internal 
+43 
+private 
+44 
+struct-interfaces: 
+45 
+: interface-type-list 
+46
+C# LANGUAGE SPECIFICATION 
+360 
+struct-body: 
+1 
+{ struct-member-declarationsopt } 
+2 
+struct-member-declarations: 
+3 
+struct-member-declaration 
+4 
+struct-member-declarations struct-member-declaration 
+5 
+struct-member-declaration: 
+6 
+constant-declaration 
+7 
+field-declaration 
+8 
+method-declaration 
+9 
+property-declaration 
+10 
+event-declaration 
+11 
+indexer-declaration 
+12 
+operator-declaration 
+13 
+constructor-declaration 
+14 
+static-constructor-declaration 
+15 
+type-declaration 
+16 
+A.2.8 Arrays 
+17 
+array-type: 
+18 
+non-array-type rank-specifiers 
+19 
+non-array-type: 
+20 
+type 
+21 
+rank-specifiers: 
+22 
+rank-specifier 
+23 
+rank-specifiers rank-specifier 
+24 
+rank-specifier: 
+25 
+[ dim-separatorsopt ] 
+26 
+dim-separators: 
+27 
+, 
+28 
+dim-separators , 
+29 
+array-initializer: 
+30 
+{ variable-initializer-listopt } 
+31 
+{ variable-initializer-list , } 
+32 
+variable-initializer-list: 
+33 
+variable-initializer 
+34 
+variable-initializer-list , variable-initializer 
+35 
+variable-initializer: 
+36 
+expression 
+37 
+array-initializer 
+38 
+A.2.9 Interfaces 
+39 
+interface-declaration: 
+40 
+attributesopt interface-modifiersopt interface identifier interface-baseopt interface-body 
+41 
+;opt 
+42 
+interface-modifiers: 
+43 
+interface-modifier 
+44 
+interface-modifiers interface-modifier 
+45
+AppendixA Grammar 
+361 
+interface-modifier: 
+1 
+new 
+2 
+public 
+3 
+protected 
+4 
+internal 
+5 
+private 
+6 
+interface-base: 
+7 
+: interface-type-list 
+8 
+interface-body: 
+9 
+{ interface-member-declarationsopt } 
+10 
+interface-member-declarations: 
+11 
+interface-member-declaration 
+12 
+interface-member-declarations interface-member-declaration 
+13 
+interface-member-declaration: 
+14 
+interface-method-declaration 
+15 
+interface-property-declaration 
+16 
+interface-event-declaration 
+17 
+interface-indexer-declaration 
+18 
+interface-method-declaration: 
+19 
+attributesopt newopt return-type identifier ( formal-parameter-listopt ) ; 
+20 
+interface-property-declaration: 
+21 
+attributesopt newopt type identifier { interface-accessors } 
+22 
+interface-accessors: 
+23 
+attributesopt get ; 
+24 
+attributesopt set ; 
+25 
+attributesopt get ; attributesopt set ; 
+26 
+attributesopt set ; attributesopt get ; 
+27 
+interface-event-declaration: 
+28 
+attributesopt newopt event type identifier ; 
+29 
+interface-indexer-declaration: 
+30 
+attributesopt newopt type this [ formal-parameter-list ] { interface-accessors } 
+31 
+A.2.10Enums 
+32 
+enum-declaration: 
+33 
+attributesopt enum-modifiersopt enum identifier enum-baseopt enum-body ;opt 
+34 
+enum-base: 
+35 
+: integral-type 
+36 
+enum-body: 
+37 
+{ enum-member-declarationsopt } 
+38 
+{ enum-member-declarations , } 
+39 
+enum-modifiers: 
+40 
+enum-modifier 
+41 
+enum-modifiers enum-modifier 
+42 
+enum-modifier: 
+43 
+new 
+44 
+public 
+45 
+protected 
+46 
+internal 
+47 
+private 
+48
+C#LANGUAGESPECIFICATION 
+362 
+enum-member-declarations: 
+1 
+enum-member-declaration 
+2 
+enum-member-declarations , enum-member-declaration 
+3 
+enum-member-declaration: 
+4 
+attributesopt identifier 
+5 
+attributesopt identifier = constant-expression 
+6 
+A.2.11Delegates 
+7 
+delegate-declaration: 
+8 
+attributesopt delegate-modifiersopt delegate type identifier ( formal-parameter-listopt ) 
+9 
+; 
+10 
+delegate-modifiers: 
+11 
+delegate-modifier 
+12 
+delegate-modifiers delegate-modifier 
+13 
+delegate-modifier: 
+14 
+new 
+15 
+public 
+16 
+protected 
+17 
+internal 
+18 
+private 
+19 
+A.2.12Attributes 
+20 
+global-attributes: 
+21 
+global-attribute-sections 
+22 
+global-attribute-sections: 
+23 
+global-attribute-section 
+24 
+global-attribute-sections global-attribute-section 
+25 
+global-attribute-section: 
+26 
+[ global-attribute-target-specifier attribute-list ] 
+27 
+[ global-attribute-target-specifier attribute-list ,] 
+28 
+global-attribute-target-specifier: 
+29 
+global-attribute-target : 
+30 
+global-attribute-target: 
+31 
+assembly 
+32 
+attributes: 
+33 
+attribute-sections 
+34 
+attribute-sections: 
+35 
+attribute-section 
+36 
+attribute-sections attribute-section 
+37 
+attribute-section: 
+38 
+[ attribute-target-specifieropt attribute-list ] 
+39 
+[ attribute-target-specifieropt attribute-list ,] 
+40 
+attribute-target-specifier: 
+41 
+attribute-target : 
+42
+AppendixA Grammar 
+attribute-target: 
+1 
+field 
+2 
+event 
+3 
+method 
+4 
+module 
+5 
+param 
+6 
+property 
+7 
+return 
+8 
+type 
+9 
+attribute-list: 
+10 
+attribute 
+11 
+attribute-list , attribute 
+12 
+attribute: 
+13 
+attribute-name attribute-argumentsopt 
+14 
+attribute-name: 
+15 
+type-name 
+16 
+attribute-arguments: 
+17 
+( positional-argument-listopt ) 
+18 
+( positional-argument-list , named-argument-list ) 
+19 
+( named-argument-list ) 
+20 
+positional-argument-list: 
+21 
+positional-argument 
+22 
+positional-argument-list ,   positional-argument 
+23 
+positional-argument: 
+24 
+attribute-argument-expression 
+25 
+named-argument-list: 
+26 
+named-argument 
+27 
+named-argument-list ,   named-argument 
+28 
+named-argument: 
+29 
+identifier = attribute-argument-expression 
+30 
+attribute-argument-expression: 
+31 
+expression
+32 
