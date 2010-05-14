@@ -1,5 +1,8 @@
 - You may need to install FreeTXL (http://www.txl.ca)
 
-- To run FreeTXL with this grammar, go to the 'test' directory and run :
+- To run FreeTXL with this grammar, use following commands from this directory:
 
-$ txl -v -xml <ADA SOURCE FILE PATH> ada2005_txl_grammar_test.txl
+$ txl ada_source_file.ada
+$ txl ada_specification.ads
+$ txl ada_body.adb
+
