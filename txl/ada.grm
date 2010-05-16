@@ -26,12 +26,16 @@
 
 
 % Maintenance log:
-
-% v1.1	Jim Cordy	15 May 2010	Unified files, corrected several minor errors, tuned for TXL
+%
+% v1.1	Jim Cordy	14 May 2010	Unified files, corrected several minor errors, tuned for TXL
 %					Added handling of pragma statements where allowed
 %					Added handling of !, : and % alternatives for |, # and "
+%					Disambiguated [name] for TXL
+%					Reordered [statement] to avoid backtracking
 %					Validated against Ada 3.0 conformance suite
+%
 % v1.0	Bruno Le Hyaric	April 2010	Initial revision
+%
 
 
 
@@ -201,8 +205,8 @@ end comments
 %     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
 
 define pragma
-      'pragma [id] ; [NL]
-    | 'pragma [id] ( [pragma_argument_association,+] ) ; [NL]
+      'pragma [identifier] ; [NL]
+    | 'pragma [identifier] ( [pragma_argument_association,+] ) ; [NL]
 end define
 
 
@@ -213,9 +217,9 @@ end define
 
 define pragma_argument_association
       [name]
-    | [id] => [name]
     | [expression]
-    | [id] => [expression]
+    | [identifier] => [name]
+    | [identifier] => [expression]
 end define
 
 
@@ -228,7 +232,7 @@ keys
     else elsif 'end entry exception exit
     for 'function
     generic goto
-    % test
+    % retrocompatibility with Ada 95 where interface is not a reserved word
     % if in interface is
     if in is
     limited loop
@@ -1086,29 +1090,27 @@ end define
 %   | type_conversion | function_call
 %   | character_literal
 
+% Tuned, abstracted and disambiguated for TXL - Jim Cordy, May 2010
 define name
-%      [direct_name]
-      [direct_name] [component*]
-%    | [explicit_dereference]
-%    | [indexed_component]
-%    | [slice]
-%    | [selected_component]
-%    | [attribute_reference]
-%    | [type_conversion]
-%    | [function_call]
+      [direct_name] [name_component*]
     | [character_literal]
 end define
 
-define component
+define name_component
       [explicit_dereference_component]
-    | [indexed_component_component]
-    | [slice_component]
+    | [indexed_slice_type_conv_or_function_call_component]
     | [selected_component_component]
     | [attribute_reference_component]
-    % Redundant - covered by indexed_component above 
-    % | [type_conversion_component]
-    % Some ambiguity in this one also
-    | [function_call_component]
+end define
+
+define indexed_slice_type_conv_or_function_call_component
+    '( [index_or_parameter_value,+] ')
+end define
+
+define index_or_parameter_value
+      [expression]
+    | [discrete_range] 
+    | [parameter_association]
 end define
 
 
@@ -1627,10 +1629,10 @@ end define
 
 define simple_statement
       [null_statement]
+    | [procedure_call_statement]  % Must be first to avoid backtracking - Jim Cordy, May 2010
     | [assignment_statement]
     | [exit_statement]
     | [goto_statement]
-    | [procedure_call_statement]
     | [simple_return_statement]
     | [entry_call_statement]
     | [requeue_statement]
@@ -2074,7 +2076,8 @@ end define
 %     [formal_parameter_selector_name =>] explicit_actual_parameter
 
 define parameter_association
-    [parameter_association_selector_name?] [explicit_actual_parameter]
+    % unselected case already handled by [expression], see [name]
+    [parameter_association_selector_name] [explicit_actual_parameter]
 end define
 
 define parameter_association_selector_name
@@ -2437,6 +2440,7 @@ end define
 define task_item
       [entry_declaration]
     | [aspect_clause]
+    | [pragma]
 end define
 
 
@@ -2520,6 +2524,7 @@ define protected_operation_declaration
       [subprogram_declaration]
     | [entry_declaration]
     | [aspect_clause]
+    | [pragma]
 end define
 
 
