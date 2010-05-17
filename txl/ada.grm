@@ -27,6 +27,9 @@
 
 % Maintenance log:
 %
+% v1.2  Bruno Le Hyaric 17 May 2010, fix 'pragma' rule, pragma declaration in type definition,
+%                       pragma declaration in generics, and null procedure declaration.
+%
 % v1.1	Jim Cordy	14 May 2010	Unified files, corrected several minor errors, tuned for TXL
 %					Added handling of pragma statements where allowed
 %					Added handling of !, : and % alternatives for |, # and "
@@ -41,7 +44,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ada 2005 TXL grammar 
-% based on Ada 2005 LRM, ISO/IEC 8652:1995(E)
+% based on Ada 2005 LRM, ISO/IEC 8652:2007(E)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Ada is case-insensitive
@@ -200,29 +203,6 @@ comments
 end comments
 
 
-% 2.8
-% pragma ::=
-%     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
-
-define pragma
-      'pragma [identifier] ; [NL]
-    | 'pragma [identifier] ( [pragma_argument_association,+] ) ; [NL]
-end define
-
-
-% 2.8
-% pragma_argument_association ::=
-%     [pragma_argument_identifier =>] name
-%   | [pragma_argument_identifier =>] expression
-
-define pragma_argument_association
-      [name]
-    | [expression]
-    | [identifier] => [name]
-    | [identifier] => [expression]
-end define
-
-
 % Ada 2005 keywords
 keys
     abort abs abstract accept access aliased 'all and array at
@@ -239,7 +219,7 @@ keys
     mod
     new 'not null
     of or others out overriding
-    package pragma private procedure protected
+    package 'pragma private procedure protected
     raise range record rem renames requeue return reverse
     select separate subtype synchronized
     tagged task terminate then type
@@ -264,6 +244,29 @@ compounds
 end compounds
 
 
+% 2.8
+% pragma ::=
+%     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
+
+define pragma
+      'pragma [identifier] ; [NL]
+    | 'pragma [identifier] ( [pragma_argument_association,+] ) ; [NL]
+end define
+
+
+% 2.8
+% pragma_argument_association ::=
+%     [pragma_argument_identifier =>] name
+%   | [pragma_argument_identifier =>] expression
+
+define pragma_argument_association
+      [name]
+    | [expression]
+    | [identifier] => [name]
+    | [identifier] => [expression]
+end define
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 3_declarations_and_types
@@ -279,8 +282,15 @@ end compounds
 %   | renaming_declaration | exception_declaration
 %   | generic_declaration | generic_instantiation
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define basic_declaration
-      [type_declaration]
+    [type_declaration]
     | [subtype_declaration]
     | [object_declaration]
     | [number_declaration]
@@ -340,6 +350,13 @@ end define
 %   | record_type_definition | access_type_definition
 %   | derived_type_definition | interface_type_definition
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define type_definition
       [enumeration_type_definition]
     | [integer_type_definition]
@@ -349,6 +366,7 @@ define type_definition
     | [access_type_definition]
     | [derived_type_definition]
     | [interface_type_definition]
+    | [pragma]
 end define
 
 
@@ -830,9 +848,17 @@ end define
 % component_item ::=
 %     component_declaration | aspect_clause
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define component_item
       [component_declaration]
     | [aspect_clause]
+    | [pragma]
 end define
 
 
@@ -1627,6 +1653,13 @@ end define
 %   | abort_statement | raise_statement
 %   | code_statement
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define simple_statement
       [null_statement]
     | [procedure_call_statement]  % Must be first to avoid backtracking - Jim Cordy, May 2010
@@ -2142,7 +2175,7 @@ end define
 %   procedure_specification is null;
 
 define null_procedure_declaration
-    [overriding_indicator]
+    [overriding_indicator?]
     [procedure_specification] is null ; [NL]
 end define
 
@@ -2437,6 +2470,13 @@ end define
 % task_item ::=
 %     entry_declaration | aspect_clause
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define task_item
       [entry_declaration]
     | [aspect_clause]
@@ -2519,6 +2559,13 @@ end define
 %     subprogram_declaration
 %     | entry_declaration
 %     | aspect_clause
+
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
 
 define protected_operation_declaration
       [subprogram_declaration]
@@ -2935,6 +2982,13 @@ end define
 %     context_clause library_item
 %  | context_clause subunit
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define compilation_unit
       [context_clause] [library_item]
     | [context_clause] [subunit]
@@ -2960,6 +3014,13 @@ end define
 %     subprogram_declaration | package_declaration
 %   | generic_declaration | generic_instantiation
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define library_unit_declaration
       [subprogram_declaration]
     | [package_declaration]
@@ -2974,6 +3035,13 @@ end define
 %     package_renaming_declaration
 % | generic_renaming_declaration
 % | subprogram_renaming_declaration
+
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
 
 define library_unit_renaming_declaration
       [package_renaming_declaration]
@@ -3232,6 +3300,13 @@ end define
 % generic_formal_part ::=
 %     generic {generic_formal_parameter_declaration | use_clause}
 
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+
 define generic_formal_part
       generic [generic_formal_parameter_declaration_or_use_clause*]
 end define
@@ -3239,6 +3314,7 @@ end define
 define generic_formal_parameter_declaration_or_use_clause
       [generic_formal_parameter_declaration]
     | [use_clause]
+    | [pragma]
 end define
 
 
