@@ -27,8 +27,12 @@
 
 % Maintenance log:
 %
-% v1.2  Bruno Le Hyaric 17 May 2010, fix 'pragma' rule, pragma declaration in type definition,
-%                       pragma declaration in generics, and null procedure declaration.
+% v1.3  Bruno Le Hyaric 19 May 2010 Fix pragmas in task declarations, in protected type declaration,
+%                                   in type record definition, in generic declaration.
+%                                   Fix null procedure declaration.
+%
+% v1.2	Jim Cordy	18 May 2010	Added handling of pragmas 
+%					Restructured to make comment overrides easier
 %
 % v1.1	Jim Cordy	14 May 2010	Unified files, corrected several minor errors, tuned for TXL
 %					Added handling of pragma statements where allowed
@@ -44,7 +48,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Ada 2005 TXL grammar 
-% based on Ada 2005 LRM, ISO/IEC 8652:2007(E)
+% based on Ada 2005 LRM, ISO/IEC 8652:1995(E)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Ada is case-insensitive
@@ -60,6 +64,38 @@
 define program
     [compilation]
 end define
+
+
+% Ada 2005 keywords
+keys
+    abort abs abstract accept access aliased 'all and array at
+    begin body
+    case constant
+    declare delay delta digits do 
+    else elsif 'end entry exception exit
+    for 'function
+    generic goto
+    % suppress 'interface' keyword for retro compatibility with old code
+    % if in interface is
+    if in is
+    limited loop
+    mod
+    new 'not null
+    of or others out overriding
+    package pragma private procedure protected
+    raise range record rem renames requeue return reverse
+    select separate subtype synchronized
+    tagged task terminate then type 
+    until use
+    when while with
+    xor
+end keys
+
+
+% Ada 2005 compound delimiters
+compounds
+    => ..  ** := /= >= <= << >> <>
+end compounds
 
 
 
@@ -203,54 +239,34 @@ comments
 end comments
 
 
-% Ada 2005 keywords
-keys
-    abort abs abstract accept access aliased 'all and array at
-    begin body
-    case constant
-    declare delay delta digits do [EX]
-    else elsif 'end entry exception exit
-    for 'function
-    generic goto
-    % retrocompatibility with Ada 95 where interface is not a reserved word
-    % if in interface is
-    if in is
-    limited loop
-    mod
-    new 'not null
-    of or others out overriding
-    package 'pragma private procedure protected
-    raise range record rem renames requeue return reverse
-    select separate subtype synchronized
-    tagged task terminate then type
-    until use
-    when while with
-    xor
-end keys
-
-
-% Ada 2005 compound delimiters
-compounds
-    =>
-    ..
-    **
-    :=
-    /=
-    >=
-    <=
-    <<
-    >>
-    <>
-end compounds
-
-
 % 2.8
 % pragma ::=
 %     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
 
 define pragma
-      'pragma [identifier] ; [NL]
-    | 'pragma [identifier] ( [pragma_argument_association,+] ) ; [NL]
+      'pragma [id] [semi]
+    | 'pragma [id] ( [pragma_argument_association,+] ) [semi]
+end define
+
+% abstract semiccolon, colon and arrow to make commenting overrides easier
+define semi
+      ; [NL]
+end define
+
+define eol
+      [NL]
+end define
+
+define colon
+       : 
+end define
+
+define colon_equals
+       := 
+end define
+
+define arrow
+      => 
 end define
 
 
@@ -260,10 +276,11 @@ end define
 %   | [pragma_argument_identifier =>] expression
 
 define pragma_argument_association
-      [name]
-    | [expression]
-    | [identifier] => [name]
-    | [identifier] => [expression]
+    [opt identifier_arrow] [expression]
+end define
+
+define identifier_arrow
+    [identifier] [arrow]
 end define
 
 
@@ -288,9 +305,10 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define basic_declaration
-    [type_declaration]
+      [type_declaration]
     | [subtype_declaration]
     | [object_declaration]
     | [number_declaration]
@@ -337,7 +355,7 @@ end define
 %   | protected_type_declaration
 
 define full_type_declaration
-      type [defining_identifier] [known_discriminant_part?] is [type_definition] ; [NL]
+      type [defining_identifier] [known_discriminant_part?] is [type_definition] [semi]
     | [task_type_declaration]
     | [protected_type_declaration]
 end define
@@ -350,13 +368,6 @@ end define
 %   | record_type_definition | access_type_definition
 %   | derived_type_definition | interface_type_definition
 
-% Pragmas are only allowed at the following places in a program:
-% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
-% * At any place where the syntax rules allow a construct defined by a syntactic category
-% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
-% syntactic categories variant or exception_handler; but not in place of such a construct.
-% Also at any place where a compilation_unit would be allowed.
-
 define type_definition
       [enumeration_type_definition]
     | [integer_type_definition]
@@ -366,7 +377,6 @@ define type_definition
     | [access_type_definition]
     | [derived_type_definition]
     | [interface_type_definition]
-    | [pragma]
 end define
 
 
@@ -375,7 +385,7 @@ end define
 %     subtype defining_identifier is subtype_indication;
 
 define subtype_declaration
-    subtype [defining_identifier] is [subtype_indication] ; [NL]
+    subtype [defining_identifier] is [subtype_indication] [semi]
 end define
 
 
@@ -441,7 +451,7 @@ define object_declaration
     %  [defining_identifier_list] : ['aliased?] ['constant?] [subtype_indication] [object_declaration_expression?]
     %| [defining_identifier_list] : ['aliased?] ['constant?] [access_definition] [object_declaration_expression?]
     %| [defining_identifier_list] : ['aliased?] ['constant?] [array_type_definition] [object_declaration_expression?]
-      [defining_identifier_list] : ['aliased?] ['constant?] [subtype_access_or_array_type_definition] [object_declaration_expression?] ; [NL]
+      [defining_identifier_list] [colon] ['aliased?] ['constant?] [subtype_access_or_array_type_definition] [object_declaration_expression?] [semi]
     | [single_task_declaration]
     | [single_protected_declaration]
 end define
@@ -453,7 +463,7 @@ define subtype_access_or_array_type_definition
 end define
 
 define object_declaration_expression
-    := [expression]
+    [colon_equals] [expression]
 end define
 
 
@@ -471,7 +481,7 @@ end define
 %     defining_identifier_list : constant := static_expression;
 
 define number_declaration
-    [defining_identifier_list] : constant := [expression] ;
+    [defining_identifier_list] [colon] constant [colon_equals] [expression] [semi]
 end define
 
 
@@ -676,7 +686,7 @@ end define
 %     discrete_subtype_indication | range
 
 define discrete_subtype_definition
-    [subtype_indication]
+      [subtype_indication]
     | [range]
 end define
 
@@ -753,12 +763,12 @@ end define
 % | defining_identifier_list : access_definition [:= default_expression]
 
 define discriminant_specification
-      [defining_identifier_list] : [null_exclusion?] [subtype_mark] [discriminant_specification_default?]
-    | [defining_identifier_list] : [access_definition] [discriminant_specification_default?]
+      [defining_identifier_list] [colon] [null_exclusion?] [subtype_mark] [discriminant_specification_default?]
+    | [defining_identifier_list] [colon] [access_definition] [discriminant_specification_default?]
 end define
 
 define discriminant_specification_default
-    := [default_expression]
+    [colon_equals] [default_expression]
 end define
 
 
@@ -789,7 +799,7 @@ define discriminant_association
 end define
 
 define discriminant_selector_name_arrow
-    [selector_name] [or_selector_name*] =>
+    [selector_name] [or_selector_name*] [arrow]
 end define
 
 define or_selector_name
@@ -823,8 +833,8 @@ end define
 %  | null record
 
 define record_definition
-      [IN][NL]
-      record [IN][NL]
+      [IN][eol]
+      record [IN][eol]
           [component_list] [EX]
       'end record [EX]
     | null record
@@ -840,7 +850,7 @@ end define
 define component_list
       [component_item+]
     | [component_item*] [variant_part]
-    | null ; [NL]
+    | null [semi]
 end define
 
 
@@ -854,6 +864,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define component_item
       [component_declaration]
@@ -867,11 +878,11 @@ end define
 %     defining_identifier_list : component_definition [:= default_expression];
 
 define component_declaration
-    [defining_identifier_list] : [component_definition] [component_declaration_default?] ; [NL]
+    [defining_identifier_list] [colon] [component_definition] [component_declaration_default?] [semi]
 end define
 
 define component_declaration_default
-    := [default_expression]
+    [colon_equals] [default_expression]
 end define
 
 
@@ -883,9 +894,9 @@ end define
 %   end case;
 
 define variant_part
-    case [direct_name] is [IN][NL]
+    case [direct_name] is [IN][eol]
         [variant+] [EX]
-    'end case ; [NL]
+    'end case [semi]
 end define
 
 
@@ -895,7 +906,7 @@ end define
 %      component_list
 
 define variant
-    when [discrete_choice_list] =>
+    when [discrete_choice_list] [arrow]
         [component_list]
 end define
 
@@ -940,7 +951,7 @@ end define
 
 define abstract_subprogram_declaration
     [overriding_indicator?]
-    [subprogram_specification] is abstract ; [NL]
+    [subprogram_specification] is abstract [semi]
 end define
 
 
@@ -1042,7 +1053,7 @@ end define
 %     type defining_identifier [discriminant_part] [is tagged];
 
 define incomplete_type_declaration
-    type [defining_identifier] [discriminant_part?] [incomplete_type_declaration_modifier?] ; [NL]
+    type [defining_identifier] [discriminant_part?] [incomplete_type_declaration_modifier?] [semi]
 end define
 
 define incomplete_type_declaration_modifier
@@ -1192,7 +1203,11 @@ define indexed_component
 end define
 
 define indexed_component_component
-    ( [expression,+] )
+    ( [index_expression,+] )
+end define
+
+define index_expression
+    [expression] 
 end define
 
 
@@ -1323,7 +1338,7 @@ end define
 
 define record_component_association
       [expression]
-    | [component_choice_list] => [expression_or_null]
+    | [component_choice_list] [arrow] [expression_or_null]
 end define
 
 
@@ -1374,15 +1389,11 @@ end define
 %  | (expression {, expression}, others => <>)
 
 define positional_array_aggregate
-    % Generalize for TXL 
-    %  ( [expression] , [expression,+] )
-    %| ( [expression,+] , others => [expression] )
-    %| ( [expression,+] , others => <> )
-      ( [expression,+] [opt comma_others] )
+      ( [index_expression,+] [repeat comma_others] )
 end define
 
 define comma_others
-    , others => [expression_or_null] 
+    , others [arrow] [expression_or_null] 
 end define
 
 
@@ -1401,7 +1412,7 @@ end define
 %  | discrete_choice_list => <>
 
 define array_component_association
-      [discrete_choice_list] => [expression_or_null]
+      [discrete_choice_list] [arrow] [expression_or_null] 
 end define
 
 define expression_or_null
@@ -1417,36 +1428,19 @@ end define
 %   | relation {xor relation}
 
 define expression
-      [relation] [and_or_xor_relation]
+      [relation] [and_or_xor_relation*]
 end define
 
 define and_or_xor_relation
-      [and_relation*]
-    | [and_then_relation*]
-    | [or_relation*]
-    | [or_else_relation*]
-    | [xor_relation*]
+      [and_or_xor] [relation]
 end define
 
-define and_relation
-    and [relation]
+define and_or_xor
+      and [opt 'then]
+    | or [opt 'else]
+    | xor
 end define
 
-define and_then_relation
-    and then [relation]
-end define
-
-define or_relation
-    or [relation]
-end define
-
-define or_else_relation
-    or else [relation]
-end define
-
-define xor_relation
-    xor [relation]
-end define
 
 
 % 4.4
@@ -1547,7 +1541,7 @@ end define
 %     +   |  -   | &
 
 define binary_adding_operator
-      + | - | &
+      + | - | [IN][NL] & [EX]
 end define
 
 
@@ -1659,6 +1653,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define simple_statement
       [null_statement]
@@ -1700,7 +1695,7 @@ end define
 %     null;
 
 define null_statement
-    null ; [NL]
+    null [semi]
 end define
 
 
@@ -1727,7 +1722,7 @@ end define
 %     variable_name := expression;
 
 define assignment_statement
-    [name] := [expression] ; [NL]
+    [name] [colon_equals] [expression] [semi]
 end define
 
 
@@ -1742,20 +1737,20 @@ end define
 %    end if;
 
 define if_statement
-    if [condition] then [IN][NL]
+    if [condition] then [IN][eol]
         [sequence_of_statements]
     [if_statement_elsif*]
     [if_statement_else?] [EX]
-    'end if ; [NL]
+    'end if [semi]
 end define
 
 define if_statement_elsif
-    [EX] elsif [condition] then [IN][NL]
+    [EX] elsif [condition] then [IN][eol]
         [sequence_of_statements]
 end define
 
 define if_statement_else
-    [EX] else [IN][NL]
+    [EX] else [IN][eol]
         [sequence_of_statements]
 end define
 
@@ -1777,9 +1772,9 @@ end define
 %   end case;
 
 define case_statement
-    case [expression] is [IN][NL]
+    case [expression] is [IN][eol]
         [case_statement_alternative+] [EX]
-    'end case ; [NL]
+    'end case [semi]
 end define
 
 
@@ -1789,7 +1784,7 @@ end define
 %      sequence_of_statements
 
 define case_statement_alternative
-    when [discrete_choice_list] =>
+    when [discrete_choice_list] [arrow]
         [sequence_of_statements]
 end define
 
@@ -1803,13 +1798,13 @@ end define
 
 define loop_statement
     [loop_statement_identifier?]
-    [iteration_scheme?] loop [IN][NL]
+    [iteration_scheme?] loop [IN][eol]
         [sequence_of_statements] [EX]
-    'end loop [identifier?] ; [NL]
+    'end loop [identifier?] [semi]
 end define
 
 define loop_statement_identifier
-    [statement_identifier] :
+    [statement_identifier] [colon]
 end define
 
 
@@ -1845,17 +1840,17 @@ end define
 define block_statement
     [block_statement_identifier_colon?]
     [declare_declarative_part?]
-    begin [IN][NL]
+    begin [IN][eol]
         [handled_sequence_of_statements] [EX]
-    'end [identifier?] ; [NL]
+    'end [identifier?] [semi]
 end define
 
 define block_statement_identifier_colon
-    [statement_identifier] :
+    [statement_identifier] [colon]
 end define
 
 define declare_declarative_part
-    declare [IN][NL]
+    declare [IN][eol]
         [declarative_part] [EX]
 end define
 
@@ -1865,7 +1860,7 @@ end define
 %     exit [loop_name] [when condition];
 
 define exit_statement
-    exit [name?] [exit_statement_when_condition?] ; [NL]
+    exit [name?] [exit_statement_when_condition?] [semi]
 end define
 
 define exit_statement_when_condition
@@ -1878,7 +1873,7 @@ end define
 %     goto label_name;
 
 define goto_statement
-    goto [name] ; [NL]
+    goto [name] [semi]
 end define
 
 
@@ -1894,7 +1889,7 @@ end define
 %    subprogram_specification;
 
 define subprogram_declaration
-    [overriding_indicator?] [subprogram_specification] ; [NL]
+    [overriding_indicator?] [subprogram_specification] [semi]
 end define
 
 
@@ -2025,7 +2020,7 @@ end define
 %  | defining_identifier_list : access_definition [:= default_expression]
 
 define parameter_specification
-      [defining_identifier_list] : [parameter_type_specification]
+      [defining_identifier_list] [colon] [parameter_type_specification]
 end define
 
 define parameter_type_specification 
@@ -2034,7 +2029,7 @@ define parameter_type_specification
 end define
 
 define parameter_specification_default
-    := [default_expression]
+    [colon_equals] [default_expression]
 end define
 
 
@@ -2060,11 +2055,11 @@ end define
 
 define subprogram_body
     [overriding_indicator?]
-    [subprogram_specification] is [IN][NL]
+    [subprogram_specification] is [IN][eol]
         [declarative_part] [EX]
-    begin [IN][NL]
+    begin [IN][eol]
         [handled_sequence_of_statements] [EX]
-    'end [designator?] ; [NL]
+    'end [designator?] [semi]
 end define
 
 
@@ -2074,8 +2069,8 @@ end define
 %  | procedure_prefix actual_parameter_part;
 
 define procedure_call_statement
-      [name] ; [NL]
-    | [prefix] [actual_parameter_part] ; [NL]
+      [name] [semi]
+    | [prefix] [actual_parameter_part] [semi]
 end define
 
 
@@ -2114,7 +2109,7 @@ define parameter_association
 end define
 
 define parameter_association_selector_name
-    [selector_name] =>
+    [selector_name] [arrow]
 end define
 
 
@@ -2134,7 +2129,7 @@ end define
 %     return [expression];
 
 define simple_return_statement
-    return [expression?] ; [NL]
+    return [expression?] [semi]
 end define
 
 
@@ -2145,15 +2140,15 @@ end define
 %    end return];
 
 define extended_return_statement
-    return [defining_identifier] : ['aliased?] [return_subtype_indication] [extended_return_statement_expression?] [extended_return_statement_do?] ; [NL]
+    return [defining_identifier] [colon] ['aliased?] [return_subtype_indication] [extended_return_statement_expression?] [extended_return_statement_do?] [semi]
 end define
 
 define extended_return_statement_expression
-    := [expression]
+    [colon_equals] [expression]
 end define
 
 define extended_return_statement_do
-    do [IN][NL]
+    do [IN][eol]
         [handled_sequence_of_statements] [EX]
     'end return
 end define
@@ -2176,7 +2171,7 @@ end define
 
 define null_procedure_declaration
     [overriding_indicator?]
-    [procedure_specification] is null ; [NL]
+    [procedure_specification] is null [semi]
 end define
 
 
@@ -2191,7 +2186,7 @@ end define
 %     package_specification;
 
 define package_declaration
-    [package_specification] ; [NL]
+    [package_specification] [semi]
 end define
 
 
@@ -2204,14 +2199,14 @@ end define
 %    end [[parent_unit_name.]identifier]
 
 define package_specification
-    package [defining_program_unit_name] is [IN][NL]
+    package [defining_program_unit_name] is [IN][eol]
         [basic_declarative_item*] [EX]
         [package_specification_private?] 
     'end [package_specification_identifier?]
 end define
 
 define package_specification_private
-    private [IN][NL]
+    private [IN][eol]
         [basic_declarative_item*] [EX]
 end define
 
@@ -2233,14 +2228,14 @@ end define
 %    end [[parent_unit_name.]identifier];
 
 define package_body
-    package 'body [defining_program_unit_name] is [IN][NL]
+    package 'body [defining_program_unit_name] is [IN][eol]
         [declarative_part] [EX]
     [package_body_statements?]
-    'end [package_body_identifier?] ; [NL]
+    'end [package_body_identifier?] [semi]
 end define
 
 define package_body_statements
-    begin [IN][NL]
+    begin [IN][eol]
         [handled_sequence_of_statements] [EX]
 end define
 
@@ -2254,7 +2249,8 @@ end define
 %     type defining_identifier [discriminant_part] is [[abstract] tagged] [limited] private;
 
 define private_type_declaration
-    type [defining_identifier] [discriminant_part?] is [NL] [private_type_declaration_tagged?] ['limited?] private ; [NL]
+    type [defining_identifier] [discriminant_part?] is [eol] 
+        [private_type_declaration_tagged?] ['limited?] private [semi]
 end define
 
 define private_type_declaration_tagged
@@ -2269,9 +2265,9 @@ end define
 %     [and interface_list] with private;
 
 define private_extension_declaration
-    type [defining_identifier] [discriminant_part?] is [NL]
+    type [defining_identifier] [discriminant_part?] is [eol]
     ['abstract?] [private_extension_declaration_modifier?] new [subtype_indication]
-    [private_extension_declaration_interface_list?] with private ; [NL]
+    [private_extension_declaration_interface_list?] with private [semi]
 end define
 
 define private_extension_declaration_modifier
@@ -2314,7 +2310,11 @@ end define
 %     use package_name {, package_name};
 
 define use_package_clause
-    use [name,+] ; [NL]
+    use [used_name,+] [semi]
+end define
+
+define used_name
+    [name] 
 end define
 
 
@@ -2323,7 +2323,11 @@ end define
 %     use type subtype_mark {, subtype_mark};
 
 define use_type_clause
-    use type [subtype_mark,+] ; [NL]
+    use type [used_subtype_mark,+] [semi]
+end define
+
+define used_subtype_mark
+    [subtype_mark]
 end define
 
 
@@ -2350,8 +2354,8 @@ end define
 %  | defining_identifier : access_definition renames object_name;
 
 define object_renaming_declaration
-      [defining_identifier] : [null_exclusion?] [subtype_mark] renames [name] ; [NL]
-    | [defining_identifier] : [access_definition] renames [name] ; [NL]
+      [defining_identifier] [colon] [null_exclusion?] [subtype_mark] renames [name] [semi]
+    | [defining_identifier] [colon] [access_definition] renames [name] [semi]
 end define
 
 
@@ -2360,7 +2364,7 @@ end define
 %     defining_identifier : exception renames exception_name;
 
 define exception_renaming_declaration
-    [defining_identifier] : exception renames [name] ; [NL]
+    [defining_identifier] [colon] exception renames [name] [semi]
 end define
 
 
@@ -2369,7 +2373,7 @@ end define
 %     package defining_program_unit_name renames package_name;
 
 define package_renaming_declaration
-    package [defining_program_unit_name] renames [name]; [NL]
+    package [defining_program_unit_name] renames [name][semi]
 end define
 
 
@@ -2380,7 +2384,7 @@ end define
 
 define subprogram_renaming_declaration
     [overriding_indicator?]
-    [subprogram_specification] renames [name] ; [NL]
+    [subprogram_specification] renames [name] [semi]
 end define
 
 
@@ -2391,9 +2395,9 @@ end define
 %  | generic function defining_program_unit_name renames generic_function_name;
 
 define generic_renaming_declaration
-      generic package [defining_program_unit_name] renames [name] ; [NL]
-    | generic procedure [defining_program_unit_name] renames [name] ; [NL]
-    | generic 'function [defining_program_unit_name] renames [name] ; [NL]
+      generic package [defining_program_unit_name] renames [name] [semi]
+    | generic procedure [defining_program_unit_name] renames [name] [semi]
+    | generic 'function [defining_program_unit_name] renames [name] [semi]
 end define
 
 
@@ -2411,11 +2415,11 @@ end define
 
 define task_type_declaration
     task type [defining_identifier] [known_discriminant_part?]
-    [task_type_declaration_definition?] ; [NL]
+    [task_type_declaration_definition?] [semi]
 end define
 
 define task_type_declaration_definition
-    is [IN][NL]
+    is [IN][eol]
         [task_type_declaration_definition_interface_list?]
         [task_definition] [EX]
 end define
@@ -2433,11 +2437,11 @@ end define
 
 define single_task_declaration
     task [defining_identifier]
-    [single_task_declaration_definition?] ; [NL]
+    [single_task_declaration_definition?] [semi]
 end define
 
 define single_task_declaration_definition
-    is [IN][NL] 
+    is [IN][eol] 
         [single_task_declaration_definition_interface_list?] [EX]
         [task_definition]
 end define
@@ -2461,7 +2465,7 @@ define task_definition
 end define
 
 define task_definition_private
-    private [IN][NL]
+    private [IN][eol]
         [task_item*] [EX]
 end define
 
@@ -2476,6 +2480,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define task_item
       [entry_declaration]
@@ -2493,11 +2498,11 @@ end define
 %   end [task_identifier];
 
 define task_body
-    task 'body [defining_identifier] is [IN][NL]
+    task 'body [defining_identifier] is [IN][eol]
         [declarative_part] [EX]
-    begin [IN][NL]
+    begin [IN][eol]
         [handled_sequence_of_statements] [EX]
-    'end [identifier?]; [NL]
+    'end [identifier?][semi]
 end define
 
 
@@ -2510,7 +2515,7 @@ end define
 define protected_type_declaration
     protected type [defining_identifier] [known_discriminant_part?] is
     [protected_type_declaration_interface_list?]
-    [protected_definition] ; [NL]    
+    [protected_definition] [semi]    
 end define
 
 define protected_type_declaration_interface_list
@@ -2525,9 +2530,9 @@ end define
 %     protected_definition;
 
 define single_protected_declaration
-    protected [defining_identifier] is [IN][NL]
+    protected [defining_identifier] is [IN][eol]
     [single_protected_declaration_interface_list?]
-    [protected_definition] ; [NL]
+    [protected_definition] [semi]
 end define
 
 define single_protected_declaration_interface_list
@@ -2566,6 +2571,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define protected_operation_declaration
       [subprogram_declaration]
@@ -2593,9 +2599,9 @@ end define
 %  end [protected_identifier];
 
 define protected_body
-    protected 'body [defining_identifier] is [IN][NL]
+    protected 'body [defining_identifier] is [IN][eol]
         [protected_operation_item*] [EX]
-    'end [identifier?] ; [NL]
+    'end [identifier?] [semi]
 end define
 
 
@@ -2621,7 +2627,7 @@ end define
 
 define entry_declaration
     [overriding_indicator?]
-    entry [defining_identifier] [entry_declaration_subtype?] [parameter_profile] ; [NL]
+    entry [defining_identifier] [entry_declaration_subtype?] [parameter_profile] [semi]
 end define
 
 define entry_declaration_subtype
@@ -2637,7 +2643,7 @@ end define
 
 define accept_statement
     accept [direct_name] [accept_statement_entry_index?] [parameter_profile]
-    [accept_statement_statements?] ; [NL]
+    [accept_statement_statements?] [semi]
 end define
 
 define accept_statement_entry_index
@@ -2645,7 +2651,7 @@ define accept_statement_entry_index
 end define
 
 define accept_statement_statements
-    do [IN][NL]
+    do [IN][eol]
         [handled_sequence_of_statements] [EX]
     'end [identifier?]
 end define
@@ -2669,11 +2675,11 @@ end define
 %  end [entry_identifier];
 
 define entry_body
-    entry [defining_identifier] [entry_body_formal_part] [entry_barrier] is [IN][NL]
+    entry [defining_identifier] [entry_body_formal_part] [entry_barrier] is [IN][eol]
         [declarative_part] [EX]
-    begin [IN][NL]
+    begin [IN][eol]
         [handled_sequence_of_statements] [EX]
-    'end [identifier?] ; [NL]
+    'end [identifier?] [semi]
 end define
 
 
@@ -2713,7 +2719,7 @@ end define
 %     entry_name [actual_parameter_part];
 
 define entry_call_statement
-    [name] [actual_parameter_part?] ; [NL]
+    [name] [actual_parameter_part?] [semi]
 end define
 
 
@@ -2722,7 +2728,7 @@ end define
 %     requeue entry_name [with abort];
 
 define requeue_statement
-    requeue [name] [requeue_statement_with_abort?] ; [NL]
+    requeue [name] [requeue_statement_with_abort?] [semi]
 end define
 
 define requeue_statement_with_abort
@@ -2745,7 +2751,7 @@ end define
 %     delay until delay_expression;
 
 define delay_until_statement
-    delay until [expression] ; [NL]
+    delay until [expression] [semi]
 end define
 
 
@@ -2754,7 +2760,7 @@ end define
 %     delay delay_expression;
 
 define delay_relative_statement
-    delay [expression] ; [NL]
+    delay [expression] [semi]
 end define
 
 
@@ -2786,16 +2792,16 @@ end define
 %  end select;
 
 define selective_accept
-    select [IN][NL]
+    select [IN][eol]
         [guard?]
         [select_alternative]
     [selective_accept_or_alternative*]
     [selective_accept_else_alternative?] [EX]
-    'end select ; [NL]
+    'end select [semi]
 end define
 
 define selective_accept_or_alternative
-    or
+    [EX] or [IN][eol]  
         [guard?]
         [select_alternative]
 end define
@@ -2811,7 +2817,7 @@ end define
 %     when condition =>
 
 define guard
-    when [condition] =>
+    when [condition] [arrow]
 end define
 
 
@@ -2851,7 +2857,7 @@ end define
 %     terminate;
 
 define terminate_alternative
-    terminate ; [NL]
+    terminate [semi]
 end define
 
 
@@ -2864,11 +2870,11 @@ end define
 %  end select;
 
 define timed_entry_call
-    select [IN][NL]
+    select [IN][eol]
         [entry_call_alternative]
-    [EX] or [IN][NL]
+    [EX] or [IN][eol]
         [delay_alternative] [EX]
-    'end select ; [NL]
+    'end select [semi]
 end define
 
 
@@ -2900,11 +2906,11 @@ end define
 %  end select;
 
 define conditional_entry_call
-    select [IN][NL]
+    select [IN][eol]
         [entry_call_alternative]
-    [EX] else [IN][NL]
+    [EX] else [IN][eol]
         [sequence_of_statements] [EX]
-    'end select ; [NL]
+    'end select [semi]
 end define
 
 
@@ -2917,11 +2923,11 @@ end define
 %  end select;
 
 define asynchronous_select
-    select [IN][NL]
+    select [IN][eol]
         [triggering_alternative] [EX]
-    [EX] then abort [IN][NL]
+    [EX] then abort [IN][eol]
         [abortable_part] [EX]
-    'end select ; [NL]
+    'end select [semi]
 end define
 
 
@@ -2958,7 +2964,11 @@ end define
 %     abort task_name {, task_name};
 
 define abort_statement
-    abort [name,+] ; [NL]
+    abort [abort_name,+] [semi]
+end define
+
+define abort_name
+    [name] 
 end define
 
 
@@ -2988,6 +2998,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define compilation_unit
       [context_clause] [library_item]
@@ -3020,6 +3031,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define library_unit_declaration
       [subprogram_declaration]
@@ -3042,6 +3054,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define library_unit_renaming_declaration
       [package_renaming_declaration]
@@ -3104,7 +3117,11 @@ end define
 %     limited [private] with library_unit_name {, library_unit_name};
 
 define limited_with_clause
-    ['limited?] ['private?] with [name,+] ; [NL]
+    ['limited?] ['private?] with [with_name,+] [semi]
+end define
+
+define with_name
+    [name] 
 end define
 
 
@@ -3113,7 +3130,7 @@ end define
 %     [private] with library_unit_name {, library_unit_name};
 
 define nonlimited_with_clause
-    ['private?] with [name,+] ; [NL]
+    ['private?] with [with_name,+] [semi]
 end define
 
 
@@ -3136,7 +3153,7 @@ end define
 
 define subprogram_body_stub
     [overriding_indicator?]
-    [subprogram_specification] is separate ; [NL]
+    [subprogram_specification] is separate [semi]
 end define
 
 
@@ -3145,7 +3162,7 @@ end define
 %     package body defining_identifier is separate;
 
 define package_body_stub
-    package 'body [defining_identifier] is separate ; [NL]
+    package 'body [defining_identifier] is separate [semi]
 end define
 
 
@@ -3154,7 +3171,7 @@ end define
 %     task body defining_identifier is separate;
 
 define task_body_stub
-    task 'body [defining_identifier] is separate ; [NL]
+    task 'body [defining_identifier] is separate [semi]
 end define
 
 
@@ -3163,7 +3180,7 @@ end define
 %     protected body defining_identifier is separate;
 
 define protected_body_stub
-    protected 'body [defining_identifier] is separate ; [NL]
+    protected 'body [defining_identifier] is separate [semi]
 end define
 
 
@@ -3187,7 +3204,7 @@ end define
 %     defining_identifier_list : exception;
 
 define exception_declaration
-    [defining_identifier_list] : exception ; [NL]
+    [defining_identifier_list] [colon] exception [semi]
 end define
 
 
@@ -3204,7 +3221,7 @@ define handled_sequence_of_statements
 end define
 
 define handled_sequence_of_statements_exception
-    exception [IN][NL]
+    exception [IN][eol]
         [exception_handler+] [EX]
 end define
 
@@ -3215,16 +3232,16 @@ end define
 %     sequence_of_statements
 
 define exception_handler
-    when [exception_handler_specification?]  [exception_choice] [or_exception_choice*] =>
+    when [exception_handler_specification?]  [exception_choice] [or_exception_choice*] [arrow]
         [sequence_of_statements]
 end define
 
 define exception_handler_specification
-    [choice_parameter_specification] :
+    [choice_parameter_specification] [colon]
 end define
 
 define or_exception_choice
-    [orbar] [exception_choice]
+    [orbar] [exception_choice] 
 end define
 
 
@@ -3253,8 +3270,8 @@ end define
 %      | raise exception_name [with string_expression];
 
 define raise_statement
-      raise ; [NL]
-    | raise [name] [raise_statement_expression?] ; [NL] 
+      raise [semi]
+    | raise [name] [raise_statement_expression?] [semi] 
 end define
 
 define raise_statement_expression
@@ -3283,7 +3300,7 @@ end define
 %     generic_formal_part  subprogram_specification;
 
 define generic_subprogram_declaration
-    [generic_formal_part] [subprogram_specification] ; [NL]
+    [generic_formal_part] [subprogram_specification] [semi]
 end define
 
 
@@ -3292,7 +3309,7 @@ end define
 %     generic_formal_part  package_specification;
 
 define generic_package_declaration
-    [generic_formal_part] [package_specification] ; [NL]
+    [generic_formal_part] [package_specification] [semi]
 end define
 
 
@@ -3306,6 +3323,7 @@ end define
 % whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
 % syntactic categories variant or exception_handler; but not in place of such a construct.
 % Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
 
 define generic_formal_part
       generic [generic_formal_parameter_declaration_or_use_clause*]
@@ -3346,13 +3364,13 @@ end define
 
 define generic_instantiation
       package [defining_program_unit_name] is
-        new [name] [generic_actual_part?] ; [NL]
+        new [name] [generic_actual_part?] [semi]
     | [overriding_indicator?]
       procedure [defining_program_unit_name] is
-        new [name] [generic_actual_part?] ; [NL]
+        new [name] [generic_actual_part?] [semi]
     | [overriding_indicator?]
       'function [defining_designator] is
-        new [name] [generic_actual_part?] ; [NL]
+        new [name] [generic_actual_part?] [semi]
 end define
 
 
@@ -3374,7 +3392,7 @@ define generic_association
 end define
 
 define generic_association_selector_name
-    [selector_name] =>
+    [selector_name] [arrow]
 end define
 
 
@@ -3397,12 +3415,12 @@ end define
 %    defining_identifier_list : mode access_definition [:= default_expression];
 
 define formal_object_declaration
-      [defining_identifier_list] : [mode] [null_exclusion?] [subtype_mark] [formal_object_declaration_default?] ; [NL]
-    | [defining_identifier_list] : [mode] [access_definition] [formal_object_declaration_default?] ; [NL]
+      [defining_identifier_list] [colon] [mode] [null_exclusion?] [subtype_mark] [formal_object_declaration_default?] [semi]
+    | [defining_identifier_list] [colon] [mode] [access_definition] [formal_object_declaration_default?] [semi]
 end define
 
 define formal_object_declaration_default
-    := [default_expression]
+    [colon_equals] [default_expression]
 end define
 
 
@@ -3411,7 +3429,7 @@ end define
 %     type defining_identifier[discriminant_part] is formal_type_definition;
 
 define formal_type_declaration
-    type [defining_identifier] [discriminant_part?] is [formal_type_definition] ; [NL]
+    type [defining_identifier] [discriminant_part?] is [formal_type_definition] [semi]
 end define
 
 
@@ -3576,7 +3594,7 @@ end define
 %     with subprogram_specification [is subprogram_default];
 
 define formal_concrete_subprogram_declaration
-    with [subprogram_specification] [formal_concrete_subprogram_declaration_default?] ; [NL]
+    with [subprogram_specification] [formal_concrete_subprogram_declaration_default?] [semi]
 end define
 
 define formal_concrete_subprogram_declaration_default
@@ -3589,7 +3607,7 @@ end define
 %     with subprogram_specification is abstract [subprogram_default];
 
 define formal_abstract_subprogram_declaration
-    with [subprogram_specification] is abstract [subprogram_default?] ; [NL]
+    with [subprogram_specification] is abstract [subprogram_default?] [semi]
 end define
 
 
@@ -3618,7 +3636,7 @@ end define
 %     with package defining_identifier is new generic_package_name  formal_package_actual_part;
 
 define formal_package_declaration
-    with package [defining_identifier] is new [name] [formal_package_actual_part] ; [NL]
+    with package [defining_identifier] is new [name] [formal_package_actual_part] [semi]
 end define
 
 
@@ -3635,11 +3653,11 @@ define formal_package_actual_part
 end define
 
 define others_arrow
-    others =>
+    others [arrow]
 end define
 
 define comma_others_arrow_null
-    , others => <>
+    , others [arrow] <> 
 end define
 
 
@@ -3650,7 +3668,7 @@ end define
 
 define formal_package_association
       [generic_association]
-    | [selector_name] => <>
+    | [selector_name] [arrow] <>
 end define
 
 
@@ -3698,9 +3716,7 @@ end define
 %    | for local_name'attribute_designator use name;
 
 define attribute_definition_clause
-      for [local_name] [SPOFF] ' ' [attribute_designator] [SPON] use [expression] ; [NL]
-    % Clearly redundant
-    % | for [local_name] ' ' [attribute_designator] use [name] ;
+      for [local_name] [SPOFF] ' ' [attribute_designator] [SPON] use [expression] [semi]
 end define
 
 
@@ -3709,7 +3725,7 @@ end define
 %     for first_subtype_local_name use enumeration_aggregate;
 
 define enumeration_representation_clause
-    for [local_name] use [enumeration_aggregate] ; [NL]
+    for [local_name] use [enumeration_aggregate] [semi]
 end define
 
 
@@ -3730,10 +3746,10 @@ end define
 %      end record;
 
 define record_representation_clause
-    for [local_name] use [IN][NL]
-    record [mod_clause?] [IN][NL]
+    for [local_name] use [IN][eol]
+    record [mod_clause?] [IN][eol]
         [component_clause*] [EX]
-    'end record ; [EX][NL]
+    'end record ; [EX][eol]
 end define
 
 
@@ -3742,7 +3758,7 @@ end define
 %     component_local_name at position 'range first_bit .. last_bit;
 
 define component_clause
-    [local_name] at [position] 'range [first_bit] [SP] ..[SP] [last_bit] ; [NL]
+    [local_name] at [position] 'range [first_bit] [SP] ..[SP] [last_bit] [semi]
 end define
 
 
@@ -3778,7 +3794,7 @@ end define
 %     qualified_expression;
 
 define code_statement
-    [qualified_expression] ; [NL]
+    [qualified_expression] [semi]
 end define
 
 
@@ -3792,7 +3808,7 @@ define restriction
 end define
 
 define arrow_restriction_parameter_argument
-    => [restriction_parameter_argument]
+    [arrow] [restriction_parameter_argument]
 end define
 
 
@@ -3826,7 +3842,7 @@ end define
 %     for direct_name use at expression;
 
 define at_clause
-    for [direct_name] use at [expression] ; [NL]
+    for [direct_name] use at [expression] [semi]
 end define
 
 
@@ -3835,7 +3851,7 @@ end define
 %     at mod static_expression;
 
 define mod_clause
-    at mod [expression] ; [NL]
+    at mod [expression] [semi]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
