@@ -27,7 +27,9 @@
 
 % Maintenance log:
 %
-% v1.0	James Cordy 	May 2010	Initial revision
+% v1.1        James Cordy         20 May 2010     Added some minor observed cases
+%
+% v1.0        James Cordy         May 2010        Initial revision
 %
 
 
@@ -45,29 +47,41 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 redefine semi
-      ; [eol]
+    ; [eol]
+end redefine
+
+redefine blocksemi
+    ; [NL] [opt comment_NL]
+end redefine
+
+redefine unitsemi
+    ; [NL] [NL] [opt comment_NL]
 end redefine
 
 redefine colon
-       : [opt comment_NL]
+    : [opt comment_NL]
 end redefine
 
 redefine arrow
-      => [opt comment_NL]
+    => [opt comment_NL]
 end redefine
 
 redefine colon_equals
-      [opt comment_NL] := [opt comment_NL]
+    [opt comment_NL] := [opt comment_NL]
 end redefine
 
 redefine eol
-	[comment_NL] 
-    |	[NL]
+      [comment_NL] 
+    | [NL]
+end redefine
+
+redefine blockeol
+    [NL] [opt comment_NL] 
 end redefine
 
 define comment_NL
-	[TAB] [comment] [NL]		% only present if -comment is on
-	[opt comment_NL]
+    [SP] [comment] [NL]                % only present if -comment is on
+    [opt comment_NL]
 end define
 
 redefine pragma_argument_association
@@ -83,6 +97,14 @@ end redefine
 % 3_declarations_and_types
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+redefine type_definition
+    [opt comment_NL] ...
+end redefine
+
+redefine type_definition
+    ...  [opt comment_NL]
+end redefine
+
 redefine defining_identifier
     [opt comment_NL] ...
 end redefine
@@ -139,12 +161,16 @@ redefine discriminant_association
     ... [opt comment_NL]
 end redefine
 
-redefine or_selector_name
-	[opt comment_NL] ...
+redefine known_discriminant_part
+    ... [opt comment_NL]
 end redefine
 
 redefine or_selector_name
-	... [opt comment_NL]
+    [opt comment_NL] ...
+end redefine
+
+redefine or_selector_name
+    ... [opt comment_NL]
 end redefine
 
 redefine orbar
@@ -157,6 +183,7 @@ end redefine
 
 redefine declarative_item
       ...
+    | [comment_NL] [declarative_item]
     | [NL] [comment_NL]
 end redefine
 
@@ -182,11 +209,11 @@ redefine record_component_association
 end redefine
 
 redefine array_component_association
-      [opt comment_NL] ...
+    [opt comment_NL] ...
 end redefine
 
 redefine array_component_association
-      ... [opt comment_NL]
+    ... [opt comment_NL]
 end redefine
 
 redefine relation
