@@ -27,6 +27,7 @@
 
 % Maintenance log:
 %
+% v1.3        Bruno Le Hyaric     5 July 2010     Added more observed cases
 % v1.2        James Cordy         7 June 2010     Added more observed cases 
 % v1.1        James Cordy         20 May 2010     Added some minor observed cases
 % v1.0        James Cordy         May 2010        Initial revision
@@ -84,6 +85,14 @@ define comment_NL
     [opt comment_NL]
 end define
 
+redefine pragma_arguments
+    [opt comment_NL] ...
+end redefine
+
+redefine pragma_arguments
+    ... [opt comment_NL]
+end redefine
+
 redefine pragma_argument_association
     [opt comment_NL] ... 
 end redefine
@@ -103,6 +112,14 @@ end redefine
 
 redefine type_definition
     ...  [opt comment_NL]
+end redefine
+
+redefine subtype_indication
+    [opt comment_NL] ...
+end redefine
+
+redefine subtype_indication
+    ... [opt comment_NL]
 end redefine
 
 redefine defining_identifier
@@ -181,17 +198,19 @@ redefine orbar
     ... [opt comment_NL]
 end redefine
 
-redefine declarative_item
-      ...
-    | [comment_NL] [declarative_item]
-    | [NL] [comment_NL]
-end redefine
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 4_names_and_expressions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+redefine name
+    [opt comment_NL] ...
+end redefine
+
+redefine name
+    ... [opt comment_NL]
+end redefine
+
 redefine index_or_parameter_value
     [opt comment_NL] ...
 end redefine
@@ -221,6 +240,54 @@ redefine relation
 end redefine
 
 redefine relation
+    ... [opt comment_NL]
+end redefine
+
+redefine indexed_slice_type_conv_or_function_call_component
+    [opt comment_NL] ...
+end redefine
+
+redefine indexed_slice_type_conv_or_function_call_component
+    ... [opt comment_NL]
+end redefine
+
+redefine simple_expression
+    [opt comment_NL] ...
+end redefine
+
+redefine simple_expression
+    ... [opt comment_NL]
+end redefine
+
+redefine relational_operator_simple_expression
+    [opt comment_NL] ...
+end redefine
+
+redefine relational_operator_simple_expression
+    ... [opt comment_NL]
+end redefine
+
+redefine binary_adding_operator_term
+    [opt comment_NL] ...
+end redefine
+
+redefine binary_adding_operator_term
+    ... [opt comment_NL]
+end redefine
+
+redefine selected_component_component
+    . [opt comment_NL] [selector_name]
+end define
+
+%redefine binary_adding_operator_term
+%    [binary_adding_operator] [opt comment_NL] [term]
+%end redefine
+
+redefine term
+    [opt comment_NL] ...
+end redefine
+
+redefine term
     ... [opt comment_NL]
 end redefine
 
@@ -246,6 +313,14 @@ end redefine
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 6_subprograms
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine actual_parameter_part
+    [opt comment_NL] ...
+end redefine
+
+redefine actual_parameter_part
+    ... [opt comment_NL]
+end redefine
 
 redefine parameter_specification
     [opt comment_NL] ...
@@ -307,6 +382,14 @@ end redefine
 % 10_program_structure_and_compilation_issues
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+redefine compilation
+    [opt comment_NL] ...
+end redefine
+
+redefine compilation
+    ... [opt comment_NL]
+end redefine
+
 redefine compilation_unit
       ...
     | [comment_NL]
@@ -318,6 +401,12 @@ end redefine
 
 redefine subunit
     separate ( [parent_unit_name] [opt comment_NL] ) [opt comment_NL] [proper_body]
+end redefine
+
+redefine context_clause
+      ...
+    | [comment_NL] [context_clause]
+    | [NL] [comment_NL]
 end redefine
 
 
@@ -346,10 +435,38 @@ redefine formal_package_association
     ... [opt comment_NL]
 end redefine
 
+define generic_instantiation
+     package [defining_program_unit_name] is [opt comment_NL]
+        new [name] [generic_actual_part?] [blocksemi]
+    | [overriding_indicator?]
+     procedure [defining_program_unit_name] is [opt comment_NL]
+        new [name] [generic_actual_part?] [blocksemi]
+    | [overriding_indicator?]
+    'function [defining_designator] is [opt comment_NL]
+        new [name] [generic_actual_part?] [blocksemi]
+end define
+
+redefine generic_formal_parameter_declaration_or_use_clause
+      ...
+    | [comment_NL] [generic_formal_parameter_declaration_or_use_clause]
+end redefine
+
+redefine generic_package_declaration
+    [generic_formal_part] [opt comment_NL] [package_specification] [blocksemi]
+end redefine
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 13_representation_issues
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine enumeration_aggregate
+    [opt comment_NL] ...
+end redefine
+
+redefine enumeration_aggregate
+    ... [opt comment_NL]
+end redefine
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
