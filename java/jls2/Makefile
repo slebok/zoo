@@ -23,8 +23,8 @@ read:
 test:
 	../../../../shared/tools/checkxml bgf impl2.bgf
 	../../../../shared/tools/checkxml bgf read2.bgf
-	../../../../shared/tools/gdt impl2.bgf extracted-implementable-grammar.bgf
-	../../../../shared/tools/gdt read2.bgf extracted-readable-grammar.bgf
+	../../../../shared/tools/gdts impl2.bgf extracted-implementable-grammar.bgf
+	../../../../shared/tools/gdts read2.bgf extracted-readable-grammar.bgf
 
 clean:
 	rm -f *.bgf parse.html
