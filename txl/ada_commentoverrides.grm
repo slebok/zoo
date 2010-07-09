@@ -198,6 +198,12 @@ redefine orbar
     ... [opt comment_NL]
 end redefine
 
+redefine declarative_item
+      ...
+    | [comment_NL] [declarative_item]
+    | [NL] [comment_NL]
+end redefine
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 4_names_and_expressions
@@ -435,26 +441,15 @@ redefine formal_package_association
     ... [opt comment_NL]
 end redefine
 
-define generic_instantiation
-     package [defining_program_unit_name] is [opt comment_NL]
-        new [name] [generic_actual_part?] [blocksemi]
-    | [overriding_indicator?]
-     procedure [defining_program_unit_name] is [opt comment_NL]
-        new [name] [generic_actual_part?] [blocksemi]
-    | [overriding_indicator?]
-    'function [defining_designator] is [opt comment_NL]
-        new [name] [generic_actual_part?] [blocksemi]
+redefine generic_instantiation_clause
+    [opt comment_NL] ...
 end define
 
 redefine generic_formal_parameter_declaration_or_use_clause
       ...
     | [comment_NL] [generic_formal_parameter_declaration_or_use_clause]
+    | [NL] [comment_NL]
 end redefine
-
-redefine generic_package_declaration
-    [generic_formal_part] [opt comment_NL] [package_specification] [blocksemi]
-end redefine
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 13_representation_issues
