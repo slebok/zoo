@@ -2,9 +2,9 @@
 
 include "ada.grm"
 
-include "ada_commentoverrides.grm"`
+include "ada_commentoverrides.grm"
 
 function main
-    match [program]	
-	_ [program]
+    match [program]
+    _ [program]
 end function
