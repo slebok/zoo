@@ -31,5 +31,5 @@ Versions of Java programming language are:
 	see http://landonf.bikemonkey.org/static/soylatte/
 
 8) "Java 7" = "Java SE 7" = "Dolphin", under current (2008) development
-	see https://jdk7.dev.java.net/
+	see http://openjdk.java.net/projects/jdk7/
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bgf:grammar xmlns:bgf="http://planet-sl.org/bgf">
+	<root>CompilationUnit</root>
 	<bgf:production>
 		<nonterminal>NormalClassDeclaration</nonterminal>
 		<bgf:expression>
@@ -327,6 +328,9 @@
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
+				<bgf:expression>
+					<terminal>;</terminal>
+				</bgf:expression>
 			</sequence>
 		</bgf:expression>
 	</bgf:production>
@@ -343,6 +347,9 @@
 							<nonterminal>Identifier</nonterminal>
 						</bgf:expression>
 					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>;</terminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -564,7 +571,7 @@
 					<terminal>@</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>TypeName</nonterminal>
+					<nonterminal>QualifiedIdentifier</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<optional>
@@ -721,7 +728,7 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MoreStatementExpressions</nonterminal>
+		<nonterminal>Expressions</nonterminal>
 		<bgf:expression>
 			<star>
 				<bgf:expression>
@@ -1163,36 +1170,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ForControl</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<terminal>final</terminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>Annotations</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Type</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>ForVarControlRest</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>VariableDeclarator</nonterminal>
 		<bgf:expression>
 			<sequence>
@@ -1266,7 +1243,14 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>ElementValues</nonterminal>
+							<sequence>
+								<bgf:expression>
+									<terminal>,</terminal>
+								</bgf:expression>
+								<bgf:expression>
+									<nonterminal>ElementValues</nonterminal>
+								</bgf:expression>
+							</sequence>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
@@ -1754,45 +1738,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ArrayInitializer</nonterminal>
-		<bgf:expression>
-			<star>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<sequence>
-								<bgf:expression>
-									<nonterminal>VariableInitializer</nonterminal>
-								</bgf:expression>
-								<bgf:expression>
-									<star>
-										<bgf:expression>
-											<sequence>
-												<bgf:expression>
-													<terminal>,</terminal>
-												</bgf:expression>
-												<bgf:expression>
-													<nonterminal>VariableInitializer</nonterminal>
-												</bgf:expression>
-											</sequence>
-										</bgf:expression>
-									</star>
-								</bgf:expression>
-								<bgf:expression>
-									<optional>
-										<bgf:expression>
-											<terminal>,</terminal>
-										</bgf:expression>
-									</optional>
-								</bgf:expression>
-							</sequence>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-			</star>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>EnumConstants</nonterminal>
 		<bgf:expression>
 			<nonterminal>EnumConstant</nonterminal>
@@ -1936,11 +1881,17 @@
 	<bgf:production>
 		<nonterminal>Block</nonterminal>
 		<bgf:expression>
-			<star>
+			<sequence>
+				<bgf:expression>
+					<terminal>{</terminal>
+				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>BlockStatements</nonterminal>
 				</bgf:expression>
-			</star>
+				<bgf:expression>
+					<terminal>}</terminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2203,9 +2154,6 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>Expression3</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
 					<terminal>instanceof</terminal>
 				</bgf:expression>
 				<bgf:expression>
@@ -2286,12 +2234,6 @@
 					<nonterminal>Arguments</nonterminal>
 				</bgf:expression>
 			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Identifier</nonterminal>
-		<bgf:expression>
-			<nonterminal>IDENTIFIER</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3122,6 +3064,20 @@
 					<terminal>)</terminal>
 				</bgf:expression>
 				<bgf:expression>
+					<star>
+						<bgf:expression>
+							<sequence>
+								<bgf:expression>
+									<terminal>[</terminal>
+								</bgf:expression>
+								<bgf:expression>
+									<terminal>]</terminal>
+								</bgf:expression>
+							</sequence>
+						</bgf:expression>
+					</star>
+				</bgf:expression>
+				<bgf:expression>
 					<optional>
 						<bgf:expression>
 							<nonterminal>DefaultValue</nonterminal>
@@ -3163,20 +3119,6 @@
 					</choice>
 				</bgf:expression>
 			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>AnnotationTypeBody</nonterminal>
-		<bgf:expression>
-			<star>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>AnnotationTypeElementDeclarations</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-			</star>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3348,7 +3290,14 @@
 	<bgf:production>
 		<nonterminal>AnnotationMethodOrConstantRest</nonterminal>
 		<bgf:expression>
-			<nonterminal>AnnotationMethodRest</nonterminal>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>Identifier</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>AnnotationMethodRest</nonterminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3581,9 +3530,6 @@
 					<nonterminal>Type</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
 					<nonterminal>AnnotationMethodOrConstantRest</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
@@ -3666,6 +3612,134 @@
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>InterfaceBody</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>AnnotationTypeBody</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>{</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>AnnotationTypeElementDeclarations</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>}</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ArrayInitializer</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>{</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<sequence>
+								<bgf:expression>
+									<nonterminal>VariableInitializer</nonterminal>
+								</bgf:expression>
+								<bgf:expression>
+									<star>
+										<bgf:expression>
+											<sequence>
+												<bgf:expression>
+													<terminal>,</terminal>
+												</bgf:expression>
+												<bgf:expression>
+													<nonterminal>VariableInitializer</nonterminal>
+												</bgf:expression>
+											</sequence>
+										</bgf:expression>
+									</star>
+								</bgf:expression>
+								<bgf:expression>
+									<optional>
+										<bgf:expression>
+											<terminal>,</terminal>
+										</bgf:expression>
+									</optional>
+								</bgf:expression>
+							</sequence>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>}</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ForVarControl</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<terminal>final</terminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>Annotations</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Type</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Identifier</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>ForVarControlRest</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ForUpdate</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>StatementExpression</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Expressions</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>FormalParameter</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<terminal>final</terminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Type</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>VariableDeclaratorId</nonterminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>

@@ -1,3 +1,5 @@
+tdir = ../../../../shared/tools
+
 all:
 	make build
 	make test
@@ -7,24 +9,26 @@ build:
 	make read
 
 debug:
-	python ../../../extraction/bnf2bgf/html2bgf.py impl.html impl2.bgf -v
-	python ../../../../shared/python/getpre.py collect.kw read.html parse.html
-	python ../../../extraction/bnf2bgf/html2bgf.py parse.html read2.bgf -v
+	${tdir}/html2bgf impl.html impl2.bgf -v
+	${tdir}/html2bgf collect.kw read.html read2.bgf -v
 
 impl:
 	@echo "Extracting impl2" > /dev/stderr
-	python ../../../extraction/bnf2bgf/html2bgf.py impl.html impl2.bgf
+	${tdir}/html2bgf impl.html impl2.bgf
+	${tdir}/xbgf ../../../convergence/java/xbgf/correct-impl2.xbgf impl2.bgf impl2r.bgf
 
 read:
 	@echo "Extracting read2" > /dev/stderr
-	python ../../../../shared/python/getpre.py collect.kw read.html parse.html
-	python ../../../extraction/bnf2bgf/html2bgf.py parse.html read2.bgf
+	${tdir}/html2bgf collect.kw read.html read2.bgf
+	${tdir}/xbgf ../../../convergence/java/xbgf/recover-read2.xbgf read2.bgf read2t.bgf
+	${tdir}/xbgf ../../../convergence/java/xbgf/correct-read2.xbgf read2t.bgf read2r.bgf
 
 test:
-	../../../../shared/tools/checkxml bgf impl2.bgf
-	../../../../shared/tools/checkxml bgf read2.bgf
-	../../../../shared/tools/gdts impl2.bgf extracted-implementable-grammar.bgf
-	../../../../shared/tools/gdts read2.bgf extracted-readable-grammar.bgf
+	ls -1 *.bgf | xargs -n1 ${tdir}/checkxml bgf
+	${tdir}/gdts impl2.bgf extracted-implementable-grammar.bgf
+	${tdir}/gdts read2.bgf extracted-readable-grammar.bgf
+	${tdir}/gdts impl2r.bgf recovered-implementable-grammar.bgf
+	${tdir}/gdts read2r.bgf recovered-readable-grammar.bgf
 
 clean:
-	rm -f *.bgf parse.html
+	rm -f ????2*.bgf parse.html

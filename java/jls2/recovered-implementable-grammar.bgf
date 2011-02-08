@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bgf:grammar xmlns:bgf="http://planet-sl.org/bgf">
+	<root>CompilationUnit</root>
 	<bgf:production>
 		<nonterminal>ConstantExpression</nonterminal>
 		<bgf:expression>
@@ -320,7 +321,11 @@
 					<terminal>(</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>ForInitOpt</nonterminal>
+					<optional>
+						<bgf:expression>
+							<nonterminal>ForInit</nonterminal>
+						</bgf:expression>
+					</optional>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>;</terminal>
@@ -336,7 +341,11 @@
 					<terminal>;</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>ForUpdateOpt</nonterminal>
+					<optional>
+						<bgf:expression>
+							<nonterminal>ForUpdate</nonterminal>
+						</bgf:expression>
+					</optional>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>)</terminal>
@@ -510,6 +519,9 @@
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
+				<bgf:expression>
+					<terminal>;</terminal>
+				</bgf:expression>
 			</sequence>
 		</bgf:expression>
 	</bgf:production>
@@ -526,6 +538,9 @@
 							<nonterminal>Identifier</nonterminal>
 						</bgf:expression>
 					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>;</terminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -569,16 +584,6 @@
 					<nonterminal>BracketsOpt</nonterminal>
 				</bgf:expression>
 			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ArgumentsOpt</nonterminal>
-		<bgf:expression>
-			<optional>
-				<bgf:expression>
-					<nonterminal>Arguments</nonterminal>
-				</bgf:expression>
-			</optional>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -836,40 +841,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>VoidMethodDeclaratorRest</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>FormalParameters</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<sequence>
-								<bgf:expression>
-									<terminal>throws</terminal>
-								</bgf:expression>
-								<bgf:expression>
-									<nonterminal>QualifiedIdentifierList</nonterminal>
-								</bgf:expression>
-							</sequence>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<choice>
-						<bgf:expression>
-							<nonterminal>MethodBody</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>;</terminal>
-						</bgf:expression>
-					</choice>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>BasicType</nonterminal>
 		<bgf:expression>
 			<terminal>byte</terminal>
@@ -1114,6 +1085,9 @@
 					<nonterminal>FormalParameters</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
+					<nonterminal>BracketsOpt</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
 					<optional>
 						<bgf:expression>
 							<sequence>
@@ -1237,7 +1211,7 @@
 				<bgf:expression>
 					<choice>
 						<bgf:expression>
-							<nonterminal>Expr</nonterminal>
+							<nonterminal>Expression</nonterminal>
 						</bgf:expression>
 						<bgf:expression>
 							<nonterminal>Type</nonterminal>
@@ -1832,12 +1806,6 @@
 		<nonterminal>Literal</nonterminal>
 		<bgf:expression>
 			<nonterminal>NullLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Identifier</nonterminal>
-		<bgf:expression>
-			<nonterminal>IDENTIFIER</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2511,37 +2479,10 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>Expression3</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
 					<terminal>instanceof</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>Type</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>VariableDeclaratorsRest</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>VariableDeclaratorRest</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<star>
-						<bgf:expression>
-							<sequence>
-								<bgf:expression>
-									<terminal>,</terminal>
-								</bgf:expression>
-								<bgf:expression>
-									<nonterminal>VariableDeclarator</nonterminal>
-								</bgf:expression>
-							</sequence>
-						</bgf:expression>
-					</star>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -2568,6 +2509,19 @@
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>VariableDeclaratorRest</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ExpressionStatement</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>StatementExpression</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>;</terminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>

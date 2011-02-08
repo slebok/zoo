@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bgf:grammar xmlns:bgf="http://planet-sl.org/bgf">
+	<root>CompilationUnit</root>
 	<bgf:production>
 		<nonterminal>ClassBodyDeclarations</nonterminal>
 		<bgf:expression>
@@ -86,7 +87,7 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>InterfaceModifiers</nonterminal>
+							<nonterminal>Modifiers</nonterminal>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
@@ -217,28 +218,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MethodName</nonterminal>
-		<bgf:expression>
-			<nonterminal>Identifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodName</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>AmbiguousName</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>.</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>ClassMemberDeclaration</nonterminal>
 		<bgf:expression>
 			<nonterminal>FieldDeclaration</nonterminal>
@@ -302,25 +281,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>AbstractMethodModifiers</nonterminal>
-		<bgf:expression>
-			<nonterminal>AbstractMethodModifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>AbstractMethodModifiers</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>AbstractMethodModifiers</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>AbstractMethodModifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>PostIncrementExpression</nonterminal>
 		<bgf:expression>
 			<sequence>
@@ -334,31 +294,9 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>TypeName</nonterminal>
-		<bgf:expression>
-			<nonterminal>Identifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>TypeName</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>PackageName</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>.</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>InterfaceType</nonterminal>
 		<bgf:expression>
-			<nonterminal>TypeName</nonterminal>
+			<nonterminal>ClassOrInterfaceType</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -371,28 +309,6 @@
 		<nonterminal>BlockStatement</nonterminal>
 		<bgf:expression>
 			<nonterminal>Statement</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>IfThenStatement</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<terminal>if</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>(</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Expression</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>)</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Statement</nonterminal>
-				</bgf:expression>
-			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -415,24 +331,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ClassModifier</nonterminal>
-		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ClassModifier</nonterminal>
-		<bgf:expression>
-			<terminal>abstract</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ClassModifier</nonterminal>
-		<bgf:expression>
-			<terminal>final</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>SingleTypeImportDeclaration</nonterminal>
 		<bgf:expression>
 			<sequence>
@@ -440,7 +338,7 @@
 					<terminal>import</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>TypeName</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>;</terminal>
@@ -449,20 +347,29 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>InterfaceModifiers</nonterminal>
+		<nonterminal>ConditionalExpression</nonterminal>
 		<bgf:expression>
-			<nonterminal>InterfaceModifier</nonterminal>
+			<nonterminal>ConditionalOrExpression</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>InterfaceModifiers</nonterminal>
+		<nonterminal>ConditionalExpression</nonterminal>
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>InterfaceModifiers</nonterminal>
+					<nonterminal>ConditionalOrExpression</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>InterfaceModifier</nonterminal>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Expression</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>:</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>ConditionalExpression</nonterminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -649,17 +556,7 @@
 	<bgf:production>
 		<nonterminal>ConstantDeclaration</nonterminal>
 		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>ConstantModifiers</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Type</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>VariableDeclarator</nonterminal>
-				</bgf:expression>
-			</sequence>
+			<nonterminal>FieldDeclaration</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -809,39 +706,16 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>Literal</nonterminal>
+		<nonterminal>Finally</nonterminal>
 		<bgf:expression>
-			<nonterminal>IntegerLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Literal</nonterminal>
-		<bgf:expression>
-			<nonterminal>FloatingPointLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Literal</nonterminal>
-		<bgf:expression>
-			<nonterminal>BooleanLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Literal</nonterminal>
-		<bgf:expression>
-			<nonterminal>CharacterLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Literal</nonterminal>
-		<bgf:expression>
-			<nonterminal>StringLiteral</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>Literal</nonterminal>
-		<bgf:expression>
-			<nonterminal>NullLiteral</nonterminal>
+			<sequence>
+				<bgf:expression>
+					<terminal>finally</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Block</nonterminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -901,7 +775,7 @@
 	<bgf:production>
 		<nonterminal>PostfixExpression</nonterminal>
 		<bgf:expression>
-			<nonterminal>ExpressionName</nonterminal>
+			<nonterminal>Name</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -971,28 +845,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>PackageName</nonterminal>
-		<bgf:expression>
-			<nonterminal>Identifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>PackageName</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>PackageName</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>.</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>ConditionalAndExpression</nonterminal>
 		<bgf:expression>
 			<nonterminal>InclusiveOrExpression</nonterminal>
@@ -1010,25 +862,6 @@
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>InclusiveOrExpression</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifiers</nonterminal>
-		<bgf:expression>
-			<nonterminal>MethodModifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifiers</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>MethodModifiers</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>MethodModifier</nonterminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -1170,21 +1003,25 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ConstructorModifier</nonterminal>
+		<nonterminal>IfThenStatement</nonterminal>
 		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstructorModifier</nonterminal>
-		<bgf:expression>
-			<terminal>protected</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstructorModifier</nonterminal>
-		<bgf:expression>
-			<terminal>private</terminal>
+			<sequence>
+				<bgf:expression>
+					<terminal>if</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>(</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Expression</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>)</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Statement</nonterminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -1279,7 +1116,7 @@
 					<terminal>new</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>TypeName</nonterminal>
+					<nonterminal>ClassOrInterfaceType</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>DimExprs</nonterminal>
@@ -1319,18 +1156,6 @@
 					<terminal>}</terminal>
 				</bgf:expression>
 			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>InterfaceModifier</nonterminal>
-		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>InterfaceModifier</nonterminal>
-		<bgf:expression>
-			<terminal>abstract</terminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -1405,7 +1230,7 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>FieldModifiers</nonterminal>
+							<nonterminal>Modifiers</nonterminal>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
@@ -1456,7 +1281,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>MethodName</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>(</terminal>
@@ -1537,24 +1362,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>AbstractMethodModifiers</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>ResultType</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>MethodDeclarator</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>Throws</nonterminal>
-						</bgf:expression>
-					</optional>
+					<nonterminal>MethodHeader</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>;</terminal>
@@ -1595,7 +1403,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>ExpressionName</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>[</terminal>
@@ -1626,6 +1434,66 @@
 					<terminal>]</terminal>
 				</bgf:expression>
 			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>public</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>protected</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>private</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>static</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>abstract</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>final</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>native</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>synchronized</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>transient</terminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Modifier</nonterminal>
+		<bgf:expression>
+			<terminal>volatile</terminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -1746,7 +1614,7 @@
 					<terminal>package</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>PackageName</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>;</terminal>
@@ -1892,18 +1760,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>AbstractMethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>AbstractMethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>abstract</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>ConstantExpression</nonterminal>
 		<bgf:expression>
 			<nonterminal>Expression</nonterminal>
@@ -1935,16 +1791,39 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>Finally</nonterminal>
+		<nonterminal>Literal</nonterminal>
 		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<terminal>finally</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Block</nonterminal>
-				</bgf:expression>
-			</sequence>
+			<nonterminal>IntegerLiteral</nonterminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Literal</nonterminal>
+		<bgf:expression>
+			<nonterminal>FloatingPointLiteral</nonterminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Literal</nonterminal>
+		<bgf:expression>
+			<nonterminal>BooleanLiteral</nonterminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Literal</nonterminal>
+		<bgf:expression>
+			<nonterminal>CharacterLiteral</nonterminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Literal</nonterminal>
+		<bgf:expression>
+			<nonterminal>StringLiteral</nonterminal>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>Literal</nonterminal>
+		<bgf:expression>
+			<nonterminal>NullLiteral</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -1954,7 +1833,7 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>ConstructorModifiers</nonterminal>
+							<nonterminal>Modifiers</nonterminal>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
@@ -1982,7 +1861,7 @@
 					<terminal>import</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>PackageName</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>.</terminal>
@@ -2075,28 +1954,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>AmbiguousName</nonterminal>
-		<bgf:expression>
-			<nonterminal>Identifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>AmbiguousName</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>AmbiguousName</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>.</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>ContinueStatement</nonterminal>
 		<bgf:expression>
 			<sequence>
@@ -2126,34 +1983,6 @@
 		<nonterminal>ImportDeclaration</nonterminal>
 		<bgf:expression>
 			<nonterminal>TypeImportOnDemandDeclaration</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>CompilationUnit</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>PackageDeclaration</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>ImportDeclarations</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>TypeDeclarations</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2294,51 +2123,41 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
+		<nonterminal>Catches</nonterminal>
 		<bgf:expression>
-			<terminal>public</terminal>
+			<nonterminal>CatchClause</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
+		<nonterminal>Catches</nonterminal>
 		<bgf:expression>
-			<terminal>protected</terminal>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>Catches</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>CatchClause</nonterminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
+		<nonterminal>Modifiers</nonterminal>
 		<bgf:expression>
-			<terminal>private</terminal>
+			<nonterminal>Modifier</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
+		<nonterminal>Modifiers</nonterminal>
 		<bgf:expression>
-			<terminal>abstract</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>static</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>final</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>synchronized</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>MethodModifier</nonterminal>
-		<bgf:expression>
-			<terminal>native</terminal>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>Modifiers</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Modifier</nonterminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2370,43 +2189,9 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ConditionalExpression</nonterminal>
-		<bgf:expression>
-			<nonterminal>ConditionalOrExpression</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConditionalExpression</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>ConditionalOrExpression</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>?</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>Expression</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>:</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>ConditionalExpression</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>ClassOrInterfaceType</nonterminal>
 		<bgf:expression>
-			<nonterminal>ClassType</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ClassOrInterfaceType</nonterminal>
-		<bgf:expression>
-			<nonterminal>InterfaceType</nonterminal>
+			<nonterminal>Name</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2585,7 +2370,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>SimpleTypeName</nonterminal>
+					<nonterminal>SimpleName</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>(</terminal>
@@ -2628,7 +2413,7 @@
 	<bgf:production>
 		<nonterminal>ClassType</nonterminal>
 		<bgf:expression>
-			<nonterminal>TypeName</nonterminal>
+			<nonterminal>ClassOrInterfaceType</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2660,7 +2445,7 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>ClassModifiers</nonterminal>
+							<nonterminal>Modifiers</nonterminal>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
@@ -2701,6 +2486,13 @@
 					<nonterminal>PrimitiveType</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>Dims</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
 					<terminal>)</terminal>
 				</bgf:expression>
 				<bgf:expression>
@@ -2717,7 +2509,7 @@
 					<terminal>(</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>ReferenceType</nonterminal>
+					<nonterminal>Expression</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>)</terminal>
@@ -2736,20 +2528,16 @@
 					<terminal>(</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>PrimitiveType</nonterminal>
+					<nonterminal>Name</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>Dims</nonterminal>
-						</bgf:expression>
-					</optional>
+					<nonterminal>Dims</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>)</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>UnaryExpression</nonterminal>
+					<nonterminal>UnaryExpressionNotPlusMinus</nonterminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -2808,23 +2596,17 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ExpressionName</nonterminal>
-		<bgf:expression>
-			<nonterminal>Identifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ExpressionName</nonterminal>
+		<nonterminal>ArrayType</nonterminal>
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>AmbiguousName</nonterminal>
+					<nonterminal>PrimitiveType</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<terminal>.</terminal>
+					<terminal>[</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>Identifier</nonterminal>
+					<terminal>]</terminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -2834,7 +2616,23 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>Type</nonterminal>
+					<nonterminal>Name</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>[</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>]</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ArrayType</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>ArrayType</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>[</terminal>
@@ -2892,7 +2690,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>Identifer</nonterminal>
+					<nonterminal>Identifier</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>(</terminal>
@@ -2979,6 +2777,22 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
+		<nonterminal>QualifiedName</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>Name</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>.</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>Identifier</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
 		<nonterminal>NumericType</nonterminal>
 		<bgf:expression>
 			<nonterminal>IntegralType</nonterminal>
@@ -2993,7 +2807,7 @@
 	<bgf:production>
 		<nonterminal>LeftHandSide</nonterminal>
 		<bgf:expression>
-			<nonterminal>ExpressionName</nonterminal>
+			<nonterminal>Name</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3104,25 +2918,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>FieldModifiers</nonterminal>
-		<bgf:expression>
-			<nonterminal>FieldModifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifiers</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>FieldModifiers</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>FieldModifier</nonterminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>MethodBody</nonterminal>
 		<bgf:expression>
 			<nonterminal>Block</nonterminal>
@@ -3135,53 +2930,21 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>Catches</nonterminal>
+		<nonterminal>Name</nonterminal>
 		<bgf:expression>
-			<nonterminal>CatchClause</nonterminal>
+			<nonterminal>SimpleName</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>Catches</nonterminal>
+		<nonterminal>Name</nonterminal>
 		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>Catches</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>CatchClause</nonterminal>
-				</bgf:expression>
-			</sequence>
+			<nonterminal>QualifiedName</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ResultType</nonterminal>
+		<nonterminal>SimpleName</nonterminal>
 		<bgf:expression>
-			<nonterminal>Type</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ResultType</nonterminal>
-		<bgf:expression>
-			<terminal>void</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstructorModifiers</nonterminal>
-		<bgf:expression>
-			<nonterminal>ConstructorModifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstructorModifiers</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>ConstructorModifiers</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>ConstructorModifier</nonterminal>
-				</bgf:expression>
-			</sequence>
+			<nonterminal>Identifier</nonterminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3197,20 +2960,29 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ClassModifiers</nonterminal>
-		<bgf:expression>
-			<nonterminal>ClassModifier</nonterminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ClassModifiers</nonterminal>
+		<nonterminal>CompilationUnit</nonterminal>
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>ClassModifiers</nonterminal>
+					<optional>
+						<bgf:expression>
+							<nonterminal>PackageDeclaration</nonterminal>
+						</bgf:expression>
+					</optional>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>ClassModifier</nonterminal>
+					<optional>
+						<bgf:expression>
+							<nonterminal>ImportDeclarations</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>TypeDeclarations</nonterminal>
+						</bgf:expression>
+					</optional>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
@@ -3268,12 +3040,39 @@
 				<bgf:expression>
 					<optional>
 						<bgf:expression>
-							<nonterminal>MethodModifiers</nonterminal>
+							<nonterminal>Modifiers</nonterminal>
 						</bgf:expression>
 					</optional>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>ResultType</nonterminal>
+					<nonterminal>Type</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>MethodDeclarator</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>Throws</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>MethodHeader</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>Modifiers</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>void</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>MethodDeclarator</nonterminal>
@@ -3325,24 +3124,6 @@
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
-		<nonterminal>ConstantModifiers</nonterminal>
-		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstantModifiers</nonterminal>
-		<bgf:expression>
-			<terminal>static</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ConstantModifiers</nonterminal>
-		<bgf:expression>
-			<terminal>final</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
 		<nonterminal>FieldAccess</nonterminal>
 		<bgf:expression>
 			<sequence>
@@ -3391,48 +3172,6 @@
 					<nonterminal>TypeDeclaration</nonterminal>
 				</bgf:expression>
 			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>public</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>protected</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>private</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>final</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>static</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>transient</terminal>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>FieldModifier</nonterminal>
-		<bgf:expression>
-			<terminal>volatile</terminal>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
