@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<xbgf:replace>
+		<!--
+			This line in the original:
+				namespaceidentifier{namespace-body } 
+			was parsed as
+				namespaceidentifier "{" namespace-body "}" 
+			
+			The extractor is usually good with splitting non-separated symbols, but
+			this time it failed because it cannot be expected to split this into a sequence
+			of a terminal, a reserved nonterminal, a non-alphanum terminal and a defined nonterminal.
+		-->
+		<bgf:expression>
+			<nonterminal>namespaceidentifier</nonterminal>
+		</bgf:expression>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>namespace</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>identifier</nonterminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</xbgf:replace>
+</xbgf:sequence>

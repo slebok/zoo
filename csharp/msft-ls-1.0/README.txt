@@ -17,9 +17,3 @@ Errors spotted right away:
 	page 365, §C.1.7
 		the definition of keyword lacks: assembly module add remove get set field method param property
 	(added manually to keywords.lst)
-	
-	page 387, §C.2.13
-		[   global-attribute-target-specifier   attribute-list   ,]
-	instead of
-		[   global-attribute-target-specifier   attribute-list   , ]
-	(changed manually in msft-ls-1.0-annex.txt)

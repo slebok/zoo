@@ -11,9 +11,3 @@ WG14/N1256 ISO/IEC 9899:TC3
 
 © ISO/IEC 2007
 
-Errors spotted right away:
-
-	page 412, §A.2.2:
-		struct-or-union-speciﬁer ∗ 
-	(strange asterisk at the end of the line is manually removed)
-	(perhaps it indicates that the preceding line is the only change in the standard)

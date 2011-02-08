@@ -21,11 +21,7 @@ Printed in Switzerland
 
 Fixes that were necessary for extraction:
 
-		namespaceidentifier{namespace-body } 
-	was changed to
-		namespaceidentifier {namespace-body } 
-	(the extractor cannot be expected to split this into a sequence
-	of a terminal, a reserved nonterminal, a non-alphanum terminal and a defined nonterminal)
+	see correct.xbgf
 	
 	There are various layout problems (say, ";" formatted in italics),
 	but we don't even care because we copy-paste the raw text anyway.

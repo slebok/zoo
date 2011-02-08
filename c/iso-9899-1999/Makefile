@@ -1,13 +1,16 @@
+tooldir = ../../../../shared/tools
+
 build:
-	../../../../shared/tools/pdf2bgf iso-is-annex.txt iso-output.bgf banned-lines.lst keywords.lst
-	../../../../shared/tools/checkxml bgf iso-output.bgf
-	../../../../shared/tools/normbgf iso-output.bgf iso-is-grammar.bgf
-	../../../../shared/tools/bgf2bnf iso-is-grammar.bgf iso-is.bnf
+	${tooldir}/pdf2bgf iso-is-annex.txt iso-output.bgf banned-lines.lst keywords.lst
+	${tooldir}/checkxml bgf iso-output.bgf
+	${tooldir}/normbgf iso-output.bgf iso-is-grammar.bgf
+	${tooldir}/subgrammar iso-is-grammar.bgf translation-unit iso-is-grammar-fix.bgf
 	rm -f iso-output.bgf
 
 clean:
-	rm -f iso-output.bgf iso-is-grammar.bgf iso-is.bnf
+	rm -f iso-is-grammar.bgf iso-is-grammar-fix.bgf intermediate.lll
 
 test:
 	make build
-	../../../../shared/tools/gdt iso-is-grammar.bgf extracted-grammar.bgf
+	${tooldir}/gdts iso-is-grammar.bgf extracted-grammar.bgf
+	${tooldir}/gdts iso-is-grammar-fix.bgf recovered-grammar.bgf

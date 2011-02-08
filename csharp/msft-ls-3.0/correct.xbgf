@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<xbgf:define>
+		<!--
+			These nonterminals replace the terminals they define, because the terminals need to be parsed differently
+			(as two separate tokens, but without whitespace between them).
+		-->
+		<bgf:production>
+			<nonterminal>right-shift</nonterminal>
+			<bgf:expression>
+				<terminal>&gt;&gt;</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>right-shift-assignment</nonterminal>
+			<bgf:expression>
+				<terminal>&gt;&gt;=</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:replace>
+		<!--
+			page 73, §3.8; page 473, §B.2.1,
+				namespace-or-type-name   .   identifier   type-argument-listop
+			instead of
+				namespace-or-type-name   .   identifier   type-argument-listopt
+		-->
+		<bgf:expression>
+			<nonterminal>type-argument-listop</nonterminal>
+		</bgf:expression>
+		<bgf:expression>
+			<optional>
+				<bgf:expression>
+					<nonterminal>type-argument-list</nonterminal>
+				</bgf:expression>
+			</optional>
+		</bgf:expression>
+	</xbgf:replace>
+	<!--
+		All the following transformations solve this problem:
+		
+		page 200, §7.14; page 480, §B.2.4,
+			explicit-anonymous-function-parameter-list
+		instead of
+			explicit-anonymous-function-parameter-list:
+		and
+			implicit-anonymous-function-parameter-list
+		instead of
+			implicit-anonymous-function-parameter-list:
+	-->
+	<xbgf:extract>
+		<bgf:production>
+			<nonterminal>implicit-anonymous-function-parameter-list</nonterminal>
+			<bgf:expression>
+				<choice>
+					<bgf:expression>
+						<nonterminal>implicit-anonymous-function-parameter</nonterminal>
+					</bgf:expression>
+					<bgf:expression>
+						<sequence>
+							<bgf:expression>
+								<nonterminal>implicit-anonymous-function-parameter-list</nonterminal>
+							</bgf:expression>
+							<bgf:expression>
+								<terminal>,</terminal>
+							</bgf:expression>
+							<bgf:expression>
+								<nonterminal>implicit-anonymous-function-parameter</nonterminal>
+							</bgf:expression>
+						</sequence>
+					</bgf:expression>
+				</choice>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:extract>
+	<xbgf:vertical>
+		<nonterminal>implicit-anonymous-function-signature</nonterminal>
+	</xbgf:vertical>
+	<xbgf:remove>
+		<vertical>
+			<bgf:production>
+				<nonterminal>implicit-anonymous-function-signature</nonterminal>
+				<bgf:expression>
+					<nonterminal>implicit-anonymous-function-parameter-list</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:remove>
+	<xbgf:add>
+		<vertical>
+			<bgf:production>
+				<nonterminal>implicit-anonymous-function-signature</nonterminal>
+				<bgf:expression>
+					<nonterminal>implicit-anonymous-function-parameter</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:add>
+	<xbgf:horizontal>
+		<nonterminal>implicit-anonymous-function-signature</nonterminal>
+	</xbgf:horizontal>
+	<xbgf:extract>
+		<bgf:production>
+			<nonterminal>explicit-anonymous-function-parameter-list</nonterminal>
+			<bgf:expression>
+				<choice>
+					<bgf:expression>
+						<nonterminal>explicit-anonymous-function-parameter</nonterminal>
+					</bgf:expression>
+					<bgf:expression>
+						<sequence>
+							<bgf:expression>
+								<nonterminal>explicit-anonymous-function-parameter-list</nonterminal>
+							</bgf:expression>
+							<bgf:expression>
+								<terminal>,</terminal>
+							</bgf:expression>
+							<bgf:expression>
+								<nonterminal>explicit-anonymous-function-parameter</nonterminal>
+							</bgf:expression>
+						</sequence>
+					</bgf:expression>
+				</choice>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:extract>
+	<xbgf:vertical>
+		<nonterminal>explicit-anonymous-function-signature</nonterminal>
+	</xbgf:vertical>
+	<xbgf:remove>
+		<vertical>
+			<bgf:production>
+				<nonterminal>explicit-anonymous-function-signature</nonterminal>
+				<bgf:expression>
+					<nonterminal>explicit-anonymous-function-parameter-list</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:remove>
+</xbgf:sequence>

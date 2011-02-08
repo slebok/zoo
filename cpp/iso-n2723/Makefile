@@ -1,15 +1,19 @@
+tooldir = ../../../../shared/tools
+
 build:
 	grep -xv 'c ' iso-is-annex.txt > iso-is-annex-no-c.txt
 	perl -pi -w -e 's/hand ler/handler/g;' iso-is-annex-no-c.txt
-	../../../../shared/tools/pdf2bgf iso-is-annex-no-c.txt iso-output.bgf banned-lines.lst keywords.lst
-	../../../../shared/tools/checkxml bgf iso-output.bgf
-	../../../../shared/tools/normbgf iso-output.bgf iso-is-grammar.bgf
-	../../../../shared/tools/bgf2bnf iso-is-grammar.bgf iso-is.bnf
+	${tooldir}/pdf2bgf iso-is-annex-no-c.txt iso-output.bgf banned-lines.lst keywords.lst
+	${tooldir}/checkxml bgf iso-output.bgf
+	${tooldir}/normbgf iso-output.bgf iso-is-grammar.bgf
+	${tooldir}/xbgf correct.xbgf iso-is-grammar.bgf iso-output.bgf
+	${tooldir}/subgrammar iso-output.bgf translation-unit iso-is-grammar-fix.bgf
 	rm -f iso-output.bgf
 
 clean:
-	rm -f iso-output.bgf iso-is-grammar.bgf iso-is.bnf iso-is-annex-no-c.txt intermediate.lll
+	rm -f iso-is-grammar.bgf iso-is-grammar-fix.bgf intermediate.lll iso-is-annex-no-c.txt
 
 test:
 	make build
-	../../../../shared/tools/gdt iso-is-grammar.bgf extracted-grammar.bgf
+	${tooldir}/gdts iso-is-grammar.bgf extracted-grammar.bgf
+	${tooldir}/gdts iso-is-grammar-fix.bgf recovered-grammar.bgf
