@@ -1,11 +1,24 @@
+tdir = ../../../shared/tools
+sdflib = ../../../../sdf-library/trunk/library/languages
+
 all:
-	../../../shared/tools/sdf2bgf ../../../../sdf-library/trunk/library/languages/bnf/syntax/*.sdf  bnf-sdf.bgf
-	../../../shared/tools/sdf2bgf ../../../../sdf-library/trunk/library/languages/ebnf/syntax/*.sdf ebnf-sdf.bgf
-	../../../shared/tools/xbgf correct.bnf.xbgf bnf-sdf.bgf _.bgf
-	../../../shared/tools/subgrammar _.bgf Rules bnf-sdf.fix.bgf
-	../../../shared/tools/xbgf correct.ebnf.xbgf ebnf-sdf.bgf _.bgf
-	../../../shared/tools/subgrammar _.bgf Grammar ebnf-sdf.fix.bgf
-	@rm -f _.bgf
+	make build
+	make test
+
+build:
+	${tdir}/sdf2bgf ${sdflib}/bnf/syntax/*.sdf bnf.sdf.bgf
+	${tdir}/sdf2bgf ${sdflib}/ebnf/syntax/*.sdf ebnf.sdf.bgf
+	${tdir}/sdf2bgf ${sdflib}/yacc/syntax/*.sdf yacc.sdf.bgf
+	${tdir}/xbgf correct.bnf.xbgf bnf.sdf.bgf _.bgf
+	${tdir}/subgrammar _.bgf Rules bnf.sdf.fix.bgf
+	${tdir}/xbgf correct.ebnf.xbgf ebnf.sdf.bgf _.bgf
+	${tdir}/subgrammar _.bgf Grammar ebnf.sdf.fix.bgf
+	${tdir}/xbgf refactor.yacc.xbgf yacc.sdf.bgf _.bgf
+	${tdir}/subgrammar _.bgf Grammar yacc.sdf.fix.bgf
 
 test:
-	@ls -1 *.bgf | xargs -n1 ../../../shared/tools/validate bgf
+	ls -1 *.xbgf | xargs -n1 ${tdir}/validate xbgf
+	ls -1 *.bgf | xargs -n1 ${tdir}/validate bgf
+
+clean:
+	rm -f bnf.sdf.bgf ebnf.sdf.bgf bnf.sdf.fix.bgf ebnf.sdf.fix.bgf yacc.sdf.bgf yacc.sdf.fix.bgf _.bgf
