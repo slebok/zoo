@@ -8,7 +8,8 @@ build:
 	${tdir}/xbgf fold-names.xbgf ${dsl}.1.bgf ${dsl}.2.bgf
 	${tdir}/xbgf fold-meta.xbgf ${dsl}.2.bgf ${dsl}.3.bgf
 	${tdir}/xbgf rename-types.xbgf ${dsl}.3.bgf ${dsl}.4.bgf
-	${tdir}/xbgf beautify.xbgf ${dsl}.4.bgf ${dsl}.final.bgf
+	${tdir}/xbgf beautify.xbgf ${dsl}.4.bgf ${dsl}.5.bgf
+	${tdir}/subgrammar ${dsl}.5.bgf document ${dsl}.final.bgf
 	${tdir}/bgf2bnf ${dsl}.final.bgf ${dsl}.final.bnf
 
 test:

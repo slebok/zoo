@@ -4,7 +4,8 @@ tdir = ../../../../shared/tools
 
 build:
 	${tdir}/xsd2bgf ${src} ${dsl}.bgf
-	${tdir}/bgf2bnf ${dsl}.bgf ${dsl}.bnf
+	${tdir}/xbgf reroot.xbgf ${dsl}.bgf ${dsl}.fix.bgf
+	${tdir}/bgf2bnf ${dsl}.fix.bgf ${dsl}.bnf
 
 test:
 	@ls -1 *.bgf | xargs -n1 ${tdir}/validate bgf 
