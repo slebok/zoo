@@ -527,10 +527,10 @@
 					<nonterminal>logical-and-expression</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>logical-or-expression</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
 					<sequence>
+						<bgf:expression>
+							<nonterminal>logical-or-expression</nonterminal>
+						</bgf:expression>
 						<bgf:expression>
 							<terminal>||</terminal>
 						</bgf:expression>
@@ -601,7 +601,7 @@
 							<nonterminal>exclusive-or-expression</nonterminal>
 						</bgf:expression>
 						<bgf:expression>
-							<terminal>ˆ</terminal>
+							<terminal>^</terminal>
 						</bgf:expression>
 						<bgf:expression>
 							<nonterminal>and-expression</nonterminal>
@@ -1475,7 +1475,7 @@
 					<terminal>&amp;=</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<terminal>ˆ=</terminal>
+					<terminal>^=</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>|=</terminal>
@@ -1638,7 +1638,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>operator</nonterminal>
+					<terminal>operator</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>operator</nonterminal>
@@ -1698,7 +1698,7 @@
 					<terminal>%</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<terminal>ˆ</terminal>
+					<terminal>^</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>&amp;</terminal>
@@ -1737,7 +1737,7 @@
 					<terminal>%=</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<terminal>ˆ=</terminal>
+					<terminal>^=</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<terminal>&amp;=</terminal>
@@ -1810,7 +1810,7 @@
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<nonterminal>operator</nonterminal>
+					<terminal>operator</terminal>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>conversion-type-id</nonterminal>
@@ -2169,50 +2169,42 @@
 	<bgf:production>
 		<nonterminal>lambda-parameter-declaration</nonterminal>
 		<bgf:expression>
-			<choice>
+			<sequence>
 				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<terminal>(</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>lambda-parameter-declaration-list</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>)</terminal>
-						</bgf:expression>
-					</sequence>
+					<terminal>(</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<sequence>
+					<optional>
 						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<terminal>mutable</terminal>
-								</bgf:expression>
-							</optional>
+							<nonterminal>lambda-parameter-declaration-list</nonterminal>
 						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>exception-specification</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>lambda-return-type-clause</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-					</sequence>
+					</optional>
 				</bgf:expression>
-			</choice>
+				<bgf:expression>
+					<terminal>)</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<terminal>mutable</terminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>exception-specification</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>lambda-return-type-clause</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -2281,6 +2273,18 @@
 				<bgf:expression>
 					<sequence>
 						<bgf:expression>
+							<nonterminal>direct-declarator</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>parameter-declaration-clause</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+						<bgf:expression>
 							<optional>
 								<bgf:expression>
 									<nonterminal>cv-qualifier-seq</nonterminal>
@@ -2317,10 +2321,6 @@
 						<bgf:expression>
 							<terminal>)</terminal>
 						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
 						<bgf:expression>
 							<optional>
 								<bgf:expression>
@@ -2422,247 +2422,6 @@
 						</bgf:expression>
 						<bgf:expression>
 							<nonterminal>class-name</nonterminal>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-			</choice>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>ref-qualifier</nonterminal>
-		<bgf:expression>
-			<choice>
-				<bgf:expression>
-					<terminal>&amp;</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>&amp;&amp;</terminal>
-				</bgf:expression>
-			</choice>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>exception-specification</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<terminal>throw</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>(</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>type-id-list</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>)</terminal>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>type-id-list</nonterminal>
-		<bgf:expression>
-			<choice>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<nonterminal>type-id</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<terminal>...</terminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<nonterminal>type-id-list</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>,</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<nonterminal>type-id</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<terminal>...</terminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-			</choice>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>type-id</nonterminal>
-		<bgf:expression>
-			<sequence>
-				<bgf:expression>
-					<nonterminal>type-specifier-seq</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<optional>
-						<bgf:expression>
-							<nonterminal>abstract-declarator</nonterminal>
-						</bgf:expression>
-					</optional>
-				</bgf:expression>
-			</sequence>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>abstract-declarator</nonterminal>
-		<bgf:expression>
-			<choice>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<nonterminal>ptr-operator</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>abstract-declarator</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<nonterminal>direct-abstract-declarator</nonterminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>...</terminal>
-				</bgf:expression>
-			</choice>
-		</bgf:expression>
-	</bgf:production>
-	<bgf:production>
-		<nonterminal>direct-abstract-declarator</nonterminal>
-		<bgf:expression>
-			<choice>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>cv-qualifier-seq</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>ref-qualifier</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>exception-specification</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>direct-abstract-declarator</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>(</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<nonterminal>parameter-declaration-clause</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>)</terminal>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>cv-qualifier-seq</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>ref-qualifier</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>exception-specification</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>-&gt;</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<nonterminal>type-id</nonterminal>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>direct-abstract-declarator</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>[</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<optional>
-								<bgf:expression>
-									<nonterminal>constant-expression</nonterminal>
-								</bgf:expression>
-							</optional>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>]</terminal>
-						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
-						<bgf:expression>
-							<terminal>(</terminal>
-						</bgf:expression>
-						<bgf:expression>
-							<nonterminal>abstract-declarator</nonterminal>
-						</bgf:expression>
-						<bgf:expression>
-							<terminal>)</terminal>
 						</bgf:expression>
 					</sequence>
 				</bgf:expression>
@@ -2795,6 +2554,259 @@
 					</sequence>
 				</bgf:expression>
 			</choice>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>abstract-declarator</nonterminal>
+		<bgf:expression>
+			<choice>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>ptr-operator</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>abstract-declarator</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>direct-abstract-declarator</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>...</terminal>
+				</bgf:expression>
+			</choice>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>direct-abstract-declarator</nonterminal>
+		<bgf:expression>
+			<choice>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>direct-abstract-declarator</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>parameter-declaration-clause</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>cv-qualifier-seq</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>ref-qualifier</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>exception-specification</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>direct-abstract-declarator</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>parameter-declaration-clause</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>cv-qualifier-seq</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>ref-qualifier</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>exception-specification</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>-&gt;</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>type-id</nonterminal>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>direct-abstract-declarator</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>[</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<nonterminal>constant-expression</nonterminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>]</terminal>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>abstract-declarator</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+			</choice>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>ref-qualifier</nonterminal>
+		<bgf:expression>
+			<choice>
+				<bgf:expression>
+					<terminal>&amp;</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>&amp;&amp;</terminal>
+				</bgf:expression>
+			</choice>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>exception-specification</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>throw</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>(</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>type-id-list</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>)</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>type-id-list</nonterminal>
+		<bgf:expression>
+			<choice>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>type-id</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<terminal>...</terminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+				<bgf:expression>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>type-id-list</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>,</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>type-id</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<optional>
+								<bgf:expression>
+									<terminal>...</terminal>
+								</bgf:expression>
+							</optional>
+						</bgf:expression>
+					</sequence>
+				</bgf:expression>
+			</choice>
+		</bgf:expression>
+	</bgf:production>
+	<bgf:production>
+		<nonterminal>type-id</nonterminal>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<nonterminal>type-specifier-seq</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<optional>
+						<bgf:expression>
+							<nonterminal>abstract-declarator</nonterminal>
+						</bgf:expression>
+					</optional>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 	</bgf:production>
 	<bgf:production>
@@ -3406,6 +3418,12 @@
 						<bgf:expression>
 							<terminal>::</terminal>
 						</bgf:expression>
+						<bgf:expression>
+							<terminal>∼</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>type-name</nonterminal>
+						</bgf:expression>
 					</sequence>
 				</bgf:expression>
 				<bgf:expression>
@@ -3429,6 +3447,12 @@
 						<bgf:expression>
 							<terminal>::</terminal>
 						</bgf:expression>
+						<bgf:expression>
+							<terminal>∼</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>type-name</nonterminal>
+						</bgf:expression>
 					</sequence>
 				</bgf:expression>
 				<bgf:expression>
@@ -3447,10 +3471,6 @@
 								</bgf:expression>
 							</optional>
 						</bgf:expression>
-					</sequence>
-				</bgf:expression>
-				<bgf:expression>
-					<sequence>
 						<bgf:expression>
 							<terminal>∼</terminal>
 						</bgf:expression>
