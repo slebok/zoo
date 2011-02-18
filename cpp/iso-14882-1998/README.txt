@@ -25,4 +25,5 @@ Fixes that were necessary for extraction:
 	
 	There are various layout problems (say, ";" formatted in italics),
 	but we don't even care because we copy-paste the raw text anyway.
-	
+	The biggest one is in §A.9 [gram.class.derived] where the keyword
+	"virtual" is displayed as a nonterminal symbol.
