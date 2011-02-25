@@ -4,7 +4,7 @@ tdir = ../../../../shared/tools
 
 build:
 	${tdir}/xsd2bgf ${src} ${dsl}.bgf
-	${tdir}/xbgf reroot.xbgf ${dsl}.bgf ${dsl}.fix.bgf
+	${tdir}/subgrammar ${dsl}.bgf evolutionSequence ${dsl}.fix.bgf
 	${tdir}/bgf2bnf ${dsl}.fix.bgf ${dsl}.bnf
 
 test:
