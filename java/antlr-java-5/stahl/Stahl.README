@@ -1,0 +1,89 @@
+
+hello!
+
+this is the java 1.5 grammar which i thought i would post 3 weeks ago :)
+it took so long mostly because the proposed final draft version of JSR14
+came out on july 27 and that had some changes relative to the public
+review that came out in 2001 (!). i finally found the time for looking
+through the draft 3rd ed. of JLS that comes with JSR14-pfd last week.
+
+oh, and thanks to michael studman, without your java15.g i would not
+even have noticed that! a superficial look at that yielded some weird
+WILDCARD thing which my grammar was missing...
+
+since i need my grammar anyway (because i have a whitespace preserving
+grammar that is based on it and a serializing tree parser to match)
+i thought i might as well post it here despite java15.g being available.
+
+also, i have some issues with java15.g, which are fixed in my grammar:
+
+- the gtToReconcile stuff is way overkill. i replaced this with
+  a simple semantic predicate in typeArguments:
+	{inputState.guessing !=0 || ltCounter == currentLtLevel + 1}?
+  (oh, and thanks anyway, because i did not actually notice that
+  tree construction was broken in the first place)
+
+- the typeArguments for method calls was missing in rule identPrimary:
+  i found adding this rather difficult because unfortunately there is a
+  conflict between the (DOT typeArgs IDENT)* loop in identPrimary
+  and (DOT typeArgs "super")* in rule postfixExpression which was not
+  there before (k=2). 
+  my first idea was to put a syntactic predicate in the loop, but
+  then antlr (2.7.4) gave me a warning that this does not make sense.
+  so what i came up with is this, and it is rather ugly:
+	(	(DOT typeArguments IDENT) =>
+			DOT^ ta2:typeArguments! IDENT
+	|	{false}?	// FIXME: this is very ugly but it seems to work...
+	)*
+  This generates two warnings, one of which i could disable, the other
+  says that empty alternative does not make any sense in a loop.
+  Obvious feature request for the antlr authors:
+  Would it be possible to handle the case of a syntactic predicate in a
+  loop with only one alternative differently in antlr, i.e. such that
+  not matching the syntax predicate means the loop is broken out of?
+
+- newExpression is also missing typeArguments, but that is easy to fix
+
+- the handling of the various different field types has a lot of
+  duplication. this is factored a bit better in my grammar.
+
+a cool feature i have added is switchable keyword support. the
+"assert" and "enum" keywords can be dis/enabled at runtime. this is
+done via a string comparison in the lexer IDENT rule. i think this
+should not harm performance too much, but i have not benchmarked
+anything and do not particularly care anyway.
+
+oh, and i have also cleaned up the formatting to always use tabs instead
+of the hideous tabs/spaces mix it was before.
+
+my grammar is actually not much tested, but the whitespace preserving
+grammar based on it parses and serializes the entire aspectix cvs
+source tree (almost 3000 java 1.4 files) and also the sources of
+findbugs (which uses generics), as well as some custom written test
+cases.
+
+btw, does anyone know of a sizable code base that uses java 1.5
+features and is licensed under some kind of free software license?
+i.e. not the sun jdk 1.5 source...
+
+so, if anybody wants to comment on this or finds a bug, i'd be happy
+to hear from you.
+
+michael stahl
+
+PS: i hereby donate the code in the attached files, which was written
+    by myself except for the parts that are from the antlr distribution
+    and the parts taken from javaG.g by Matt Quail, to the public
+    domain.
+
+PPS: difference to java15.g
+  well, this was developed entirely independently from java15.g by
+  michael studman, and so there are quite some diffences in how
+  the rules are named, how the rules are factored, how the ast is
+  constructed and such. i have outlined the most important differences
+  in functionality in the "issues" section above. right now i am not
+  aware of any bugs in my grammar, but of course that does not mean
+  that there aren't any. so if these issues are fixed, the two
+  should basically do the same thing. everything else is basically
+  a matter of, hmmmm, taste maybe? oh, and my grammar has runtime
+  switchable keywords as added value :)
