@@ -1,9 +1,12 @@
 all:
 	make build
-	#make run
+	make run
 
 build:
-	java -cp ../../../../../download/antlr-3.2.jar antlr.Tool java1.5.g
+	java -cp ../../../../../download/antlr-3.2.jar antlr.Tool java1.5.g ../studman/java15.tree.g
+
+run:
+	java -cp $$CLASSPATH:../../../../../download/antlr-3.2.jar TestIO TestIO.java
 
 clean:
-	rm Java.tokens Java*.java *.class
+	rm -f JavaToken*.java JavaLexer*.java JavaRecognizer*.java *.class *.smap
