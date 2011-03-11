@@ -141,5 +141,3 @@ EscapeSequence: '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')|   UnicodeEscape    | 
 UnicodeEscape: '\\' 'u' HexDigit HexDigit HexDigit HexDigit    ;
 ENUM: 'enum';
 ASSERT: 'assert';
-Identifier: Letter (Letter|JavaIDDigit)*;
-WS: (' '|'\r'|'\t'|'\u000C'|'\n');
