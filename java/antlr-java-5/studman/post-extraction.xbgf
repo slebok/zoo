@@ -18,24 +18,25 @@
 			<epsilon/>
 		</bgf:expression>
 	</xbgf:replace>
-<!-- this is a simplification -->
+<!-- this is a walkaround for not having negative character classes -->
+	<xbgf:replace>
+		<bgf:expression>
+			<nonterminal>BGF_STRING</nonterminal>
+		</bgf:expression>
+		<bgf:expression>
+			<value>string</value>
+		</bgf:expression>
+	</xbgf:replace>
+<!-- this nonterminal was introduced by a semantic action hack -->
 	<xbgf:define>
 		<bgf:production>
-			<nonterminal>IDENT</nonterminal>
+			<nonterminal>TRIPLE_DOT</nonterminal>
 			<bgf:expression>
-				<value>string</value>
+				<terminal>...</terminal>
 			</bgf:expression>
 		</bgf:production>
 	</xbgf:define>
-<!-- this is a minor simplification (leading zeros, ...) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>NUM_INT</nonterminal>
-			<bgf:expression>
-				<value>int</value>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
+
 <!-- this is a minor simplification (as for NUM_INT), otherwise a proper definition -->
 	<xbgf:define>
 		<bgf:production>
@@ -54,44 +55,6 @@
 								<terminal>L</terminal>
 							</bgf:expression>
 						</choice>
-					</bgf:expression>
-				</sequence>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
-<!-- this is a simplification (no escape sequences) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>STRING_LITERAL</nonterminal>
-			<bgf:expression>
-				<sequence>
-					<bgf:expression>
-						<terminal>"</terminal>
-					</bgf:expression>
-					<bgf:expression>
-						<value>string</value>
-					</bgf:expression>
-					<bgf:expression>
-						<terminal>"</terminal>
-					</bgf:expression>
-				</sequence>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
-<!-- this is a simplification (no escape sequences) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>CHAR_LITERAL</nonterminal>
-			<bgf:expression>
-				<sequence>
-					<bgf:expression>
-						<terminal>'</terminal>
-					</bgf:expression>
-					<bgf:expression>
-						<value>string</value>
-					</bgf:expression>
-					<bgf:expression>
-						<terminal>'</terminal>
 					</bgf:expression>
 				</sequence>
 			</bgf:expression>

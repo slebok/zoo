@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
-	<!-- this is a patch -->
+<!-- this is a patch -->
 	<xbgf:replace>
 		<bgf:expression>
 			<nonterminal>EPSILON</nonterminal>
@@ -9,60 +9,13 @@
 			<epsilon/>
 		</bgf:expression>
 	</xbgf:replace>
-	<!-- this is a simplification -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>IDENT</nonterminal>
-			<bgf:expression>
-				<value>string</value>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
-	<!-- this is a minor simplification (leading zeros, ...) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>DECIMAL_LITERAL</nonterminal>
-			<bgf:expression>
-				<value>int</value>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
-	<!-- this is a simplification (no escape sequences) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>STRING_LITERAL</nonterminal>
-			<bgf:expression>
-				<sequence>
-					<bgf:expression>
-						<terminal>"</terminal>
-					</bgf:expression>
-					<bgf:expression>
-						<value>string</value>
-					</bgf:expression>
-					<bgf:expression>
-						<terminal>"</terminal>
-					</bgf:expression>
-				</sequence>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
-	<!-- this is a simplification (no escape sequences) -->
-	<xbgf:define>
-		<bgf:production>
-			<nonterminal>CHARACTER_LITERAL</nonterminal>
-			<bgf:expression>
-				<sequence>
-					<bgf:expression>
-						<terminal>'</terminal>
-					</bgf:expression>
-					<bgf:expression>
-						<value>string</value>
-					</bgf:expression>
-					<bgf:expression>
-						<terminal>'</terminal>
-					</bgf:expression>
-				</sequence>
-			</bgf:expression>
-		</bgf:production>
-	</xbgf:define>
+<!-- this is a walkaround for not having negative character classes -->
+	<xbgf:replace>
+		<bgf:expression>
+			<nonterminal>BGF_STRING</nonterminal>
+		</bgf:expression>
+		<bgf:expression>
+			<value>string</value>
+		</bgf:expression>
+	</xbgf:replace>
 </xbgf:sequence>
