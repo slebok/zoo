@@ -27,7 +27,7 @@
 			<epsilon/>
 		</bgf:expression>
 	</xbgf:replace>
-<!-- this is an error 1 in the grammar (!!!) -->
+<!-- this nonterminal was introduced by a semantic action hack -->
 	<xbgf:define>
 		<bgf:production>
 			<nonterminal>ENUM</nonterminal>
@@ -36,12 +36,99 @@
 			</bgf:expression>
 		</bgf:production>
 	</xbgf:define>
-<!-- this is an error 2 in the grammar (!!!) -->
+<!-- this nonterminal was introduced by a semantic action hack -->
 	<xbgf:define>
 		<bgf:production>
 			<nonterminal>ASSERT</nonterminal>
 			<bgf:expression>
 				<terminal>assert</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+<!-- this is a minor simplification, otherwise a proper definition -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>NUM_LONG</nonterminal>
+			<bgf:expression>
+				<sequence>
+					<bgf:expression>
+						<value>int</value>
+					</bgf:expression>
+					<bgf:expression>
+						<choice>
+							<bgf:expression>
+								<terminal>l</terminal>
+							</bgf:expression>
+							<bgf:expression>
+								<terminal>L</terminal>
+							</bgf:expression>
+						</choice>
+					</bgf:expression>
+				</sequence>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+<!-- simplification because NUM_INT is too complicated and idiosyncratic -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>NUM_FLOAT</nonterminal>
+			<bgf:expression>
+				<sequence>
+					<bgf:expression>
+						<value>int</value>
+					</bgf:expression>
+					<bgf:expression>
+						<optional>
+							<bgf:expression>
+								<nonterminal>EXPONENT</nonterminal>
+							</bgf:expression>
+						</optional>
+					</bgf:expression>
+					<bgf:expression>
+						<choice>
+							<bgf:expression>
+								<terminal>f</terminal>
+							</bgf:expression>
+							<bgf:expression>
+								<terminal>F</terminal>
+							</bgf:expression>
+						</choice>
+					</bgf:expression>
+				</sequence>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+<!-- simplification because NUM_INT is too complicated and idiosyncratic -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>NUM_DOUBLE</nonterminal>
+			<bgf:expression>
+				<sequence>
+					<bgf:expression>
+						<value>int</value>
+					</bgf:expression>
+					<bgf:expression>
+						<optional>
+							<bgf:expression>
+								<nonterminal>EXPONENT</nonterminal>
+							</bgf:expression>
+						</optional>
+					</bgf:expression>
+					<bgf:expression>
+						<optional>
+							<bgf:expression>
+								<choice>
+									<bgf:expression>
+										<terminal>d</terminal>
+									</bgf:expression>
+									<bgf:expression>
+										<terminal>D</terminal>
+									</bgf:expression>
+								</choice>
+							</bgf:expression>
+						</optional>
+					</bgf:expression>
+				</sequence>
 			</bgf:expression>
 		</bgf:production>
 	</xbgf:define>
