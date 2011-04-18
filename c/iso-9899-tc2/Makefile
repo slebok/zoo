@@ -6,7 +6,7 @@ build:
 	${tooldir}/normbgf iso-output.bgf iso-is-grammar.bgf
 	${tooldir}/xbgf correct.xbgf iso-is-grammar.bgf iso-output.bgf
 	${tooldir}/subgrammar iso-is-grammar.bgf translation-unit iso-is-grammar-fix.bgf
-	rm -f iso-output.bgf intermediate.lll
+	rm -f iso-output.bgf
 
 test:
 	make build
