@@ -7,7 +7,6 @@ extract:
 	cd parr && make extract
 	cd stahl && make extract
 	cd studman && make extract
-	rm */*.ext.bgf */*.fix.bgf
 
 test:
 	ls -1 *.bgf */*.bgf | xargs -n1 ../../../../shared/tools/validate bgf
