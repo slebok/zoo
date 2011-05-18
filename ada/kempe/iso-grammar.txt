@@ -491,7 +491,7 @@ aggregate:
  ;
 
 record_aggregate:
- (record_component_association_list) 
+ "(" record_component_association_list ")" 
  ;
 
 record_component_association_list:
@@ -509,7 +509,7 @@ component_choice_list:
  ;
 
 extension_aggregate:
-    (ancestor_part with record_component_association_list) 
+    "(" ancestor_part with record_component_association_list ")"
  ;
 
 ancestor_part:
@@ -674,7 +674,7 @@ statement_identifier:
  ;
 
 assignment_statement:
- variable_name ASSUMES expression
+ variable_name ASSUMES expression ";"
  ;
 
 if_statement:
@@ -704,6 +704,7 @@ case_statement_alternative:
  ;
 
 loop_statement:
+    (loop_statement_identifier ":")?
        ( iteration_scheme )? loop
          sequence_of_statements
        end loop  ( loop_identifier )? ";" 
@@ -719,6 +720,7 @@ loop_parameter_specification:
  ;
 
 block_statement:
+   (block_statement_identifier ":")?
         ( declare
             declarative_part )?
         begin
@@ -1189,7 +1191,7 @@ protected_body_stub:
  ;
 
 subunit:
- separate (parent_unit_name) proper_body 
+ separate "(" parent_unit_name ")" proper_body 
  ;
 
 exception_declaration:
@@ -1204,6 +1206,7 @@ handled_sequence_of_statements:
  ;
 
 exception_handler:
+  when (choice_parameter_specification ":")? exception_choice ("|" exception_choice)* "=>"
      sequence_of_statements 
  ;
 
@@ -1420,4 +1423,5 @@ at_clause:
  ;
 
 mod_clause:
- at mod static_expression;
+ at mod static_expression ";"
+ ;

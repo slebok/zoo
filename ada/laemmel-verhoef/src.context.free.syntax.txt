@@ -1,0 +1,1047 @@
+pragma 	= 	pragma identifier [ "(" pragma_argument_association { "," pragma_argument_association }* ")" ] ";"
+
+Diagrams  Uses  Top  Help
+
+pragma_argument_association 	= 	( [ pragma_argument_identifier "=>" ] name | [ pragma_argument_identifier "=>" ] expression )
+
+Diagrams  Uses  Top  Help
+
+basic_declaration 	= 	( type_declaration | subtype_declaration | object_declaration | number_declaration | subprogram_declaration | abstract_subprogram_declaration | package_declaration | renaming_declaration | exception_declaration | generic_declaration | generic_instantiation )
+
+Diagrams  Uses  Top  Help
+
+defining_identifier 	= 	identifier
+
+Diagrams  Uses  Top  Help
+
+type_declaration 	= 	( full_type_declaration | incomplete_type_declaration | private_type_declaration | private_extension_declaration )
+
+Diagrams  Uses  Top  Help
+
+full_type_declaration 	= 	( "type" defining_identifier [ known_discriminant_part ] "is" type_definition ";" | task_type_declaration | protected_type_declaration )
+
+Diagrams  Uses  Top  Help
+
+type_definition 	= 	( enumeration_type_definition | integer_type_definition | real_type_definition | array_type_definition | record_type_definition | access_type_definition | derived_type_definition )
+
+Diagrams  Uses  Top  Help
+
+subtype_declaration 	= 	"subtype" defining_identifier "is" subtype_indication ";"
+
+Diagrams  Uses  Top  Help
+
+subtype_indication 	= 	subtype_mark [ constraint ]
+
+Diagrams  Uses  Top  Help
+
+subtype_mark 	= 	subtype_name
+
+Diagrams  Uses  Top  Help
+
+constraint 	= 	( scalar_constraint | composite_constraint )
+
+Diagrams  Uses  Top  Help
+
+scalar_constraint 	= 	( range_constraint | digits_constraint | delta_constraint )
+
+Diagrams  Uses  Top  Help
+
+composite_constraint 	= 	( index_constraint | discriminant_constraint )
+
+Diagrams  Uses  Top  Help
+
+object_declaration 	= 	( defining_identifier_list ":" [ "aliased" ] [ "constant" ] subtype_indication [ ":=" expression ] ";" | defining_identifier_list ":" [ "aliased" ] [ "constant" ] array_type_definition [ ":=" expression ] ";" | single_task_declaration | single_protected_declaration )
+
+Diagrams  Uses  Top  Help
+
+defining_identifier_list 	= 	defining_identifier { "," defining_identifier }*
+
+Diagrams  Uses  Top  Help
+
+number_declaration 	= 	defining_identifier_list ":" "constant" ":=" static_expression ";"
+
+Diagrams  Uses  Top  Help
+
+derived_type_definition 	= 	[ "abstract" ] "new" parent_subtype_indication [ record_extension_part ]
+
+Diagrams  Uses  Top  Help
+
+range_constraint 	= 	"range" range_definition
+
+Diagrams  Uses  Top  Help
+
+range_definition 	= 	( range_attribute_reference | simple_expression ".." simple_expression )
+
+Diagrams  Uses  Top  Help
+
+enumeration_type_definition 	= 	"(" enumeration_literal_specification { "," enumeration_literal_specification }* ")"
+
+Diagrams  Uses  Top  Help
+
+enumeration_literal_specification 	= 	( defining_identifier | defining_character_literal )
+
+Diagrams  Uses  Top  Help
+
+defining_character_literal 	= 	character_literal
+
+Diagrams  Uses  Top  Help
+
+integer_type_definition 	= 	( signed_integer_type_definition | modular_type_definition )
+
+Diagrams  Uses  Top  Help
+
+signed_integer_type_definition 	= 	"range" static_simple_expression ".." static_simple_expression
+
+Diagrams  Uses  Top  Help
+
+modular_type_definition 	= 	"mod" static_expression
+
+Diagrams  Uses  Top  Help
+
+real_type_definition 	= 	( floating_point_definition | fixed_point_definition )
+
+Diagrams  Uses  Top  Help
+
+floating_point_definition 	= 	"digits" static_expression [ real_range_specification ]
+
+Diagrams  Uses  Top  Help
+
+real_range_specification 	= 	"range" static_simple_expression ".." static_simple_expression
+
+Diagrams  Uses  Top  Help
+
+fixed_point_definition 	= 	( ordinary_fixed_point_definition | decimal_fixed_point_definition )
+
+Diagrams  Uses  Top  Help
+
+ordinary_fixed_point_definition 	= 	"delta" static_expression real_range_specification
+
+Diagrams  Uses  Top  Help
+
+decimal_fixed_point_definition 	= 	"delta" static_expression "digits" static_expression [ real_range_specification ]
+
+Diagrams  Uses  Top  Help
+
+digits_constraint 	= 	"digits" static_expression [ range_constraint ]
+
+Diagrams  Uses  Top  Help
+
+array_type_definition 	= 	( unconstrained_array_definition | constrained_array_definition )
+
+Diagrams  Uses  Top  Help
+
+unconstrained_array_definition 	= 	"array" "(" index_subtype_definition { "," index_subtype_definition }* ")" "of" component_definition
+
+Diagrams  Uses  Top  Help
+
+index_subtype_definition 	= 	subtype_mark "range" "<>"
+
+Diagrams  Uses  Top  Help
+
+constrained_array_definition 	= 	"array" "(" discrete_subtype_definition { "," discrete_subtype_definition }* ")" "of" component_definition
+
+Diagrams  Uses  Top  Help
+
+discrete_subtype_definition 	= 	( discrete_subtype_indication | "range" )
+
+Diagrams  Uses  Top  Help
+
+component_definition 	= 	[ "aliased" ] subtype_indication
+
+Diagrams  Uses  Top  Help
+
+index_constraint 	= 	"(" discrete_range { "," discrete_range }* ")"
+
+Diagrams  Uses  Top  Help
+
+discrete_range 	= 	( discrete_subtype_indication | range_definition )
+
+Diagrams  Uses  Top  Help
+
+discriminant_part 	= 	( unknown_discriminant_part | known_discriminant_part )
+
+Diagrams  Uses  Top  Help
+
+unknown_discriminant_part 	= 	"(" "<>" ")"
+
+Diagrams  Uses  Top  Help
+
+known_discriminant_part 	= 	"(" discriminant_specification { ";" discriminant_specification }* ")"
+
+Diagrams  Uses  Top  Help
+
+discriminant_specification 	= 	( defining_identifier_list ":" subtype_mark [ ":=" default_expression ] | defining_identifier_list ":" access_definition [ ":=" default_expression ] )
+
+Diagrams  Uses  Top  Help
+
+default_expression 	= 	expression
+
+Diagrams  Uses  Top  Help
+
+discriminant_constraint 	= 	"(" discriminant_association { "," discriminant_association }* ")"
+
+Diagrams  Uses  Top  Help
+
+discriminant_association 	= 	[ discriminant_selector_name { "|" discriminant_selector_name }* "=>" ] expression
+
+Diagrams  Uses  Top  Help
+
+record_type_definition 	= 	[ [ "abstract" ] "tagged" ] [ "limited" ] record_definition
+
+Diagrams  Uses  Top  Help
+
+record_definition 	= 	( "record" component_list "end" "record" | "null" "record" )
+
+Diagrams  Uses  Top  Help
+
+component_list 	= 	( component_item { component_item }* | { component_item }* variant_part | "null" ";" )
+
+Diagrams  Uses  Top  Help
+
+component_item 	= 	( component_declaration | representation_clause )
+
+Diagrams  Uses  Top  Help
+
+component_declaration 	= 	defining_identifier_list ":" component_definition [ ":=" default_expression ] ";"
+
+Diagrams  Uses  Top  Help
+
+variant_part 	= 	"case" discriminant_direct_name "is" variant { variant }* "end" "case" ";"
+
+Diagrams  Uses  Top  Help
+
+variant 	= 	"when" discrete_choice_list "=>" component_list
+
+Diagrams  Uses  Top  Help
+
+discrete_choice_list 	= 	discrete_choice { "|" discrete_choice }*
+
+Diagrams  Uses  Top  Help
+
+discrete_choice 	= 	( expression | discrete_range | "others" )
+
+Diagrams  Uses  Top  Help
+
+record_extension_part 	= 	"with" record_definition
+
+Diagrams  Uses  Top  Help
+
+access_type_definition 	= 	( access_to_object_definition | access_to_subprogram_definition )
+
+Diagrams  Uses  Top  Help
+
+access_to_object_definition 	= 	"access" [ general_access_modifier ] subtype_indication
+
+Diagrams  Uses  Top  Help
+
+general_access_modifier 	= 	( "all" | "constant" )
+
+Diagrams  Uses  Top  Help
+
+access_to_subprogram_definition 	= 	( "access" [ "protected" ] "procedure" parameter_profile | "access" [ "protected" ] "function" parameter_and_result_profile )
+
+Diagrams  Uses  Top  Help
+
+access_definition 	= 	"access" subtype_mark
+
+Diagrams  Uses  Top  Help
+
+incomplete_type_declaration 	= 	"type" defining_identifier [ discriminant_part ] ";"
+
+Diagrams  Uses  Top  Help
+
+declarative_part 	= 	{ declarative_item }*
+
+Diagrams  Uses  Top  Help
+
+declarative_item 	= 	( basic_declarative_item | body )
+
+Diagrams  Uses  Top  Help
+
+basic_declarative_item 	= 	( basic_declaration | representation_clause | use_clause )
+
+Diagrams  Uses  Top  Help
+
+body 	= 	( proper_body | body_stub )
+
+Diagrams  Uses  Top  Help
+
+proper_body 	= 	( subprogram_body | package_body | task_body | protected_body )
+
+Diagrams  Uses  Top  Help
+
+name 	= 	( direct_name | explicit_dereference | indexed_component | slice | selected_component | attribute_reference | type_conversion | function_call | character_literal )
+
+Diagrams  Uses  Top  Help
+
+direct_name 	= 	( identifier | operator_symbol )
+
+Diagrams  Uses  Top  Help
+
+prefix 	= 	( name | implicit_dereference )
+
+Diagrams  Uses  Top  Help
+
+explicit_dereference 	= 	name "." "all"
+
+Diagrams  Uses  Top  Help
+
+implicit_dereference 	= 	name
+
+Diagrams  Uses  Top  Help
+
+indexed_component 	= 	prefix "(" expression { "," expression }* ")"
+
+Diagrams  Uses  Top  Help
+
+slice 	= 	prefix "(" discrete_range ")"
+
+Diagrams  Uses  Top  Help
+
+selected_component 	= 	prefix "." selector_name
+
+Diagrams  Uses  Top  Help
+
+selector_name 	= 	( identifier | character_literal | operator_symbol )
+
+Diagrams  Uses  Top  Help
+
+attribute_reference 	= 	prefix "'" attribute_designator
+
+Diagrams  Uses  Top  Help
+
+attribute_designator 	= 	( identifier [ "(" static_expression ")" ] | "Access" | "Delta" | "Digits" )
+
+Diagrams  Uses  Top  Help
+
+range_attribute_reference 	= 	prefix "'" range_attribute_designator
+
+Diagrams  Uses  Top  Help
+
+range_attribute_designator 	= 	"Range" [ "(" static_expression ")" ]
+
+Diagrams  Uses  Top  Help
+
+aggregate 	= 	( record_aggregate | extension_aggregate | array_aggregate )
+
+Diagrams  Uses  Top  Help
+
+record_aggregate 	= 	"(" record_component_association_list ")"
+
+Diagrams  Uses  Top  Help
+
+record_component_association_list 	= 	( record_component_association { "," record_component_association }* | "null" "record" )
+
+Diagrams  Uses  Top  Help
+
+record_component_association 	= 	[ component_choice_list "=>" ] expression
+
+Diagrams  Uses  Top  Help
+
+component_choice_list 	= 	( component_selector_name { "|" component_selector_name }* | "others" )
+
+Diagrams  Uses  Top  Help
+
+extension_aggregate 	= 	"(" ancestor_part "with" record_component_association_list ")"
+
+Diagrams  Uses  Top  Help
+
+ancestor_part 	= 	( expression | subtype_mark )
+
+Diagrams  Uses  Top  Help
+
+array_aggregate 	= 	( positional_array_aggregate | named_array_aggregate )
+
+Diagrams  Uses  Top  Help
+
+positional_array_aggregate 	= 	( "(" expression "," expression { "," expression }* ")" | "(" expression { "," expression }* "," "others" "=>" expression ")" )
+
+Diagrams  Uses  Top  Help
+
+named_array_aggregate 	= 	"(" array_component_association { "," array_component_association }* ")"
+
+Diagrams  Uses  Top  Help
+
+array_component_association 	= 	discrete_choice_list "=>" expression
+
+Diagrams  Uses  Top  Help
+
+expression 	= 	( relation { "and" relation }* | relation { "and" "then" relation }* | relation { "or" relation }* | relation { "or" "else" relation }* | relation { "xor" relation }* )
+
+Diagrams  Uses  Top  Help
+
+relation 	= 	( simple_expression [ relational_operator simple_expression ] | simple_expression [ "not" ] "in" range_definition | simple_expression [ "not" ] "in" subtype_mark )
+
+Diagrams  Uses  Top  Help
+
+simple_expression 	= 	[ unary_adding_operator ] term { binary_adding_operator term }*
+
+Diagrams  Uses  Top  Help
+
+term 	= 	factor { multiplying_operator factor }*
+
+Diagrams  Uses  Top  Help
+
+factor 	= 	( primary [ "**" primary ] | "abs" primary | "not" primary )
+
+Diagrams  Uses  Top  Help
+
+primary 	= 	( numeric_literal | "null" | string_literal | aggregate | name | qualified_expression | allocator | "(" expression ")" )
+
+Diagrams  Uses  Top  Help
+
+logical_operator 	= 	( "and" | "or" | "xor" )
+
+Diagrams  Uses  Top  Help
+
+relational_operator 	= 	( "=" | "/=" | "<" | "<=" | ">" | ">=" )
+
+Diagrams  Uses  Top  Help
+
+binary_adding_operator 	= 	( "+" | "-" | "&" )
+
+Diagrams  Uses  Top  Help
+
+unary_adding_operator 	= 	( "+" | "--" )
+
+Diagrams  Uses  Top  Help
+
+multiplying_operator 	= 	( "*" | "/" | "mod" | "rem" )
+
+Diagrams  Uses  Top  Help
+
+highest_precedence_operator 	= 	( "**" | "abs" | "not" )
+
+Diagrams  Uses  Top  Help
+
+type_conversion 	= 	( subtype_mark "(" expression ")" | subtype_mark "(" name ")" )
+
+Diagrams  Uses  Top  Help
+
+qualified_expression 	= 	( subtype_mark "'" "(" expression ")" | subtype_mark "'" aggregate )
+
+Diagrams  Uses  Top  Help
+
+allocator 	= 	( "new" subtype_indication | "new" qualified_expression )
+
+Diagrams  Uses  Top  Help
+
+sequence_of_statements 	= 	statement { statement }*
+
+Diagrams  Uses  Top  Help
+
+statement 	= 	( { label }* simple_statement | { label }* compound_statement )
+
+Diagrams  Uses  Top  Help
+
+simple_statement 	= 	( null_statement | assignment_statement | exit_statement | goto_statement | procedure_call_statement | return_statement | entry_call_statement | requeue_statement | delay_statement | abort_statement | raise_statement | code_statement )
+
+Diagrams  Uses  Top  Help
+
+compound_statement 	= 	( if_statement | case_statement | loop_statement | block_statement | accept_statement | select_statement )
+
+Diagrams  Uses  Top  Help
+
+null_statement 	= 	"null" ";"
+
+Diagrams  Uses  Top  Help
+
+label 	= 	"<<" label_statement_identifier ">>"
+
+Diagrams  Uses  Top  Help
+
+statement_identifier 	= 	direct_name
+
+Diagrams  Uses  Top  Help
+
+assignment_statement 	= 	variable_name ":=" expression ";"
+
+Diagrams  Uses  Top  Help
+
+if_statement 	= 	"if" condition "then" sequence_of_statements { "elsif" condition "then" sequence_of_statements }* [ "else" sequence_of_statements ] "end" "if" ";"
+
+Diagrams  Uses  Top  Help
+
+condition 	= 	boolean_expression
+
+Diagrams  Uses  Top  Help
+
+case_statement 	= 	"case" expression "is" case_statement_alternative { case_statement_alternative }* "end" "case" ";"
+
+Diagrams  Uses  Top  Help
+
+case_statement_alternative 	= 	"when" discrete_choice_list "=>" sequence_of_statements
+
+Diagrams  Uses  Top  Help
+
+loop_statement 	= 	[ loop_statement_identifier ":" ] [ iteration_scheme ] "loop" sequence_of_statements "end" "loop" [ loop_identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+iteration_scheme 	= 	( "while" condition | "for" loop_parameter_specification )
+
+Diagrams  Uses  Top  Help
+
+loop_parameter_specification 	= 	defining_identifier "in" [ "reverse" ] discrete_subtype_definition
+
+Diagrams  Uses  Top  Help
+
+block_statement 	= 	[ block_statement_identifier ":" ] [ "declare" declarative_part ] "begin" handled_sequence_of_statements "end" [ block_identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+exit_statement 	= 	"exit" [ loop_name ] [ "when" condition ] ";"
+
+Diagrams  Uses  Top  Help
+
+goto_statement 	= 	"goto" label_name ";"
+
+Diagrams  Uses  Top  Help
+
+subprogram_declaration 	= 	subprogram_specification ";"
+
+Diagrams  Uses  Top  Help
+
+abstract_subprogram_declaration 	= 	subprogram_specification "is" "abstract" ";"
+
+Diagrams  Uses  Top  Help
+
+subprogram_specification 	= 	( "procedure" defining_program_unit_name parameter_profile | "function" defining_designator parameter_and_result_profile )
+
+Diagrams  Uses  Top  Help
+
+designator 	= 	( [ parent_unit_name "." ] identifier | operator_symbol )
+
+Diagrams  Uses  Top  Help
+
+defining_designator 	= 	( defining_program_unit_name | defining_operator_symbol )
+
+Diagrams  Uses  Top  Help
+
+defining_program_unit_name 	= 	[ parent_unit_name "." ] defining_identifier
+
+Diagrams  Uses  Top  Help
+
+operator_symbol 	= 	string_literal
+
+Diagrams  Uses  Top  Help
+
+defining_operator_symbol 	= 	operator_symbol
+
+Diagrams  Uses  Top  Help
+
+parameter_profile 	= 	[ formal_part ]
+
+Diagrams  Uses  Top  Help
+
+parameter_and_result_profile 	= 	[ formal_part ] "return" subtype_mark
+
+Diagrams  Uses  Top  Help
+
+formal_part 	= 	"(" parameter_specification { ";" parameter_specification }* ")"
+
+Diagrams  Uses  Top  Help
+
+parameter_specification 	= 	( defining_identifier_list ":" mode subtype_mark [ ":=" default_expression ] | defining_identifier_list ":" access_definition [ ":=" default_expression ] )
+
+Diagrams  Uses  Top  Help
+
+mode 	= 	( [ "in" ] | "in" "out" | "out" )
+
+Diagrams  Uses  Top  Help
+
+subprogram_body 	= 	subprogram_specification "is" declarative_part "begin" handled_sequence_of_statements "end" [ designator ] ";"
+
+Diagrams  Uses  Top  Help
+
+procedure_call_statement 	= 	( procedure_name ";" | procedure_prefix actual_parameter_part ";" )
+
+Diagrams  Uses  Top  Help
+
+function_call 	= 	( function_name | function_prefix actual_parameter_part )
+
+Diagrams  Uses  Top  Help
+
+actual_parameter_part 	= 	"(" parameter_association { "," parameter_association }* ")"
+
+Diagrams  Uses  Top  Help
+
+parameter_association 	= 	[ formal_parameter_selector_name "=>" ] explicit_actual_parameter
+
+Diagrams  Uses  Top  Help
+
+explicit_actual_parameter 	= 	( expression | variable_name )
+
+Diagrams  Uses  Top  Help
+
+return_statement 	= 	"return" [ expression ] ";"
+
+Diagrams  Uses  Top  Help
+
+package_declaration 	= 	package_specification ";"
+
+Diagrams  Uses  Top  Help
+
+package_specification 	= 	"package" defining_program_unit_name "is" { basic_declarative_item }* [ "private" { basic_declarative_item }* ] "end" [ [ parent_unit_name "." ] identifier ]
+
+Diagrams  Uses  Top  Help
+
+package_body 	= 	"package" body defining_program_unit_name "is" declarative_part [ "begin" handled_sequence_of_statements ] "end" [ [ parent_unit_name "." ] identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+private_type_declaration 	= 	"type" defining_identifier [ discriminant_part ] "is" [ [ "abstract" ] "tagged" ] [ "limited" ] "private" ";"
+
+Diagrams  Uses  Top  Help
+
+private_extension_declaration 	= 	"type" defining_identifier [ discriminant_part ] "is" [ "abstract" ] "new" ancestor_subtype_indication "with" "private" ";"
+
+Diagrams  Uses  Top  Help
+
+use_clause 	= 	( use_package_clause | use_type_clause )
+
+Diagrams  Uses  Top  Help
+
+use_package_clause 	= 	"use" package_name { "," package_name }* ";"
+
+Diagrams  Uses  Top  Help
+
+use_type_clause 	= 	"use" "type" subtype_mark { "," subtype_mark }* ";"
+
+Diagrams  Uses  Top  Help
+
+renaming_declaration 	= 	( object_renaming_declaration | exception_renaming_declaration | package_renaming_declaration | subprogram_renaming_declaration | generic_renaming_declaration )
+
+Diagrams  Uses  Top  Help
+
+object_renaming_declaration 	= 	defining_identifier ":" subtype_mark "renames" object_name ";"
+
+Diagrams  Uses  Top  Help
+
+exception_renaming_declaration 	= 	defining_identifier ":" "exception" "renames" exception_name ";"
+
+Diagrams  Uses  Top  Help
+
+package_renaming_declaration 	= 	"package" defining_program_unit_name renamespackage_name ";"
+
+Diagrams  Uses  Top  Help
+
+subprogram_renaming_declaration 	= 	subprogram_specification "renames" callable_entity_name ";"
+
+Diagrams  Uses  Top  Help
+
+generic_renaming_declaration 	= 	( "generic" "package" defining_program_unit_name "renames" generic_package_name ";" | "generic" "procedure" defining_program_unit_name "renames" generic_procedure_name ";" | "generic" "function" defining_program_unit_name "renames" generic_function_name ";" )
+
+Diagrams  Uses  Top  Help
+
+task_type_declaration 	= 	"task" "type" defining_identifier [ known_discriminant_part ] [ "is" task_definition ] ";"
+
+Diagrams  Uses  Top  Help
+
+single_task_declaration 	= 	"task" defining_identifier [ "is" task_definition ] ";"
+
+Diagrams  Uses  Top  Help
+
+task_definition 	= 	{ task_item }* [ "private" { task_item }* ] "end" [ task_identifier ]
+
+Diagrams  Uses  Top  Help
+
+task_item 	= 	( entry_declaration | representation_clause )
+
+Diagrams  Uses  Top  Help
+
+task_body 	= 	"task" body defining_identifier "is" declarative_part "begin" handled_sequence_of_statements "end" [ task_identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+protected_type_declaration 	= 	"protected" "type" defining_identifier [ known_discriminant_part ] "is" protected_definition ";"
+
+Diagrams  Uses  Top  Help
+
+single_protected_declaration 	= 	"protected" defining_identifier "is" protected_definition ";"
+
+Diagrams  Uses  Top  Help
+
+protected_definition 	= 	{ protected_operation_declaration }* [ "private" { protected_element_declaration }* ] "end" [ protected_identifier ]
+
+Diagrams  Uses  Top  Help
+
+protected_operation_declaration 	= 	( subprogram_declaration | entry_declaration | representation_clause )
+
+Diagrams  Uses  Top  Help
+
+protected_element_declaration 	= 	( protected_operation_declaration | component_declaration )
+
+Diagrams  Uses  Top  Help
+
+protected_body 	= 	"protected" body defining_identifier "is" { protected_operation_item }* "end" [ protected_identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+protected_operation_item 	= 	( subprogram_declaration | subprogram_body | entry_body | representation_clause )
+
+Diagrams  Uses  Top  Help
+
+entry_declaration 	= 	"entry" defining_identifier [ "(" discrete_subtype_definition ")" ] parameter_profile ";"
+
+Diagrams  Uses  Top  Help
+
+accept_statement 	= 	"accept" entry_direct_name [ "(" entry_index ")" ] parameter_profile [ "do" handled_sequence_of_statements "end" [ entry_identifier ] ] ";"
+
+Diagrams  Uses  Top  Help
+
+entry_index 	= 	expression
+
+Diagrams  Uses  Top  Help
+
+entry_body 	= 	"entry" defining_identifier entry_body_formal_part entry_barrier "is" declarative_part "begin" handled_sequence_of_statements "end" [ entry_identifier ] ";"
+
+Diagrams  Uses  Top  Help
+
+entry_body_formal_part 	= 	[ "(" entry_index_specification ")" ] parameter_profile
+
+Diagrams  Uses  Top  Help
+
+entry_barrier 	= 	"when" condition
+
+Diagrams  Uses  Top  Help
+
+entry_index_specification 	= 	"for" defining_identifier "in" discrete_subtype_definition
+
+Diagrams  Uses  Top  Help
+
+entry_call_statement 	= 	entry_name [ actual_parameter_part ] ";"
+
+Diagrams  Uses  Top  Help
+
+requeue_statement 	= 	"requeue" entry_name [ "with" "abort" ] ";"
+
+Diagrams  Uses  Top  Help
+
+delay_statement 	= 	( delay_until_statement | delay_relative_statement )
+
+Diagrams  Uses  Top  Help
+
+delay_until_statement 	= 	"delay" "until" delay_expression ";"
+
+Diagrams  Uses  Top  Help
+
+delay_relative_statement 	= 	"delay" delay_expression ";"
+
+Diagrams  Uses  Top  Help
+
+select_statement 	= 	( selective_accept | timed_entry_call | conditional_entry_call | asynchronous_select )
+
+Diagrams  Uses  Top  Help
+
+selective_accept 	= 	"select" [ guard ] select_alternative { "or" [ guard ] select_alternative }* [ "else" sequence_of_statements ] "end" "select" ";"
+
+Diagrams  Uses  Top  Help
+
+guard 	= 	"when" condition "=>"
+
+Diagrams  Uses  Top  Help
+
+select_alternative 	= 	( accept_alternative | delay_alternative | terminate_alternative )
+
+Diagrams  Uses  Top  Help
+
+accept_alternative 	= 	accept_statement [ sequence_of_statements ]
+
+Diagrams  Uses  Top  Help
+
+delay_alternative 	= 	delay_statement [ sequence_of_statements ]
+
+Diagrams  Uses  Top  Help
+
+terminate_alternative 	= 	"terminate" ";"
+
+Diagrams  Uses  Top  Help
+
+timed_entry_call 	= 	"select" entry_call_alternative "or" delay_alternative "end" "select" ";"
+
+Diagrams  Uses  Top  Help
+
+entry_call_alternative 	= 	entry_call_statement [ sequence_of_statements ]
+
+Diagrams  Uses  Top  Help
+
+conditional_entry_call 	= 	"select" entry_call_alternative "else" sequence_of_statements "end" "select" ";"
+
+Diagrams  Uses  Top  Help
+
+asynchronous_select 	= 	"select" triggering_alternative "then" "abort" abortable_part "end" "select" ";"
+
+Diagrams  Uses  Top  Help
+
+triggering_alternative 	= 	triggering_statement [ sequence_of_statements ]
+
+Diagrams  Uses  Top  Help
+
+triggering_statement 	= 	( entry_call_statement | delay_statement )
+
+Diagrams  Uses  Top  Help
+
+abortable_part 	= 	sequence_of_statements
+
+Diagrams  Uses  Top  Help
+
+abort_statement 	= 	"abort" task_name { "," task_name }* ";"
+
+Diagrams  Uses  Top  Help
+
+compilation 	= 	{ compilation_unit }*
+
+Diagrams  Uses  Top  Help
+
+compilation_unit 	= 	( context_clause library_item | context_clause subunit )
+
+Diagrams  Uses  Top  Help
+
+library_item 	= 	( [ "private" ] library_unit_declaration | library_unit_body | [ "private" ] library_unit_renaming_declaration )
+
+Diagrams  Uses  Top  Help
+
+library_unit_declaration 	= 	( subprogram_declaration | package_declaration | generic_declaration | generic_instantiation )
+
+Diagrams  Uses  Top  Help
+
+library_unit_renaming_declaration 	= 	( package_renaming_declaration | generic_renaming_declaration | subprogram_renaming_declaration )
+
+Diagrams  Uses  Top  Help
+
+library_unit_body 	= 	( subprogram_body | package_body )
+
+Diagrams  Uses  Top  Help
+
+parent_unit_name 	= 	name
+
+Diagrams  Uses  Top  Help
+
+context_clause 	= 	{ context_item }*
+
+Diagrams  Uses  Top  Help
+
+context_item 	= 	( with_clause | use_clause )
+
+Diagrams  Uses  Top  Help
+
+with_clause 	= 	"with" library_unit_name { "," library_unit_name }* ";"
+
+Diagrams  Uses  Top  Help
+
+body_stub 	= 	( subprogram_body_stub | package_body_stub | task_body_stub | protected_body_stub )
+
+Diagrams  Uses  Top  Help
+
+subprogram_body_stub 	= 	subprogram_specification "is" "separate" ";"
+
+Diagrams  Uses  Top  Help
+
+package_body_stub 	= 	"package" body defining_identifier "is" "separate" ";"
+
+Diagrams  Uses  Top  Help
+
+task_body_stub 	= 	"task" body defining_identifier "is" "separate" ";"
+
+Diagrams  Uses  Top  Help
+
+protected_body_stub 	= 	"protected" body defining_identifier "is" "separate" ";"
+
+Diagrams  Uses  Top  Help
+
+subunit 	= 	"separate" "(" parent_unit_name ")" proper_body
+
+Diagrams  Uses  Top  Help
+
+exception_declaration 	= 	defining_identifier_list ":" "exception" ";"
+
+Diagrams  Uses  Top  Help
+
+handled_sequence_of_statements 	= 	sequence_of_statements [ "exception" exception_handler { exception_handler }* ]
+
+Diagrams  Uses  Top  Help
+
+exception_handler 	= 	"when" [ choice_parameter_specification ":" ] exception_choice { "|" exception_choice }* "=>" sequence_of_statements
+
+Diagrams  Uses  Top  Help
+
+choice_parameter_specification 	= 	defining_identifier
+
+Diagrams  Uses  Top  Help
+
+exception_choice 	= 	( exception_name | "others" )
+
+Diagrams  Uses  Top  Help
+
+raise_statement 	= 	"raise" [ exception_name ] ";"
+
+Diagrams  Uses  Top  Help
+
+generic_declaration 	= 	( generic_subprogram_declaration | generic_package_declaration )
+
+Diagrams  Uses  Top  Help
+
+generic_subprogram_declaration 	= 	generic_formal_part subprogram_specification ";"
+
+Diagrams  Uses  Top  Help
+
+generic_package_declaration 	= 	generic_formal_part package_specification ";"
+
+Diagrams  Uses  Top  Help
+
+generic_formal_part 	= 	"generic" { ( generic_formal_parameter_declaration | use_clause ) }*
+
+Diagrams  Uses  Top  Help
+
+generic_formal_parameter_declaration 	= 	( formal_object_declaration | formal_type_declaration | formal_subprogram_declaration | formal_package_declaration )
+
+Diagrams  Uses  Top  Help
+
+generic_instantiation 	= 	( "package" defining_program_unit_name "is" "new" generic_package_name [ generic_actual_part ] ";" | "procedure" defining_program_unit_name "is" "new" generic_procedure_name [ generic_actual_part ] ";" | "function" defining_designator "is" "new" generic_function_name [ generic_actual_part ] ";" )
+
+Diagrams  Uses  Top  Help
+
+generic_actual_part 	= 	"(" generic_association { "," generic_association }* ")"
+
+Diagrams  Uses  Top  Help
+
+generic_association 	= 	[ generic_formal_parameter_selector_name "=>" ] explicit_generic_actual_parameter
+
+Diagrams  Uses  Top  Help
+
+explicit_generic_actual_parameter 	= 	( expression | variable_name | subprogram_name | entry_name | subtype_mark | package_instance_name )
+
+Diagrams  Uses  Top  Help
+
+formal_object_declaration 	= 	defining_identifier_list ":" mode subtype_mark [ ":=" default_expression ] ";"
+
+Diagrams  Uses  Top  Help
+
+formal_type_declaration 	= 	"type" defining_identifier [ discriminant_part ] "is" formal_type_definition ";"
+
+Diagrams  Uses  Top  Help
+
+formal_type_definition 	= 	( formal_private_type_definition | formal_derived_type_definition | formal_discrete_type_definition | formal_signed_integer_type_definition | formal_modular_type_definition | formal_floating_point_definition | formal_ordinary_fixed_point_definition | formal_decimal_fixed_point_definition | formal_array_type_definition | formal_access_type_definition )
+
+Diagrams  Uses  Top  Help
+
+formal_private_type_definition 	= 	[ [ "abstract" ] "tagged" ] [ "limited" ] "private"
+
+Diagrams  Uses  Top  Help
+
+formal_derived_type_definition 	= 	[ "abstract" ] "new" subtype_mark [ "with" "private" ]
+
+Diagrams  Uses  Top  Help
+
+formal_discrete_type_definition 	= 	"(" "<>" ")"
+
+Diagrams  Uses  Top  Help
+
+formal_signed_integer_type_definition 	= 	"range" "<>"
+
+Diagrams  Uses  Top  Help
+
+formal_modular_type_definition 	= 	"mod" "<>"
+
+Diagrams  Uses  Top  Help
+
+formal_floating_point_definition 	= 	"digits" "<>"
+
+Diagrams  Uses  Top  Help
+
+formal_ordinary_fixed_point_definition 	= 	"delta" "<>"
+
+Diagrams  Uses  Top  Help
+
+formal_decimal_fixed_point_definition 	= 	"delta" "<>" "digits" "<>"
+
+Diagrams  Uses  Top  Help
+
+formal_array_type_definition 	= 	array_type_definition
+
+Diagrams  Uses  Top  Help
+
+formal_access_type_definition 	= 	access_type_definition
+
+Diagrams  Uses  Top  Help
+
+formal_subprogram_declaration 	= 	"with" subprogram_specification [ "is" subprogram_default ] ";"
+
+Diagrams  Uses  Top  Help
+
+subprogram_default 	= 	( default_name | "<>" )
+
+Diagrams  Uses  Top  Help
+
+default_name 	= 	name
+
+Diagrams  Uses  Top  Help
+
+formal_package_declaration 	= 	"with" "package" defining_identifier "is" "new" generic_package_name formal_package_actual_part ";"
+
+Diagrams  Uses  Top  Help
+
+formal_package_actual_part 	= 	( "(" "<>" ")" | [ generic_actual_part ] )
+
+Diagrams  Uses  Top  Help
+
+representation_clause 	= 	( attribute_definition_clause | enumeration_representation_clause | record_representation_clause | at_clause )
+
+Diagrams  Uses  Top  Help
+
+local_name 	= 	( direct_name | direct_name "'" attribute_designator | library_unit_name )
+
+Diagrams  Uses  Top  Help
+
+attribute_definition_clause 	= 	( "for" local_name "'" attribute_designator "use" expression ";" | "for" local_name "'" attribute_designator "use" name ";" )
+
+Diagrams  Uses  Top  Help
+
+enumeration_representation_clause 	= 	"for" first_subtype_local_name "use" enumeration_aggregate ";"
+
+Diagrams  Uses  Top  Help
+
+enumeration_aggregate 	= 	array_aggregate
+
+Diagrams  Uses  Top  Help
+
+record_representation_clause 	= 	"for" first_subtype_local_name "use" "record" [ mod_clause ] { component_clause }* "end" "record" ";"
+
+Diagrams  Uses  Top  Help
+
+component_clause 	= 	component_local_name "at" position "range" first_bit ".." last_bit ";"
+
+Diagrams  Uses  Top  Help
+
+position 	= 	static_expression
+
+Diagrams  Uses  Top  Help
+
+first_bit 	= 	static_simple_expression
+
+Diagrams  Uses  Top  Help
+
+last_bit 	= 	static_simple_expression
+
+Diagrams  Uses  Top  Help
+
+code_statement 	= 	qualified_expression ";"
+
+Diagrams  Uses  Top  Help
+
+restriction 	= 	( restriction_identifier | restriction_parameter_identifier "=>" expression )
+
+Diagrams  Uses  Top  Help
+
+delta_constraint 	= 	"delta" static_expression [ range_constraint ]
+
+Diagrams  Uses  Top  Help
+
+at_clause 	= 	"for" direct_name "use" "at" expression ";"
+
+Diagrams  Uses  Top  Help
+
+mod_clause 	= 	"at" "mod" static_expression ";"
+
+Diagrams  Uses  Top  Help
