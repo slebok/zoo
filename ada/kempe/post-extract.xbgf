@@ -1,49 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<!-- Interpreting the notation rule that | is a BNF bar unless encountered as {| -->
 	<xbgf:replace>
 		<bgf:expression>
-			<nonterminal>ASSUMES</nonterminal>
+			<nonterminal>TERMINALBAR</nonterminal>
 		</bgf:expression>
 		<bgf:expression>
-			<terminal>:=</terminal>
+			<terminal>|</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- should be defined elsewhere-->
+	<xbgf:replace>
+		<bgf:expression>
+			<terminal>digit</terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<nonterminal>digit</nonterminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- should be defined elsewhere-->
+	<xbgf:replace>
+		<bgf:expression>
+			<terminal>underline</terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<nonterminal>underline</nonterminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- Disambiguating "range" and the range nonterminal -->
+	<xbgf:replace>
+		<bgf:expression>
+			<nonterminal>range</nonterminal>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>range</terminal>
 		</bgf:expression>
 	</xbgf:replace>
 	<xbgf:replace>
 		<bgf:expression>
-			<nonterminal>QUOTE</nonterminal>
-		</bgf:expression>
-		<bgf:expression>
-			<terminal>"</terminal>
-		</bgf:expression>
-	</xbgf:replace>
-	<xbgf:replace>
-		<bgf:expression>
-			<nonterminal>DOUBLEARROW</nonterminal>
-		</bgf:expression>
-		<bgf:expression>
-			<terminal>=&gt;</terminal>
-		</bgf:expression>
-	</xbgf:replace>
-	<xbgf:replace>
-		<bgf:expression>
-			<nonterminal>UNKNOWNDP</nonterminal>
+			<sequence>
+				<bgf:expression>
+					<terminal>range</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>range</terminal>
+				</bgf:expression>
+			</sequence>
 		</bgf:expression>
 		<bgf:expression>
 			<sequence>
 				<bgf:expression>
-					<terminal>(</terminal>
+					<terminal>range</terminal>
 				</bgf:expression>
 				<bgf:expression>
-					<terminal>&lt;&gt;</terminal>
-				</bgf:expression>
-				<bgf:expression>
-					<terminal>)</terminal>
+					<nonterminal>range</nonterminal>
 				</bgf:expression>
 			</sequence>
 		</bgf:expression>
+		<in>
+			<nonterminal>range_constraint</nonterminal>
+		</in>
 	</xbgf:replace>
-	<xbgf:inline>pragmaINLINE</xbgf:inline>
-	<xbgf:inline>discriminant_associationINLINE</xbgf:inline>
-	<xbgf:inline>package_specificationINLINE</xbgf:inline>
-	<xbgf:inline>package_bodyINLINE</xbgf:inline>
+	<xbgf:replace>
+		<bgf:expression>
+			<terminal>range</terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<nonterminal>range</nonterminal>
+		</bgf:expression>
+		<in>
+			<nonterminal>discrete_range</nonterminal>
+		</in>
+	</xbgf:replace>
+	<xbgf:replace>
+		<bgf:expression>
+			<terminal>range</terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<nonterminal>range</nonterminal>
+		</bgf:expression>
+		<in>
+			<nonterminal>relation</nonterminal>
+		</in>
+	</xbgf:replace>
 </xbgf:sequence>
