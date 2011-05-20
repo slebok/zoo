@@ -12,6 +12,12 @@ debug = False
 def isAlpha(x):
 	return reduce(lambda a,b:a and b=='_' or b.isalnum(),x,True)
 
+def isQNumber(x):
+	if x =='.':
+		return False
+	else:
+		return reduce(lambda a,b:a and b=='.' or b.isdigit(),x,True)
+
 def splitTokenStream(s):
 	ts = [s[0]]
 	i = 1
@@ -50,7 +56,32 @@ def useDefiningSymbol(ts,d):
 			poss.append(i)
 	poss.append(len(ts)+1)
 	for i in range(0,len(poss)-1):
-		prods.append(ts[poss[i]-1:poss[i+1]-1])
+		if 'end-label-symbol' in config.keys():
+			if ts[poss[i]-2] == config['end-label-symbol']:
+				if 'start-label-symbol' in config.keys():
+					# todo: now works only with one-token labels!
+					if ts[poss[i]-4] == config['start-label-symbol']:
+						# everything is fine
+						p = [ts[poss[i]-3],ts[poss[i]-1]]
+					else:
+						print 'STEP 4 problem: start-label-symbol mismatch!'
+						# todo: recover
+				else:
+					# no starting symbol for the label
+					p = [ts[poss[i]-3],ts[poss[i]-1]]
+			else:
+				# no label this time
+				p = ['',ts[poss[i]-1]]
+		else:
+			# no labels at all
+			p = ['',ts[poss[i]-1]]
+		end = poss[i+1]-1
+		if 'end-label-symbol' in config.keys() and ts[end-1] == config['end-label-symbol']:
+			end -= 2
+			if 'start-label-symbol' in config.keys() and ts[end-1] == config['start-label-symbol']:
+				end -= 1
+		p.extend(ts[poss[i]+1:end])
+		prods.append(p)
 	return prods
 
 def useDefinitionSeparatorSymbol(ts,d):
@@ -433,7 +464,7 @@ def filterNewlines(s):
 
 def glueTerminals(p):
 	q = []
-	for y in p:
+	for y in p[2:]:
 		if y[0] != config['start-terminal-symbol'] or len(q) == 0 or q[-1][0] != config['start-terminal-symbol']:
 			q.append(y)
 			continue
@@ -443,10 +474,21 @@ def glueTerminals(p):
 			q[-1] = q[-1][:-1] + y[1:]
 		else:
 			q.append(y)
-	if debug and p != q:
+	r = p[:2]
+	r.extend(q)
+	if debug and p != r:
 		print '>>>in>>>>',p
-		print '>>>out>>>',q
-	return q
+		print '>>>out>>>',r
+	return r
+
+def assembleQualifiedNumbers(ts):
+	ds = []
+	for x in ts:
+		if len(ds)>0 and (isQNumber(x) or x=='.') and isQNumber(ds[-1]):
+			ds[-1] += x
+		else:
+			ds.append(x)
+	return ds
 
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
@@ -475,6 +517,7 @@ if __name__ == "__main__":
 		print 'STEP 2 skipped, sorry: start-nonterminal-symbol and end-nonterminal-symbol are not both specified.'
 	# STEP 3: assembling composite metasymbols together
 	print 'STEP 3: assembling metasymbols according to their possible values.'
+	tokens = assembleQualifiedNumbers(tokens)
 	for k in config.keys():
 		if len(config[k])>1:
 			print 'STEP 3: going to glue tokens that resemble', config[k]
@@ -497,6 +540,8 @@ if __name__ == "__main__":
 			config['terminator-symbol'] = ts
 		else:
 			print 'STEP 4 unsuccessful, sorry.'
+			for p in prods:
+				print '%40s'%p[1],'>>>>>>',p[-2:]
 			# ORLY?
 	# STEP 4a.2: adjusting the terminator-symbol on the last production
 	for i in range(0,len(config['terminator-symbol'])):
@@ -528,9 +573,9 @@ if __name__ == "__main__":
 		step6 = True
 		if 'start-terminal-symbol' not in config.keys() and 'end-terminal-symbol' not in config.keys():
 			config['start-terminal-symbol'] = config['end-terminal-symbol'] = '"'
-		defined = map(lambda x:x[0],prods)
+		defined = map(lambda x:x[1],prods)
 		defined.append(config['defining-symbol'])
-		prods = map(lambda p:map(lambda x:x if x in defined or x.find(config['undefined-nonterminals-are-terminals'])>-1 or (x.isupper() and len(x)>1) else config['start-terminal-symbol']+x+config['end-terminal-symbol'],p),prods)
+		prods = map(lambda p:map(lambda x:x if x in defined or x.find(config['undefined-nonterminals-are-terminals'])>-1 or (x.isupper() and len(x)>1) or x=='' else config['start-terminal-symbol']+x+config['end-terminal-symbol'],p),prods)
 	if 'glue-nonalphanumeric-terminals' in config.keys():
 		print 'STEP 6: glueing non-alphanumeric terminal symbols together.'
 		step6 = True
@@ -549,7 +594,9 @@ if __name__ == "__main__":
 	bgf = BGF.Grammar()
 	for q in prods:
 		p = BGF.Production()
-		p.setNT(q[0])
+		if 'disregard-labels' not in config.keys() and q[0]:
+			p.setLabel(q[0])
+		p.setNT(q[1])
 		p.setExpr(map2expr(q[2:]))
 		bgf.addProd(p)
 	ET.ElementTree(bgf.getXml()).write(sys.argv[3])
