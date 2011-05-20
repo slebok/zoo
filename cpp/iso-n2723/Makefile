@@ -3,6 +3,7 @@ tooldir = ../../../../shared/tools
 build:
 	grep -xv 'c ' iso-is-annex.txt > iso-is-annex-no-c.txt
 	perl -pi -w -e 's/hand ler/handler/g;' iso-is-annex-no-c.txt
+	perl -pi -w -e 's/∼/~/g;' iso-is-annex-no-c.txt
 	${tooldir}/pdf2bgf iso-is-annex-no-c.txt iso-output.bgf banned-lines.lst keywords.lst
 	${tooldir}/checkxml bgf iso-output.bgf
 	${tooldir}/normbgf iso-output.bgf iso-is-grammar.bgf
