@@ -1,7 +1,4 @@
 build: 
-	make ada.bgf
-
-ada.bgf: src.syntax.summary.txt
 	cat src.syntax.summary.txt | grep -v 'quotation mark' > src.prepared.txt
 	perl -pi -w -e 's/{\|/{TERMINALBAR/g;' src.prepared.txt
 	perl -pi -w -e 's/J\./0\./g;' src.prepared.txt

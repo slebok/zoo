@@ -490,6 +490,39 @@ def assembleQualifiedNumbers(ts):
 			ds.append(x)
 	return ds
 
+def decomposeSymbols(p,defd):
+	# [label, nt, ...]
+	q = p[:2]
+	for x in p[2:]:
+		match = False
+		if x not in defd and x.find(config['undefined-nonterminals-are-terminals'])>-1:
+			for d in defd:
+				if x[:len(d)] == d and x[len(d):].find(config['undefined-nonterminals-are-terminals'])<0:
+					nt = d
+					t = x[len(d):]
+					if debug:
+						print '->->->->->',x,'matches as',nt,'+',t
+					q.append(nt)
+					# todo: need to be adjusted if the order of phases is changed
+					#q.append(config['start-terminal-symbol']+t+config['end-terminal-symbol'])
+					q.append(t)
+					match = True
+					break
+				if x[-len(d):] == d and x[:-len(d)].find(config['undefined-nonterminals-are-terminals'])<0:
+					nt = d
+					t = x[:-len(d)]
+					if debug:
+						print '=>=>=>=>=>',x,'matches as',t,'+',nt
+					# todo: need to be adjusted if the order of phases is changed
+					#q.append(config['start-terminal-symbol']+t+config['end-terminal-symbol'])
+					q.append(t)
+					q.append(nt)
+					match = True
+					break
+		if not match:
+			q.append(x)
+	return q
+
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
 		print 'Usage:'
@@ -520,7 +553,7 @@ if __name__ == "__main__":
 	tokens = assembleQualifiedNumbers(tokens)
 	for k in config.keys():
 		if len(config[k])>1:
-			print 'STEP 3: going to glue tokens that resemble', config[k]
+			print 'STEP 3: going to glue tokens that resemble', config[k].replace('\n','\\n')
 			tokens = mapglue(tokens,config[k])
 	if debug:
 		print tokens
@@ -564,20 +597,24 @@ if __name__ == "__main__":
 	# STEP 6:
 	print 'STEP 6: executing special extraction commands.'
 	step6 = False
+	defined = map(lambda x:x[1],prods)
+	defined.append(config['defining-symbol'])
 	if 'ignore-extra-newlines' in config.keys():
 		print 'STEP 6: ignoring extra newlines.'
 		step6 = True
 		prods = map(lambda x:filter(lambda y:y!='\n',x),prods)
+	if 'decompose-symbols' in config.keys():
+		print 'STEP 6 (part of rule 4): decomposing compound symbols.'
+		step6 = True
+		prods = map(lambda x:decomposeSymbols(x,defined),prods)
 	if 'undefined-nonterminals-are-terminals' in config.keys():
-		print 'STEP 6: turning undefined nonterminals into terminals.'
+		print 'STEP 6 (rule 5): turning undefined nonterminals into terminals.'
 		step6 = True
 		if 'start-terminal-symbol' not in config.keys() and 'end-terminal-symbol' not in config.keys():
 			config['start-terminal-symbol'] = config['end-terminal-symbol'] = '"'
-		defined = map(lambda x:x[1],prods)
-		defined.append(config['defining-symbol'])
 		prods = map(lambda p:map(lambda x:x if x in defined or x.find(config['undefined-nonterminals-are-terminals'])>-1 or (x.isupper() and len(x)>1) or x=='' else config['start-terminal-symbol']+x+config['end-terminal-symbol'],p),prods)
 	if 'glue-nonalphanumeric-terminals' in config.keys():
-		print 'STEP 6: glueing non-alphanumeric terminal symbols together.'
+		print 'STEP 6 (part of rule 3): glueing non-alphanumeric terminal symbols together.'
 		step6 = True
 		prods = map(glueTerminals,prods)
 	if not step6:

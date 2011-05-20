@@ -8,3 +8,5 @@ http://www.springerlink.com/content/gnnp286r72w6/
 
 Annex P (informative): Syntax Summary, pages 675..692
 
+The PDF is of a rather poor quality, one needs to pay attention to the order of the lines when copy-pasting.
+Some whitespace also gets messed up, but the extractor copes with it.
