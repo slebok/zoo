@@ -111,6 +111,32 @@ def useDefinitionSeparatorSymbol(ts,d):
 		alts.append(ts[poss[i]+1:poss[i+1]])
 	return alts
 
+def findMostProbableTail(ps):
+	# bucket sort
+	ss = {}
+	for s in map(lambda x:x[-1],ps):
+		if s not in ss.keys():
+			ss[s] = 1
+		else:
+			ss[s] += 1
+	# at least 80% has the same end symbol?
+	m = max(ss.values())
+	if m < 0.8*len(ps):
+		return None,None
+	for k in ss.keys():
+		if ss[k] == m:
+			break
+	n2f = []
+	fps = []
+	cx = 0
+	for p in ps:
+		if p[-1] == k:
+			fps.append(p)
+		else:
+			n2f.append(cx)
+		cx += 1
+	return n2f,findCommonTail(fps)
+
 def findCommonTail(ps):
 	tail = []
 	for i in range(1,len(ps[0])):
@@ -394,7 +420,7 @@ def map2expr(ss):
 	elif len(ess) == 1:
 		if len(ess[0]) == 0:
 			print 'Serialisation error: empty internal output sequence!'
-			return
+			return BGF.Expression(BGF.Epsilon())
 		elif len(ess[0]) == 1:
 			return BGF.Expression(ess[0][0])
 		else:
@@ -407,7 +433,7 @@ def map2expr(ss):
 		for es in ess:
 			if len(es) == 0:
 				print 'Serialisation error: empty internal output sequence!'
-				return
+				return BGF.Expression(BGF.Epsilon())
 			elif len(es) == 1:
 				e.add(BGF.Expression(es[0]))
 			else:
@@ -571,17 +597,28 @@ if __name__ == "__main__":
 		if ts:
 			print 'STEP 4 successful: inferred terminator-symbol:',ts
 			config['terminator-symbol'] = ts
+			need2fix = [-1]
 		else:
-			print 'STEP 4 unsuccessful, sorry.'
-			for p in prods:
-				print '%40s'%p[1],'>>>>>>',p[-2:]
-			# ORLY?
-	# STEP 4a.2: adjusting the terminator-symbol on the last production
-	for i in range(0,len(config['terminator-symbol'])):
-		if prods[-1][-len(config['terminator-symbol'])+i:] == config['terminator-symbol'][:len(config['terminator-symbol'])-i]:
-			prods[-1] = prods[-1][:-len(config['terminator-symbol'])+i]
-			prods[-1].extend(config['terminator-symbol'])
-			break
+			(need2fix,ts) = findMostProbableTail(prods)
+			if ts:
+				print 'STEP 4 successful: inferred the most probable terminator-symbol:',ts
+				config['terminator-symbol'] = ts
+			else:
+				# ORLY?
+				print 'STEP 4 unsuccessful, sorry.'
+				for p in prods:
+					print '%40s'%p[1],'>>>>>>',p[-2:]
+	# STEP 4a.2: adjusting the terminator-symbol on the unfit productions
+	poststep4 = 0
+	for f in need2fix:
+		for i in range(0,len(config['terminator-symbol'])):
+			if prods[f][-len(config['terminator-symbol'])+i:] == config['terminator-symbol'][:len(config['terminator-symbol'])-i]:
+				prods[f] = prods[f][:-len(config['terminator-symbol'])+i]
+				prods[f].extend(config['terminator-symbol'])
+				poststep4 += 1
+				break
+	if poststep4 > 0:
+		print 'STEP 4 also adjusted',poststep4,'productions that did not quite fit the expectations.'
 	# STEP 4b: splitting the token stream into productions according to terminator-symbol; inferring defining-symbol
 	# TODO
 	prods = map(lambda p:p[:-(len(config['terminator-symbol']))] if p[-(len(config['terminator-symbol'])):] == config['terminator-symbol'] else p,prods)
