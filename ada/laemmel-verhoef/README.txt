@@ -1,4 +1,4 @@
-iBrowsable Ada 95 Grammar
+Browsable Ada 95 Grammar
 Copyright (C) 2000 Ralf Lämmel (CWI, Amsterdam) & Chris Verhoef (Free University, Amsterdam)
 
 Full copyright information including the copyright information for the underlying Ada 95 Reference Manual are found here.
