@@ -1,17 +1,7 @@
-tooldir = ../../../../shared/tools
+extract:
+	${tooldir}/pdf2bgf src.grammar.summary.txt cpp.raw.bgf banned-lines.lst keywords.lst
+	${tooldir}/normbgf cpp.raw.bgf cpp.ext.bgf
+	${tooldir}/xbgf correct.xbgf cpp.ext.bgf cpp.ext.2.bgf
+	${tooldir}/subgrammar cpp.ext.2.bgf translation-unit cpp.bgf
 
-build:
-	${tooldir}/pdf2bgf iso-is-annex.txt iso-output.bgf banned-lines.lst keywords.lst
-	${tooldir}/checkxml bgf iso-output.bgf
-	${tooldir}/normbgf iso-output.bgf iso-is-grammar.bgf
-	${tooldir}/xbgf correct.xbgf iso-is-grammar.bgf iso-output.bgf
-	${tooldir}/subgrammar iso-output.bgf translation-unit iso-is-grammar-fix.bgf
-	rm -f iso-output.bgf
-
-clean:
-	rm -f iso-is-grammar.bgf iso-is-grammar-fix.bgf intermediate.lll
-
-test:
-	make build
-	${tooldir}/gdts iso-is-grammar.bgf extracted-grammar.bgf
-	${tooldir}/gdts iso-is-grammar-fix.bgf recovered-grammar.bgf
+include ../../Makefile.include

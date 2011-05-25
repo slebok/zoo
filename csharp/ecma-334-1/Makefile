@@ -1,13 +1,5 @@
-build:
-	../../../../shared/tools/pdf2bgf ecma-334-annex.txt ecma-output.bgf banned-lines.lst keywords.lst
-	../../../../shared/tools/checkxml bgf ecma-output.bgf
-	../../../../shared/tools/normbgf ecma-output.bgf ecma-334-grammar.bgf
-	../../../../shared/tools/bgf2bnf ecma-334-grammar.bgf ecma-334.bnf
-	rm -f ecma-output.bgf
+extract:
+	${tooldir}/pdf2bgf src.grammar.txt csharp.raw.bgf banned-lines.lst keywords.lst
+	${tooldir}/normbgf csharp.raw.bgf csharp.bgf
 
-clean:
-	rm -f ecma-output.bgf ecma-334-grammar.bgf ecma-334.bnf
-
-test:
-	make build
-	../../../../shared/tools/gdt ecma-334-grammar.bgf extracted-grammar.bgf
+include ../../Makefile.include

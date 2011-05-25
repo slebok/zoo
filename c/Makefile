@@ -1,14 +1,10 @@
-build:
-	cd iso-9899-1999 && make build
-	cd iso-9899-tc2 && make build
-	cd iso-9899-tc3 && make build
+extract:
+	cd iso-9899-1999 && make extract
+	cd iso-9899-tc2  && make extract
+	cd iso-9899-tc3  && make extract
 
 clean:
-	cd iso-9899-1999 && make clean
-	cd iso-9899-tc2 && make clean
-	cd iso-9899-tc3 && make clean
+	rm -f */*.bgf */*.html */*.bnf */intermediate.lll */tmp.xml
 
 test:
-	cd iso-9899-1999 && make test
-	cd iso-9899-tc2 && make test
-	cd iso-9899-tc3 && make test
+	ls -1 */*.bgf | xargs -n1 ../../../shared/tools/validate bgf

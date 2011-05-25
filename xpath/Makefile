@@ -1,33 +1,11 @@
-tdir = ../../../shared/tools
-
-test:
-	${tdir}/spec2bgf xpath1.xml xpath.bgf
-	${tdir}/validate bgf xpath.bgf
-	${tdir}/xbgf xpath1.normalize.xbgf xpath.bgf xpath.norm.bgf
-	${tdir}/subgrammar xpath.norm.bgf Expr xpath.fixed.bgf
-	${tdir}/bgf2html xpath.fixed.bgf xpath.html
-
-steps:
-	/usr/local/bin/xsltproc ../../extraction/w3c/spec2bgf.xslt xpath1.xml > xpath.v1.bgf
-	cp xpath.v1.bgf xpath.v2.bgf
-	perl -pi -w -e 's/<unknown>\)\*<\/unknown>/<unknown>\)<\/unknown><postfix-star\/>/g;' xpath.v2.bgf
-	perl -pi -w -e 's/<unknown>\)\?<\/unknown>/<unknown>\)<\/unknown><postfix-optional\/>/g;' xpath.v2.bgf
-	perl -pi -w -e 's/<unknown>\?\)\?<\/unknown>/<postfix-optional\/><unknown>\)<\/unknown><postfix-optional\/>/g;' xpath.v2.bgf
-	perl -pi -w -e "s/<unknown>\(\'.\'<\/unknown>/<unknown>\(<\/unknown><terminal>.<\/terminal>/g;" xpath.v2.bgf
-	perl -pi -w -e 's/<unknown>\(<\/unknown>/<sequence><bgf:expression>/g;' xpath.v2.bgf
-	perl -pi -w -e 's/<unknown>\)<\/unknown>/<\/bgf:expression><\/sequence>/g;' xpath.v2.bgf
-	/usr/local/bin/xsltproc ../../extraction/w3c/postfix2confix.xslt xpath.v2.bgf > xpath.v3.bgf
-	/usr/local/bin/xsltproc ../../extraction/w3c/cleanup.xslt xpath.v3.bgf > xpath.v4.bgf
-	${tdir}/validate bgf xpath.v4.bgf
-	${tdir}/xbgf xpath1.normalize.xbgf xpath.v4.bgf xpath.v5.bgf
-	${tdir}/subgrammar xpath.v5.bgf Expr xpath.v6.bgf
-	${tdir}/bgf2html xpath.v6.bgf xpath.html
+extract:
+	cd v1 && make extract
 
 get:
-	curl -k http://www.w3.org/TR/1999/REC-xpath-19991116.xml >xpath1.xml
-	curl -k http://www.w3.org/TR/2007/REC-xpath20-20070123/xpath20.xml >xpath2.xml
-	curl -k http://www.w3.org/XML/1998/06/xmlspec-v20.dtd > xmlspec-v20.dtd
-	perl -pi -w -e 's/\/XML\/1998\/06\/xmlspec-v20.dtd/xmlspec-v20.dtd/g;' xpath1.xml
+	curl -k http://www.w3.org/TR/1999/REC-xpath-19991116.xml > v1/src.recommendation.xml
+	curl -k http://www.w3.org/XML/1998/06/xmlspec-v20.dtd > v1/xmlspec-v20.dtd
+	perl -pi -w -e 's/\/XML\/1998\/06\/xmlspec-v20.dtd/xmlspec-v20.dtd/g;' v1/src.recommendation.xml
+	curl -k http://www.w3.org/TR/2007/REC-xpath20-20070123/xpath20.xml > v2/src.recommendation.xml
 
 clean:
-	rm -f *~ *.bgf
+	rm -f *~ *.bgf *.html */*~ */*.bgf */*.html
