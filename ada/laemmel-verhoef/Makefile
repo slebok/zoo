@@ -1,5 +1,5 @@
-build:
-	../hunter.py src.context.free.syntax.txt config.edd ada.raw.bgf
+extract:
+	../../hunter.py src.context.free.syntax.txt config.edd ada.raw.bgf
 	../../../../shared/tools/xbgf correct.xbgf ada.raw.bgf ada.bgf
 
 test:

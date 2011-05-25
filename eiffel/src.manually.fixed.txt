@@ -1,0 +1,111 @@
+Class_name =∆ Identifier
+Class_declaration =∆ [Notes] Class_header
+[Formal_generics] [Obsolete] [Inheritance] [Creators] [Converters] [Features] [Invariant]
+[Notes] end
+Notes =∆ note Note_list Note_list =∆ {Note_entry ";" ...}* Note_entry =∆ Note_name Note_values
+Note_name =∆ Identifier ":" Note_values =∆ {Note_item ","...}+ Note_item =∆ Identifier | Manifest_constant
+Class_header =∆ [Header_mark] class Class_name Header_mark=∆ deferred|expanded|frozen
+Obsolete =∆ obsolete Message Message =∆ Manifest_string
+Features =∆ Feature_clause+ Feature_clause =∆ feature [Clients] [Header_comment] Feature_declaration_list Feature_declaration_list =∆ {Feature_declaration ";" ...}* Header_comment =∆ Comment
+Feature_declaration =∆ New_feature_list Declaration_body Declaration_body =∆ [Formal_arguments] [Query_mark] [Feature_value] Query_mark =∆	Type_mark [Assigner_mark] Type_mark =∆ ":" Type Feature_value =∆ [Explicit_value]
+[Obsolete] [Header_comment] [Attribute_or_routine]
+Explicit_value =∆ "=" Manifest_constant
+New_feature_list =∆ {New_feature "," ...}+ New_feature =∆ [frozen] Extended_feature_name
+Attribute_or_routine =∆ [Precondition] [Local_declarations]
+Feature_body [Postcondition] [Rescue] end	
+Feature_body =∆ Deferred | Effective_routine | Attribute
+Extended_feature_name =∆ Feature_name [Alias] Feature_name =∆ Identifier Alias =∆ alias '"' Alias_name '"' [convert] Alias_name =∆ Operator | Bracket
+Bracket =∆ "[]"
+Operator =∆ Unary | Binary Unary =∆ not | "+" | "–" | Free_unary Binary=∆ "+"|"–"|"*"|"/"|"//"|"\\"|"^"|".."|
+"<" | ">" | "<=" | ">=" | and | or | xor | and then | or else | implies |
+Free_binary
+Assigner_mark =∆ assign Feature_name
+Inheritance =∆ Inherit_clause+ Inherit_clause =∆ inherit [Non_conformance] Parent_list Non_conformance =∆ "{" NONE "}" Parent_list =∆ {Parent ";" ...}+ Parent =∆ Class_type [Feature_adaptation] Feature_adaptation =∆ [Undefine]
+[Redefine] [Rename] [New_exports] [Select]
+end
+Rename =∆ rename Rename_list Rename_list =∆ {Rename_pair "," ...}+
+Rename_pair =∆ Feature_name as Extended_feature_name
+Clients =∆ "{" Class_list "}" Class_list =∆ {Class_name "," ...}+
+New_exports =∆ export New_export_list New_export_list =∆ {New_export_item ";" ...}+ New_export_item =∆ Clients [Header_comment] Feature_set Feature_set =∆ Feature_list | all Feature_list =∆ {Feature_name "," ...}+
+Formal_arguments =∆ "(" Entity_declaration_list ")" Entity_declaration_list =∆ {Entity_declaration_group ";" ...}+ Entity_declaration_group =∆ Identifier_list Type_mark Identifier_list =∆ {Identifier "," ...}+
+Deferred =∆ deferred Effective_routine =∆ Internal | External Internal =∆ Routine_mark Compound Routine_mark =∆ do | Once Once =∆ once [ "("Key_list ")" ] Key_list =∆ {Manifest_string "," ...}+
+Local_declarations =∆ local [Entity_declaration_list]
+Compound =∆ {Instruction ";" ...}*
+Instruction =∆ Creation_instruction | Call | Assignment | Assigner_call | Conditional | Multi_branch | Loop | Debug | Precursor | Check | Retry
+Precondition =∆ require [else] Assertion Postcondition =∆ ensure [then] Assertion [Only] Invariant =∆ invariant Assertion Assertion =∆ {Assertion_clause ";" ...}* Assertion_clause =∆ [Tag_mark] Unlabeled_assertion_clause Unlabeled_assertion_clause =∆ Boolean_expression | Comment Tag_mark =∆ Tag ":" Tag =∆ Identifier
+Old =∆ old Expression
+Only =∆ only [Feature_list]
+Check =∆ check Assertion [Notes] end
+Variant =∆ variant [Tag_mark] Expression
+Precursor =∆ Precursor [Parent_qualification] [Actuals] Parent_qualification =∆ "{" Class_name "}"
+Redefine =∆ redefine Feature_list
+Undefine =∆ undefine Feature_list
+Type =∆ Class_or_tuple_type | Formal_generic_name | Anchored Class_or_tuple_type =∆ Class_type | Tuple_type Class_type =∆ [Attachment_mark] Class_name [Actual_generics]
+Attachment_mark =∆ "?" | "!" Anchored =∆	[Attachment_mark] like Anchor Anchor =∆ Feature_name | Current
+Actual_generics =∆ "[" Type_list "]" Type_list =∆ {Type "," ...}+
+Formal_generics =∆ "[" Formal_generic_list "]" Formal_generic_list =∆ {Formal_generic ","...}+ Formal_generic =∆ [frozen] Formal_generic_name [Constraint] Formal_generic_name =∆ [?] Identifier
+Constraint =∆ "–>" Constraining_types [Constraint_creators] Constraining_types =∆ Single_constraint | Multiple_constraint Single_constraint =∆ Type [Renaming] Renaming =∆ Rename end
+Multiple_constraint =∆ "{" Constraint_list "}" Constraint_list =∆ {Single_constraint "," ...}+ Constraint_creators =∆ create Feature_list end
+Tuple_type =∆ TUPLE [Tuple_parameter_list] Tuple_parameter_list =∆	"[" Tuple_parameters "]" Tuple_parameters =∆	Type_list | Entity_declaration_list
+Manifest_tuple =∆	"[" Expression_list "]" Expression_list =∆ {Expression "," ...}*
+Converters=∆ convertConverter_list Converter_list =∆	{Converter ","...}+ Converter =∆	Conversion_procedure | Conversion_query Conversion_procedure =∆	Feature_name "(" "{" Type_list "}" ")" Conversion_query =∆	Feature_name ":" "{" Type_list "}"
+Select =∆ select Feature_list
+Conditional =∆	if Then_part_list [Else_part] end Then_part_list=∆ {Then_partelseif...}+ Then_part =∆ Boolean_expression then Compound Else_part =∆ else Compound
+Multi_branch =∆ inspect Expression [When_part_list] [Else_part] end
+When_part_list =∆ When_part+When_part=∆ whenChoicesthenCompound
+Choices =∆ {Choice "," ...}+
+Choice =∆ Constant | Manifest_type | Constant_interval | Type_interval
+Constant_interval =∆ Constant ".." Constant
+Type_interval =∆ Manifest_type ".." Manifest_type
+Loop =∆ Initialization
+[Invariant]
+Exit_condition
+Loop_body
+[Variant]
+end	
+Initialization =∆ from Compound Exit_condition =∆ until Boolean_expression Loop_body =∆ loop Compound
+Debug =∆ debug [ "("Key_list ")" ] Compound end
+Attribute=∆ attributeCompound
+Entity =∆ Variable | Read_only Variable =∆ Variable_attribute | Local Variable_attribute =∆ Feature_name Local =∆ Identifier | Result Read_only =∆ Formal | Constant_attribute | Current Formal =∆ Identifier Constant_attribute =∆ Feature_name
+Creators =∆ Creation_clause+ Creation_clause =∆ create [Clients] [Header_comment] Creation_procedure_list Creation_procedure_list =∆ {Creation_procedure ","...}+ Creation_procedure =∆ Feature_name
+Creation_instruction =∆ create [Explicit_creation_type] Creation_call Explicit_creation_type =∆ "{" Type "}" Creation_call =∆ Variable [Explicit_creation_call] Explicit_creation_call =∆ "." Unqualified_call
+Creation_expression =∆	create Explicit_creation_type [Explicit_creation_call]
+Equality =∆ Expression Comparison Expression Comparison =∆ "=" | "/=" | "~" | "/~"
+Assignment =∆ Variable ":=" Expression
+Assigner_call =∆ Expression ":=" Expression
+Call =∆ Object_call | Non_object_call Object_call =∆ [Target "."] Unqualified_call Unqualified_call =∆ Feature_name [Actuals] Target =∆ Local | Read_only | Call | Parenthesized_target Parenthesized_target =∆ "(|" Expression "|)" Non_object_call =∆ "{" Type "}" "." Unqualified_call
+Actuals =∆ "(" Actual_list ")" Actual_list =∆ {Expression "," ...}+
+Object_test =∆ "{" Identifier ":" Type "}" Expression
+Rescue =∆ rescue Compound Retry =∆ retry
+Agent =∆	Call_agent | Inline_agent Call_agent =∆	agent Call_agent_body Inline_agent =∆	agent [Formal_arguments] [Type_mark] [Attribute_or_routine] [Agent_actuals]
+Call_agent_body =∆	Agent_qualified | Agent_unqualified
+Agent_qualified =∆ Agent_target ". " Agent_unqualified
+Agent_unqualified =∆ Feature_name [Agent_actuals]Agent_target =∆ Entity | Parenthesized | Manifest_type
+Agent_actuals =∆ "(" Agent_actual_list ")"Agent_actual_list =∆ {Agent_actual "," ...}+
+Agent_actual =∆ Expression | Placeholder
+Placeholder =∆ [Manifest_type] "?"
+Expression=∆ Basic_expression | Special_expression Basic_expression=∆ Read_only | Local | Call | Precursor | Equality | Parenthesized | Old |
+Operator_expression | Bracket_expression | Creation_expression Special_expression=∆ Manifest_constant | Manifest_tuple | Agent | Object_test | Once_string |
+Address  Parenthesized =∆ "(" Expression ")" Address =∆ "$" Variable Once_string=∆ onceManifest_string Boolean_expression =∆ Basic_expression | Boolean_constant | Object_test
+Operator_expression =∆ Unary_expression | Binary_expression Unary_expression =∆ Unary Expression Binary_expression =∆ Expression Binary Expression
+Bracket_expression =∆ Bracket_target "[" Actuals "]" Bracket_target =∆ Target | Once_string | Manifest_constant | Manifest_tuple
+Constant =∆ Manifest_constant | Constant_attribute Constant_attribute =∆ Feature_name
+Manifest_constant =∆ [Manifest_type] Manifest_value Manifest_type =∆ "{" Type "}" Manifest_value =∆ Boolean_constant |
+Character_constant | Integer_constant | Real_constant | Manifest_string | Manifest_type
+Sign=∆"+"|"–"  Integer_constant =∆ [Sign] Integer Character_constant =∆ "'" Character "'" Boolean_constant =∆ True | False Real_constant =∆ [Sign] Real
+Manifest_string =∆ Basic_manifest_string | Verbatim_string Basic_manifest_string =∆ ' " ' String_content ' " ' String_content =∆ {Simple_string Line_wrapping_part ...}+ Verbatim_string =∆ Verbatim_string_opener Line_sequence Verbatim_string_closer Verbatim_string_opener =∆ ' " ' [Simple_string] Open_bracket Verbatim_string_closer =∆	Close_bracket [Simple_string] ' " '
+Open_bracket =∆ "[" | "{" Close_bracket =∆ "]" | "}"
+External =∆ external External_language [External_name] External_language =∆ Unregistered_language | Registered_language Unregistered_language =∆ Manifest_string External_name =∆ alias Manifest_string
+Registered_language=∆	C_external | C++_external | DLL_external
+External_signature=∆ signature[External_argument_types][:External_type] External_argument_types =∆ "(" External_type_list ")" External_type_list =∆ {External_type "," ...}* External_type =∆ Simple_string
+External_file_use=∆ useExternal_file_list External_file_list =∆ {External_file "," ...}+ External_file =∆ External_user_file | External_system_file External_user_file=∆ '"' Simple_string '"' External_system_file =∆ "<"Simple_string ">"
+C_external =∆ ’' " ' C ’[inline]
+[External_signature] [External_file_use] '"'
+C++_external =∆ ' " ' C++ inline
+[External_signature] [External_file_use] '"'
+DLL_external =∆ ' " ' dll [windows]
+DLL_identifier [DLL_index] [External_signature] [External_file_use] '"' 
+DLL_identifier =∆ Simple_string DLL_index =∆ Integer
+Comment =∆ "– –" {Simple_string Comment_break ...}* Comment_break =∆ New_line [Blanks_or_tabs] "– –"
+Integer =∆ [Integer_base] Digit_sequence Integer_base =∆ "0" Integer_base_letter Integer_base_letter =∆ "b" | "c" | "x" | "B" | "C" | "X" Digit_sequence =∆ Digit+
+Digit=∆ "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9" | "a" | "b" | "c" | "d" | "e" | "f" | "A" | "B" | "C" | "D" | "E" | "F" | "_"
