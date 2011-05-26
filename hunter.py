@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import os, sys
 import xml.etree.ElementTree as ET
-#sys.path.append(os.getcwd().split('slps')[0]+'slps/shared/python')
-import BGF
+sys.path.append(os.getcwd().split('slps')[0]+'slps/shared/python')
+import BGF3
 from functools import reduce
 
 debug = False
@@ -95,6 +95,8 @@ def reconsiderSpaces(ts,sep,vs):
 	vs = list(vs)
 	vs.append('\n')
 	for x in ts[1:]:
+		if x == '\n' and 'ignore-extra-newlines' in config.keys():
+			continue
 		if x == sep:
 			nts.append('')
 		elif nts[-1] in vs or x in vs:
@@ -403,7 +405,7 @@ def map2expr(ss):
 				j = len(ss)
 			if debug:
 				print('>>>context>>>',ss[i:j])
-			e = BGF.Star()
+			e = BGF3.Star()
 			e.setExpr(map2expr(ss[i+1:j-1]))
 			es.append(e)
 			i = j
@@ -414,7 +416,7 @@ def map2expr(ss):
 				j = len(ss)
 			if debug:
 				print('>>>context>>>',ss[i:j])
-			e = BGF.Plus()
+			e = BGF3.Plus()
 			e.setExpr(map2expr(ss[i+1:j-1]))
 			es.append(e)
 			i = j
@@ -425,7 +427,7 @@ def map2expr(ss):
 				j = len(ss)
 			if debug:
 				print('>>>context>>>',ss[i:j])
-			e = BGF.Optional()
+			e = BGF3.Optional()
 			e.setExpr(map2expr(ss[i+1:j-1]))
 			es.append(e)
 			i = j
@@ -439,17 +441,17 @@ def map2expr(ss):
 			if debug:
 				print('>>>context>>>',ss[i:j])
 			# {x y}* => (x (yx)*)?
-			e = BGF.Sequence()
+			e = BGF3.Sequence()
 			x = map2expr([ss[i+1]])
 			y = map2expr([ss[i+2]])
 			e.add(x)
-			e2 = BGF.Sequence()
+			e2 = BGF3.Sequence()
 			e2.add(y)
 			e2.add(x)
-			s = BGF.Star()
-			s.setExpr(BGF.Expression(e2))
-			e.add(BGF.Expression(s))
-			e2 = BGF.Optional()
+			s = BGF3.Star()
+			s.setExpr(BGF3.Expression(e2))
+			e.add(BGF3.Expression(s))
+			e2 = BGF3.Optional()
 			e2.setExpr(e)
 			es.append(e2)
 			i = j
@@ -463,16 +465,16 @@ def map2expr(ss):
 			if debug:
 				print('>>>context>>>',ss[i:j])
 			# {x y}+ => (x (yx)*)
-			e = BGF.Sequence()
+			e = BGF3.Sequence()
 			x = map2expr([ss[i+1]])
 			y = map2expr([ss[i+2]])
 			e.add(x)
-			e2 = BGF.Sequence()
+			e2 = BGF3.Sequence()
 			e2.add(y)
 			e2.add(x)
-			s = BGF.Star()
-			s.setExpr(BGF.Expression(e2))
-			e.add(BGF.Expression(s))
+			s = BGF3.Star()
+			s.setExpr(BGF3.Expression(e2))
+			e.add(BGF3.Expression(s))
 			es.append(e)
 			i = j
 		elif ss[i] == 'START-GROUP-SYMBOL':
@@ -496,7 +498,7 @@ def map2expr(ss):
 		elif ss[i][0] == config['start-terminal-symbol']:
 			if debug:
 				print('TERMINAL',ss[i][1:-1])
-			e = BGF.Terminal()
+			e = BGF3.Terminal()
 			if ss[i][1:-1] == '':
 				print('Serialisation error: empty terminal, replaced with ""!')
 				e.setName('""')
@@ -507,7 +509,7 @@ def map2expr(ss):
 		else:
 			if debug:
 				print('NONTERMINAL',ss[i])
-			e = BGF.Nonterminal()
+			e = BGF3.Nonterminal()
 			e.setName(ss[i])
 			es.append(e)
 			i += 1
@@ -518,28 +520,28 @@ def map2expr(ss):
 	elif len(ess) == 1:
 		if len(ess[0]) == 0:
 			print('Serialisation error: empty internal output sequence!')
-			return BGF.Expression(BGF.Epsilon())
+			return BGF3.Expression(BGF3.Epsilon())
 		elif len(ess[0]) == 1:
-			return BGF.Expression(ess[0][0])
+			return BGF3.Expression(ess[0][0])
 		else:
-			e = BGF.Sequence()
+			e = BGF3.Sequence()
 			for x in ess[0]:
-				e.add(BGF.Expression(x))
-			return BGF.Expression(e)
+				e.add(BGF3.Expression(x))
+			return BGF3.Expression(e)
 	else:
-		e = BGF.Choice()
+		e = BGF3.Choice()
 		for es in ess:
 			if len(es) == 0:
 				print('Serialisation error: empty internal output sequence!')
-				return BGF.Expression(BGF.Epsilon())
+				return BGF3.Expression(BGF3.Epsilon())
 			elif len(es) == 1:
-				e.add(BGF.Expression(es[0]))
+				e.add(BGF3.Expression(es[0]))
 			else:
-				ee = BGF.Sequence()
+				ee = BGF3.Sequence()
 				for x in es:
-					ee.add(BGF.Expression(x))
-				e.add(BGF.Expression(ee))
-		return BGF.Expression(e)
+					ee.add(BGF3.Expression(x))
+				e.add(BGF3.Expression(ee))
+		return BGF3.Expression(e)
 	print('Dead code reached!')
 	return
 
@@ -1001,9 +1003,9 @@ if __name__ == "__main__":
 		for p in prods:
 			print('\t',p[1],'is defined as:',p[2:])
 	# FINAL STEP: compose BGF
-	bgf = BGF.Grammar()
+	bgf = BGF3.Grammar()
 	for q in prods:
-		p = BGF.Production()
+		p = BGF3.Production()
 		if 'disregard-labels' not in config.keys() and q[0]:
 			p.setLabel(q[0])
 		p.setNT(q[1])
