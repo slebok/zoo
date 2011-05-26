@@ -50,6 +50,28 @@ def isQNumber(x):
 	else:
 		return reduce(lambda a,b:a and b=='.' or b.isdigit(),x,True)
 
+def removeComments(ts,s,e):
+	while s in ts:
+		i = ts.index(s)
+		# special case
+		if i>1 and 'start-terminal-symbol' in config.keys() and ts[i-1:i+2]==[config['start-terminal-symbol'],s,config['end-terminal-symbol']]:
+			print('STEP 0: adjusted for the comment starting symbol being used as a terminal.')
+			nts = ts[:i-1]
+			nts.append(ts[i-1]+ts[i]+ts[i+1])
+			nts.extend(ts[i+2:])
+			ts = nts
+			continue
+		j = endOfContext(ts,i,e)
+		if j<0:
+			print('STEP 0 error: mismatched comment delimiters.')
+			j = i
+		nts = ts[:i]
+		nts.extend(ts[j:])
+		#print('<<<',ts)
+		ts = nts
+		#print('>>>',ts)
+	return ts
+	
 def splitTokenStream(s):
 	ts = [s[0]]
 	i = 1
@@ -65,8 +87,24 @@ def splitTokenStream(s):
 			ts.append(s[i])
 			alpha = isAlpha(s[i])
 		i += 1
-	return filter(lambda x:x not in [' ',' ','	'],ts)
+	return list(filter(lambda x:x not in [' ',' ','	'],ts))
 	# not space, not hard space, not tab; newlines are preserved for now
+
+def reconsiderSpaces(ts,sep,vs):
+	nts = [ts[0]]
+	vs = list(vs)
+	vs.append('\n')
+	for x in ts[1:]:
+		if x == sep:
+			nts.append('')
+		elif nts[-1] in vs or x in vs:
+			if nts[-1]=='':
+				nts[-1] = x
+			else:
+				nts.append(x)
+		else:
+			nts[-1] += ' ' + x
+	return nts
 
 def readConfig(f):
 	global debug
@@ -746,6 +784,43 @@ def postfix2confix(p):
 				q.extend(p[w+1:])
 				p = q
 	return p
+
+def useTerminatorToFixProds(ps,ts):
+	# TODO: will not work with labels
+	nps = []
+	for p in ps:
+		while ts in p:
+			i = p.index(ts)
+			nps.append(p[:i])
+			np = [nps[-1][0]]
+			if config['defining-symbol'] not in p[i+1:]:
+				tail = p[i+1:]
+				if 'ignore-extra-newlines' in config.keys():
+					while '\n' in tail:
+						tail.remove('\n')
+				if len(tail)>0:
+					print('STEP 4 problem: terminator symbol without proper defining symbol context.',tail)
+					return nps
+				else:
+					p = tail
+					continue
+			else:
+				nt = p[i+1:p.index(config['defining-symbol'])]
+				if 'ignore-extra-newlines' in config.keys():
+					while '\n' in nt:
+						nt.remove('\n')
+				if len(nt) != 1:
+					print('STEP 4 problem: cannot determine nonterminal name from',nt)
+					nt = ' '.join(nt)
+				else:
+					nt = nt[0]
+				np.append(nt)
+			np.extend(p[p.index(config['defining-symbol'])+1:])
+			#print('<<<p<<<',p)
+			p = np
+			#print('>>>p>>>',p)
+	return nps
+
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
 		print('Usage:')
@@ -753,11 +828,15 @@ if __name__ == "__main__":
 		sys.exit(-1)
 	#f = open('src.grammar.txt','r')
 	f = open(sys.argv[1],'r')
-	# STEP 0: read the file, remove whitespace (?)
-	print('STEP 0: reading the file, removing whitespace, getting the configuration.')
-	tokens = list(splitTokenStream(f.read()))
-	f.close()
 	readConfig(sys.argv[2])
+	# STEP 0: read the file, remove whitespace (?)
+	print('STEP 0: reading the file, removing whitespace and comments.')
+	tokens = splitTokenStream(f.read())
+	f.close()
+	if 'start-comment-symbol' in config.keys() and 'end-comment-symbol' in config.keys():
+		# remove comments
+		# assumption: comments are never nested!
+		tokens = removeComments(mapglue(mapglue(tokens,config['start-comment-symbol']),config['end-comment-symbol']),config['start-comment-symbol'],config['end-comment-symbol'])
 	if debug:
 		print(tokens)
 	# STEP 1: assemble terminal symbols
@@ -796,17 +875,38 @@ if __name__ == "__main__":
 	if debug:
 		print(tokens)
 	# STEP 4: slice according to defining-symbol
-	print('STEP 4: splitting the token stream into productions according to defining-symbol.')
+	print('STEP 4: splitting the token stream into productions.')
+	if 'nonterminals-may-contain-spaces' in config.keys() and 'concatenate-symbol' in config.keys():
+		# can only treat them together, because spaces in names without concatenation symbol are highly ambiguous
+		# and concatenation symbols are never used if nonterminal names do not have spaces
+		tokens = reconsiderSpaces(tokens,config['concatenate-symbol'],config.values())
 	if 'defining-symbol' in config.keys():
 		prods = useDefiningSymbol(tokens,config['defining-symbol'])
 	else:
 		print('STEP 4 skipped, sorry: defining-symbol is not specified.')
 		# TODO
 	# STEP 4a.1: [sanity check] Infer terminator-symbol
-	print('STEP 4: inferring terminator-symbol by looking at the productions.')
 	if debug:
-		print(prods)
-	if 'terminator-symbol' not in config.keys():
+		print('The grammar is perceived like this:')
+		for p in prods:
+			print('\t',p[1],'is defined as',p[2:])
+	print('STEP 4: inferring terminator-symbol by looking at the productions.')
+	if 'terminator-symbol' in config.keys():
+		# we do have the terminator, but suppose we also had definition symbol!
+		# TODO otherwise
+		ts = findCommonTail(prods[:-1])
+		if ts:
+			need2fix = [-1]
+			prob = 100
+		else:
+			(need2fix,ts,prob) = findMostProbableTail(prods)
+		if ''.join(ts) == config['terminator-symbol']:
+			print('STEP 4 confirmed terminator-symbol, congratulations!')
+		else:
+			print('STEP 4 would have thought that terminator-symbol is',ts,'and not',config['terminator-symbol'])
+		# now let's fix productions that were joined together
+		prods = useTerminatorToFixProds(prods,config['terminator-symbol'])
+	else:
 		ts = findCommonTail(prods[:-1])
 		if ts:
 			print('STEP 4 successful: inferred terminator-symbol:',ts)
@@ -824,6 +924,11 @@ if __name__ == "__main__":
 					print('%40s'%p[1],'>>>>>>',p[-2:])
 	# STEP 4a.2: adjusting the terminator-symbol on the unfit productions
 	poststep4 = 0
+	if debug:
+		print('The grammar is perceived like this:')
+		for p in prods:
+			print('\t',p[1],'is defined as',p[2:])
+	
 	for f in need2fix:
 		for i in range(0,len(config['terminator-symbol'])):
 			if prods[f][-len(config['terminator-symbol'])+i:] == config['terminator-symbol'][:len(config['terminator-symbol'])-i]:
@@ -831,8 +936,15 @@ if __name__ == "__main__":
 				prods[f].extend(config['terminator-symbol'])
 				poststep4 += 1
 				break
+		if ''.join(prods[f][-len(config['terminator-symbol'])-1:-1]) == config['terminator-symbol'] and prods[f][-1] == '\n':
+			prods[f].pop()
+			poststep4 += 1
 	if poststep4 > 0:
 		print('STEP 4 also adjusted',poststep4,'productions that did not quite fit the expectations.')
+	if debug:
+		print('The grammar is perceived like this:')
+		for p in prods:
+			print('\t',p[1],'is defined as',p[2:])
 	# STEP 4b: splitting the token stream into productions according to terminator-symbol; inferring defining-symbol
 	# TODO
 	prods = [p[:-(len(config['terminator-symbol']))] if p[-(len(config['terminator-symbol'])):] == config['terminator-symbol'] else p for p in prods]
@@ -880,11 +992,14 @@ if __name__ == "__main__":
 	# STEP X: validating bracketing?
 	# ...
 	# RESULT
+	if 'nonterminals-may-contain-spaces' in config.keys():
+		#
+		prods = [[x.replace(' ','_') for x in p] for p in prods]
+		print('LAST STEP: replacing spaces with underscores for BGF compatibility and readability.')
 	if debug:
 		print('RESULT:')
 		for p in prods:
-			print(p[0],'is defined as:')
-			print('\t',p[2:])
+			print('\t',p[1],'is defined as:',p[2:])
 	# FINAL STEP: compose BGF
 	bgf = BGF.Grammar()
 	for q in prods:
