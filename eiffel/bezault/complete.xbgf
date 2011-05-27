@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<!--
+		An identifier is a sequence of one or more characters, of which the first is a letter (a to z and A to Z) and each of the subsequent ones,
+		if any, is a letter, a decimal digit (0 to 9) or an underscore character (_).
+		Letter case is not significant for letters: the two identifiers lInKeD_liST and LINKED_LIST are considered the same.
+	-->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>Identifier</nonterminal>
+			<bgf:expression>
+				<sequence>
+					<bgf:expression>
+						<nonterminal>Letter</nonterminal>
+					</bgf:expression>
+					<bgf:expression>
+						<star>
+							<bgf:expression>
+								<choice>
+									<bgf:expression>
+										<nonterminal>Letter</nonterminal>
+									</bgf:expression>
+									<bgf:expression>
+										<nonterminal>Decimal_digit</nonterminal>
+									</bgf:expression>
+									<bgf:expression>
+										<terminal>_</terminal>
+									</bgf:expression>
+								</choice>
+							</bgf:expression>
+						</star>
+					</bgf:expression>
+				</sequence>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<!--
+		An integer is a sequence of characters, each of which must be either:
+	        a decimal digit (0 to 9)
+	        an underscore (_), which may not be the first character.
+	    If any underscore is present, then there must be three digits to the right of every underscore, and there must not be
+		any consecutive group of four digits.
+	-->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>Integer</nonterminal>
+			<bgf:expression>
+				<choice>
+					<bgf:expression>
+						<plus>
+							<bgf:expression>
+								<nonterminal>Decimal_digit</nonterminal>
+							</bgf:expression>
+						</plus>
+					</bgf:expression>
+					<bgf:expression>
+						<sequence>
+							<bgf:expression>
+								<nonterminal>Decimal_digit</nonterminal>
+							</bgf:expression>
+							<bgf:expression>
+								<optional>
+									<bgf:expression>
+										<sequence>
+											<bgf:expression>
+												<nonterminal>Decimal_digit</nonterminal>
+											</bgf:expression>
+											<bgf:expression>
+												<optional>
+													<bgf:expression>
+														<nonterminal>Decimal_digit</nonterminal>
+													</bgf:expression>
+												</optional>
+											</bgf:expression>
+										</sequence>
+									</bgf:expression>
+								</optional>
+							</bgf:expression>
+							<bgf:expression>
+								<plus>
+									<bgf:expression>
+										<sequence>
+											<bgf:expression>
+												<terminal>_</terminal>
+											</bgf:expression>
+											<bgf:expression>
+												<nonterminal>Decimal_digit</nonterminal>
+											</bgf:expression>
+											<bgf:expression>
+												<nonterminal>Decimal_digit</nonterminal>
+											</bgf:expression>
+											<bgf:expression>
+												<nonterminal>Decimal_digit</nonterminal>
+											</bgf:expression>
+										</sequence>
+									</bgf:expression>
+								</plus>
+							</bgf:expression>
+						</sequence>
+					</bgf:expression>
+				</choice>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<!--
+		Hexadecimal_constant
+		    An hexadecimal constant is a sequence of two or more characters, whose first character is a decimal digit (0 to 9),
+			whose subsequent characters but the last are decimal digits or letters a to f or A to F, and followed by x or X,
+			with no other intervening characters.
+	-->
+	<!--
+		Real
+			A real number is made of the following elements:
+		        an optional Integer, giving the integral part (If this is absent, the integral part is 0.)
+		        a required dot (.)
+		        an optional Integer written backwards, which gives the fractional part (if this is absent, the fractional part is 0.)
+		        an optional exponent, which is the letter e or E followed by an optional Sign (+ or -) and an Integer.
+					The integer is required if the e or E is present. This indicates that the value appearing before the e or E must
+					be scaled by 10^n, where n is the given integer.
+		    No intervening character (blank or otherwise) is permitted between these elements.
+			The integral and fractional parts may not both be absent. If underscores are used in the integral or the fractional part,
+			they must also appear in the other part, unless it has three digits or less.
+	-->
+	<!--
+		Character_constant
+		    A character constant is either:
+		        a printable character except percent (%) and single quote (')
+		        a Special_character
+		    enclosed in single quotes (').
+	-->
+	<!--
+		Manifest_string
+		    A manifest string is an arbitrary sequence of:
+		        printable characters except percent (%) and double quote (")
+		        Special_characters
+		    enclosed in double quotes (").
+		    An extended form allows one to write a manifest string on two or more lines. Every line but the last must end
+			with a percent (%) and every line but the first must begin with a percent (%) possibly preceded by blanks ( ) and tab characters.
+	-->
+	<!--
+		Bit_constant
+		    A bit constant is a sequence of digits 0 or 1, followed by b or B, with no other intervening characters.
+	-->
+	<!--
+		Free_operator
+		    A free operator is a sequence of one or more characters, whose first character is any one of @ # | & and whose subsequent
+			characters, if any, may be any printable characters. Letter case is not significant for letters in free operators.
+	-->
+	<!--
+		Comment
+		    A comment begins with two dash characters (- -) and extends to the end of the line.
+		    An extended form allows one to write a comment on two or more lines. Every line but the first must begin
+			with two dash characters possibly preceded by blanks and tab characters.
+		Header_comment
+		    Comment
+	-->
+	<!--
+		Break
+		    A break is made of a sequence of one or more of the following characters:
+		        blank
+		        tab
+		        new line
+		    A break can be inserted between two adjacent elements without affecting the semantics.
+	-->
+	<!--
+		Special_character
+		    A special character has one of the following forms:
+		        a sequence %/code/ where code is an unsigned integer representing the character of ASCII code code in decimal value
+		        a sequence %K used to represent the following special characters:
+						@ 	%A 	At-sign
+						BS 	%B 	Backspace
+						^ 	%C 	Circumflex
+						$ 	%D 	Dollar
+						FF 	%F 	Form feed
+						\ 	%H 	backslasH
+						~ 	%L 	tiLda
+						NL (LF) 	%N 	Newline
+						` 	%Q 	back Quote
+						CR 	%R 	carriage Return
+						# 	%S 	Sharp
+						HT 	%T 	horizontal Tab
+						NUL 	%U 	nUll character
+						| 	%V 	Vertical bar
+						% 	%% 	percent
+						' 	%' 	single quote
+						" 	%" 	double quote
+						[ 	%( 	opening bracket
+						] 	%) 	closing bracket
+						{ 	%< 	opening brace
+						} 	%> 	closing brace
+	-->
+	<!--
+		Reserved_word
+		    A reserved word is either:
+		        a keyword, which serves to introduce and delimit the variant components of constructs. The Eiffel keywords are:
+					alias, all, and, as, check, class, creation, debug, deferred, do, else, elseif, end, ensure, expanded, export,
+					external, feature, from, frozen, if, implies, indexing, infix, inherit, inspect, invariant, is, like, local, loop,
+					not, obsolete, old, once, or, prefix, redefine, rename, require, rescue, retry, select, separate, then, undefine,
+					until, variant, when, xor.
+		        a predefined name, which comes at positions where variable tokens would also be permissible. The Eiffel predefined names are:
+					BIT, Current, False, Precursor, Result, Strip, True, Unique.
+		    The letter case is not significant for reserved words: the two words Result and rEsUlT are considered the same.
+	-->
+	<!--
+		Semicolon
+		    Semicolons are used as separators in lists such as Index_list or Compound. Semicolons are optional in most places. However they are required in some cases to remove ambiguities in Assertion and Compound. The ambiguity appears in the following piece of code:
+
+		        foo (expr).bar
+
+		    where this could be recognized as "bar applied to the result of function foo with argument expr" or as "a call to foo followed by bar applied to expr". The rule to resolve this ambiguity is to put a semicolon between 'foo' and '(expr).bar' to get the second interpretation, or to leave it as it is to get the first one.
+	-->
+</xbgf:sequence>

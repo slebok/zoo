@@ -12,6 +12,7 @@ config = {}
 masked = {}
 always_terminals = []
 always_nonterminals = []
+ignore_tokens = []
 
 special = \
 	[
@@ -87,7 +88,10 @@ def splitTokenStream(s):
 			ts.append(s[i])
 			alpha = isAlpha(s[i])
 		i += 1
-	return list(filter(lambda x:x not in [' ',' ','	'],ts))
+	if 'tabulation-symbol' in config.keys():
+		ts = mapglue(ts,config['tabulation-symbol'])
+	#return list(filter(lambda x:x not in [' ',' ','	'],['TABULATION-SYMBOL' if t == config['tabulation-symbol'] else t for t in ts]))
+	return ['\t' if t=='TABULATION' else t for t in filter(lambda x:x not in [' ',' ','	'],['TABULATION' if t == config['tabulation-symbol'] else t for t in ts])]
 	# not space, not hard space, not tab; newlines are preserved for now
 
 def reconsiderSpaces(ts,sep,vs):
@@ -95,7 +99,7 @@ def reconsiderSpaces(ts,sep,vs):
 	vs = list(vs)
 	vs.append('\n')
 	for x in ts[1:]:
-		if x == '\n' and 'ignore-extra-newlines' in config.keys():
+		if x in ignore_tokens:
 			continue
 		if x == sep:
 			nts.append('')
@@ -127,6 +131,15 @@ def readConfig(f):
 		if e.tag=='decompose-symbols':
 			for x in e.findall('except'):
 				always_terminals.append(x.text)
+		if e.tag=='ignore':
+			for x in e.findall('*'):
+				if x.tag=='newline':
+					ignore_tokens.append('\n')
+					ignore_tokens.append('@@@0-0')
+				elif x.tag=='same-indentation':
+					ignore_tokens.append('@@@1-1')
+				else:
+					ignore_tokens.append(x.text)
 	if debug:
 		print('Ok',config)
 
@@ -745,7 +758,8 @@ def balanceProd(p):
 				else:
 					fail = True
 			if fail:
-				print('Cannot balance a production :-(')
+				print('STEP 6: Cannot balance a production, reverting',oldpi,'to a terminal.')
+				p[i] = config['start-terminal-symbol']+config[oldpi.lower()]+config['end-terminal-symbol']
 				i += 1
 			else:
 				print('STEP 6: Rebalanced ambiguity of',oldpi,'with',p[i])
@@ -797,9 +811,9 @@ def useTerminatorToFixProds(ps,ts):
 			np = [nps[-1][0]]
 			if config['defining-symbol'] not in p[i+1:]:
 				tail = p[i+1:]
-				if 'ignore-extra-newlines' in config.keys():
-					while '\n' in tail:
-						tail.remove('\n')
+				for x in ignore_tokens:
+					while x in tail:
+						tail.remove(x)
 				if len(tail)>0:
 					print('STEP 4 problem: terminator symbol without proper defining symbol context.',tail)
 					return nps
@@ -808,9 +822,9 @@ def useTerminatorToFixProds(ps,ts):
 					continue
 			else:
 				nt = p[i+1:p.index(config['defining-symbol'])]
-				if 'ignore-extra-newlines' in config.keys():
-					while '\n' in nt:
-						nt.remove('\n')
+				for x in ignore_tokens:
+					while x in nt:
+						nt.remove(x)
 				if len(nt) != 1:
 					print('STEP 4 problem: cannot determine nonterminal name from',nt)
 					nt = ' '.join(nt)
@@ -822,6 +836,29 @@ def useTerminatorToFixProds(ps,ts):
 			p = np
 			#print('>>>p>>>',p)
 	return nps
+
+def considerIndentation(ts):
+	nts = ['@@@0-']
+	oldlevel = level = 0
+	# ['A', '\n', '\t', 'B', '\n', '\t', 'C', 'D', 'E', 'F', '\n', '\t', '\t', 'G', '\n', '\t', 'H', '\n', 'X', '\n', '\t', 'Y', '\n', '\t', 'Z', '\n', 'B', '\n', '\t', 'K', '\n', 'C', '\n', '\t', 'L', '\n']
+	for t in ts:
+		if t == '\n':
+			if nts[-1][:3] == '@@@':
+				nts[-1] += '0'
+				oldlevel = level
+			nts.append('@@@'+str(oldlevel)+'-')
+			level = 0
+		elif t == '\t':
+			level += 1
+		elif nts[-1][:3]=='@@@':
+			nts[-1] += str(level)
+			oldlevel = level
+			nts.append(t)
+		else:
+			nts.append(t)
+	if nts[-1][:3] == '@@@':
+		nts[-1] += '0'
+	return nts
 
 if __name__ == "__main__":
 	if len(sys.argv) != 4:
@@ -844,7 +881,7 @@ if __name__ == "__main__":
 	# STEP 1: assemble terminal symbols
 	print('STEP 1: assembling terminal symbols according to start-terminal-symbol and end-terminal-symbol.')
 	for k in masked.keys():
-		if len(k)>1:
+		if len(k)>1 and k.find('@@@')<0:
 			print('STEP 1: going to glue tokens that resemble masked terminal', k.replace('\n','\\n'))
 			tokens = mapglue(tokens,k)
 	if 'start-terminal-symbol' in config.keys() and 'end-terminal-symbol' in config.keys():
@@ -870,14 +907,21 @@ if __name__ == "__main__":
 	# STEP 3: assembling composite metasymbols together
 	print('STEP 3: assembling metasymbols according to their possible values.')
 	tokens = assembleQualifiedNumbers(tokens)
-	for k in config.keys():
-		if len(config[k])>1:
-			print('STEP 3: going to glue tokens that resemble metasymbol', config[k].replace('\n','\\n'))
-			tokens = mapglue(tokens,config[k])
+	for k in config.values():
+		if len(k)>1 and k.find('\n')<0:
+			print('STEP 3: going to glue tokens that resemble metasymbol', k.replace('\n','\\n'))
+			tokens = mapglue(tokens,k)
 	if debug:
 		print(tokens)
 	# STEP 4: slice according to defining-symbol
 	print('STEP 4: splitting the token stream into productions.')
+	if 'consider-indentation' in config.keys():
+		# rewrite tokens with tabulation
+		tokens = considerIndentation(tokens)
+	if debug:
+		print('After considering indentation:',tokens)
+	if debug:
+		print(tokens)
 	if 'nonterminals-may-contain-spaces' in config.keys() and 'concatenate-symbol' in config.keys():
 		# can only treat them together, because spaces in names without concatenation symbol are highly ambiguous
 		# and concatenation symbols are never used if nonterminal names do not have spaces
@@ -930,7 +974,6 @@ if __name__ == "__main__":
 		print('The grammar is perceived like this:')
 		for p in prods:
 			print('\t',p[1],'is defined as',p[2:])
-	
 	for f in need2fix:
 		for i in range(0,len(config['terminator-symbol'])):
 			if prods[f][-len(config['terminator-symbol'])+i:] == config['terminator-symbol'][:len(config['terminator-symbol'])-i]:
@@ -941,6 +984,12 @@ if __name__ == "__main__":
 		if ''.join(prods[f][-len(config['terminator-symbol'])-1:-1]) == config['terminator-symbol'] and prods[f][-1] == '\n':
 			prods[f].pop()
 			poststep4 += 1
+	ii = list(filter(lambda x:x[:3]=='@@@',ignore_tokens))
+	if 'consider-indentation' in config.keys() and len(ii)>0:
+		# rewrite tokens with tabulation
+		#tokens = considerIndentation(tokens)
+		for x in ii:
+			prods = [list(filter(lambda y:y!=x,p)) for p in prods]
 	if poststep4 > 0:
 		print('STEP 4 also adjusted',poststep4,'productions that did not quite fit the expectations.')
 	if debug:
@@ -961,8 +1010,16 @@ if __name__ == "__main__":
 	if not step5:
 		print('STEP 5 skipped: sorry, no metasymbols specified.')
 	# STEP 6: validating metasymbols
+	if debug:
+		print('The grammar is perceived like this:')
+		for p in prods:
+			print('\t',p[1],'is defined as',p[2:])
 	prods = list(map(postfix2confix,prods))
 	prods = list(map(balanceProd,prods))
+	if debug:
+		print('The grammar is perceived like this:')
+		for p in prods:
+			print('\t',p[1],'is defined as',p[2:])
 	# STEP 7: various commands
 	print('STEP 7: executing special extraction commands.')
 	step7 = False
@@ -970,10 +1027,11 @@ if __name__ == "__main__":
 	if debug:
 		print('Defined are',defined)
 	defined.append(config['defining-symbol'])
-	if 'ignore-extra-newlines' in config.keys():
-		print('STEP 7: ignoring extra newlines.')
+	if len(ignore_tokens)>0:
+		print('STEP 7: ignoring extra tokens.')
 		step7 = True
-		prods = [list(filter(lambda y:y!='\n',p)) for p in prods]
+		for x in ignore_tokens:
+			prods = [list(filter(lambda y:y!=x,p)) for p in prods]
 		#prods = list(map(lambda x:filter(lambda y:y!='\n',x),prods))
 	if 'decompose-symbols' in config.keys():
 		print('STEP 7 (part of rule 4): decomposing compound symbols.')
