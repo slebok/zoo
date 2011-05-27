@@ -90,8 +90,8 @@ def splitTokenStream(s):
 		i += 1
 	if 'tabulation-symbol' in config.keys():
 		ts = mapglue(ts,config['tabulation-symbol'])
-	#return list(filter(lambda x:x not in [' ',' ','	'],['TABULATION-SYMBOL' if t == config['tabulation-symbol'] else t for t in ts]))
-	return ['\t' if t=='TABULATION' else t for t in filter(lambda x:x not in [' ',' ','	'],['TABULATION' if t == config['tabulation-symbol'] else t for t in ts])]
+		return ['\t' if t=='TABULATION' else t for t in filter(lambda x:x not in [' ',' ','	'],['TABULATION' if t == config['tabulation-symbol'] else t for t in ts])]
+	return list(filter(lambda x:x not in [' ',' ','	'],ts))
 	# not space, not hard space, not tab; newlines are preserved for now
 
 def reconsiderSpaces(ts,sep,vs):
@@ -908,7 +908,7 @@ if __name__ == "__main__":
 	print('STEP 3: assembling metasymbols according to their possible values.')
 	tokens = assembleQualifiedNumbers(tokens)
 	for k in config.values():
-		if len(k)>1 and k.find('\n')<0:
+		if len(k)>1 and (k.find('\n')<0 or 'consider-indentation' not in config.keys()):
 			print('STEP 3: going to glue tokens that resemble metasymbol', k.replace('\n','\\n'))
 			tokens = mapglue(tokens,k)
 	if debug:
