@@ -1,0 +1,375 @@
+Class_declaration
+    [ Indexing ]
+    Class_header
+    [ Formal_generics ]
+    [ Obsolete ]
+    [ Inheritance ]
+    [ Creators ]
+    [ Features ]
+    [ Invariant ]
+    end [ -- class Class_name ]
+Indexing
+    indexing Index_list
+Index_list
+    { Index_clause ; ... }
+Index_clause
+    [ Index ] Index_terms
+Index
+    Identifier :
+Index_terms
+    { Index_value , ... }+
+Index_value
+    Identifier | Manifest_constant
+
+Class_header
+    [ Header_mark ] class Class_name
+Header_mark
+    deferred | expanded | separate 
+Class_name
+    Identifier
+
+Formal_generics
+    [ Formal_generic_list ]
+Formal_generic_list
+    { Formal_generic , ... } 
+Formal_generic
+    Formal_generic_name [ Constraint ]
+Formal_generic_name
+    Identifier
+Constraint
+    -> Class_type
+
+Obsolete
+    obsolete Message
+Message
+    Manifest_string
+
+Inheritance
+    inherit Parent_list
+Parent_list
+    { Parent ; ... }
+Parent
+    Class_type [ Feature_adaptation ]
+Feature_adaptation
+    [ Rename ]
+    [ New_exports ]
+    [ Undefine ]
+    [ Redefine ]
+    [ Select ]
+    end 
+Rename
+    rename Rename_list
+Rename_list
+    { Rename_pair , ... }
+Rename_pair
+    Feature_name as Feature_name
+
+New_exports
+    export New_export_list
+New_export_list
+    { New_export_item ; ... }
+New_export_item
+    Clients Feature_set
+Feature_set
+    Feature_list | all
+Feature_list
+    { Feature_name , ... }
+
+Clients
+    { Class_list }
+Class_list
+    { Class_name , ... }
+
+Redefine
+    redefine Feature_list
+Undefine
+    undefine Feature_list
+Select
+    select Feature_list
+
+Creators
+    creation { Creation_clause creation ... }+
+Creation_clause
+    [ Clients ] [ Header_comment ] Procedure_list 
+Procedure_list
+    { Procedure_name , ... }
+Procedure_name
+    Identifier 
+Features
+    feature { Feature_clause feature ... }+
+Feature_clause
+    [ Clients ] [ Header_comment ] Feature_declaration_list
+Feature_declaration_list
+    { Feature_declaration ; ... }
+
+Feature_declaration
+    New_feature_list Declaration_body
+Declaration_body
+    [ Formal_arguments ] [ Type_mark ] [ Constant_or_routine ]
+Constant_or_routine
+    is Feature_value
+Feature_value
+    Manifest_constant | Unique | Routine
+Unique
+    Unique
+
+New_feature_list
+    { New_feature , ... }+
+New_feature
+    [ frozen ] Feature_name
+
+Feature_name
+    Identifier | Prefix | Infix
+Prefix
+    prefix " Prefix_operator "
+Infix
+    infix " Infix_operator "
+Prefix_operator
+    Unary | Free_operator
+Infix_operator
+    Binary | Free_operator 
+Unary
+    not | + | -
+Binary
+    + | - | * | / | < | > | <= | >= | // | \\ | ^ |
+    and | or | xor | and then | or else | implies
+
+Formal_arguments
+    ( Entity_declaration_list )
+Entity_declaration_list
+    { Entity_declaration_group ; ... }
+Entity_declaration_group
+    Identifier_list Type_mark
+Identifier_list
+    { Identifier , ... }+
+Type_mark
+    : Type 
+Routine
+    [ Obsolete ]
+    [ Header_comment ]
+    [ Precondition ]
+    [ Local_declarations ]
+    Routine_body
+    [ Postcondition ]
+    [ Rescue ]
+    end [ -- Feature_name ] 
+Routine_body
+    Effective | Deferred
+Effective
+    Internal | External
+Internal
+    Routine_mark Compound
+Routine_mark
+    do | once
+Deferred
+    deferred
+
+External
+    external Language_name [ External_name ]
+Language_name
+    Manifest_string
+External_name
+    alias Manifest_string 
+Local_declarations
+    local Entity_declaration_list
+
+Precondition
+    require [ else ] Assertion
+Postcondition
+    ensure [ then ] Assertion
+Invariant
+    invariant Assertion
+Assertion
+    { Assertion_clause ; ... }
+Assertion_clause
+    [ Tag_mark ] Unlabeled_assertion_clause
+Unlabeled_assertion_clause
+    Boolean_expression | Comment
+Tag_mark
+    Tag :
+Tag
+    Identifier 
+Rescue
+    rescue Compound 
+Type
+    Class_type |
+    Class_type_expanded |
+    Class_type_separate |
+    Anchored | Bit_type 
+Class_type
+    Class_name [ Actual_generics ]
+Actual_generics
+    [ Type_list ]
+Type_list
+    { Type , ... } 
+Class_type_expanded
+    expanded Class_type
+Class_type_separate
+    separate Class_type 
+Bit_type
+    BIT Bit_length 
+Bit_length
+    Integer_constant | Attribute
+Anchored
+    like Anchor
+Anchor
+    Identifier | Current
+
+Compound
+    { Instruction ; ... }
+Instruction
+    Creation | Call | Assignment |
+    Assignment_attempt | Conditional |
+    Multi_branch | Loop | Debug |
+    Check | Retry | Null_instruction
+
+Creation
+    ! [ Type ] ! Writable [ Creation_call ] 
+Creation_call
+    . Procedure_name [ Actuals ] 
+Assignment
+    Writable := Expression
+Assignment_attempt
+    Writable ?= Expression
+
+Conditional
+    if Then_part_list [ Else_part ] end
+Then_part_list
+    { Then_part elseif ... }+
+Then_part
+    Boolean_expression then Compound
+Else_part
+    else Compound
+
+Multi_branch
+    inspect Expression
+    [ When_part_list ] [ Else_part ] end
+When_part_list
+    when { When_part when ... }+
+When_part
+    Choices then Compound
+Choices
+    { Choice , ... }
+Choice
+    Choice_constant | Interval 
+Interval
+    Choice_constant .. Choice_constant 
+Choice_constant
+    Integer_constant | Character_constant | Attribute 
+Loop
+    Initialization
+    [ Invariant ]
+    [ Variant ]
+    Loop_body
+    end
+Initialization
+    from Compound
+Variant
+    variant [ Tag_mark ] Expression 
+Loop_body
+    Exit loop Compound
+Exit
+    until Boolean_expression
+
+Debug
+    debug [ Debug_keys ] Compound end
+Debug_keys
+    ( Debug_key_list )
+Debug_key_list
+    { Debug_key , ... }
+Debug_key
+    Manifest_string
+
+Check
+    check Assertion end
+
+Retry
+    retry 
+Null_instruction
+    empty 
+Call
+    Qualified_call | Precursor
+Qualified_call
+    [ Call_qualifier ] Call_chain
+Call_qualifier
+    Call_target .
+Call_target
+    Parenthesized | Result | Current | Precursor
+Call_chain
+    { Unqualified_call . ... }+
+Unqualified_call
+    Identifier [ Actuals ] 
+Precursor
+    [ Parent_qualification ] Precursor [ Actuals ]
+Parent_qualification
+    { Class_name } 
+Attribute
+    Identifier 
+Writable
+    Identifier | Result 
+Actuals
+    ( Actual_list )
+Actual_list
+    { Actual , ... } 
+Actual
+    Expression | Address 
+Address
+    $ Address_mark
+Address_mark
+    Feature_name | Current | Result
+
+Expression
+    Current | Result |
+    Call | Operator_expression |
+    Equality | Manifest_array |
+    Old | Strip | Boolean_constant |
+    Bit_constant | Integer | Real |
+    Manifest_string | Character_constant |
+    Wide_character_constant |
+    Wide_manifest_string |
+    Hexadecimal_constant 
+Boolean_expression
+    Expression 
+Operator_expression
+    Parenthesized | Unary_expression | Binary_expression
+Parenthesized
+    ( Expression )
+Unary_expression
+    Prefix_operator Expression
+Binary_expression
+    Expression Infix_operator Expression 
+Equality
+    Expression Comparison Expression
+Comparison
+    = | /= 
+Manifest_constant
+    Boolean_constant | Character_constant |
+    Integer_constant | Real_constant |
+    Manifest_string | Bit_constant |
+    Wide_character_constant |
+    Wide_manifest_string |
+    Hexadecimal_constant 
+Boolean_constant
+    True | False
+Integer_constant
+    [ Sign ] Integer 
+Real_constant
+    [ Sign ] Real 
+Sign
+    + | -
+Wide_character_constant
+    $ Character_constant 
+Wide_manifest_string
+    $ Manifest_string 
+Manifest_array
+    << Expression_list >>
+Expression_list
+    { Expression , ... }
+
+Old
+    old Expression 
+Strip
+    Strip ( Attribute_list )
+Attribute_list
+    { Attribute , ... } 
+
