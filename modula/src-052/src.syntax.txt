@@ -1,0 +1,157 @@
+Compilation I [ UNSAFE ] ( Interface I Module ).
+Interface = INTERFACE Ident ";" { Import }
+{ Declaration } END Ident "_"
+Module = MODULE Ident [ EXPORTS IDList ] ";" Import }
+Block Ident ".".
+Import = [ FROM Ident ] IMPORT IDList ";".
+Block I { Declaration } BEGIN Stmts END.
+Declaration = CONST { Constbecl ";" }
+I TYPE { TypeDec1 ";" }
+I EXCEPTION { EXCepti0nDeC1 ";" }
+I VAR ( Variablebecl ";" }
+I ProcedureHead [ "=" Block Ident ] "
+I REVEAL { TypeID ( "=" I "<:" ) Type ;" }.
+ConstDec1 I Ident [ ":" Type ] "=" ConstExpr.
+TypeDec1 = Ident ( "=" I "<:" ) Type.
+ExceptionDecl = Ident [ "(" Type ")" ].
+Variab1eDecl = IDList (":" Type t ":=" Expr).
+ProcedureHead = PROCEDURE Ident Signature.
+Signature = "(" Formals ")" [ "2" Type ] [ RAISES Raises ]
+Formale I [ Formal { ";" Formal } [ ";" ] ].
+Formal ' [ VALUE I VAR I READONLY ] IDList ( "z" Type k ":=" ConstExpr )
+Raises = "{" [ ExceptionID { "," ExceptionID } ] "}"
+
+Stmts - [Stn { ";" Stmt } [ ";" ] ].
+Stmt = AssignStmt I Block I Cal1Stmt I CaseStmt
+I ExitStmt I EvalStmt I ForStmt I IfStmt I LockStmt
+I LoopStmt I RaiseSt|t I RepeatStmt I ReturnStmt
+I TryFinStmt I TryXptStmt I TCaseStmt I HhileStmt I WithStmt.
+AssignStmt Expr ":=" Expr.
+CallStmt Expr "(" [ Actual { "," Actual } ] ")".
+CaseStmt CASE Expr UF [ Case ] { "I" Case } [ELSE Stmts] END.
+ExitStmt EXIT.
+EvalStmt EVAL Expr.
+F0rStmt FOR Ident ":=" Expt TO EXP! [ BY Expr ] DD Stmts END.
+IfStmt IF Expr THEN Stmts {ELSIF Expt THEN StmtS} [ELSE Stmts] END
+LockStmt LOCK Expr D0 Stmts END.
+LoopStmt LOOP Stmts END.
+RaiseStmt RAISE ExceptionID [ "(" Expr ")" ].
+Repeatstmt REPEAT Stmts UNTIL Expr.
+ReturnStmt RETURN [ Expr ].
+TCaseStmt TYPECASE Expr DF [ Tcase ] { "I" Tcase } [ELSE Stmts] END.
+TryXptStmt TRY Stmts EXCEPT [Handler] {"I" Handler} [ELSE Stmts] END.
+TryFinStmt TRY Stmts FINALLY Stmts END.
+Hhi1eStmt WHILE Expt D0 Stmts END.
+Uithstmt WITH Binding { "," Binding } D0 Stmts END.
+Case = Labels { "," Labels } "=>" Stmts.
+Labels = ConstExpr [".." ConstExpr].
+Handler = ExceptionID { "," ExceptionID } ["(" Ident ")"] "=>" Stmts.
+Tcase = Type { "," Type } [ "(" Ident ")" ] "=>" Stmts.
+Binding = Ident "=" Expr.
+Actual = ( [ Ident ":=" ] Expr I Type ).
+
+
+Type - TypeName I ArrayType I PackedType I EnumType I 0bjectType
+I ProcedureType I RecordType I RefType I SetType I SubrangeType
+I n(H Type H)u-
+ArrayType = ARRAY [ Type { ",“ Type } ] OF Type.
+PackedType = BITS ConstExpr FOR Type.
+Enu_Type = n{n [ IDList ] u}n_
+0bjectType = [Ancestor] [Brand] OBJECT Fields [ METHODS Hethods ] END
+
+ProcedureType
+RecordType
+RefType
+SetType
+SubrangeType
+PROCEDURE Signature.
+RECORD Fields END.
+[ UNTRACED ] f Brand ] REF Type.
+SET OF Type.
+"[" ConstExpr "__" ConstExpr "]"
+Ancestor I TypeName I ObjectType I UNTRACED.
+Brand = BRANDED [ TextLiteral ].
+Fields = [ Field { ";" Field } [ ";" ] ].
+Field = IDList ( ":" Type 1 ":=" ConstExpr ).
+Methods = [ Method { ";" Method } [ ";" ] ].
+.,||
+Method = Ident ( Signature I "
+ProcedureID
+
+ConstExpr I Expr.
+Expr
+E1
+E2
+E3
+E4
+E5
+E6
+E7
+E8
+I
+Relop
+Addop
+Hulop
+E1 { OR E1 }.
+E2 { AND E2 }
+{ NOT } E3.
+E4 { Relop E4
+as { Addop E5
+E6 { Hulop E6
+{ ||+|| I ||_n J,
+E8 { Selector
+}
+}
+}
+E
+}
+Ident I Number I CharL1tera1 I TextL1tera1
+Constructor I "( Expr )
+- |l_l\ I |\#|| I n< I |< I an
+- u+|\ I o\,.,|| I Ilt
+- ||*|\ I l\/ll I   I  
+Selector I "‚Äò" I "." Ident I ‚Äô[ Expr { " Expr } ]
+I ' ual {
+ll<| [  
+IIIIAC  
+Constructor I Type "{ [ Setcons I RecordCons I ArrayCons ] }
+SetCons I SetE1t { "." SetE1t }
+SetE1t I Expr [ ".." Expr ]
+RecordCons I RecordE1t { RecordE1t }
+RecordE1t I [ Ident ":I ] Expr
+ArrayCone I Expr { "." Expr } [
+
+TypeName I Ident [ "." Ident ] I ROOT I UNTRACED ROOT
+ExceptionID = Ident [ "." Ident ].
+ProcedureID = Ident [ "." Ident ].
+IDList = Ident { "," Ident }.
+
+
+Literal = Number I CharLitera1 I TextLitera1.
+Ident = Letter { Letter I Digit I "_" }.
+operator. 3 ||+|| I ||_|| I n*u I ll/ll I ll _ ll I ne n I n : ll ngu I llgll I n*n I < 1
+I ll<ll ruin I Il>ll n¢|| I n>|| I llkll I ||<n me : u I ||.|| ll>ll I ll 'U I 1
+I NIM I urn I n_n n_a| I n(u I l|)n I n{|| I n],|| I n[|| I ll]ll
+CharLiteral = "’" ( PrintingChar I Escape ) "’".
+TextLiteral = DQUUTE { PrintingChar I Escape } DQUUTE.
+E3cape = :Nu Ilnll I #Nu :stu I |1\n urn I ll\ll safes
+I ||\n n\|| I |\\n nan I u\n  
+I "\" 0ctalDigit GctalDigit 0cta1Digit.
+Number = Digit { Digit }
+I Digit { Digit } "_" HexDigit { HexDigit }
+I Digit { Digit } "." Digit { Digit } [ Exponent ].
+Exponent = ("E" I "e" I "D" I "d" ) [ "+" I "-" ] Digit { Digit }
+PrintingChar = Letter I Digit I UtherChar.
+HexDigit = Digit I "A" I "B" I "c" I "D" I "E" | "F"
+I nan I nbn I MCH I lldll I neu I Hill.
+
+  '11011 I 11111 I 'N' I 11911.
+0cta1Digit = "0" | "1" I ... 1 H7".
+Letter. , 11A11 I 11B11 I _ _ _ I 11211 I nan I 11b11 I _ _ ' I 11z11_
+Utherchar ‘ ll ll I 11 ! ll I 11#|1 I 11$11 I 111211 I lltll I ll (11 I Il) ll
+I 11*11 I 114,11 I ll ' ll I 11_,11 I ll _ 11 I 11/11 I ll : 11 I 11 ; ll
+I 11<11 I 11,11 I 11>11 I 11'?11 I 11°11 I 11[11 I ll] ll I 11-'~11
+I 11-11 I llfll I 11{11 I 11I11 I 11}11 I 11"11
+| ExtendedChar
+ExtendedChar = any char with ISU-Latin-1 code in [8_240..8_377]
+

@@ -1,0 +1,154 @@
+Compilation = [ UNSAFE ] ( Interface | Module ).
+Interface = INTERFACE Ident ";" { Import }
+{ Declaration } END Ident ".".
+Module = MODULE Ident [ EXPORTS IDList ] ";" { Import }
+Block Ident ".".
+Import = [ FROM Ident ] IMPORT IDList ";".
+Block = { Declaration } BEGIN Stmts END.
+Declaration = CONST { ConstDecl ";" }
+| TYPE { TypeDecl ";" }
+| EXCEPTION { ExceptionDecl ";" }
+| VAR { VariableDecl ";" }
+| ProcedureHead [ "=" Block Ident ] ";"
+| REVEAL { TypeID ( "=" | "<:" ) Type ";" }.
+
+ConstDecl = Ident [ ":" Type ] "=" ConstExpr.
+TypeDecl = Ident ( "=" | "<:" ) Type.
+ExceptionDecl = Ident [ "(" Type ")" ].
+VariableDecl = IDList (":" Type & ":=" Expr).
+ProcedureHead = PROCEDURE Ident Signature.
+Signature = "(" Formals ")" [ ":" Type ] [ RAISES Raises ].
+
+Formals = [ Formal { ";" Formal } [ ";" ] ].
+Formal = [ VALUE | VAR | READONLY ] IDList ( ":" Type & ":=" ConstExpr ).
+Raises = "{" [ ExceptionID { "," ExceptionID } ] "}".
+
+Stmts = [Stmt { ";" Stmt } [ ";" ] ].
+
+Stmt = AssignStmt | Block | CallStmt | CaseStmt
+| ExitStmt | EvalStmt | ForStmt | IfStmt | LockStmt
+| LoopStmt | RaiseStmt | RepeatStmt | ReturnStmt
+| TryFinStmt | TryXptStmt | TCaseStmt | WhileStmt | WithStmt.
+
+AssignStmt = Expr ":=" Expr.
+CallStmt = Expr "(" [ Actual { "," Actual } ] ")".
+CaseStmt = CASE Expr OF [ Case ] { "|" Case } [ELSE Stmts] END.
+ExitStmt = EXIT.
+EvalStmt = EVAL Expr.
+ForStmt = FOR Ident ":=" Expt TO Expr [ BY Expr ] DO Stmts END.
+IfStmt = IF Expr THEN Stmts {ELSIF Expt THEN Stmts} [ELSE Stmts] END.
+LockStmt = LOCK Expr DO Stmts END.
+LoopStmt = LOOP Stmts END.
+RaiseStmt = RAISE ExceptionID [ "(" Expr ")" ].
+Repeatstmt = REPEAT Stmts UNTIL Expr.
+ReturnStmt = RETURN [ Expr ].
+TCaseStmt = TYPECASE Expr OF [ Tcase ] { "|" Tcase } [ELSE Stmts] END.
+TryXptStmt = TRY Stmts EXCEPT [Handler] {"|" Handler} [ELSE Stmts] END.
+TryFinStmt = TRY Stmts FINALLY Stmts END.
+WhileStmt = WHILE Expt DO Stmts END.
+WithStmt = WITH Binding { "," Binding } DO Stmts END.
+
+Case = Labels { "," Labels } "=>" Stmts.
+Labels = ConstExpr [".." ConstExpr].
+Handler = ExceptionID { "," ExceptionID } ["(" Ident ")"] "=>" Stmts.
+Tcase = Type { "," Type } [ "(" Ident ")" ] "=>" Stmts.
+Binding = Ident "=" Expr.
+
+Actual = ( [ Ident ":=" ] Expr | Type ).
+
+Type = TypeName | ArrayType | PackedType | EnumType | ObjectType
+| ProcedureType | RecordType | RefType | SetType | SubrangeType
+| "(" Type ")".
+
+ArrayType = ARRAY [ Type { "," Type } ] OF Type.
+PackedType = BITS ConstExpr FOR Type.
+EnumType = "{" [ IDList ] "}".
+ObjectType = [Ancestor] [Brand] OBJECT Fields [ METHODS Methods ] END.
+
+ProcedureType = PROCEDURE Signature.
+RecordType = RECORD Fields END.
+RefType = [ UNTRACED ] [ Brand ] REF Type.
+SetType = SET OF Type.
+SubrangeType = "[" ConstExpr ".." ConstExpr "]".
+
+Ancestor = TypeName | ObjectType | UNTRACED.
+Brand = BRANDED [ TextLiteral ].
+Fields = [ Field { ";" Field } [ ";" ] ].
+Field = IDList ( ":" Type & ":=" ConstExpr ).
+Methods = [ Method { ";" Method } [ ";" ] ].
+Method = Ident ( Signature & ":=" ProcedureID ).
+
+ConstExpr = Expr.
+
+Expr = E1 {OR E1 }.
+E1 = E2 { AND E2 }.
+E2 = { NOT } E3.
+E3 = E4 { Relop E4 }.
+E4 = E5 { Addop E5 }.
+E5 = E6 { Mulop E6 }.
+E6 = { "+" | "-" } E7.
+E7 = E8 { Selector }.
+E8 = Ident | Number | CharLiteral | TextLiteral
+| Constructor | "(" Expr ")".
+
+Relop = "=" | "#" | "<" | "<=" | ">" | ">=" | IN.
+Addop = "+" | "-" | "&".
+Mulop = "*" | "/" | DIV | MOD.
+
+Selector = "^" | "." Ident | "[" Expr { "," Expr } "]"
+| "(" [Actual {"," Actual } ] ")".
+
+Constructor = Type "{" [ SetCons | RecordCons | ArrayCons ] "}".
+
+SetCons = SetElt { "." SetElt }.
+SetElt = Expr [ ".." Expr ].
+RecordCons = RecordElt { "," RecordElt }.
+RecordElt = [ Ident ":=" ] Expr.
+ArrayCons = Expr { "," Expr } [ "," ".." ] .
+
+TypeName = Ident [ "." Ident ] | ROOT | UNTRACED ROOT.
+ExceptionID = Ident [ "." Ident ].
+ProcedureID = Ident [ "." Ident ].
+
+IDList = Ident { "," Ident }.
+
+Literal = Number | CharLiteral | TextLiteral.
+
+Ident = Letter { Letter | Digit | "_" }.
+
+Operator = "+" | "-" | "*" | "/" | "." | "^" | ":" "=" | "=" | "$" | "<"
+| "<" "=" | ">" "=" | ">" | "&" | "<" ":" | "=" ">" | "," | ";"
+| "|" | ":" | "." "." | "(" | ")" | "{" | "}" | "[" | "]".
+
+CharLiteral = "’" ( PrintingChar | Escape ) "’".
+
+TextLiteral = DQUOTE { PrintingChar | Escape } DQUOTE.
+
+Escape = "\" "n" | "\" "t" | "\" "r" | "\" "f"
+| "\" "\" | "\" "’" | "\" DQUOTE
+| "\" OctalDigit OctalDigit OctalDigit.
+
+Number = Digit { Digit }
+| Digit { Digit } "_" HexDigit { HexDigit }
+| Digit { Digit } "." Digit { Digit } [ Exponent ].
+
+Exponent = ("E" | "e" | "D" | "d" ) [ "+" | "-" ] Digit { Digit }.
+
+PrintingChar = Letter | Digit | UtherChar.
+
+HexDigit = Digit | "A" | "B" | "C" | "D" | "E" | "F"
+| "a" | "b" | "c" | "d" | "e" | "f".
+
+Digit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9".
+
+OctalDigit = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7".
+
+Letter = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z".
+
+OtherChar = " " | "!" | "#" | "$" | "%" | "&" | "(" | ")"
+| "*" | "+" | "," | "-" | "." | "/" | ":" | ";"
+| "<" | "=" | ">" | "?" | "@" | "[" | "]" | "^"
+| "_" | "‘" | "{" | "|" | "}" | "~"
+| ExtendedChar.
+
+ExtendedChar = " " | "¡" | "¢" | "£" | "¤" | "¥" | "¦" | "§" | "¨" | "©" | "ª" | "«" | "¬" | "­" | "®" | "¯" | "°" | "±" | "²" | "³" | "´" | "µ" | "¶" | "·" | "¸" | "¹" | "º" | "»" | "¼" | "½" | "¾" | "¿" | "À" | "Á" | "Â" | "Ã" | "Ä" | "Å" | "Æ" | "Ç" | "È" | "É" | "Ê" | "Ë" | "Ì" | "Í" | "Î" | "Ï" | "Ð" | "Ñ" | "Ò" | "Ó" | "Ô" | "Õ" | "Ö" | "×" | "Ø" | "Ù" | "Ú" | "Û" | "Ü" | "Ý" | "Þ" | "ß" | "à" | "á" | "â" | "ã" | "ä" | "å" | "æ" | "ç" | "è" | "é" | "ê" | "ë" | "ì" | "í" | "î" | "ï" | "ð" | "ñ" | "ò" | "ó" | "ô" | "õ" | "ö" | "÷" | "ø" | "ù" | "ú" | "û" | "ü" | "ý" | "þ" | "ÿ".

@@ -13,6 +13,7 @@ masked = {}
 always_terminals = []
 always_nonterminals = []
 ignore_tokens = []
+ignore_lines = []
 
 special = \
 	[
@@ -49,7 +50,7 @@ def isQNumber(x):
 	if x =='.':
 		return False
 	else:
-		return reduce(lambda a,b:a and b=='.' or b.isdigit(),x,True)
+		return reduce(lambda a,b:a and (b=='.' or b.isdigit()),x,True)
 
 def removeComments(ts,s,e):
 	while s in ts:
@@ -74,10 +75,26 @@ def removeComments(ts,s,e):
 	return ts
 	
 def splitTokenStream(s):
+	global debug
+	if debug:
+		print('Token stream:',list(s))
 	ts = [s[0]]
 	i = 1
 	alpha = isAlpha(s[0])
+	inQuotes = False
 	while (i<len(s)):
+		if 'start-terminal-symbol' in config.keys() and 'end-terminal-symbol' in config.keys():
+			if not inQuotes and s[i] == config['start-terminal-symbol']:
+				ts.append(s[i])
+				inQuotes = True
+				i += 1
+				continue
+			elif inQuotes:
+				if s[i] == config['end-terminal-symbol']:
+					inQuotes = False
+				ts[-1] += s[i]
+				i += 1
+				continue
 		if alpha:
 			if isAlpha(s[i]):
 				ts[-1] += s[i]
@@ -122,21 +139,23 @@ def readConfig(f):
 			config[e.tag] = e.text.replace('\\n','\n')
 		else:
 			config[e.tag] = ''
-		if e.tag=='nonterminal-if-camelcase':
+		if e.tag in ('nonterminal-if-camelcase','nonterminal-if-uppercase','decompose-symbols'):
+			config[e.tag] = ''
 			for x in e.findall('except'):
 				always_terminals.append(x.text)
-		if e.tag=='undefined-nonterminals-are-terminals':
+		if e.tag in ('terminal-if-camelcase','terminal-if-uppercase','undefined-nonterminals-are-terminals'):
+			config[e.tag] = ''
 			for x in e.findall('except'):
 				always_nonterminals.append(x.text)
-		if e.tag=='decompose-symbols':
-			for x in e.findall('except'):
-				always_terminals.append(x.text)
 		if e.tag=='ignore':
+			config[e.tag] = ''
 			for x in e.findall('*'):
-				if x.tag=='newline':
+				if x.tag == 'newline':
 					ignore_tokens.append('\n')
 					ignore_tokens.append('@@@0-0')
-				elif x.tag=='same-indentation':
+				elif x.tag == 'lines-containing':
+					ignore_lines.append(x.text)
+				elif x.tag == 'same-indentation':
 					ignore_tokens.append('@@@1-1')
 				else:
 					ignore_tokens.append(x.text)
@@ -761,6 +780,9 @@ def balanceProd(p):
 				print('STEP 6: Cannot balance a production, reverting',oldpi,'to a terminal.')
 				p[i] = config['start-terminal-symbol']+config[oldpi.lower()]+config['end-terminal-symbol']
 				i += 1
+			elif p[i] == oldpi:
+				print('STEP 6: Problem at',oldpi,'in',p)
+				i += 1
 			else:
 				print('STEP 6: Rebalanced ambiguity of',oldpi,'with',p[i])
 				i = j
@@ -805,6 +827,8 @@ def useTerminatorToFixProds(ps,ts):
 	# TODO: will not work with labels
 	nps = []
 	for p in ps:
+		if ts not in p:
+			print('STEP 4 warning: a production is disregarded due to the lack of terminator symbol:',p)
 		while ts in p:
 			i = p.index(ts)
 			nps.append(p[:i])
@@ -832,9 +856,9 @@ def useTerminatorToFixProds(ps,ts):
 					nt = nt[0]
 				np.append(nt)
 			np.extend(p[p.index(config['defining-symbol'])+1:])
-			#print('<<<p<<<',p)
+			#print('!!!<<<p<<<',p)
 			p = np
-			#print('>>>p>>>',p)
+			#print('!!!>>>p>>>',p)
 	return nps
 
 def considerIndentation(ts):
@@ -865,21 +889,24 @@ if __name__ == "__main__":
 		print('Usage:')
 		print('	extract.py input.txt config.edd output.bgf')
 		sys.exit(-1)
-	#f = open('src.grammar.txt','r')
-	f = open(sys.argv[1],'r')
 	readConfig(sys.argv[2])
+	f = open(sys.argv[1],'r')
 	# STEP 0: read the file, remove whitespace (?)
-	print('STEP 0: reading the file, removing whitespace and comments.')
-	tokens = splitTokenStream(f.read())
+	print('STEP 0: reading the input file.')
+	lines = f.readlines()
 	f.close()
+	# STEP 1: assemble terminal symbols
+	print('STEP 1: removing whitespace and comments, assembling terminal symbols.')
+	print(ignore_lines)
+	for sign in ignore_lines:
+		lines = list(filter(lambda x:x.find(sign)<0,lines))
+	tokens = splitTokenStream(''.join(lines))
 	if 'start-comment-symbol' in config.keys() and 'end-comment-symbol' in config.keys():
 		# remove comments
 		# assumption: comments are never nested!
 		tokens = removeComments(mapglue(mapglue(tokens,config['start-comment-symbol']),config['end-comment-symbol']),config['start-comment-symbol'],config['end-comment-symbol'])
 	if debug:
 		print(tokens)
-	# STEP 1: assemble terminal symbols
-	print('STEP 1: assembling terminal symbols according to start-terminal-symbol and end-terminal-symbol.')
 	for k in masked.keys():
 		if len(k)>1 and k.find('@@@')<0:
 			print('STEP 1: going to glue tokens that resemble masked terminal', k.replace('\n','\\n'))
@@ -888,29 +915,41 @@ if __name__ == "__main__":
 		tokens = [config['start-terminal-symbol']+masked[x]+config['end-terminal-symbol'] if x in masked.keys() else x for x in tokens]
 		tokens = assembleBracketedSymbols(tokens,config['start-terminal-symbol'],config['end-terminal-symbol'])
 	else:
-		print('STEP 1 skipped, sorry: start-terminal-symbol and end-terminal-symbol are not both specified.')
+		print('STEP 1 was of limited use, sorry: start-terminal-symbol and end-terminal-symbol are not both specified.')
 		# technically we still need them to denote terminals in our internal representation
 		config['start-terminal-symbol'] = config['end-terminal-symbol'] = '"'
 		tokens = [config['start-terminal-symbol']+masked[x]+config['end-terminal-symbol'] if x in masked.keys() else x for x in tokens]
 	if 'terminal-if-uppercase' in config.keys():
-		print('STEP 1: All uppercase tokens are considered terminals.')
-		tokens = [config['start-terminal-symbol']+x+config['end-terminal-symbol'] if len(x)>1 and x[0]!=config['start-terminal-symbol'] and x.isupper() else x for x in tokens]
-	tokens = [config['start-terminal-symbol']+x+config['end-terminal-symbol'] if x==config['start-terminal-symbol']+config['end-terminal-symbol'] or x==config['start-terminal-symbol'] else x for x in tokens]
+		print('STEP 1: all uppercase tokens are considered terminals.')
+		tokens = [config['start-terminal-symbol']+x+config['end-terminal-symbol']
+					if  len(x)>1
+					and x[0]!=config['start-terminal-symbol']
+					and x.isupper()
+					and x not in always_nonterminals
+				else x
+					for x in tokens]
+	tokens = [config['start-terminal-symbol']+x+config['end-terminal-symbol']
+				if x==config['start-terminal-symbol']+config['end-terminal-symbol']
+				or x==config['start-terminal-symbol']
+			else x
+				for x in tokens]
 	if debug:
 		print(tokens)
 	# STEP 2: assemble nonterminal symbols
-	print('STEP 2: assembling nonterminal symbols according to start-nonterminal-symbol and end-nonterminal-symbol.')
+	print('STEP 2: assembling nonterminal symbols.')
 	if 'start-nonterminal-symbol' in config.keys() and 'end-nonterminal-symbol' in config.keys():
 		tokens = assembleBracketedSymbols(tokens,config['start-nonterminal-symbol'],config['end-nonterminal-symbol'])
 	else:
 		print('STEP 2 skipped, sorry: start-nonterminal-symbol and end-nonterminal-symbol are not both specified.')
 	# STEP 3: assembling composite metasymbols together
+	if debug:
+		print(tokens)
 	print('STEP 3: assembling metasymbols according to their possible values.')
 	tokens = assembleQualifiedNumbers(tokens)
-	for k in config.values():
-		if len(k)>1 and (k.find('\n')<0 or 'consider-indentation' not in config.keys()):
-			print('STEP 3: going to glue tokens that resemble metasymbol', k.replace('\n','\\n'))
-			tokens = mapglue(tokens,k)
+	for k in config.keys():
+		if len(config[k])>1 and (config[k].find('\n')<0 or 'consider-indentation' not in config.keys()):
+			print('STEP 3: going to glue tokens that resemble metasymbol', config[k].replace('\n','\\n').replace('\t','\\t'),'('+k+')')
+			tokens = mapglue(tokens,config[k])
 	if debug:
 		print(tokens)
 	# STEP 4: slice according to defining-symbol
