@@ -1,6 +1,6 @@
 extract:
-	../../hunter.py src.the.syntax.txt config.edd eiffel.raw.bgf
-	${tooldir}/xbgf post-extract.xbgf eiffel.raw.bgf eiffel.ext.bgf
-	${tooldir}/xbgf complete.xbgf eiffel.ext.bgf eiffel.bgf
+	${hunter} src.the.syntax.txt config.edd raw.bgf
+	${tooldir}/xbgf post-extract.xbgf raw.bgf ext.bgf
+	${tooldir}/xbgf complete.xbgf ext.bgf grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

@@ -1,4 +1,5 @@
 extract:
-	../../hunter.py src.manually.fixed.txt config.edd modula.bgf
+	${hunter} src.manually.fixed.txt config.edd raw.bgf
+	${tooldir}/xbgf refactor.xbgf raw.bgf grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

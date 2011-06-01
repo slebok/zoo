@@ -25,14 +25,15 @@ special = \
 		'END-GROUP-SYMBOL',
 		'START-OPTION-SYMBOL',
 		'END-OPTION-SYMBOL',
-		'START-STAR-SYMBOL',
-		'END-STAR-SYMBOL',
-		'START-PLUS-SYMBOL',
-		'END-PLUS-SYMBOL',
+		'START-REPETITION-STAR-SYMBOL',
+		'END-REPETITION-STAR-SYMBOL',
+		'START-REPETITION-PLUS-SYMBOL',
+		'END-REPETITION-PLUS-SYMBOL',
 		'START-SEPLIST-STAR-SYMBOL',
 		'END-SEPLIST-STAR-SYMBOL',
 		'START-SEPLIST-PLUS-SYMBOL',
 		'END-SEPLIST-PLUS-SYMBOL',
+		'POSTFIX-OPTIONALITY-SYMBOL',
 		'POSTFIX-REPETITION-STAR-SYMBOL',
 		'POSTFIX-REPETITION-PLUS-SYMBOL',
 		'UNDEFINED-NONTERMINALS-ARE-TERMINALS',
@@ -44,7 +45,7 @@ special = \
 	]
 
 def isAlpha(x):
-	return reduce(lambda a,b:a and b=='_' or b.isalnum(),x,True)
+	return reduce(lambda a,b:a and (b=='_' or b=='-' or b.isalnum()),x,True)
 
 def isQNumber(x):
 	if x =='.':
@@ -75,9 +76,6 @@ def removeComments(ts,s,e):
 	return ts
 	
 def splitTokenStream(s):
-	global debug
-	if debug:
-		print('Token stream:',list(s))
 	ts = [s[0]]
 	i = 1
 	alpha = isAlpha(s[0])
@@ -425,13 +423,14 @@ def startOfContext(a,i,s):
 	return j
 
 def map2expr(ss):
-	global debug
+	#global debug
+	debug = False
 	ess = []
 	es = []
 	i = 0
 	while i<len(ss):
-		if ss[i] == 'START-STAR-SYMBOL':
-			j = endOfContext(ss,i,'END-STAR-SYMBOL')
+		if ss[i] == 'START-REPETITION-STAR-SYMBOL':
+			j = endOfContext(ss,i,'END-REPETITION-STAR-SYMBOL')
 			if j<0:
 				print('Unbalanced bracketing, please fix first. Level:',-j)
 				j = len(ss)
@@ -441,8 +440,8 @@ def map2expr(ss):
 			e.setExpr(map2expr(ss[i+1:j-1]))
 			es.append(e)
 			i = j
-		elif ss[i] == 'START-PLUS-SYMBOL':
-			j = endOfContext(ss,i,'END-PLUS-SYMBOL')
+		elif ss[i] == 'START-REPETITION-PLUS-SYMBOL':
+			j = endOfContext(ss,i,'END-REPETITION-PLUS-SYMBOL')
 			if j<0:
 				print('Unbalanced bracketing, please fix first. Level:',-j)
 				j = len(ss)
@@ -683,6 +682,7 @@ def splitString(s,kw):
 def decomposeSymbols(p,defd):
 	# [label, nt, ...]
 	q = p[:2]
+	# nested-name-specifiertemplateopt
 	for x in p[2:]:
 		match = False
 		# expanded for better readability
@@ -791,7 +791,7 @@ def balanceProd(p):
 	return p
 
 def postfix2confix(p):
-	for s in ('POSTFIX-REPETITION-PLUS-SYMBOL','POSTFIX-REPETITION-STAR-SYMBOL'):
+	for s in ('POSTFIX-REPETITION-PLUS-SYMBOL','POSTFIX-REPETITION-STAR-SYMBOL','POSTFIX-OPTIONALITY-SYMBOL'):
 		while s in p:
 			w = p.index(s)
 			if w == 0:
@@ -806,19 +806,19 @@ def postfix2confix(p):
 					p[w] = config['start-terminal-symbol']+p[w]+config['end-terminal-symbol']
 					continue
 				else:
-					print('STEP 6: Converted postfix repetition to confix notation.')
-					p[w-1] = s.replace('POSTFIX-REPETITION','END')
-					p[j] = s.replace('POSTFIX-REPETITION','START')
+					print('STEP 6: Converted postfix metasymbol to confix notation.')
+					p[w-1] = s.replace('POSTFIX','END')
+					p[j] = s.replace('POSTFIX','START')
 					q = p[:w]
 					q.extend(p[w+1:])
 					p = q
 			else:
 				# single element
-				print('STEP 6: Converted postfix repetition to confix notation.')
+				print('STEP 6: Converted postfix metasymbol to confix notation.')
 				q = p[:w-1]
-				q.append(s.replace('POSTFIX-REPETITION','START'))
+				q.append(s.replace('POSTFIX','START'))
 				q.append(p[w-1])
-				q.append(s.replace('POSTFIX-REPETITION','END'))
+				q.append(s.replace('POSTFIX','END'))
 				q.extend(p[w+1:])
 				p = q
 	return p
@@ -896,21 +896,26 @@ if __name__ == "__main__":
 	lines = f.readlines()
 	f.close()
 	# STEP 1: assemble terminal symbols
-	print('STEP 1: removing whitespace and comments, assembling terminal symbols.')
-	print(ignore_lines)
+	#print(ignore_lines)
 	for sign in ignore_lines:
 		lines = list(filter(lambda x:x.find(sign)<0,lines))
-	tokens = splitTokenStream(''.join(lines))
+	tokens = list(''.join(lines))
+	if debug:
+		print('Token stream:',tokens)
+	print('STEP 1: removing whitespace and comments, assembling terminal symbols.')
+	for k in masked.keys():
+		if len(k)>1 and k.find('@@@')<0:
+			print('STEP 1: going to glue tokens that resemble masked terminal', k.replace('\n','\\n'))
+			tokens = mapglue(tokens,k)
+			if debug:
+				print('Token stream:',tokens)
+	tokens = splitTokenStream(tokens)
 	if 'start-comment-symbol' in config.keys() and 'end-comment-symbol' in config.keys():
 		# remove comments
 		# assumption: comments are never nested!
 		tokens = removeComments(mapglue(mapglue(tokens,config['start-comment-symbol']),config['end-comment-symbol']),config['start-comment-symbol'],config['end-comment-symbol'])
 	if debug:
-		print(tokens)
-	for k in masked.keys():
-		if len(k)>1 and k.find('@@@')<0:
-			print('STEP 1: going to glue tokens that resemble masked terminal', k.replace('\n','\\n'))
-			tokens = mapglue(tokens,k)
+		print('Token stream:',tokens)
 	if 'start-terminal-symbol' in config.keys() and 'end-terminal-symbol' in config.keys():
 		tokens = [config['start-terminal-symbol']+masked[x]+config['end-terminal-symbol'] if x in masked.keys() else x for x in tokens]
 		tokens = assembleBracketedSymbols(tokens,config['start-terminal-symbol'],config['end-terminal-symbol'])
@@ -934,7 +939,7 @@ if __name__ == "__main__":
 			else x
 				for x in tokens]
 	if debug:
-		print(tokens)
+		print('Token stream:',tokens)
 	# STEP 2: assemble nonterminal symbols
 	print('STEP 2: assembling nonterminal symbols.')
 	if 'start-nonterminal-symbol' in config.keys() and 'end-nonterminal-symbol' in config.keys():
@@ -943,7 +948,7 @@ if __name__ == "__main__":
 		print('STEP 2 skipped, sorry: start-nonterminal-symbol and end-nonterminal-symbol are not both specified.')
 	# STEP 3: assembling composite metasymbols together
 	if debug:
-		print(tokens)
+		print('Token stream:',tokens)
 	print('STEP 3: assembling metasymbols according to their possible values.')
 	tokens = assembleQualifiedNumbers(tokens)
 	for k in config.keys():
@@ -951,7 +956,7 @@ if __name__ == "__main__":
 			print('STEP 3: going to glue tokens that resemble metasymbol', config[k].replace('\n','\\n').replace('\t','\\t'),'('+k+')')
 			tokens = mapglue(tokens,config[k])
 	if debug:
-		print(tokens)
+		print('Token stream:',tokens)
 	# STEP 4: slice according to defining-symbol
 	print('STEP 4: splitting the token stream into productions.')
 	if 'consider-indentation' in config.keys():
@@ -960,7 +965,7 @@ if __name__ == "__main__":
 	if debug:
 		print('After considering indentation:',tokens)
 	if debug:
-		print(tokens)
+		print('Token stream:',tokens)
 	if 'nonterminals-may-contain-spaces' in config.keys() and 'concatenate-symbol' in config.keys():
 		# can only treat them together, because spaces in names without concatenation symbol are highly ambiguous
 		# and concatenation symbols are never used if nonterminal names do not have spaces
@@ -1004,9 +1009,11 @@ if __name__ == "__main__":
 				config['terminator-symbol'] = ts[0]
 			else:
 				# ORLY?
-				print('STEP 4 unsuccessful, sorry.')
+				print('STEP 4 unsuccessful, sorry: will assume terminator-symbol to be empty.')
 				for p in prods:
 					print('%40s'%p[1],'>>>>>>',p[-2:])
+				config['terminator-symbol'] = ''
+				need2fix = []
 	# STEP 4a.2: adjusting the terminator-symbol on the unfit productions
 	poststep4 = 0
 	if debug:
@@ -1040,7 +1047,23 @@ if __name__ == "__main__":
 	prods = [p[:-(len(config['terminator-symbol']))] if p[-(len(config['terminator-symbol'])):] == config['terminator-symbol'] else p for p in prods]
 	# STEP 5: slice insides according to definition-separator-symbol
 	step5 = False
-	for s in ('definition-separator-symbol','postfix-repetition-star-symbol','postfix-repetition-plus-symbol','start-group-symbol','end-group-symbol','start-star-symbol','end-star-symbol','start-plus-symbol','end-plus-symbol','start-seplist-star-symbol','end-seplist-star-symbol','start-seplist-plus-symbol','end-seplist-plus-symbol','start-option-symbol','end-option-symbol'):
+	for s in \
+		('definition-separator-symbol'
+		,'postfix-repetition-star-symbol'
+		,'postfix-repetition-plus-symbol'
+		,'postfix-optionality-symbol'
+		,'start-group-symbol'
+		,'end-group-symbol'
+		,'start-repetition-star-symbol'
+		,'end-repetition-star-symbol'
+		,'start-repetition-plus-symbol'
+		,'end-repetition-plus-symbol'
+		,'start-seplist-star-symbol'
+		,'end-seplist-star-symbol'
+		,'start-seplist-plus-symbol'
+		,'end-seplist-plus-symbol'
+		,'start-option-symbol'
+		,'end-option-symbol'):
 		if s in config.keys():
 			print('STEP 5: marking',s+'.')
 			step5 = True

@@ -1,10 +1,5 @@
 extract:
-	../../hunter.py src.context.free.syntax.txt config.edd ada.raw.bgf
-	../../../../shared/tools/xbgf correct.xbgf ada.raw.bgf ada.bgf
+	${hunter} src.context.free.syntax.txt config.edd raw.bgf
+	${tooldir}/xbgf correct.xbgf raw.bgf grammar.bgf
 
-test:
-	ls -1 *.bgf | xargs -n1 ../../../../shared/tools/validate bgf
-	../../../../shared/tools/checkbgf ada.bgf
-
-clean:
-	rm -rf *.bgf *.bnf
+include ../../Makefile.grammar

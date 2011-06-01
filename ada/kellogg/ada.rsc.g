@@ -1139,3 +1139,65 @@ RPAREN             :       ')'     ;
 COLON              :       ':'     ;
 COMMA              :       ','     ;
 SEMI               :       ';'     ;
+
+TIC    :   '\''    ;
+
+
+
+
+
+
+
+
+IDENTIFIER
+            : ( 'a'| 'b'| 'c'| 'd'| 'e'| 'f'| 'g'| 'h'| 'i'| 'j'| 'k'| 'l'| 'm'| 'n'| 'o'| 'p'| 'q'| 'r'| 's'| 't'| 'u'| 'v'| 'w'| 'x'| 'y'| 'z' ) ( ('_')? ( 'a'| 'b'| 'c'| 'd'| 'e'| 'f'| 'g'| 'h'| 'i'| 'j'| 'k'| 'l'| 'm'| 'n'| 'o'| 'p'| 'q'| 'r'| 's'| 't'| 'u'| 'v'| 'w'| 'x'| 'y'| 'z'|'0'| '1'| '2'| '3'| '4'| '5'| '6'| '7'| '8'| '9') )*
+	;
+
+CHARACTER_LITERAL    : 
+
+	'\'' ANY '\''
+	;
+
+CHAR_STRING : '"' (ANY)* '"'
+	;
+
+NUMERIC_LIT : ( DIGIT )+
+		( '#' BASED_INTEGER ( '.' BASED_INTEGER )? '#'
+		| ( '_' ( DIGIT )+ )+  
+		)?
+		( 
+			( '.' ( DIGIT )+ ( '_' ( DIGIT )+ )* ( EXPONENT )?
+			| EXPONENT
+			)
+		)?
+	;
+
+
+
+DIGIT   :  ( '0'| '1'| '2'| '3'| '4'| '5'| '6'| '7'| '8'| '9' ) ;
+
+EXPONENT           :  ('e') ('+'|'-')? ( DIGIT )+ ;
+
+EXTENDED_DIGIT     :  ( DIGIT | 'a'|'b'|'c'|'d'|'e'|'f' ) ;
+
+BASED_INTEGER      :  ( EXTENDED_DIGIT ) ( ('_')? EXTENDED_DIGIT )* ;
+
+
+
+WS_	:	(	' '
+		|	'\t'
+		|	'\f'
+
+		|	(	'\r\n'  
+			|	'\r'    
+			|	'\n'    
+			)
+			
+		)
+		
+	;
+
+
+COMMENT :	( COMMENT_INTRO (ANY)* ('\n'|'\r'('\n')?) )
+		
+	;

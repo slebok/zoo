@@ -11,4 +11,7 @@ diff:
 	#../../../../shared/tools/bgf2bnf ada.bgf ada.bnf
 	gdts cpp-1.bgf cpp.raw.bgf
 
+toy:
+	../../hunter.py toy.prepared.txt config.edd toy.bgf || exit -1
+
 include ../../Makefile.include

@@ -1,6 +1,6 @@
 extract:
-	${tooldir}/sdf2bgf ${sdflibdir}/modula-3/syntax/*.sdf modula.ext.bgf
-	${tooldir}/subgrammar modula.ext.bgf Compilation modula.ext.2.bgf
-	${tooldir}/xbgf refactor.xbgf modula.ext.2.bgf modula.bgf
+	${tooldir}/sdf2bgf ${sdflibdir}/modula-3/syntax/*.sdf raw.bgf
+	${tooldir}/subgrammar raw.bgf Compilation ext.bgf
+	${tooldir}/xbgf refactor.xbgf ext.bgf grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar
