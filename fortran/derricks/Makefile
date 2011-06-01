@@ -1,7 +1,6 @@
 extract:
-	${tooldir}/sdf2bgf ${sdflibdir}/fortran/syntax/*.sdf fortran.sdf.ext.bgf
-	${tooldir}/subgrammar fortran.sdf.ext.bgf ExecutableProgram fortran.tmp.bgf
-	${tooldir}/xbgf refactor.xbgf fortran.tmp.bgf fortran.sdf.rec.bgf
-	cp fortran.sdf.rec.bgf fortran.bgf
+	${tooldir}/sdf2bgf ${sdflibdir}/fortran/syntax/*.sdf raw.bgf
+	${tooldir}/subgrammar raw.bgf ExecutableProgram ext.bgf
+	${tooldir}/xbgf refactor.xbgf ext.bgf grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

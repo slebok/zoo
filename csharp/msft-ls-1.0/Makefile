@@ -1,6 +1,6 @@
 extract:
-	${tooldir}/pdf2bgf src.grammar.txt csharp.raw.bgf banned-lines.lst keywords.lst
-	${tooldir}/normbgf csharp.raw.bgf csharp.ext.bgf
-	${tooldir}/subgrammar csharp.ext.bgf compilation-unit csharp.bgf
+	${tooldir}/pdf2bgf src.grammar.txt raw.bgf banned-lines.lst keywords.lst
+	${tooldir}/normbgf raw.bgf ext.bgf
+	${tooldir}/subgrammar ext.bgf compilation-unit grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

@@ -1,5 +1,5 @@
 extract:
-	${tooldir}/lll2bgf ../../../recovery/csharp/CSHARP1.0.LLL raw.bgf
+	${tooldir}/lll2bgf ../../../recovery/csharp/grammars/Final.lll raw.bgf
 	${tooldir}/normbgf raw.bgf grammar.bgf
 
 include ../../Makefile.grammar
