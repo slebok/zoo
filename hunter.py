@@ -550,7 +550,7 @@ def map2expr(ss):
 		return
 	elif len(ess) == 1:
 		if len(ess[0]) == 0:
-			print('Serialisation error: empty internal output sequence!')
+			print('Serialisation warning: empty internal output sequence, treating like epsilon!')
 			return BGF3.Expression(BGF3.Epsilon())
 		elif len(ess[0]) == 1:
 			return BGF3.Expression(ess[0][0])
@@ -563,7 +563,7 @@ def map2expr(ss):
 		e = BGF3.Choice()
 		for es in ess:
 			if len(es) == 0:
-				print('Serialisation error: empty internal output sequence!')
+				print('Serialisation warning: empty internal output sequence, treating like epsilon!')
 				return BGF3.Expression(BGF3.Epsilon())
 			elif len(es) == 1:
 				e.add(BGF3.Expression(es[0]))
@@ -1116,7 +1116,7 @@ if __name__ == "__main__":
 	# RESULT
 	if 'nonterminals-may-contain-spaces' in config.keys():
 		#
-		prods = [[x.replace(' ','_') for x in p] for p in prods]
+		prods = [[x.replace(' ','_') if len(x)<3 or (x[0]!=config['start-terminal-symbol'] and x[-1]!=config['end-terminal-symbol']) else x for x in p] for p in prods]
 		print('LAST STEP: replacing spaces with underscores for BGF compatibility and readability.')
 	if debug:
 		print('RESULT:')

@@ -1,6 +1,6 @@
 extract:
-	${tooldir}/sdf2bgf ${sdflibdir}/yacc/syntax/*.sdf yacc.ext.bgf
-	${tooldir}/xbgf refactor.xbgf yacc.ext.bgf yacc.ext.2.bgf
-	${tooldir}/subgrammar yacc.ext.2.bgf Grammar yacc.bgf
+	${tooldir}/sdf2bgf ${sdflibdir}/yacc/syntax/*.sdf raw.bgf
+	${tooldir}/xbgf refactor.xbgf raw.bgf ext.bgf
+	${tooldir}/subgrammar ext.bgf Grammar grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

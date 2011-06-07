@@ -1,11 +1,10 @@
 extract:
 	echo 'Extracting the actual grammar...'
-	../../../extraction/rascal/extract.py RascalRascal.rsc rascal.ext.bgf
-	${tooldir}/subgrammar rascal.ext.bgf Module PreModule Command rascal.bgf
+	../../../extraction/rascal/extract.py RascalRascal.rsc ext.bgf
+	${tooldir}/subgrammar ext.bgf Module PreModule Command grammar.bgf
 
 horizontal:
 	echo 'Recovering the horizontal grammar...'
-	${tooldir}/xbgf horizontalize.xbgf rascal.bgf rascal.hor.bgf
-	${tooldir}/subgrammar rascal.hor.bgf Module PreModule Command rascal.true.hor.bgf
+	${tooldir}/xbgf horizontalize.xbgf grammar.bgf hor.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

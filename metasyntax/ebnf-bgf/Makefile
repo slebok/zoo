@@ -2,7 +2,7 @@ extract:
 	@echo Manually crafted grammar, no need to extract
 
 test:
-	validate bgf bnf-bgf.bgf
+	validate bgf grammar.bgf
 
 clean:
 	rm -f ~* *.bnf

@@ -1,4 +1,4 @@
 extract:
-	${tooldir}/xsd2bgf ../../../../shared/xsd/bgf.xsd bgf.bgf
+	${tooldir}/xsd2bgf ../../../../shared/xsd/bgf.xsd grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar

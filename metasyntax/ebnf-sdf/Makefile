@@ -1,6 +1,6 @@
 extract:
-	${tooldir}/sdf2bgf ${sdflibdir}/ebnf/syntax/*.sdf ebnf-sdf.ext.bgf
-	${tooldir}/xbgf correct.xbgf ebnf-sdf.ext.bgf ebnf-sdf.ext.2.bgf
-	${tooldir}/subgrammar ebnf-sdf.ext.2.bgf Grammar ebnf-sdf.bgf
+	${tooldir}/sdf2bgf ${sdflibdir}/ebnf/syntax/*.sdf raw.bgf
+	${tooldir}/xbgf correct.xbgf raw.bgf ext.bgf
+	${tooldir}/subgrammar ext.bgf Grammar grammar.bgf
 
-include ../../Makefile.include
+include ../../Makefile.grammar
