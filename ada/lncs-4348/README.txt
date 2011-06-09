@@ -10,3 +10,10 @@ Annex P (informative): Syntax Summary, pages 675..692
 
 The PDF is of a rather poor quality, one needs to pay attention to the order of the lines when copy-pasting.
 Some whitespace also gets messed up, but the extractor copes with it.
+
+
+------------------------
+src.semantics.txt was semi-automatically created to encompass the following rule from §1.1.4 (p.6,l.14):
+
+	If the name of any syntactic category starts with an italicized part, it is equivalent to the category name without the italicized part.
+	The italicized part is intended to convey some semantic information. For example subtype_name and task_name are both equivalent to name alone.

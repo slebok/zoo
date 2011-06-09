@@ -1,5 +1,6 @@
 extract: 
 	cp src.syntax.summary.txt src.prepared.txt
+	cat src.semantics.txt >> src.prepared.txt
 	perl -pi -w -e 's/{\|/{TERMINALBAR/g;' src.prepared.txt
 	perl -pi -w -e 's/–/-/g;' src.prepared.txt
 	perl -pi -w -e 's/J\./0\./g;' src.prepared.txt
