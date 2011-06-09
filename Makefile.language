@@ -5,11 +5,11 @@ extract:
 	cd $* && make extract
 
 diff:
+	make extract
 	cat ready.lst | xargs -n1 -I _ make _.diff
 
 %.diff:
-	make $*.extract
-	gdt $*.bgf $*/grammar.bgf || exit -1
+	gdts $*.bgf $*/grammar.bgf
 
 save:
 	cat ready.lst | xargs -n1 -I _ make _.save
