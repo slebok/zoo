@@ -1,0 +1,407 @@
+% TXL grammar for TXL 10.5
+% J.R. Cordy, Queen's University
+% March 2009
+
+% Copyright 2009 James R. Cordy
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+%    Redistributions of source code must retain the above copyright notice, 
+%    this list of conditions and the following disclaimer.
+%    Redistributions in binary form must reproduce the above copyright notice,
+%    this list of conditions and the following disclaimer in the documentation
+%    and/or other materials provided with the distribution.
+%
+%    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+%    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+%    AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+%    AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+%    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%    POSSIBILITY OF SUCH DAMAGE.
+
+% Based on The TXL Programmaing Language, Version 10.5 - Appendix A: Formal Syntax of TXL. 
+
+% Note:  This grammar does not include the syntax of preprocessor directives,
+% which are instead handled as (preserved) comments.
+
+% Modification Log:
+
+% v1.0, Jim Cordy, March 2009.
+%   initial revision.
+
+
+% TXL comments begin with a % character and end at the end of the line. 
+% The % character must be quoted if it appears as a terminal symbol 
+% in a TXL program (as it does here) 
+comments
+	'%{ '}%
+	'%( ')%
+	'%
+	'#
+end comments
+
+% Preserve comments, disable charlit
+#pragma -raw -comment 
+tokens
+    charlit    ""
+    quotedcharlit	"''#['\n]*'"
+    quotedstringlit	"'\"#[\"\n]*\""
+    special 	"[(|\s)!@$^&\*\+:<>\?~\\=-;,./\(\){}`]+"
+	|	"'#[\]\[ 	\n]+"
+	|	"'\[" | "'\]" 
+        |       "\[\]"
+	|	"''"
+	|	"'\""
+    lengthrule	"\[\#"		% Don't know any other way to handle this! - JRC
+end tokens
+
+% The following are keywords of TXL and must be quoted if they appear 
+% as terminal symbols in a TXL program (as they do here) 
+keys 
+	'all 'assert 'attr 'by 'comments 'compounds 'construct 'deconstruct 
+	'define 'each 'end 'export 'external 'function 'import 'include 
+	'keys 'list 'match 'not 'opt 'push 'pop 'redefine 'repeat 'replace 
+	'rule 'see 'skipping 'tokens 'where 
+	'| '[ ']
+end keys 
+
+% A TXL program consists of a sequence of TXL statements 
+define program 
+	[repeat statement] 
+end define 
+
+define statement 
+	[includeStatement] 
+    |   [keysStatement] 
+    |   [compoundsStatement] 
+    |   [commentsStatement] 
+    |   [tokensStatement] 
+    |   [defineStatement] 
+    |   [redefineStatement] 
+    |   [ruleStatement] 
+    |   [functionStatement] 
+    |   [externalStatement] 
+    |   [comment] [NL]
+end define 
+
+define includeStatement 
+	'include [stringlit] 	[NL]	% string literal gives file name 
+end define 
+
+define keysStatement 
+	'keys				[NL][IN] 
+		[repeat keyword] 	[EX][NL]
+	'end 'keys 			[NL][NL]
+end define 
+
+define keyword
+	[literal] [SP]
+    |	[not 'end] [key] [SP]
+end define
+
+define compoundsStatement 
+	'compounds			[NL][IN] 
+		[repeat compound]	[EX][NL] 
+	'end 'compounds			[NL][NL] 
+end define 
+
+define compound
+	[literal] [SP]
+end define
+
+define commentsStatement 
+	'comments 				[NL][IN]
+		[repeat commentConvention]	[EX]	% one convention per line 
+	'end 'comments				[NL][NL] 
+end define 
+
+define commentConvention 
+	[literal] [SP] [literal] 	[NL]	% start / end symbol pair 
+    |   [literal]			[NL] 	% start symbol (to end of line) 
+end define 
+
+define tokensStatement 
+	'tokens				[NL][IN] 
+		[repeat tokenPattern] 	[EX]	% one pattern per line 
+	'end 'tokens 			[NL][NL]
+end define 
+
+define tokenPattern 
+	[typeid] [TAB_24] [stringlit] [NL]		% new token type, or override of 
+							% an existing token type 
+    |  [TAB_16] '| [TAB_24]  [stringlit] [NL]		% extension of the immediately 
+							% preceding token type 
+    | 	[typeid] [TAB_16] [opt '...] '| [TAB_24] [stringlit] [NL]	% extension of an existing 
+									% token type   
+    |   [typeid] [TAB_16] '+ [TAB_24] [stringlit] [NL]	% extension of an existing 
+        						% token type (deprecated) 
+    |	[comment] [NL]
+end define 
+
+define defineStatement 
+	'define [typeid]			[NL][IN][IN] 
+		[repeat literalOrType]		[NL] 
+		[repeat barLiteralsAndTypes]	[EX][EX]  
+	'end 'define				[NL][NL] 
+	[RESET]
+end define 
+
+define redefineStatement 
+	'redefine [typeid]			[NL][IN][IN] 
+		[opt dotDotDotBar] 				% postextension of existing define 
+		[repeat literalOrType] 		[NL] 
+		[repeat barLiteralsAndTypes]	 
+		[opt barDotDotDot] 		[EX][EX]	% preextension of existing define 
+	'end [redefineOrDefine]			[NL][NL] 
+	[RESET]
+end define 
+
+define redefineOrDefine
+	% Legacy form - redefine ends with 'end define'
+	'redefine | 'define
+end define
+
+define RESET
+	[EX][EX][EX][EX][EX][EX][EX][EX][EX]
+end define
+
+define dotDotDotBar 
+	'... [EX][NL] '| [TAB][IN] 
+end define 
+
+define barDotDotDot 
+	[EX] '| [TAB] [IN] '... [NL]  
+end define 
+
+define barLiteralsAndTypes 
+	[EX] '| [TAB] [IN] [repeat literalOrType] [NL] 
+end define 
+
+define literalOrType 
+	[type] [SP]		% must be first!
+    |	[literal] [SP]
+end define 
+
+define type 
+	[formatCues]
+    | 	'[ [typeSpec] ']
+end define
+
+define formatCues
+	[IN] [IN] [repeat formatCue+] [EX] [EX] [opt optNL]
+end define
+
+define optNL
+	[see literalOrType] [NL]
+end define
+
+define formatCue
+	'[ [formatId] ']
+end define
+
+define formatId
+	'NL | 'IN [IN] | 'EX [EX] 
+end define
+
+define typeSpec
+	[opt typeModifier] [typeid] [opt typeRepeater] 
+    |	'!
+end define
+
+define typeModifier
+	 'opt | 'repeat | 'list | 'attr | 'see | 'not | 'push | 'pop | ': | '~ | '> | '< 
+end define 
+
+define typeRepeater
+	'+ | '* | '? | ', | ',+ 
+end define 
+
+define typeidOrQuotedLiteral 
+	[typeid] 
+    |   [quotedLiteral] 
+end define 
+
+define ruleStatement 
+	'rule [ruleid] [repeat formalArgument]				[NL][IN][IN] 
+		[repeat constructDeconstructImportExportOrCondition] 	
+		[EX] [opt skippingType] 
+		'replace [opt dollarStar] [SP] [type]			[NL][IN] 
+			[pattern] 
+		[repeat constructDeconstructImportExportOrCondition] 
+		[EX] 'by						[NL][IN] 
+			[replacement] 					[EX][EX]
+	'end 'rule							[NL][NL] 
+    |   	
+	'rule [ruleid] [repeat formalArgument] 				[NL][IN][IN]
+		[repeat constructDeconstructImportExportOrCondition] 	
+		[EX] [opt skippingType] 
+		'match [opt dollarStar] [SP] [type]			[NL][IN]
+			[pattern] 					[EX][EX]
+		[repeat constructDeconstructImportExportOrCondition] 
+	'end 'rule 							[NL][NL]
+end define 
+
+define functionStatement 
+	'function [ruleid] [repeat formalArgument] 			[NL][IN][IN]
+		[repeat constructDeconstructImportExportOrCondition] 
+		[EX] [opt skippingType] 
+		'replace [opt dollarStar] [SP] [type]			[NL][IN]
+			[pattern] 
+		[repeat constructDeconstructImportExportOrCondition] 
+		[EX] 'by						[NL][IN] 
+			[replacement] 					[EX][EX]
+	'end 'function 							[NL][NL]
+    |   
+	'function [ruleid] [repeat formalArgument] 			[NL][IN][IN]
+		[repeat constructDeconstructImportExportOrCondition] 
+		[EX] [opt skippingType] 
+		'match [opt dollarStar] [SP] [type]			[NL][IN]
+			[pattern]
+		[repeat constructDeconstructImportExportOrCondition]	[EX][EX] 
+	'end 'function 							[NL][NL]
+end define 
+
+define dollarStar
+	[SP] '$ | [SP] '*
+end define
+
+define externalStatement 
+	'external 'rule [ruleid] [repeat formalArgument] 		[NL][NL]
+    |   'external 'function [ruleid] [repeat formalArgument] 		[NL][NL]
+end define 
+
+define formalArgument 
+	[varid] [SP] [type] [repeat commentNL] 
+end define 
+
+define constructDeconstructImportExportOrCondition 
+	[constructor] 
+    |   [deconstructor] 
+    |   [condition] 
+    |   [importer] 
+    |   [exporter] 
+    |   [EX] [comment] [NL] [IN] 
+end define 
+
+define constructor 
+	[EX] 'construct [varid] [SP] [type] 	[NL][IN] 
+		[replacement] 
+end define 
+
+define deconstructor 
+	[EX] [opt skippingType] 
+	'deconstruct [opt 'not] [opt '*] [opt type] [varid] 	[NL][IN]
+		[pattern] 
+end define 
+
+define condition 
+	[EX] 'where [opt 'not] [opt 'all]	[NL][IN] 
+		[repeat commentNL]
+		[expression]			[NL] 
+    |   [EX] 'assert [opt 'not] [opt 'all]	[NL][IN] 
+		[repeat commentNL]
+		[expression] 			[NL]
+end define 
+
+define importer 
+	[EX] 'import [varid] [opt type]		[NL][IN] 
+		[opt pattern] 
+end define 
+
+define exporter 
+	[EX] 'export [varid] [opt type]		[NL][IN] 
+		[opt replacement] 
+end define 
+
+define skippingType 
+	'skipping [SP] [type] [repeat commentNL] 
+end define 
+
+define pattern 
+	[repeat literalOrVariable] 		[NL]
+end define 
+
+define literalOrVariable 
+	[literal] [SP] 
+    |   [varid] [SP] [type] [SP] 	% bind of a new variable 
+    |   [varid] [SP] 	% use of a previously bound variable 
+end define 
+
+define replacement 
+	[repeat literalOrExpression] 		[NL]
+end define 
+
+define literalOrExpression 
+	[literal] [SP] 
+    |   [expression] [SP] 
+end define 
+
+define expression 
+	[varid] [opt ruleApplications] 
+end define 
+
+define ruleApplications
+	[IN][IN] [repeat commentNL] [repeat ruleApplication+] [EX][EX] [opt ruleoptNL]
+end define
+
+define ruleoptNL
+	[see literalOrExpression] [NL]
+end define
+
+define ruleApplication 
+	[SP] '[ [ruleid] [repeat varidOrLiteral] [opt eachArgs] ']  [repeat commentNL]
+    |   [SP] [lengthrule] [repeat varidOrLiteral] [opt eachArgs] ']  [repeat commentNL]
+end define 
+
+define commentNL
+   	[SP] [SP] [comment] [opt NEWoptNL]
+end define
+
+define NEWoptNL
+	[not '|] [not 'end] [NL]
+end define
+
+define eachArgs
+	[SP] 'each [repeat varidOrLiteral] 
+end define
+
+define varidOrLiteral 
+	[SP] [varid] 
+    |   [SP] [literal] 
+end define 
+
+define literal 
+	[quotedLiteral] | [unquotedLiteral] 
+    |   [SP] [comment] [opt NEWoptNL]
+end define 
+
+define quotedLiteral 
+	' ' [unquotedLiteral] 	% note: ' ' means a single quote mark 
+    |   ' ' [key]
+end define 
+
+define unquotedLiteral 
+    	[SP] ' '
+    |	[not comment] [token]
+end define 
+
+define varid 
+	[id] 	% identifier that is a variable name 
+end define 
+
+define typeid 
+	[id] 	% identifier that is a type (define) name 
+    |	[SP] [literal]
+end define 
+
+define ruleid 
+	[id] 		% identifier that is a rule/function name 
+    |   [special]	% built-in
+    |   '#
+    |	[key]
+end define 
