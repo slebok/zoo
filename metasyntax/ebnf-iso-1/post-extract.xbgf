@@ -1,13 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<!-- Using ASCII / C0 / ISO 6429 characters directly -->
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__ISO_6429_character_Horizontal_Tabulation__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>\t</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__ISO_6429_character_Carriage_Return__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>\r</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__ISO_6429_character_Line_Feed__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>\n</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__ISO_6429_character_Vertical_Tabulation__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>\v</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__ISO_6429_character_Form_Feed__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>\f</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- removing character follow restrictions -->
 	<xbgf:replace>
 		<bgf:expression>
 			<choice>
 				<bgf:expression>
-					<nonterminal>terminal_character_-_(_first_quote_symbol</nonterminal>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>terminal_character__-__</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>_first_quote_symbol</nonterminal>
+						</bgf:expression>
+					</sequence>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>second_quote_symbol_)</nonterminal>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>second_quote_symbol_</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+					</sequence>
 				</bgf:expression>
 			</choice>
 		</bgf:expression>
@@ -43,7 +152,17 @@
 		<bgf:expression>
 			<choice>
 				<bgf:expression>
-					<nonterminal>terminal_character_-_(_letter</nonterminal>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>terminal_character__-__</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>(</terminal>
+						</bgf:expression>
+						<bgf:expression>
+							<nonterminal>_letter</nonterminal>
+						</bgf:expression>
+					</sequence>
 				</bgf:expression>
 				<bgf:expression>
 					<nonterminal>decimal_digit</nonterminal>
@@ -64,12 +183,38 @@
 					<nonterminal>special_sequence_symbol</nonterminal>
 				</bgf:expression>
 				<bgf:expression>
-					<nonterminal>other_character_)</nonterminal>
+					<sequence>
+						<bgf:expression>
+							<nonterminal>other_character_</nonterminal>
+						</bgf:expression>
+						<bgf:expression>
+							<terminal>)</terminal>
+						</bgf:expression>
+					</sequence>
 				</bgf:expression>
 			</choice>
 		</bgf:expression>
 		<bgf:expression>
 			<nonterminal>terminal_character</nonterminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- Removing static semantics -->
+	<xbgf:replace>
+		<bgf:expression>
+			<sequence>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+				<bgf:expression>
+					<nonterminal>__a_syntactic-factor_that_could_be_replaced__by_a_syntactic-factor_containing_no__meta-identifiers__</nonterminal>
+				</bgf:expression>
+				<bgf:expression>
+					<terminal>?</terminal>
+				</bgf:expression>
+			</sequence>
+		</bgf:expression>
+		<bgf:expression>
+			<nonterminal>syntactic-factor</nonterminal>
 		</bgf:expression>
 	</xbgf:replace>
 </xbgf:sequence>
