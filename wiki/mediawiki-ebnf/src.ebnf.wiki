@@ -1,0 +1,134 @@
+The following is a first draft trying to describe the Wikitext-Syntax with [[w:Extended Backus–Naur Form|Extended Backus–Naur Form]] (EBNF).
+
+Features of current parsing that must be incorporated (list is likely incomplete):
+
+#Redirects
+#Headers
+#Paragraphs
+#SGML (HTML, nowiki, math, plugins)
+#Lists (unordered, ordered, definition, pseudo-definition)
+#Initial spaces
+#Bold/italics
+#Templates (int:, msg:, msgnw:, raw:?)
+#Template parameters (both on the sending and receiving sides)
+#Horizontal rules
+#[[Help:Magic words|Magic words]]
+#Wikilinks (category, image, Media:)
+#External links
+#Plain URLs (e.g., http://blah)
+#Tables
+#Character entities (e.g., &amp;amp;, &amp;#1234;, &amp;#x1234;)
+#[[Help:Magic_words#Behavior_switches|Behavior switches]]
+#Date reorganization based on user prefs
+#ISBNs
+
+==General==
+<pre>
+digit         = ("1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"|"0");
+URL           = { ASCII letter }, "://", { URL char };
+ASCII letter  = ("a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+                | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+                | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+                | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z");
+URL char      = (ASCII letter | digit | "-" | "_" | "." | "~" | "!" | "*" | "'" | "(" | ")" | ";"
+                | ":" | "@" | "&" | "=" | "+" | "$" | "," | "/" | "?" | "%" | "#" | "[" | "]");
+Unicode char  = (* Assume this is all valid Unicode characters. *);
+text          = { Unicode char };
+
+full pagename = [ namespace, ":" | ":" ] pagename;
+namespace     = Unicode char, { Unicode char };
+pagename      = Unicode char, { Unicode char };
+</pre>
+
+== Links ==
+<pre>
+start link    = "[[";
+end link      = "]]";
+internal link = start link, full pagename, ["|", label], end link, label extension;
+external link = URL | (start link, URL, [whitespace Label], endLink, label extension);
+redirect      = "#REDIRECT", internal link;
+header link   = "/*", text, "*/";
+ISBN link     = digit, ["-"|" "], 3 * digit, ["-"|" "], 5 * digit,
+                [("-"|" "),(digit|"X"|"x")];
+</pre>
+
+== Headers ==
+<pre>
+header end  = [whitespace], line break;
+header6     = line break, "======", [whitespace], text, [whitespace], "======", header end;
+header5     = line break, "=====",  [whitespace], text, [whitespace], "=====",  header end;
+header4     = line break, "====",   [whitespace], text, [whitespace], "====",   header end;
+header3     = line break, "===",    [whitespace], text, [whitespace], "===",    header end;
+header2     = line break, "==",     [whitespace], text, [whitespace], "==",     header end;
+header1     = line break, "=",      [whitespace], text, [whitespace], "=",      header end;
+comment     = "<!--", [Text], "-->";
+Commentary  = "<comment", [Text], ">", [Text], "</comment>"; (* This works? *)
+</pre>
+
+== Formatting ==
+<pre>
+horizontal rule  = "----", {"-"};
+bold italic text = "'''''", text, "'''''";
+bold text        = "'''", text, "'''"; 
+italic text      = "''", text, "''";
+code line        = linebreak, " ", text;
+nowiki           = "&lt;nowiki&gt;", text, "&lt;/nowiki&gt;";
+</pre>
+
+== Lists ==
+<pre>
+unordered list           = "*", text;
+continue unordered list  = (unordered list|continue unordered list|":"|"*"|"#"),
+                           linebreak, unordered list;
+ordered list             = "#", text;
+continue ordered list    = (ordered list|continue ordered list|":"|"*"|"#"),
+                           linebreak, ordered list;
+definition list          = [text], ":", text;
+continue definition list = (definition list|continue definition list|":"|"*"|"#"),
+                           linebreak, definition list;
+</pre>
+
+== Signature ==
+<pre>
+user signature           = "~~~";
+user signature with date = "~~~~";
+current date             = "~~~~~";
+</pre>
+
+== Includes ==
+<pre>
+include  = ( template | tplarg ) ;
+template = "{{", title, { "|", part }, "}}" ;
+tplarg   = "{{{", title, { "|", part }, "}}}" ;
+part     = [ name, "=" ], value ;    
+title    = balanced text ;
+name     = balanced text ;
+value    = balanced text ;
+balanced text = text without consecutive equal braces, { include, text without consecutive equal braces } ;
+</pre>
+
+==Behavior switches==
+<pre>
+place TOC            = {whitespace|linebreak}, "__TOC__",           {whitespace|linebreak};
+force TOC            = {whitespace|linebreak}, "__FORCETOC__",      {whitespace|linebreak};
+disable TOC          = {whitespace|linebreak}, "__NOTOC__",         {whitespace|linebreak};
+disable section edit = {whitespace|linebreak}, "__NOEDITSECTION__", {whitespace|linebreak};
+</pre>
+
+==Tables==
+<pre>
+table start       = "{|", {style|whitespace}, linebreak;
+table end         = "|}";
+table header      = "|+", text, linebreak; (* What is this?  This exists? *)
+table header cell = (linebreak, "!", ({style|whitespace}- "|"), text)
+                  | (tablecell, ("!!" | "||"), ({style|whitespace}- "|"), text);
+table cell        = (linebreak, "|", ({style|whitespace}- "|"), text)
+                  | (table cell, "||", ({Style|WhiteSpace}- "|"), text);
+table row         = linebreak, "|-", {"-"}, {style|whitespace}, linebreak;
+
+table body        = ( table header cell | table cell ),
+                    { table row, ( table header cell | table cell ) };
+table             = table start, [table row], table body, table end;
+</pre>
+
+[[Category:Parser|EBNF]]
