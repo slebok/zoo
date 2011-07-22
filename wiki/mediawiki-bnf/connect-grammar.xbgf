@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<!-- Noparse block -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>characters</nonterminal>
+			<bgf:expression>
+				<plus>
+					<bgf:expression>
+						<nonterminal>character</nonterminal>
+					</bgf:expression>
+				</plus>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<!-- Beautification engage! -->
+	<xbgf:reroot>
+		<root>wiki-page</root>
+	</xbgf:reroot>
+	<!-- digits!!! -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>digits</nonterminal>
+			<bgf:expression>
+				<plus>
+					<bgf:expression>
+						<nonterminal>digit</nonterminal>
+					</bgf:expression>
+				</plus>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:unite>
+		<add>digit</add>
+		<to>decimal-digit</to>
+	</xbgf:unite>
+	<xbgf:unite>
+		<add>DIGIT</add>
+		<to>decimal-digit</to>
+	</xbgf:unite>
+	<!-- ImageOtherParameter -->
+	<xbgf:vertical>
+		<nonterminal>image-option</nonterminal>
+	</xbgf:vertical>
+	<xbgf:add>
+		<vertical>
+			<bgf:production>
+				<nonterminal>image-option</nonterminal>
+				<bgf:expression>
+					<nonterminal>image-other-parameter</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:add>
+	<xbgf:horizontal>
+		<nonterminal>image-option</nonterminal>
+	</xbgf:horizontal>
+	<xbgf:eliminate>
+		<nonterminal>BlockHTML</nonterminal>
+	</xbgf:eliminate>
+	<xbgf:eliminate>
+		<nonterminal>newlines</nonterminal>
+	</xbgf:eliminate>
+	<!--
+		 mw("img_upright")          ::= "upright" [, ["=",] PositiveInteger]
+		 mw("img_width")            ::= PositiveNumber "px" ;
+	-->
+	<xbgf:unite>
+		<add>PositiveInteger</add>
+		<to>digits</to>
+	</xbgf:unite>
+	<xbgf:unite>
+		<add>PositiveNumber</add>
+		<to>digits</to>
+	</xbgf:unite>
+	<!-- 
+		removing French idiosyncrasy
+	-->
+	<xbgf:vertical>
+		<nonterminal>text-with-formatting</nonterminal>
+	</xbgf:vertical>
+	<xbgf:remove>
+		<vertical>
+			<bgf:production>
+				<nonterminal>text-with-formatting</nonterminal>
+				<bgf:expression>
+					<nonterminal>open-guillemet</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:remove>
+	<xbgf:remove>
+		<vertical>
+			<bgf:production>
+				<nonterminal>text-with-formatting</nonterminal>
+				<bgf:expression>
+					<nonterminal>close-guillemet</nonterminal>
+				</bgf:expression>
+			</bgf:production>
+		</vertical>
+	</xbgf:remove>
+	<xbgf:horizontal>
+		<nonterminal>text-with-formatting</nonterminal>
+	</xbgf:horizontal>
+	<!-- ImageModeParameter -->
+	<xbgf:unite>
+		<add>ImageModeThumb</add>
+		<to>image-mode-auto-thumb</to>
+	</xbgf:unite>
+	<!-- top level link, currently under discussion, last comment in 2006 -->
+	<xbgf:fold>
+		<nonterminal>link</nonterminal>
+	</xbgf:fold>
+	<!-- crucial and nontrivial -->
+	<xbgf:unite>
+		<add>category</add>
+		<to>category-link</to>
+	</xbgf:unite>
+</xbgf:sequence>

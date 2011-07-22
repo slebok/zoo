@@ -1,0 +1,93 @@
+{{Grammar nav}}
+'''Special blocks''' are things like itemized lists starting with <tt>*</tt> ; they can only be specified at the start of a line and usually run till the end of the line.
+
+<source lang="bnf">
+<special-block>           ::= <horizontal-rule> | <heading> | <list-item> | <nowiki><table></nowiki> | <space-block> | ... 
+</source>
+
+The dots need to be filled in.
+
+=== Horizontal rule ===
+
+A horizontal rule is specified by 4 or more dashes. It is translated to an &lt;hr&gt; element. 
+
+<source lang="bnf">
+<horizontal-rule>         ::= "----" [<dashes>] [<inline-text>] <newline>
+<dashes>                  ::= "-" [<dashes>]
+</source>
+
+If the <tt>inline-text</tt> is present, it is ''not'' wrapped in a &lt;p&gt; element. 
+
+=== Heading ===
+
+A level-''n'' heading is translated to an &lt;h''n''&gt; element.
+
+<source lang="bnf">
+<heading>                 ::= <level-6-heading> | <level-5-heading> | <level-4-heading> 
+                                 | <level-3-heading> | <level-2-heading> | <level-1-heading>
+<level-6-heading>         ::= "======" <inline-text> "======" <space-tabs> <newline>
+<level-5-heading>         ::= "====="  <inline-text> "====="  <space-tabs> <newline>
+<level-4-heading>         ::= "===="   <inline-text> "===="   <space-tabs> <newline>
+<level-3-heading>         ::= "==="    <inline-text> "==="    <space-tabs> <newline>
+<level-2-heading>         ::= "=="     <inline-text> "=="     <space-tabs> <newline>
+<level-1-heading>         ::= "="      <inline-text> "="      <space-tabs> <newline>
+</source>
+
+The alternatives in the first rule need to be tried from left to right. 
+
+Some notes (as implied by the grammar):
+* An unterminated heading tag is treated as normal text.
+* Unbalanced tags are treated as the shorter of the two tags (i.e. '''==== heading ==''' renders as the level 2 heading '''== heading''')
+* More than 6 = signs are treated as 6, with the extra symbols being included in the header.
+
+=== List item ===
+<source lang="bnf">
+<list-item>               ::= <indent-item> |  <enumerated-item> | <bullet-item> 
+<indent-item>             ::= ":" [(<list-item> | <item-body>)]
+<enumerated-item>         ::= "#" [(<list-item> | <item-body>)]
+<bullet-item>             ::= "*" [(<list-item> | <item-body>)]
+<item-body>               ::= <defined-term> | [<whitespace>] <inline-text>
+
+<defined-term>            ::= ";" <text> [ (<definition>)]
+<definition>              ::= ":" <inline-text>
+</source>
+
+Semantics:
+*<tt><indent-item></tt> and <tt><definition></tt> are translated to a &lt;dd> element, wrapped in a &lt;dl>
+*A <tt><bullet-item></tt> is translated to a &lt;li> element wrapped in a &lt;ul>.
+*An <tt><enumerated-item></tt> is translated to a &lt;li> element wrapped in a &lt;ol>.
+*A <tt><defined-term></tt> is translated to a &lt;dt> element wrapped in a &lt;dl>.
+
+Notes:
+*The grouping of successive list items cannot be captured in EBNF. The simplest approach would appear to be a second pass whereby successive pairings of close/open list are eliminated. For example, <nowiki><ol><li>Foo</li></nowiki><s><nowiki></ol><ol></nowiki></s><nowiki><li>Boo</li></ol></nowiki> would be rewritten as <nowiki><ol><li>Foo</li><li>Boo</li></ol></nowiki> 
+*<tt><list-item></tt> and <tt><defined-term></tt> are obviously matched in preference to <tt><inline-text></tt>. The user has to insert whitespace in order to get inline-text starting with #, ;, * or :.
+*The current parser accepts a wide range of syntax than the above, allowing other list items to appear after a definition list (;). This appears to be arbitrary, unpredictable and not particularly useful. See [http://bugzilla.wikipedia.org/show_bug.cgi?id=11894 bug11894].
+
+=== Table ===
+<div style="background: #ffffdd">
+''From meta...minor reformatting''
+<source lang="bnf">
+ <Table>                   ::=  "{|" [ " " TableParameters ] NewLine TableFirstRow "|}" ;
+ <TableFirstRow>           ::= TableColumnLine NewLine | TableColumnMultiLine | TableRow ;
+ <TableRow>                ::= "|-" [ CSS ] NewLine TableColumn [ TableRow ] ;
+ <TableColumn>             ::= TableColumnLine | TableColumnMultiLine ;
+ <TableColumnLine>         ::= "|" InlineText [ "|" TableColumnLine ] ;
+ <TableColumnMultiLine>    ::= "|" [ TableCellParameters "|" ] AnyText NewLine [ TableColumnMultiLine ] ;
+ <TableParameters>         ::= CSS | ? HTML table attributes ? ;
+ <TableCellParameter>      ::= CSS | ? HTML cell attributes ? ;
+</source>
+
+</div>
+
+=== Space block ===
+Starting a line with a space creates a pre-formatted block of text similar to using &lt;pre>. The big difference is that the contained text is still parsed and rendered normally.
+<source lang="bnf">
+<space-block>             ::= " " <inline-text> <newline> [ {<space-block-2} ]
+<space-block-2>           ::= " " [<inline-text>] <newline>
+</source>
+
+;Rendering
+:The block is surrounded with &lt;pre>. White space and newlines are preserved literally.
+:Note that the first line of a space block must have text in it. Subsequent lines can be composed of just spaces.
+
+[[Category:Parser|BNF/Special block]]

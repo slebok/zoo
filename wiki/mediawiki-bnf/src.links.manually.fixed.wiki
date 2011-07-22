@@ -1,0 +1,139 @@
+{{Grammar nav}}
+
+This page references elements defined in [[Markup spec/BNF/Fundamental elements]] and [[Markup spec/BNF/Article title]]
+
+:''Internal and external links work fundamentally differently in MediaWiki, and should likely be treated separately. --[[User:Brion VIBBER|Brion VIBBER]] 04:08, 29 May 2006 (UTC)''
+
+::Do you mean to separate out their definitions, or to remove the <link> element and add its current definition wherever it would otherwise be used?  I think it makes logical sense to keep the top-level <link> definition, but I have separated out the definitions, which I hope will aid clarity. --[[User:HappyDog|HappyDog]] 13:46, 29 May 2006 (UTC)
+
+== Link definitions ==
+
+=== Top level definition ===
+
+<source lang=bnf>
+<link>			::= <internal-link> | <external-link>
+</source>
+
+=== Internal links ===
+
+<source lang=bnf>
+<internal-link>		::= <internal-link-start> <article-link>  [ "#" <section-id> ] [ <pipe> [<link-description>] ] <internal-link-end> [<extra-description>]
+
+/* Parser actually considers namespace and subpages to just be part of the article-title, and deals with them later. */
+<article-link>		::= [<interwiki-prefix> | ":" ] [<namespace-prefix] <article-title>
+
+/* if subpages: */
+/* not properly fleshed out, haven not tried all the combinations */
+<article-link>          ::= [<interwiki-prefix> | ":"] [<namespace-prefix] <article-title>
+                         | "/" <article-title>
+                         | { "../" } [<article-title>]
+
+<article-title>         ::= { [<title-legal-chars> | "%" ] } +
+
+/* Specified using regex format, obviously... */
+<title-legal-chars>  ::= " " | "%" | "!" | """ | "$" | "&" | "'" | "(" | ")"
+ | "*" | "," | "-" | "." | "/"
+ | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+ | ":" | ";" | "=" | "?" | "@"
+ | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+ | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+ | "\" | "^" | "_" | "`"
+ | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+ | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+ | "~"
+ | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | ""
+ | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | "" | ""
+ | "" | "" | "" | "" | "" | "" | " " | "¡" | "¢" | "£" | "¤" | "¥" | "¦"
+ | "§" | "¨" | "©" | "ª" | "«" | "¬" | "­" | "®" | "¯" | "°" | "±" | "²" | "³"
+ | "´" | "µ" | "¶" | "·" | "¸" | "¹" | "º" | "»" | "¼" | "½" | "¾" | "¿" | "À"
+ | "Á" | "Â" | "Ã" | "Ä" | "Å" | "Æ" | "Ç" | "È" | "É" | "Ê" | "Ë" | "Ì" | "Í"
+ | "Î" | "Ï" | "Ð" | "Ñ" | "Ò" | "Ó" | "Ô" | "Õ" | "Ö" | "×" | "Ø" | "Ù" | "Ú"
+ | "Û" | "Ü" | "Ý" | "Þ" | "ß" | "à" | "á" | "â" | "ã" | "ä" | "å" | "æ" | "ç"
+ | "è" | "é" | "ê" | "ë" | "ì" | "í" | "î" | "ï" | "ð" | "ñ" | "ò" | "ó" | "ô"
+ | "õ" | "ö" | "÷" | "ø" | "ù" | "ú" | "û" | "ü" | "ý" | "þ" | "ÿ" | "+"
+
+<interwiki-prefix>	::= <interwiki> ":"
+<interwiki>		::= STRING_FROM_DB
+
+<namespace-prefix>	::= [<namespace>] ":"
+<namespace>		::= STRING_FROM_CONFIG
+/* is it? parser.php gives it as  "[_0-9A-Za-z\x80-\xff]" */
+
+<link-description>	::= LEGAL_ARTICLE_ENTITY
+<extra-description>	::= <letter> [<extra-description>]
+
+<internal-link-start>	::= "[["
+<internal-link-end>	::= "]]"
+
+<pipe>			::= "|"
+
+/* Almost anything seems to be allowed, but it won't necessarily be treated as an actual section title */
+<section-id>            ::= { [<title-legal-chars> | "%" | "#" ] } + 
+</source>
+
+;Remarks
+:Logically, internal-link should be matched in preference to external-link, as that's how the current parser does it. However, the current parser also explicitly checks for an accidental match of an external link in an inside link (that is, <nowiki>[[http://foo.com]]</nowiki>) and converts it back to an external link. 
+:<code>if (preg_match('/^\b(?:' . wfUrlProtocols() . ')/', $m[1])) { $s .= $prefix . '[[' . $line ; continue; } </code>
+
+=== Categories ===
+In the current parser, categories are just a mildly special case of an internal link. But to the user they seem quite different, and the final behaviour is very different. So let's treat them specially.
+
+<source lang=bnf>
+/* section-ids are technically tolerated currently. but they do nothing and aren't used. */
+/* similarly a pipe without a sort key is technically tolerated but isn't useful. */
+<category>		::= <internal-link-start> <category-namespace> ":" <article-title> [ <pipe> <sort-key> ] <internal-link-end>
+
+<category-namespace>    ::= NS_CATEGORY
+/* set in languages/messages/MessagesXx.php. By default, "Category" */
+
+/* <article-title> specified above. for a category, it's possibly more restrictive. */
+/* other bits specified above. */
+
+</source>
+
+;Remarks
+:A link *to* a category is handled by internal-link above.
+
+====Rendering====
+A category link produces no inline text. However, the fact of the link (with possible manual sort key) is stored, and possibly rendered by the skin.
+
+=== External links ===
+
+<source lang=bnf>
+<external-link>		::= <external-link-start> <url> [<whitespace>] [<link-description>] <external-link-end> 
+			    | <url>
+
+<url>			::= <protocol> <url-path>
+<protocol>		::= ALLOWED_PROTOCOL_FROM_CONFIG (e.g. "http://", "mailto:")
+<url-path>		::= <url-char> [<url-path>]
+<url-char>		::= LEGAL_URL_ENTITY
+
+<external-link-start>	::= "["
+<external-link-end>	::= "]"
+</source>
+
+== Transformations ==
+=== Internal link to HTML ===
+
+ URL = <a href=$1?title=$2$3"$4 title="$2">$5$6</a>
+
+Where
+
+ if <interwiki> is blank
+   $1 = internal variable $wgScript
+ else
+   $1 = looked up in DB, based on value of <interwiki>
+ $2 = <namespace-prefix> <article-link>
+ If destination page exists
+   $3 = "'''''&amp;amp;action=edit'''''"
+   $4 = "''''' class="new"'''''"
+ else
+   $3 and $4 are blank
+ If <description> is blank
+   $5 = <article-link>
+ else
+   $5 = <description>
+ $6 = <extra-description>
+
+
+[[Category:Parser|BNF/Links]]

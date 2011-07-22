@@ -1,0 +1,125 @@
+{{Grammar nav}}
+
+== Wiki-page ==
+The top-level element (start symbol) is <tt>wiki-page</tt> which describes the contents of a page. A page can either be a redirect or a normal article.
+
+<source lang=bnf>
+<wiki-page>               ::= <redirect> [<article>] | [<article>]
+<redirect>                ::= <redirect-tag> <characters> <internal-link-start> <article-link> (<internal-link-end> | <pipe> | EOL)
+<redirect-tag>            ::= FROM_LANGUAGE_FILE
+</source>
+
+''<internal-link-start>, <article-link>, <internal-link-end> and <pipe> are defined in [[../Links/]]''
+Notes:
+
+The <redirect-tag> is language-specific, and may have more than one possible value.  By default the value for the right-hand-side of the expression (replacing FROM_LANGUAGE_FILE) is <code>"#redirect"</code>, but in Estonian it is <code>"#redirect" | "#suuna"</code>.  This match is case-insensitive (though this again may be overridden in the language file).
+
+<characters> should be non-greedy, matching the largest subset of characters that does not contain <internal-link-start>.
+
+For example, <tt><redirect></tt> will match the following, and treat it as a redirect to ''foo'':
+:<tt><nowiki>#REDireCTnon%^sense[[foo|and this is parsed as article content</nowiki></tt>
+
+* Interwiki prefixes may not be supported in redirect links. (Is this configurable?)
+* The <article> following the redirect link is not rendered. However, it is parsed. So, interwiki links, category links and even normal links are still treated and behave "normally".
+* Anchors (Article#Section) are supported, but not yet described in the grammar.
+
+== Article ==
+
+This describes the contents of an article. An article consists of blocks, which come in two flavours: paragraphs and special blocks. Both of them end with a newline. Paragraphs are separated by empty lines.
+
+<source lang=bnf>
+ <article>                 ::= <special-block-and-more> | <paragraph-and-more> 
+ <special-block-and-more>  ::= <special-block> ( EOF | [<newline>] <special-block-and-more> 
+                                                     | (<newline> | "") <paragraph-and-more> )
+ <paragraph-and-more>      ::= <paragraph> ( EOF | [<newline>] <special-block-and-more> 
+                                                 | <newline> <paragraph-and-more> )
+</source>
+
+The nonterminals <tt>special-block-and-more</tt> and <tt>paragraph-and-more</tt> are not disjoint; the parser should first try to match against <tt>special-block-and-more</tt>.
+
+
+
+The expression <tt>(<newline> | "")</tt> is a greedy version of <tt>[<newline>]</tt>. If both the empty string and a newline can be matched, then the former expression matches the newline, while the latter expression would match the empty string according to the conventions on [[../]].
+
+*For the definition of special block, see [[../Special block]].
+
+;Note
+:Any line that does not start with one of the following is not a special block: <code> " " | "{|" | "#" | ";" | ":" | "*" | "="</code>
+:This should assist in parsing.
+:Hey, that's almost what it says in the current parser. I must be onto something. Wonder why it doesn't cover space or = though.
+::<code>if (!$piece['lineStart'] && preg_match('/^(?:{\\||:|;|#|\*)/', $text)) /*}*/{</code>
+
+== Paragraph ==
+
+Every paragraph ends with a newline character. A paragraph translated in a &lt;p&gt; element. 
+<source lang=bnf>
+ <paragraph>               ::= <newline> [<lines-of-text>] | <lines-of-text>
+ <lines-of-text>           ::= <line-of-text> [<lines-of-text>]
+ <line-of-text>            ::= <inline-text> <newline>
+</source>
+
+*For the definition of inline text, see [[../Inline text]].
+
+The recursion in the second rule should be non-greedy, i.e., it should match as few lines as possible. For instance,
+:<tt>abc</tt>
+:<tt>----</tt>
+should be parsed as one <tt>line-of-text</tt> and one <tt>horizontal-rule</tt>, but
+:<tt>abc</tt>
+:<tt>---</tt>
+should be parsed as two <tt>line-of-text</tt> nonterminals.
+
+If a paragraph starts with a newline, the newline is as a &lt;br&gt; element.
+----
+
+===Block HTML===
+(not referred to yet)
+BlockHTML = Pre | Blockquote | TableHTML | Div | HeaderHTML ;
+
+
+===String Types===
+<div style="background:#ffffdd;">
+''This text came from Meta-Wiki. It's not immediately compatible with the surrounding text (it's EBNF, rather than BNF, for a start). However it is much more precise about the nature of lines and captures rules about whitespace normalisation.''
+
+Fundamental strings
+
+<source lang=bnf>WikiMarkupCharacters = "|" | "[" | "]" | "*" | "#" | ":" | ";" | "<" | ">" | "=" | "'" | "{" | "}" ;</source>
+
+<source lang=bnf>
+UnicodeCharacter = ? all supported Unicode characters ? - Whitespaces ;
+UnicodeWiki = UnicodeCharacter - WikiMarkupCharacters ;
+PlainText = UnicodeWiki
+          | "<nowiki><nowiki></nowiki>" { "|" | "[" | "]" | "<" | ">" | "{" | "}" } "<nowiki></nowiki></nowiki>"
+          | UnicodeWiki { " " } ( "*" | "#" | ":" | ";" )
+          | UnicodeWiki [ " " ] "=" [ " " ] UnicodeWiki
+          | UnicodeWiki "'"
+          | " '" UnicodeWiki ;
+WhiteSpaces =  " " | NewLine | ? carriage return ? | ? line feed ? | ? tab ? | ? variants of spaces ? ;
+NewLine = ? carriage return and line feed ? ;
+</source>
+
+Article strings
+
+<source lang=bnf>
+Line = PlainText { PlainText } { " " { " " } PlainText { PlainText } } ;
+Text = Line { Line } { NewLine { NewLine } Line { Line } } ;
+</source>
+
+Titles
+
+<source lang=bnf>
+PageName = TitleCharacter , { [ " " ] TitleCharacter } ;
+PageNameLink = TitleCharacter , { [ " " | "_" ] TitleCharacter } ;
+SectionTitle = ( SectionLinkCharacter - "=" ) { [ " " ] ( SectionLinkCharacter - "=" ) } ;
+SectionLink = SectionLinkCharacter { [ "_" ] SectionLinkCharacter } ;
+LinkTitle = { UnicodeCharacter { " " } } ( UnicodeCharacter - "]" ) ;
+
+TitleCharacter = UnicodeCharacter - BadTitleCharacters ;
+BadTitleCharacters = "[" | "]" | "{" | "}" | "<" | ">" | "_" | "|" | "#" ;
+SectionLinkCharacter = UnicodeCharacter - BadSectionLinkCharacters ;
+BadSectionLinkCharacters = "[" | "]" | "|" ;
+</source>
+</div>
+----
+
+
+[[Category:Parser|BNF/Article]]

@@ -1,0 +1,78 @@
+{{Grammar nav}}
+A "noparse block" ([[User:Stevage|my]] term) is a block that is parsed according to totally different logic. It is the first thing the current parser does after preprocessing, in the "strip" method. The only thing that ends one of these blocks is the matching close tag.
+<source lang="bnf">
+ <noparse-block>           ::= <nowiki-block> | <html-block> | <math-block> | <pre-block> | <html-comment>
+</source>
+
+Notes:
+*Nowiki, pre and html-comment are always available.
+*Html is available if $wgRawHtml is true in localsettings.php
+*Math is available if the math extension is installed
+*Other tags may be available if installed and present in parser->mTagHooks.
+
+==Nowiki==
+The &lt;nowiki&gt; tag prevents special markup (like <tt><nowiki>''</nowiki></tt> for italics) from being recognized.
+
+<source lang="bnf">
+ <nowiki-block>            ::= <nowiki-opening-tag> (<whitespace>) <nowiki-body> (<whitespace>) [<nowiki-closing-tag> | (?=EOF) ]
+ <nowiki-opening-tag>      ::= "&lt;nowiki" (<whitespace> (<characters>)) "&gt;"
+ <nowiki-closing-tag>      ::= "&lt;/nowiki" (<whitespace>) "&gt;"
+ <nowiki-body>             ::= <characters>
+</source>
+
+In words, if a &lt;nowiki&gt; tag is not closed, then it is taken to run until the end. <tt>(?=EOF)</tt> is a look-ahead assertion, like in [[w:PCRE|PCRE]]. It asserts that an EOF follows, but does not consume the EOF.
+
+=== Translating to HTML ===
+
+To translate a nowiki tag to HTML, perform the following transformations:
+* <html-unsafe-symbol> terminals within <nowiki-body> are replaced with the appropriate <html-entity> (see [[Markup spec/BNF/Fundamental elements#Transformations|Fundamental elements]]).
+* <nowiki-body> is otherwise output more or less literally. Whitespace is treated as normal: single new lines are ignored, consecutive new lines are converted into <code>p</code> and <code>br</code> elements. Leading and trailing space from each line is removed, and runs of spaces are normalised to a single space within a line.
+* The <whitespace> elements in the top-level <nowiki-tag> are discarded.
+
+**'' Actually, this is not true.  The <nowiki-body> is treated as paragraphs of text, as in the main <article> tag, with blank lines being replaced with <nowiki><p><br /></p></nowiki>, and each paragraph being trim()ed. --[[User:HappyDog|HappyDog]] 15:11, 18 June 2006 (UTC)''
+***Noted, thanks. [[User:Stevage|Stevage]] 04:43, 4 December 2007 (UTC)
+
+==Math==
+==Pre==
+The &lt;pre&gt; tag behaves much like nowiki, but generates a literal &lt;pre> tag, which causes different output. Notably, a nowiki is treated literally inside a pre tag, and vice versa.
+
+<source lang="bnf">
+ <pre-block>               ::= <pre-opening-tag> (<whitespace>) <pre-body> (<whitespace>) [<pre-closing-tag> | (?=EOF) ]
+ <pre-opening-tag>         ::= "&lt;pre" (<whitespace> (<characters>)) "&gt;"
+ <pre-closing-tag>         ::= "&lt;/pre" (<whitespace>) "&gt;"
+ <pre-body>                ::= <characters>
+</source>
+
+Notes:
+*Not quite accurate, <nowiki><pre-foo></nowiki> is recognised, although <prefoo> is not.
+
+===Translating to HTML===
+*<html-unsafe-symbol> terminals are replaced.
+*New lines are retained literally.
+*The whole block is wrapped in <code>&lt;pre></code>
+
+
+==Html==
+<source lang="bnf">
+ <html-block>               ::= <html-opening-tag> (<whitespace>) <html-body> (<whitespace>) [<html-closing-tag> | (?=EOF) ]
+ <html-opening-tag>         ::= "&lt;html" (<whitespace> (<characters>)) "&gt;"
+ <html-closing-tag>         ::= "&lt;/html" (<whitespace>) "&gt;"
+ <html-body>                ::= <characters>
+</source>
+
+===Translating to HTML===
+*All characters, including whitespace, newlines, and "html-unsafe-symbol" terminals are output literally.
+*The block is not wrapped in anything.
+
+==HTML-comment==
+<source lang="bnf">
+<html-comment>             ::= "&lt;!--" ({ characters }) "-->"
+</source>
+
+===Translating to HTML===
+HTML comments are completely stripped out, never to be seen again. It's possible that with the new parser, this behaviour could be changed - it was primarily to avoid conflict with other parts of the parser that generated internal comments, such as to identify section headings with.
+
+Note: Unlike in HTML, this stripping is repeated until there is nothing left to strip, i.e. <CODE >&lt;&lt;!---->!----></CODE > becomes <<!---->!----> (nothing).
+
+
+[[Category:Parser|BNF/Noparse-block]]

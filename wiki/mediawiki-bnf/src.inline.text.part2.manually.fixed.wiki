@@ -1,0 +1,75 @@
+==Images, media, gallery==
+
+Links to images and media should be handled as normal links. It's inline images and media that are being dealt with here.
+
+Originally from MetaWiki.
+===Images===
+
+<source lang="bnf">
+ ImageInline                ::= "[[" , "Image:" , PageName, ".", ImageExtension, ( { Pipe, ImageOption, } ) "]]" ;
+ ImageName                  ::= PageName, ".", ImageExtension ;
+ ImageExtension             ::= "jpg" | "jpeg" | "png" | "svg" | "gif" | "bmp" ;
+ ImageOption                ::= ImageModeParameter | ImageSizeParameter | ImageAlignParameter                               | ImageVAlignParameter | Caption ;
+
+ ImageModeParameter         ::= ImageModeManualThumb | ImageModeThumb | ImageModeFrame | ImageModeFrameless ;
+
+ ImageModeManualThumb       ::= "thumbnail=", ImageName | "thumb=", ImageName ;
+ ImageModeAutoThumb         ::= "thumbnail" | "thumb";
+ ImageModeFrame             ::= "framed" | "enframed" | "frame";
+ ImageModeFrameless         ::= "frameless";
+
+ ImageOtherParameter        ::= ImageParamPage | ImageParamUpright | ImageParamBorder ;
+ ImageParamPage             ::= "page=$1" | "page $1" ; /*  ??? (where is this used?) */
+ ImageParamUpgright         ::= "upright" [, ["=",] PositiveInteger] ;
+ ImageParamBorder           ::= "border" ;
+
+ ImageSizeParameter         ::= PositiveNumber, "px" ;
+
+
+ ImageAlignParameter        ::= ImageAlignLeft | ImageAlign|Center | ImageAlignRight | ImageAlignNone ;
+ ImageAlignLeft             ::= "left" ;
+ ImageAlignCenter           ::= "center" | "centre" ;
+ ImageAlignRight            ::= "right" ;
+ ImageAlignNone             ::= "none" ;
+
+ ImageValignParameter       ::= ImageValignBaseline | ImageValignSub | ImageValignSuper | ImageValignTop 
+                             | ImageValignTextTop | ImageValignMiddle | ImageValignBottom | ImageValignTextBottom ;
+
+ ImageValignBaseline        ::= "baseline" ;
+ ImageValignSub             ::= "sub" ;
+ ImageValignSuper           ::= "super" | "sup" ;
+ ImageValignTop             ::= "top" ;
+ ImageValignTextTop         ::= "text-top" ;
+ ImageValignMiddle          ::= "middle" ;
+ ImageValignBottom          ::= "bottom" ;
+ ImageValignTextBottom      ::= "text-bottom" ;
+
+ Caption                    ::= inline-text ;
+</source>
+
+====Semantics====
+*Renders an image inline using the <code>&lt;img></code> tag. 
+*It is not an error to specify multiple alignment parameters; the first specified is the one used.
+*It is not an error to specify multiple captions; the last specified is the one used.
+*The caption has no effect if ThumbImageParameter is not given.
+
+===Media===
+
+<source lang="bnf">
+ MediaInline               ::=  "[[" , "Media:" , PageName, ".", MediaExtension, "]]" ;
+ MediaExtension ::= "ogg" | "wav" ;
+</source>
+
+
+
+===Gallery===
+
+<source lang="bnf">
+ GalleryBlock               ::=   "<gallery>" [ NewLine ] GalleryImage { [ NewLine ] GalleryImage } [ NewLine ] "</gallery>" ;
+ GalleryImage               ::=   (to be defined: essentially   foo.jpg[|caption] ) ;
+</source>
+
+Remarks:
+*The gallery block can technically be used in the middle of a sentence so is not a "special block". It doesn't render particularly nicely when you do that though.
+
+[[Category:Parser|BNF/Inline text]]

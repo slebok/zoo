@@ -1,0 +1,52 @@
+{{grammar nav}}
+These are the fundamental definitions of common data types.  Terminals are case-sensitive.
+
+<source lang="bnf">
+<character>             ::= <whitespace-char> | <non-whitespace-char> | <html-entity> 
+
+<html-entity>           ::= "&" <html-entity-chars> ";"
+                          | "&#" <decimal-number> ";"
+                          | "&#x" <hex-number> ";"						   
+<html-entity-chars>     ::= <html-entity-char> [<html-entity-chars>]
+<html-entity-char>      ::= <ucase-letter> | <lcase-letter> | <decimal-digit>
+
+<whitespace>            ::= <whitespace-char> [<whitespace>] | EOF
+<newlines>              ::= <newline> [<newlines>]
+<space-tabs>            ::= <space-tab> [<space-tabs>]
+
+<whitespace-char>       ::= <space-tab> | <newline>
+
+<space-tab>             ::= <space> | TAB
+<spaces>                ::= <space> [<spaces>]
+<space>                 ::= " "
+
+<newline>               ::= CR LF | LF CR | CR | LF
+<BOL>                   ::= <newline> | BOF
+<EOL>                   ::= <newline> | EOF
+
+<non-whitespace-char>   ::= <letter> | <decimal-digit> | <symbol>
+<letter>                ::= <ucase-letter> | <lcase-letter>
+<ucase-letter>          ::= "A" | "B" | ... | "Y" | "Z"
+<lcase-letter>          ::= "a" | "b" | ... | "y" | "z"
+<symbol>                ::= <html-unsafe-symbol> | <underscore> | "." | "," | ...
+<html-unsafe-symbol>    ::= "<" | ">" | "&"
+<underscore>            ::= "_"
+
+<decimal-number>        ::= <decimal-digit> [<decimal-number>]
+<decimal-digit>         ::= "0" | "1" | ... | "8" | "9"
+
+<hex-number>            ::= <hex-digit> [<hex-number>]
+<hex-digit>             ::= <decimal-digit> 
+                            | "A" | "B" | "C" | "D" | "E" | "F" 
+                            | "a" | "b" | "c" | "d" | "e" | "f"
+</source>
+
+== Transformations ==
+
+* Terminals in <html-unsafe-symbol> will, in some situations, need to be converted to valid <html-entity> symbols.  When this is required, the transformation is as follows:
+** < becomes &amp;lt;
+** > becomes &amp;gt;
+** & becomes &amp;amp;
+
+
+[[Category:Parser|BNF/Fundamental elements]]

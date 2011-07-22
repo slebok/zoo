@@ -1,0 +1,52 @@
+===Block HTML===
+(not referred to yet)
+<source lang=bnf>BlockHTML = Pre | Blockquote | TableHTML | Div | HeaderHTML ;</source>
+
+
+===String Types===
+<div style="background:#ffffdd;">
+''This text came from Meta-Wiki. It's not immediately compatible with the surrounding text (it's EBNF, rather than BNF, for a start). However it is much more precise about the nature of lines and captures rules about whitespace normalisation.''
+
+Fundamental strings
+
+<source lang=bnf>WikiMarkupCharacters = "|" | "[" | "]" | "*" | "#" | ":" | ";" | "<" | ">" | "=" | "'" | "{" | "}" ;</source>
+
+<source lang=bnf>
+UnicodeCharacter = ? all supported Unicode characters ? - Whitespaces ;
+UnicodeWiki = UnicodeCharacter - WikiMarkupCharacters ;
+PlainText = UnicodeWiki
+          | "<nowiki><nowiki></nowiki>" { "|" | "[" | "]" | "<" | ">" | "{" | "}" } "<nowiki></nowiki></nowiki>"
+          | UnicodeWiki { " " } ( "*" | "#" | ":" | ";" )
+          | UnicodeWiki [ " " ] "=" [ " " ] UnicodeWiki
+          | UnicodeWiki "'"
+          | " '" UnicodeWiki ;
+WhiteSpaces =  " " | NewLine | ? carriage return ? | ? line feed ? | ? tab ? | ? variants of spaces ? ;
+NewLine = ? carriage return and line feed ? ;
+</source>
+
+Article strings
+
+<source lang=bnf>
+Line = PlainText { PlainText } { " " { " " } PlainText { PlainText } } ;
+Text = Line { Line } { NewLine { NewLine } Line { Line } } ;
+</source>
+
+Titles
+
+<source lang=bnf>
+PageName = TitleCharacter , { [ " " ] TitleCharacter } ;
+PageNameLink = TitleCharacter , { [ " " | "_" ] TitleCharacter } ;
+SectionTitle = ( SectionLinkCharacter - "=" ) { [ " " ] ( SectionLinkCharacter - "=" ) } ;
+SectionLink = SectionLinkCharacter { [ "_" ] SectionLinkCharacter } ;
+LinkTitle = { UnicodeCharacter { " " } } ( UnicodeCharacter - "]" ) ;
+
+TitleCharacter = UnicodeCharacter - BadTitleCharacters ;
+BadTitleCharacters = "[" | "]" | "{" | "}" | "<" | ">" | "_" | "|" | "#" ;
+SectionLinkCharacter = UnicodeCharacter - BadSectionLinkCharacters ;
+BadSectionLinkCharacters = "[" | "]" | "|" ;
+</source>
+</div>
+----
+
+
+[[Category:Parser|BNF/Article]]

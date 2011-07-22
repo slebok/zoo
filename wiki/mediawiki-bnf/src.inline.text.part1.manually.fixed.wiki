@@ -1,0 +1,305 @@
+{{grammar nav}}
+
+"Inline text" is the guts of Wikitext formatting. It covers every situation where "normal" text is allowed, such as image captions, table data, and to an extent (yet to work out how to enforce this restriction...), headings and link text.
+__TOC__
+<br clear=all/>
+
+<source lang="bnf">
+ <inline-text>             ::= <inline-element> [<inline-text>]
+ <inline-element>          ::= <category-link>           
+                             | <internal-link> 
+                             | <external-link>
+                             | <magic-link> 
+                             | <image-inline> | <gallery-block> | <media-inline> 
+                             | <text-with-formatting>
+
+ <text-with-formatting>    ::= <formatting> 
+                             | <inline-html> 
+                             | <noparseblock>
+                             | <behaviour-switch> 
+                             | <open-guillemet> | <close-guillemet>
+                             | <html-entity>
+                             | <html-unsafe-symbol>
+                             | <text>
+                             | <random-character> 
+                             | (more missing?)...
+ <text>                    ::= { <harmless-character> }+
+
+</source>
+
+Detail:
+*noparse-block: [[../Noparse-block]]
+*link: [[../Links/]]
+*magic-link: [[../Magic links/]]
+
+The parser should try the options in order, with <tt>text</tt> matching if all else fails. In particular, <category-link> should be matched before <link> because a category is a special type of link, and we don't want the normal parsing to occur.
+
+====HTML entity====
+The parser recognises validly constructed HTML entities and leaves them alone. 
+<source lang="bnf">
+ <html-entity>           ::= "&" <html-entity-name> ";"
+                          | "&#" <decimal-number> ";"
+                          | "&#x" <hex-number> ";"                                                   
+ <html-entity-name>      ::= Sanitizer::$wgHtmlEntities (case sensitive)
+ (* "Aacute" | "aacute" | ... *)
+
+</source>
+
+====Rendering====
+*The whole sequence is output literally.
+*The current parser does very complicated things with escaping and de-escaping. So maybe there are places where something more complicated needs to happen.
+
+===HTML unsafe symbol===
+These "unsafe" symbols are turned into HTML entities if they haven't matched part of a valid HTML entity above. It's probably not too efficient having single-character level matching rules...perhaps should be combined with "text".
+<source lang="bnf">
+ <html-unsafe-symbol>     ::= <unescaped-ampersand> | <unespaced-less-than> | <unescaped-greater-than>
+ <unescaped-ampersand>    ::= "&" 
+ <unescaped-less-than>    ::= "<" 
+ <unescaped-greater-than> ::= ">" 
+</source>
+
+====Rendering====
+*<unescaped-ampersand> &rarr; <code>&amp;amp; </code>
+*<unescaped-less-than> &rarr; <code>&amp;lt; </code>
+*<unescaped-greater-than> &rarr; <code>&amp;gt; </code>
+
+===Text===
+Harmless-characters mean characters that couldn't be anything else. I'm not sure how useful this is as a distinction, but perhaps it will help speed things up? 
+
+A "random character" is any character which hasn't matched anything else.
+
+<source lang="bnf">
+	<harmless-characters>    ::=
+	   "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+	 | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+	 | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+	 | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+	 | "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" 
+
+ <random-character>       ::= ? any character ... ?
+
+</source>
+
+====Rendering====
+Both types are written literally.
+
+
+'''This section from the "fundamental elements" section...time to mangle!
+
+----
+<source lang="bnf">
+<character>             ::= <whitespace-char> | <non-whitespace-char> | <html-entity> 
+
+
+<whitespace>            ::= <whitespace-char> [<whitespace>] | EOF
+<newlines>              ::= <newline> [<newlines>]
+<space-tabs>            ::= <space-tab> [<space-tabs>]
+
+<whitespace-char>       ::= <space-tab> | <newline>
+
+<space-tab>             ::= <space> | TAB
+<spaces>                ::= <space> [<spaces>]
+<space>                 ::= " "
+
+<newline>               ::= CR LF | LF CR | CR | LF
+<BOL>                   ::= <newline> | BOF
+<EOL>                   ::= <newline> | EOF
+
+<non-whitespace-char>   ::= <letter> | <decimal-digit> | <symbol>
+<letter>                ::= <ucase-letter> | <lcase-letter>
+<ucase-letter>          ::=
+  "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+| "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+<lcase-letter>          ::=
+   "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+ | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
+<symbol>                ::= <html-unsafe-symbol> | <underscore> | "." | "," | ...
+
+<underscore>            ::= "_"
+
+<decimal-number>        ::= <decimal-digit> [<decimal-number>]
+<decimal-digit>         ::=
+   "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" 
+
+<hex-number>            ::= <hex-digit> [<hex-number>]
+<hex-digit>             ::= <decimal-digit> 
+                            | "A" | "B" | "C" | "D" | "E" | "F" 
+                            | "a" | "b" | "c" | "d" | "e" | "f"
+</source>
+
+
+===Formatting===
+Bold/italics is the biggest problem with switching to a consume-parse-render parser. It will not be possible to describe the current, extremely esoteric rules in simple (E)BNF. The best we can hope for is to store tokens representing the apostrophe clumps and do a second pass to make more sense of them. It would be very useful to define a second, unambiguous set of formatting syntax (most likely // and **), and encourage people to use those wherever apostrophes and bold/italics meet.
+
+Some rules for parsing bold/italics as recognised by the current parser. These must be implemented (Brion said so). In increasing order of complexity:
+#<nowiki>''italics'', '''bold''', '''''bold-italics'''''</nowiki>
+#:''italics'', '''bold''', '''''bold-italics'''''
+#<nowiki>'''''bold-italics''' just italics'' normal</nowiki>
+#:'''''bold-italics''' just italics'' normal
+#<nowiki>Some text about l''''Arc de triomphe'''.</nowiki>
+#:Some text about l''''Arc de triomphe'''.
+#<nowiki>However: '''bold is l''''Arc de triomphe'''.</nowiki>
+#:However: '''bold is l''''Arc de triomphe'''.
+
+Optimistic view:
+<source lang="bnf">
+ <formatting>              ::= <bold-italic-toggle> | <bold-toggle> | <italic-toggle>
+ <bold-italic-toggle>      ::= "'''''"
+ <bold-toggle>             ::= "'''"
+ <italic-toggle>           ::= "''"
+</source>
+
+Reality:
+<source lang="bnf">
+ <formatting>              ::= <apostrophe-jungle>
+ <apostrophe-jungle>       ::= "''" { "'" }
+</source>
+
+====Rendering====
+*Once the parser has decided which way the toggles go:
+**bold-toggle-on -> &lt;b>
+**bold-toggle-off -> &lt;/b>
+**italic-toggle-on -> &lt;i>
+**italic-toggle-off -> &lt;/i>
+**bold-italic-toggle-on -> &lt;b> &lt;i>
+**bold-italic-toggle-off-> &lt;/i> &lt;/b>
+
+====Determining the behaviour of apostrophes====
+The following describes the behaviour of repeated postrophes. "Bold" means "toggle bold", rather than "turn bold on". "Bold, italics" means "Toggle bold and italics independently", rather than "turn bold and italics on" or "toggle bold and italics the same way".
+
+*One (<code> <nowiki>'</nowiki> </code>): Always a single apostrophe. 
+*:e.g.  (<code> <nowiki>hello ' blah</nowiki> </code>) &rarr; hello ' blah
+*Two (<code> <nowiki>''</nowiki> </code>): Always italics on or off
+*:e.g.  (<code> <nowiki>hello '' blah</nowiki> </code>) &rarr; hello '' blah
+*Three (<code> <nowiki>'''</nowiki> </code>):
+*#Bold (default)
+*#:e.g.  (<code> <nowiki>hello ''' blah</nowiki> </code>) &rarr; hello ''' blah
+*#Apostrophe, italics
+*#*If there is otherwise an odd number of both bold and italics
+*#*#If the preceding characters are <space><non-space> (and there are no earlier such sequences)
+*#*#:e.g.  (<code> <nowiki>hello l'''amour'' l'''ouest''' blah</nowiki> </code>) &rarr; hello l'''amour'' l'''ouest''' blah
+*#*#Else if the preceding characters are <non-space><non-space> (and there are no earlier such sequences)
+*#*#:e.g.  (<code> <nowiki>hello mon'''amour'' blah</nowiki> </code>) &rarr; hello mon'''amour'' blah
+*#*#Else (the preceding character is <space>) (and there are no earlier such sequences)
+*#*#:e.g.  (<code> <nowiki>hello '''amour'' '''blah '''blah</nowiki> </code>) &rarr; hello '''amour'' '''blah '''blah
+*#Italics, apostrophe (never)
+*Four (<code> <nowiki>''''</nowiki> </code>):
+*#Bold, apostrophe (never)
+*#Apostrophe, bold (default, if either bold or italics ends up balanced)
+*#:e.g.  (<code> <nowiki>hello ''''amour''' now ''italics unbalanced, but that's ok</nowiki> </code>) &rarr; hello ''''amour''' now ''italics unbalanced, but that's ok
+*#:e.g.  (<code> <nowiki>hello ''''amour''' now, '''bold unbalanced, but that's ok</nowiki> </code>) &rarr; hello ''''amour''' now, '''bold unbalanced, but that's ok
+*#Apostrophe, apostrophe, italics
+*#*If the default treatment leads to an odd number of bold and italics then this can meet condition 1 under the second case of three italics, above.
+*#*:e.g.  (<code> <nowiki>hello ''''amour''' now '''''bold and italics unbalanced, so invoke this special case</nowiki> </code>) &rarr; hello ''''amour''' now '''''bold and italics unbalanced, so invoke this special case
+*Five (<code> <nowiki>'''''</nowiki> </code>): 
+*#Bold, italics; or italics, bold (default, the two cases are equivalent)
+*#:e.g.  (<code> <nowiki>hello ''''' blah</nowiki> </code>) &rarr; hello ''''' blah
+*#Italics, apostrophe, italics (never)
+*More than five:
+*#Apostrophes, bold+italics (default)
+*#:e.g.  (<code> <nowiki>hello '''''''''' blah</nowiki> </code>) &rarr; hello '''''''''' blah
+*#:e.g.  (<code> <nowiki>hello '''bold '''''''''' blah</nowiki> </code>) &rarr; hello '''bold '''''''''' blah
+*#Bold+italics, apostrophes (never)
+
+*#Bold+italics, apostrophes (never)
+
+===Inline HTML===
+The parser recognises and cleans a large number of HTML tags, as defined in Sanitizer.php.
+
+A decision has to be made here on whether to attempt to parse these things as a matched set, or whether to leave that to a later pass.
+
+A loose definition assuming they are treated individually:
+// REMOVED MANUALLY 
+;Remarks:
+:The range of "word-boundary-char" seems to be an artefact of the regular expression: <code>if( preg_match( '!^(/?)(\\w+)([^>]*?)(/{0,1}>)([^<]*)$!', $x, $regs ) ) {</code>
+		
+
+====The list of "tags that must be closed"<nowiki>:</nowiki>====
+<!-- this categorisation very loose and just for ease of lookup -->
+;block elements
+:p, span, table, div, 
+;lists
+:ol, ul, dl, 
+;paragraph formatting
+: h1, h2, h3, h4, h5, h6, cite, center, blockquote, caption, pre,
+;character formatting
+:b, del, i, ins, u, font, big, small, sub, sup, code, em, s,
+:strike, strong, tt, var, u
+;Ruby
+:rt, rb , rp, ruby, 
+
+
+====Tags that can appear singly, and possibly paired====
+:br, hr, li, dt, dd
+
+====Tags that must not be paired: ====
+:br, hr
+
+====Tags that can be nested (source code is dubious on this)====
+:table, tr, td, th, div, blockquote, ol, ul, dl, font, big, small, sub, sup, span
+
+====Tags that can only appear inside a table:====
+:td, th, tr,
+
+====Tags that make lists====
+:ul,ol,
+
+====And tags that can appear inside lists====
+:li
+
+<!--
+BoldHTML | ItalicHTML | UnderlineHTML | Superscript | Subscript | Strikethrough | "<br />" | Small | Big | Code | Span ;-->
+
+The significance of these groupings is shown as follows:
+<pre>
+ A <blockquote> B <span>C </blockquote> D </span> E
+</pre>
+Here, blockquote and span are both "nesting" tags. When the close-blockquote tag is found inside the span block, it is escaped.
+
+This doesn't work:
+<pre>
+ <span>Some text [[Image:foo.jpg|close </span>it.]]
+</pre>
+But this does:
+<pre>
+ <b>Some text [[Image:foo.jpg|close </b>it.]]
+</pre>
+
+====Rendering====
+*Tags that have to be paired are forced closed according to some sort of logic.
+*<extra-characters> are "sanitized", strip all but pre-approved attributes and styles on a whitelist.
+*Tags are then written out literally: <code>&lt;InlineHTMLTagname> " " <sanitized-attributes> &gt;</code> etc.
+*HTML comments are completely discarded, with some whitespace massaging: (sanitizer.php)
+*:''To avoid leaving blank lines, when a comment is both preceded and followed by a newline (ignoring spaces), trim leading and trailing spaces and one of the newlines.''
+
+===Non-breaking spaces===
+This is pretty trivial and used basically to improve the appearance of punctuation in French, which always places a space before certain punctuation, and places spaces inside guillemets. Other languages use these characters, but without the spaces. Currently performed directly in the parse() method.
+// REMOVED MANUALLY
+====Rendering====
+*In both cases, the space is converted to a <code>&amp;#160;</code> string.
+
+===Behaviour switches===
+Not to be confused with magic links. These seem to be able to be used virtually anywhere: a table of contents in an image caption even works. See [[Help:Magic words#Behaviour switches]].
+<source lang="bnf">
+ <behaviour-switch>               ::= <behaviourswitch-toc> | <behaviourswitch-forcetoc> | <behaviourswitch-notoc> | <behaviourswitch-noeditsection> | <behaviourswitch-nogallery> 
+ <behaviourswitch-toc>            ::= "__TOC__"i
+ <behaviourswitch-forcetoc>       ::= "__FORCETOC__"i
+ <behaviourswitch-notoc>          ::= "__NOTOC__"i
+ <behaviourswitch-noeditsection>  ::= "__NOEDITSECTION__"i
+ <behaviourswitch-nogallery>      ::= "__NOGALLERY__"i
+
+</source>
+
+Notes:
+*These are the "default" strings to be matched. They can be modified in <code>languages/messages/MessagesXx.php</code> where Xx is the language.
+*Each magicword can have more than one string associated with it.
+*The magic words are by default case insensitive but this can be changed in the file.
+*Plenty of other "magic words" exist, including "magic variables" (eg <nowiki>{{CURRENTMONTH}}</nowiki>) which will be handled by the preprocessor. However it looks like all sorts of other "magic words" exist and are processed in different places.
+
+====Semantics====
+*behaviourswitch-toc: a miniature contents page will be rendered and inserted at the first instance of this token.
+*behaviourswitch-forcetoc: a contents box will be rendered even if the normal criteria (typically, 4 sections) have not been met. Irrelevant if magicword-toc is present.
+*behaviourswitch-notoc: no miniature contents pages will be rendered. Only takes effect if neither magicword-toc nor magicword-forcetoc are present.
+*behaviourswitch-noeditsection: no edit links are to be displayed for any sections.
+*behaviourswitch-nogallery: unclear. According to the code (parser::stripNoGallery): ''if the string __NOGALLERY__ (not case-sensitive) occurs in the HTML, do not add TOC''. Perhaps it only has an effect in certain namespaces.
+

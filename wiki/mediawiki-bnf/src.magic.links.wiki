@@ -1,0 +1,44 @@
+{{Grammar nav}}
+
+Magic links are words that may appear within <wiki-text> that are automatically converted to external links without any special markup being required by the person writing the page.
+
+<source lang="bnf">
+<magic-link>	::= <isbn> | <rfc-number> | <pmid-number>
+</source>
+
+Note that all character-literals on this page are case sensitive (i.e. upper-case characters in the definitions on this page MUST be written in upper case in the markup).
+
+== ISBN numbers ==
+See [[Manual:ISBN]]
+
+<source lang="bnf">
+<isbn>		::= "ISBN" (" "+) <isbn-number> ?(non-word-character /\b/)
+<isbn-number>	::= ("97" ("8" | "9") (" " | "-")?) (DIGIT (" " | "-")?) {9} (DIGIT | "X" | "x")
+</source>
+
+Examples:
+* ISBN 1234567890
+* ISBN 123456789x
+* ISBN                             1 2 3-4-5 6789 X
+* ISBN 978-9999999999
+
+Counter-examples:
+* ISBN 12345678901 (not followed by non-word character )
+* ISBN 123456789 (too short)
+* ISBN 97-81234567890 (dashes not allowed in prefix)
+* ISBN1234567890 (no spaces)
+
+== RFCs ==
+See [[Manual:RFC]]
+
+<source lang="bnf">
+<rfc-number>	::= "RFC" <spaces> <digits>
+</source>
+
+== PubMed IDs ==
+
+<source lang="bnf">
+<pmid-number>	::= "PMID" <spaces> <digits>
+</source>
+
+[[Category:Parser|BNF/Magic links]]

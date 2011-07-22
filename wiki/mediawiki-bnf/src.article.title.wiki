@@ -1,0 +1,57 @@
+{{grammar nav}}
+
+The definitions on this page use some elements defined in [[Markup spec/BNF/Fundamental elements]].
+
+== Canonical article title ==
+The canonical article title is the version stored in the database.  It has stricter rules about what it can contain than <article-title>, which can be used in page markup and other situations but must be converted to a canonical title for most other uses.
+
+<source lang=bnf>
+
+<canonical-article-title>	::= <canonical-page> [<canonical-sub-pages>]
+
+<canonical-sub-pages>		::= <canonical-sub-page> [<canonical-sub-pages>]
+<canonical-sub-page>		::= <sub-page-separator> <canonical-page-chars>
+ 
+<canonical-page>		::= <canonical-page-first-char> [<canonical-page-chars>]
+<canonical-page-chars>		::= <canonical-page-char> [<canonical-page-chars>]
+ 
+<canonical-page-first-char>	::= <ucase-letter> | <digit> | <underscore> | ...?
+<canonical-page-char>		::= <letter> | <digit> | <underscore> | ...?
+
+<sub-page-separator>		::= "/"
+
+</source>
+
+:''There is not a native concept of subpages in MediaWiki. That's a cute add-on extra, and no such things is enforced in titles. --[[User:Brion VIBBER|Brion VIBBER]] 04:05, 29 May 2006 (UTC)''
+:: The reason I have added them is so that when it comes to translating between forms we will need to be able to refer to the sub-page element (e.g. when generating the links list at the top of the page in HTML, or when converting a relative wiki-link to a canonical page title). --[[User:HappyDog|HappyDog]] 13:49, 29 May 2006 (UTC)
+
+== Article title ==
+This is the description of an article title, as used in links and other similar situations.  It must be converted to a <canonical-article-title> for most other uses though.  The structure is basically the same as <canonical-article-title>, except for the final page-char terminals.
+
+<source lang=bnf>
+<article-title>		::= <page> [<sub-pages>]
+
+<sub-pages>		::= <sub-page> [<sub-pages>]
+<sub-page>		::= <sub-page-separator> <page-chars>
+ 
+<page>			::= <page-first-char> [<page-chars>]
+<page-chars>		::= <page-char> [<page-chars>]
+ 
+<page-first-char>		::= <canonical-page-first-char> | <lcase-letter> | ...?
+<page-char>		::= <canonical-page-char> | <space> | ...?
+</source>
+
+== Transformations ==
+=== Transform <article-title> to <canonical-article-title> ===
+
+{| cellpadding="3"
+|-
+| <canonical-page-first-char> 
+| align="center" | = || ucase(<page-first-char>)
+|-
+| <underscore> 
+| align="center" | => || " "
+|}
+
+
+[[Category:Parser|BNF/Article title]]
