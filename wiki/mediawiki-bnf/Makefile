@@ -10,7 +10,7 @@ extract:
 
 	${tooldir}/mergebgf raw.1.bgf raw.2.bgf raw.3.bgf raw.4.bgf raw.5.bgf ext.01.bgf
 
-	${tooldir}/xbgf utilise-plus.xbgf            ext.01.bgf ext.02.bgf
+	${tooldir}/xbgf utilise-repetition.xbgf      ext.01.bgf ext.02.bgf
 	${tooldir}/xbgf remove-concatenation.xbgf    ext.02.bgf ext.03.bgf
 	${tooldir}/xbgf remove-extension-points.xbgf ext.03.bgf ext.04.bgf
 	${tooldir}/xbgf remove-php-legacy.xbgf       ext.04.bgf ext.05.bgf
@@ -20,24 +20,22 @@ extract:
 	${tooldir}/xbgf remove-duplicates.xbgf       ext.08.bgf ext.09.bgf
 	${tooldir}/xbgf dehtmlify.xbgf               ext.09.bgf ext.10.bgf
 	${tooldir}/xbgf utilise-question.xbgf        ext.10.bgf ext.11.bgf
-	${tooldir}/xbgf utilise-star.xbgf            ext.11.bgf ext.12.bgf
-	${tooldir}/xbgf fix-markup.xbgf              ext.12.bgf ext.13.bgf
-	${tooldir}/xbgf define-special-symbols.xbgf  ext.13.bgf ext.14.bgf
-	${tooldir}/xbgf fake-exclusion.xbgf          ext.14.bgf ext.15.bgf
-	${tooldir}/xbgf remove-postfix-case.xbgf     ext.15.bgf ext.16.bgf
-	${tooldir}/xbgf fix-names.xbgf               ext.16.bgf ext.17.bgf
-	${tooldir}/xbgf unify-whitespace.xbgf        ext.17.bgf ext.18.bgf
-	${tooldir}/xbgf connect-grammar.xbgf         ext.18.bgf ext.19.bgf
-	${tooldir}/xbgf refactor-repetition.xbgf     ext.19.bgf ext.20.bgf
-	${tooldir}/xbgf define-lexicals.xbgf         ext.20.bgf ext.21.bgf
+	${tooldir}/xbgf fix-markup.xbgf              ext.11.bgf ext.12.bgf
+	${tooldir}/xbgf define-special-symbols.xbgf  ext.12.bgf ext.13.bgf
+	${tooldir}/xbgf fake-exclusion.xbgf          ext.13.bgf ext.14.bgf
+	${tooldir}/xbgf remove-postfix-case.xbgf     ext.14.bgf ext.15.bgf
+	${tooldir}/xbgf fix-names.xbgf               ext.15.bgf ext.16.bgf
+	${tooldir}/xbgf unify-whitespace.xbgf        ext.16.bgf ext.17.bgf
+	${tooldir}/xbgf connect-grammar.xbgf         ext.17.bgf ext.18.bgf
+	${tooldir}/xbgf refactor-repetition.xbgf     ext.18.bgf ext.19.bgf
+	${tooldir}/xbgf define-lexicals.xbgf         ext.19.bgf ext.20.bgf
 
-	${hunter} mediawiki.config.wiki plain.edd add.bgf
-	${tooldir}/mergebgf ext.21.bgf add.bgf ext.22.bgf
-	${tooldir}/subgrammar ext.21.bgf wiki-page grammar.bgf
+	#${hunter} mediawiki.config.wiki plain.edd add.bgf
+	#${tooldir}/mergebgf ext.21.bgf add.bgf ext.22.bgf
+	${tooldir}/subgrammar ext.20.bgf wiki-page grammar.bgf
 
 	${tooldir}/bgf2html grammar.bgf view.html
 	${tooldir}/checkbgf grammar.bgf
-	${tooldir}/checkbgf ext.01.bgf
 
 plot:
 	${tooldir}/bgf2dot  grammar.bgf grammar.dot

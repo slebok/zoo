@@ -87,4 +87,74 @@
 	<xbgf:horizontal>
 		<nonterminal>TableParameters</nonterminal>
 	</xbgf:horizontal>
+	<!-- defining some unresolved nonterminals from configuration; valid only for default configuration of MediaWiki for Wikipedia (which is great for a baseline grammar) -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>FROM_LANGUAGE_FILE</nonterminal>
+			<bgf:expression>
+				<terminal>#redirect</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:inline>FROM_LANGUAGE_FILE</xbgf:inline>
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>STRING_FROM_DB</nonterminal>
+			<bgf:expression>
+				<terminal>Wikipedia</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:inline>STRING_FROM_DB</xbgf:inline>
+	<!-- [_0-9A-Za-z\x80-\xff] -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>STRING_FROM_CONFIG</nonterminal>
+			<bgf:expression>
+				<value>string</value>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:inline>STRING_FROM_CONFIG</xbgf:inline>
+	<!-- by default, "Category" -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>NS_CATEGORY</nonterminal>
+			<bgf:expression>
+				<terminal>Category</terminal>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:inline>NS_CATEGORY</xbgf:inline>
+	<!-- <protocol>             ::= ALLOWED_PROTOCOL_FROM_CONFIG (e.g. "http://", "mailto:") -->
+	<xbgf:define>
+		<bgf:production>
+			<nonterminal>ALLOWED_PROTOCOL_FROM_CONFIG</nonterminal>
+			<bgf:expression>
+				<choice>
+					<bgf:expression>
+						<terminal>http://</terminal>
+					</bgf:expression>
+					<bgf:expression>
+						<terminal>https://</terminal>
+					</bgf:expression>
+					<bgf:expression>
+						<terminal>ftp://</terminal>
+					</bgf:expression>
+					<bgf:expression>
+						<terminal>ftps://</terminal>
+					</bgf:expression>
+					<bgf:expression>
+						<terminal>mailto:</terminal>
+					</bgf:expression>
+				</choice>
+			</bgf:expression>
+		</bgf:production>
+	</xbgf:define>
+	<xbgf:inline>ALLOWED_PROTOCOL_FROM_CONFIG</xbgf:inline>
+	<!-- seems this way, need to validate -->
+	<xbgf:unite>
+		<add>LEGAL_ARTICLE_ENTITY</add>
+		<to>article-title</to>
+	</xbgf:unite>
 </xbgf:sequence>
