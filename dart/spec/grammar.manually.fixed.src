@@ -1,0 +1,456 @@
+variableDeclaration:
+declaredIdentifier (‘, ’ identifier)*
+;
+initializedVariableDeclaration:
+declaredIdentifier (‘=’ expression)? (‘, ’ initializedIdentifier)*
+;
+initializedIdentifierList:
+initializedIdentifier (‘, ’ initializedIdentifier)*
+;
+initializedIdentifier:
+identifier (‘=’ expression)?
+;
+declaredIdentifier:
+finalVarOrType identifier
+;
+finalVarOrType:final type? |
+var |type
+;
+functionSignature:
+returnType? identifier formalParameterList
+;
+functionPrefix:
+returnType? identifier
+;
+functionBody:
+‘=>’ expression ‘;’ |block
+;
+block:
+‘{’ statements ‘}’
+;
+formalParameterList:
+‘(’ ‘)’ |‘(’ normalFormalParameters (‘,’ namedFormalParameters)? ‘)’ |(namedFormalParameters)
+;
+normalFormalParameters:
+normalFormalParameter (‘, ’ normalFormalParameter)*
+;
+namedFormalParameters:
+‘[’ defaultFormalParameter (‘, ’ defaultFormalParameter)* ‘]’
+;
+normalFormalParameter:
+functionSignature |fieldFormalParameter |simpleFormalParameter
+;
+simpleFormalParameter:
+declaredIdentifier |
+identifier
+;
+fieldFormalParameter:finalVarOrType? this ‘.’ identifier
+;
+defaultFormalParameter:
+normalFormalParameter (’=’ expression)?
+;
+classDefinition:class identifier typeParameters? superclass? interfaces?
+‘{’ classMemberDefinition* ‘}’;
+classMemberDefinition:
+declaration ‘;’ |methodSignature functionBody
+;
+methodSignature:
+factoryConstructorSignature |static functionSignature |getterSignature |setterSignature |operatorSignature |functionSignature initializers? |namedConstructorSignature initializers?
+;
+declaration:
+constantConstructorSignature (redirection | initializers)? |constructorSignature (redirection | initializers)? |functionSignature redirection |namedConstructorSignature redirection |
+abstract getterSignature |abstract setterSignature |abstract operatorSignature |abstract functionSignature |static final type? staticFinalDeclarationList |static? initializedVariableDeclaration
+;
+staticFinalDeclarationList:
+:staticFinalDeclaration (’, ’ staticFinalDeclaration)*
+;
+staticFinalDeclaration:
+identifier ’=’ expression
+;
+operatorSignature:
+returnType? operator operator formalParameterList
+;
+operator:
+unaryOperator |binaryOperator |’[]’ |’[]=’ |
+negate,
+;
+unaryOperator:
+negateOperator
+;
+binaryOperator:
+multiplicativeOperator |additiveOperator |shiftOperator |relationalOperator |equalityOperator |bitwiseOperator |
+;
+prefixOperator:
+additiveOperator |negateOperator
+;
+negateOperator:
+’!’ |’ ̃’
+;
+getterSignature:static? returnType? get identifier formalParameterList
+;
+setterSignature:static? returnType? set identifier formalParameterList
+;
+constructorSignature:
+identifier formalParameterList |namedConstructorSignature
+;
+namedConstructorSignature:
+identifier ‘.’ identifier formalParameterList
+;
+redirection:‘:’ this (‘.’ identifier)? arguments
+;
+initializers:
+‘:’ superCallOrFieldInitializer (‘, ’ superCallOrFieldInitializer)*
+;
+superCallOrFieldInitializer:super arguments |
+super ‘.’ identifier arguments |fieldInitializer
+;
+fieldInitializer:(this ‘.’)? identifier ‘=’ conditionalExpression
+;
+factoryConstructorSignature:factory qualified typeVariables? (‘.’ identifier)? formalParameterList
+;
+constantConstructorSignature:const qualified formalParameterList
+;
+superclass:extends type
+;
+interfaces:
+implements typeList
+;
+interfaceDefinition:
+interface identifier typeParameters? superinterfaces? factorySpecification? ‘{’ (interfaceMemberDefinition)* ‘}’
+;
+interfaceMemberDefinition:static final type? initializedIdentifierList ‘;’ |
+functionSignature ‘;’ |
+constantConstructorSignature ‘;’ |namedConstructorSignature ‘;’ |getterSignature ‘;’ |setterSignature ‘;’ |operatorSignature ‘;’ |variableDeclaration ‘;’
+;
+factorySpecification:factory identifier typeParameters?
+;
+superinterfaces:extends typeList
+;
+typeParameter:identifier (extends type)?
+;
+typeParameters:
+‘<’ typeParameter (‘,’ typeParameter)* ‘>’
+;
+expression:
+assignableExpression assignmentOperator expression |conditionalExpression
+;
+expressionList:
+expression (‘, ’ expression)*
+;
+primary:
+thisExpression |super assignableSelector |functionExpression |literal |identifier |newExpression constantObjectExpression |‘(’ expression ‘)’ |
+;
+literal:
+nullLiteral |booleanLiteral |numericLiteral |stringLiteral |mapLiteral |listLiteral
+;
+nullLiteral:
+null
+;
+numericLiteral:
+NUMBER |HEX NUMBER
+;
+NUMBER:
+DIGIT+ (‘.’ DIGIT*)? EXPONENT? |‘.’ DIGIT+ EXPONENT? |
+EXPONENT:
+(‘e’ | ‘E’) (’+’ | ‘-‘)? DIGIT+
+;
+HEX NUMBER:
+‘0x’ HEX DIGIT+ |‘0X’ HEX DIGIT+
+;
+HEX DIGIT:
+‘a’..’f’ |‘A’..’F’ |DIGIT
+;
+booleanLiteral:true |
+false
+;
+stringLiteral:
+‘@’? MULTI LINE STRING |SINGLE LINE STRING
+;
+SINGLE LINE STRING:
+‘”’ STRING CONTENT DQ* ‘”’ |‘’’ STRING CONTENT SQ* ‘\’’ |‘@’ ‘’’ ( ( ‘’’ | NEWLINE ))* ‘’’ |‘@’ ‘”’ ( ( ‘”’ | NEWLINE ))* ‘”’
+;
+MULTI LINE STRING:
+‘"""’ .* ‘"""’ |‘’’’’ .* ‘’’’’
+;
+ESCAPE SEQUENCE:
+\n|\r|\f|\b|\t|\v|\ x HEX DIGIT HEX DIGIT |\ u HEX DIGIT HEX DIGIT HEX DIGIT HEX DIGIT |\ u{ HexDigitSequence }
+;
+HEX DIGIT SEQUENCE:
+HEX DIGIT HEX DIGIT? HEX DIGIT? HEX DIGIT? HEX DIGIT?HEX DIGIT? HEX DIGIT?
+;
+STRING CONTENT DQ:
+ ̃( ‘\’ | ‘"’ | ‘$’ | NEWLINE ) |‘\’  ̃( NEWLINE ) |STRING INTERPOLATION
+;
+STRING CONTENT SQ:
+ ̃( ‘\’ | ‘’’ | ‘$’ | NEWLINE ) |‘\’  ̃( NEWLINE ) |STRING INTERPOLATION
+;
+NEWLINE:
+‘\ n’ |‘\ r’
+;
+STRING INTERPOLATION:
+‘$’ IDENTIFIER NO DOLLAR |‘$’ ‘{’ Expression ‘}’
+;
+listLiteral:
+const? typeArguments? ‘[’ (expressionList ‘, ’?)? ‘]’
+;
+mapLiteral:const? typeArguments? ‘{’ (mapLiteralEntry (‘, ’ mapLiteralEntry)* ‘, ’?)? ‘}’;
+mapLiteralEntry:
+identifier ‘:’ expression |stringLiteral ‘:’ expression
+;
+functionExpression:
+(returnType? identifier)? formalParameterList functionExpressionBody
+;
+functionExpressionBody:
+‘=>’ expression |block
+;
+thisExpression:this
+;
+newExpression:
+new type (‘.’ identifier)? arguments
+;
+constObjectExpression:
+const type (’.’ identifier)? arguments
+;
+arguments:
+‘(’ argumentList? ‘)’
+;
+argumentList:
+namedArgument (‘, ’ namedArgument)* |expressionList (‘, ’ namedArgument)*
+;
+namedArgument:
+label expression
+;
+assignmentOperator:
+‘=’ |compoundAssignmentOperator
+;
+compoundAssignmentOperator:
+‘*=’ |‘/=’ |‘ ̃/=’ |‘%=’ |‘+=’ |‘-=’ |‘<<=’ |‘>’ ’>’ ’>’ ’=’ ? |‘<’ ’<’ ’=’ ? |‘&=’ |
+‘ˆ=’ |
+‘|=’
+;
+conditionalExpression:
+logicalOrExpression (‘?’ expression ‘:’ expression)?
+;
+logicalOrExpression:
+logicalAndExpression (‘||’ logicalAndExpression)*
+;
+logicalAndExpression:
+bitwiseOrExpression (‘&&’ bitwiseOrExpression)*
+;
+bitwiseOrExpression:
+bitwiseXorExpression (‘|’ bitwiseXorExpression)* |super (‘|’ bitwiseXorExpression)+
+;
+bitwiseXorExpression:
+bitwiseAndExpression (‘ˆ’ bitwiseAndExpression)* |super (‘ˆ’ bitwiseAndExpression)+
+;
+bitwiseAndExpression:
+equalityExpression (‘&’ equalityExpression)* |super (‘&’ equalityExpression)+
+;
+bitwiseOperator:
+‘&’ |‘ˆ’ |
+‘|’
+;
+equalityExpression:
+relationalExpression (equalityOperator relationalExpression)? |
+super equalityOperator relationalExpression
+;
+equalityOperator:
+‘==’ |‘!=’ |‘===’ |‘!==’
+;
+relationalExpression:
+shiftExpression (isOperator type | relationalOperator shiftExpression)? |
+super relationalOperator shiftExpression
+;
+relationalOperator:
+‘>=’ |‘>’ |‘<=’ |‘<’
+;
+shiftExpression:
+additiveExpression (shiftOperator additiveExpression)* |super (shiftOperator additiveExpression)+
+;
+shiftOperator:
+‘<<’ |‘>>>’ |‘>>’
+;
+additiveExpression:
+multiplicativeExpression (additiveOperator multiplicativeExpression)* |
+super (additiveOperator multiplicativeExpression)+
+;
+additiveOperator:
+‘+’ |‘-’
+;
+multiplicativeExpression:
+unaryExpression (multiplicativeOperator unaryExpression)* |super (multiplicativeOperator unaryExpression)+
+;
+multiplicativeOperator:
+‘*’ |‘/’ |
+‘%’ |‘ ̃/’
+;
+unaryExpression:
+prefixExpression |postfixExpression |unaryOperator super |‘-’ super |incrementOperator assignableExpression
+;
+prefixExpression:
+prefixOperator unaryExpression
+;
+postfixExpression:
+assignableExpression postfixOperator |primary selector*
+;
+postfixOperator:
+incrementOperator
+;
+incrementOperator:
+‘++’ |‘–’
+;
+assignableExpression:
+primary (arguments* assignableSelector)+ |super assignableSelector |identifier
+;
+selector:
+assignableSelector |arguments
+;
+assignableSelector:
+‘[’ expression ‘]’ |‘.’ identifier
+;
+identifier:
+IDENTIFIER NO DOLLAR |IDENTIFIER |BUILT IN IDENTIFIER
+;
+IDENTIFIER NO DOLLAR:
+IDENTIFIER START NO DOLLAR IDENTIFIER PART NO DOLLAR*
+;
+IDENTIFIER:
+IDENTIFIER START IDENTIFIER PART*
+;
+BUILT IN IDENTIFIER:abstract |
+assert |class |extends |factory |get |implements |import |interface |
+is |
+library |negate, |operator |set |source |static |typedef
+;
+IDENTIFIER START:
+IDENTIFIER START NO DOLLAR |’$’
+;
+IDENTIFIER START NO DOLLAR:
+LETTER |’’
+;
+IDENTIFIER PART NO DOLLAR:
+IDENTIFIER START NO DOLLAR |DIGIT
+;
+IDENTIFIER PART:
+IDENTIFIER START |DIGIT
+;
+qualified:
+identifier (‘.’ identifier)?
+;
+isOperator:
+is ‘!’?
+;
+statements:
+statement*
+;
+statement:
+label* nonLabelledStatement
+;
+nonLabelledStatement:
+block |initializedVariableDeclaration ’;’ |forStatement |whileStatement |doStatement |switchStatement |ifStatement |tryStatement |breakStatement |continueStatement |returnStatement |throwStatement |expressionStatement |assertStatement |functionSignature functionBody
+;
+expressionStatement:
+expression? ‘;’ |
+;
+ifStatement:
+if ‘(’ expression ‘)’ statement ( else statement)?
+;
+forStatement:
+for ‘(’ forLoopParts ‘)’ statement
+;
+forLoopParts:
+forInitializerStatement expression? ‘;’ expressionList? |declaredIdentifier in expression |identifier in expression
+;
+forInitializerStatement:
+initializedVariableDeclaration ‘;’ |expression? ‘;’
+;
+whileStatement:while ‘(’ expression ‘)’ statement
+;
+doStatement:do statement while ‘(’ expression ‘)’ ‘;’
+;
+switchStatement:
+switch ‘(’ expression ‘)’ ‘{’ switchCase* defaultCase? ‘}’
+;
+switchCase:
+label? (case expression ‘:’)+ statements
+;
+defaultCase:
+label? (case expression ‘:’)* default ‘:’ statements
+;
+tryStatement:try block (catchPart+ finallyPart? | finallyPart)
+;
+catchPart:catch ‘(’ declaredIndentifier (‘, ’ declaredIndentifier)? ‘)’ block
+;
+finallyPart:finally block
+;
+returnStatement:
+return expression? ’;’
+;
+label:
+identifier ’:’
+;
+breakStatement:break identifier? ’;’
+;
+continueStatement:continue identifier? ’;’
+;
+throwStatement:throw expression? ’;’
+;
+assertStatement:
+assert ’(’ conditionalExpression ’)’ ’;’ |
+topLevelDefinition:
+classDefinition |interfaceDefinition |functionTypeAlias |functionSignature functionBody |
+returnType? getOrSet identifier formalParameterList functionBody |
+final type? staticFinalDeclarationList ’;’ |variableDeclaration ’;’
+;
+getOrSet:get |
+set
+;
+libraryDefinition:
+scriptTag? libraryName import* include* resource* topLevelDefinition*
+;
+scriptTag:
+’#!’ ( ̃NEWLINE)* NEWLINE |
+libraryName:
+’#’ ’library’ ’(’ stringLiteral ’)’ ’;’ |
+resource:
+’#’ ’resource’ ’(’ stringLiteral ’)’ ’;’
+;
+libraryImport:
+’#’ ’import’ ’(’ stringLiteral (’, ’ ’prefix:’ stringLiteral)? ’)’ ’;’
+;
+include:
+’#’ ’source’ ’(’ stringLiteral ’)’ ’;’
+;
+compilationUnit:
+topLevelDefinition* EOF
+;
+scriptDefinition:
+scriptTag? libraryName? import* include* resource* topLevelDefinition*
+;
+type:
+qualified typeArguments?
+;
+typeArguments:
+’<’ typeList ’>’
+;
+typeList:
+type (’, ’ type)*
+;
+functionTypeAlias:
+typedef functionPrefix typeParameters? formalParameterList ’;’
+;
+LETTER:
+‘a’ .. ‘z’ |‘A’ ..‘Z’
+;
+DIGIT:
+‘0’ .. ‘9’
+;
+WHITESPACE:
+(‘\t’ | ‘ ’ | NEWLINE)+
+;
+SINGLE LINE COMMENT:
+‘//’  ̃(NEWLINE)* (NEWLINE)?
+;
+MULTI LINE COMMENT:
+‘/*’ (.)*
+;

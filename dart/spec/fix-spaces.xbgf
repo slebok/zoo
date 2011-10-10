@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbgf:sequence xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:bgf="http://planet-sl.org/bgf">
+	<!-- Spaces does not need to be included in the terminal symbols since they are (optionally) allowed by layout -->
+	<!-- PS: It is replace and not renameT since "," is not fresh. -->
+	<xbgf:replace>
+		<!-- in many places -->
+		<bgf:expression>
+			<terminal>, </terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>,</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<xbgf:replace>
+		<!-- in negateOperator -->
+		<bgf:expression>
+			<terminal> ~</terminal>
+		</bgf:expression>
+		<bgf:expression>
+			<terminal>~</terminal>
+		</bgf:expression>
+	</xbgf:replace>
+	<!-- The following is plain wrong (used in NEWLINE) since this is a lexical production by nature -->
+	<xbgf:rename>
+		<terminal>
+			<from>\ n</from>
+			<to>\n</to>
+		</terminal>
+	</xbgf:rename>
+	<xbgf:rename>
+		<terminal>
+			<from>\ r</from>
+			<to>\r</to>
+		</terminal>
+	</xbgf:rename>
+	<!-- invisible spaces in the PDF: compoundAssignmentOperator -->
+	<xbgf:rename>
+		<terminal>
+			<from> ~/=</from>
+			<to>~/=</to>
+		</terminal>
+	</xbgf:rename>
+	<!-- invisible spaces in the PDF: multiplicativeOperator -->
+	<xbgf:rename>
+		<terminal>
+			<from> ~/</from>
+			<to>~/</to>
+		</terminal>
+	</xbgf:rename>
+	<!-- PDF copy/pasting trouble with IDENTIFIER_START_NO_DOLLAR-->
+	<xbgf:rename>
+		<terminal>
+			<from>’’</from>
+			<to>_</to>
+		</terminal>
+	</xbgf:rename>
+</xbgf:sequence>
