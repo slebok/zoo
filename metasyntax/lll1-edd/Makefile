@@ -1,0 +1,6 @@
+extract:
+	${tooldir}/rsc2bgf GeneratedLLL.rsc raw.bgf
+	${gendir}/reroot2top raw.bgf reroot.prepared.xbgf
+	${tooldir}/xbgf reroot.prepared.xbgf raw.bgf grammar.bgf
+
+include ../../Makefile.grammar
