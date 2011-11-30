@@ -18,3 +18,5 @@ List of errors:
 	• the definition of setterSignature lacks the terminator metasymbol (fixed by Grammar Hunter easily)
 	• the definition of bitwiseAndExpression lacks the terminator metasymbol (fixed by Grammar Hunter easily)
 	• the definition of expressionStatement lacks the terminator metasymbol (fixed by Grammar Hunter easily)
+	• seems like this version prefers single quoted terminals, but it has lots of legacy uses of 'fancy' quotes like “, ”, ‘ or ’
+
