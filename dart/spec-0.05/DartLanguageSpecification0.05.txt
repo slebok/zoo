@@ -1,0 +1,4000 @@
+﻿The Dart Programming Language Specification
+
+
+The Dart Programming Language Specification
+
+
+
+
+The Dart Team
+________________
+
+
+
+
+The Dart Programming Language Specification
+Licensing
+Changes
+Changes Since Version 0.02
+Changes Since Version 0.03
+Changes Since Version 0.04
+Notation
+Overview
+Scoping
+Privacy
+Concurrency
+Errors and Warnings
+Variables
+Functions
+Function Declarations
+Formal Parameters
+Positional Formals
+Named Optional Formals
+Type of a Function
+Classes
+Instance Methods
+Abstract Methods
+Operators
+Getters
+Setters
+Instance Variables
+Constructors
+Generative Constructors
+Redirecting Constructors
+Initializer Lists
+Factories
+Constant Constructors
+Static Methods
+Static Variables
+Superclasses
+Inheritance and Overriding
+Superinterfaces
+Interfaces
+Methods
+Operators
+Getters and Setters
+Factories and Constructors
+Superinterfaces
+Inheritance and Overriding
+Generics
+Expressions
+Constants
+Null
+Numbers
+Booleans
+Boolean Conversion
+Strings
+String Interpolation
+Lists
+Maps
+Function Expressions
+This
+Instance Creation
+New
+Const
+Spawning an Isolate
+Property Extraction
+Function Invocation
+Actual Argument List Evaluation
+Binding Actuals to Formals
+Unqualified Invocation
+Function Expression Invocation
+Method Invocation
+Ordinary Invocation
+Static Invocation
+Super Invocation
+Sending Messages
+Getter Invocation
+Assignment
+Compound Assignment
+Conditional
+Logical Boolean Expressions
+Bitwise Expressions
+Equality
+Relational Expressions
+Shift
+Additive Expressions
+Multiplicative Expressions
+Unary Expressions
+Postfix Expressions
+Assignable Expressions
+Identifier Reference
+Type Test
+Statements
+Blocks
+Expression Statements
+Variable Declaration
+If
+For
+For Loop
+Foreach
+While
+Do
+Switch
+Try
+Return
+Labels
+Break
+Continue
+Throw
+Assert
+Libraries and Scripts
+Imports
+Includes
+Scripts
+Types
+Static Types
+Dynamic Type System
+Type Declarations
+Typedef
+Interface Types
+Function Types
+Type Dynamic
+Type Void
+Parameterized Types
+Actual Type of a Declaration
+Least Upper Bounds
+Reference
+Lexical Rules
+Reserved Words
+Comments
+Operator Precedence
+
+
+Notes
+
+
+This is a work in progress. Expect the contents and language rules to change over time. This document is synced to version 0.05.
+
+
+Please send comments to gbracha@google.com.
+
+
+
+
+Licensing
+
+
+Except as otherwise noted, the content of this document is licensed under the Creative Commons Attribution 3.0 License, and code samples are licensed under the BSD License.
+
+
+Changes
+
+
+Changes Since Version 0.02
+
+
+The following changes have been made in version 0.03 since version 0.02. In addition, various typographical errors have been corrected. The changes are listed by section number.
+
+
+2: Expanded examples of grammar in notation section.
+
+
+7.9: Removed static warning when imported superinterface of a class contains private members.
+
+
+8.3: Removed redundant prohibition on default values.
+
+
+8.4: Removed static warning when imported superinterface of an interface contains private members.
+
+
+10: Fixed typo in grammar
+
+
+10.10.1, 10.10.2 : made explicit accessibility requirement for class being constructed.
+
+
+10.10.2: make clear that referenced constructor must be marked const.
+
+
+10.14.3: fixed botched sentence where superclass S is introduced.
+
+
+10.27: qualified definition of v++ so it is clear that v is an identifier.
+
+
+
+
+Changes Since Version 0.03
+
+
+7.1: Added rules prohibiting clashes of inherited variable names or of static and instance methods.
+
+
+7.1, 8.1: Added missing requirement that overriding methods have same number of required parameters and all optional parameters as overridden method, in same order.
+
+
+9: Added prohibition against cyclic type hierarchy for type parameters.
+
+
+10.10:  Clarified requirements on use of parameterized types in instance creation expressions.
+
+
+10.13.2: Added requirement that qi are distinct. 
+
+
+10.4.2: Static method invocation determines the function (which may involve evaluating a getter) before evaluating the arguments, so that static invocation and top-level function invocation agree.
+
+
+10:30: Added missing test that type being tested against is in scope and is indeed a type.
+
+
+11.5.1: Changed for loop to introduce fresh variable for each iteration.
+
+
+13.8:  Malformed parameterized types generate warnings, not errors(except when used i[a]n reified contexts like instance creation and superclasses/interfaces).
+
+
+
+
+
+
+Changes Since Version 0.04
+
+
+7.1.2: Removed unary plus operator. Clarified that operator formals must be required.
+
+
+7.5.3: Filled in a lot of missing detail.
+
+
+8.3: Allowed factory class to be declared via a qualified name.
+
+
+10.3: Changed production for Number.
+
+
+10.10.2: Added requirements that actuals be constant, rules for dealing with inappropriate types of actuals, and examples. Also explicitly prohibit type variables.
+
+
+10.13.4: Modified final bullet to keep it inline with similar clauses in other sections. Exact wording of these sections also tweaked slightly.
+
+
+10.25: Specified ! operator. Eliminated section on prefix expressions and moved contents to section on unary expressions.
+
+
+14.1: Specified unicode form of Dart source.
+
+
+Notation
+
+
+We distinguish between normative and non-normative text. Normative text defines the rules of Dart. It is given in this font (black Arial[b] 11pt). At this time, non-normative text includes:
+1.  Rationale. Discussion of the motivation for language design decisions appears in blue[c] italics.  Distinguishing normative from non-normative helps clarify what part of the text is binding and what part is merely expository.  
+2. Commentary, given in green (Arial, 11pt) . Comments such as “The careful reader will have noticed that the name Dart  has four characters” serve to illustrate or clarify the specification, but are redundant with the normative text.  The difference between commentary and rationale can be subtle. Commentary is more general than rationale, and may include illustrative examples or clarifications.
+3. Open questions (in red). Open questions are points that are unsettled in the mind of the author(s) of the specification; expect them  (the questions, not the authors; precision is important in a specification) to be eliminated in the final specification. Should the text at the end of the previous bullet be rationale or commentary?
+
+
+
+
+Reserved words and built-in identifiers appear in this font. 
+Examples would be switch or class. 
+
+
+Grammar productions are given in a common variant of EBNF. The left
+hand side of a production ends with a colon. On the right hand side, alternation is represented by vertical bars, and sequencing by spacing. Optional elements of a production are suffixed by a question mark like so: anElephant? . Appending a star to an element of a production means it may be repeated zero or more times. Appending a plus sign to a production means it occurs one or more times. Parentheses are used for grouping. Negation (the not combinator of PEGs) is represented by prefixing an element of a production with a tilde.
+
+
+
+
+An example would be:
+
+
+AProduction: 
+      AnAlternative
+    | AnotherAlternative
+    |  OneThing After Another
+  | ZeroOrMoreThings*
+  | OneOrMoreThings+
+  | AnOptionalThing?
+  | (Some Grouped Things[d])
+  | ~NotAThing
+  | A_LEXICAL_THING 
+  ;
+
+
+Both syntactic and lexical productions are represented this way. Lexical productions are distinguished by their names. The names of lexical productions consist exclusively of upper case characters and underscores. As always, within grammatical productions, whitespace and comments between elements of the production are implicitly ignored unless stated otherwise.
+Productions are embedded, as much as possible, in the discussion of the constructs they represent.
+
+
+A list x1,..., xn denotes any list of n elements of the form xi, 1 <= i <= n. Note that n may be zero, in which case the list is empty. We use such lists extensively throughout this specification.
+
+
+The notation [x1, ..., xn/y1, ..., yn]E  denotes a copy of E in which all occurrences of xi, 1 <= i <= n have been replaced with yi.
+
+
+The specifications of operators often involve statements such as x op y is equivalent to the method invocation x.op(y). Such specifications should be understood as a shorthand for:
+ x op y is equivalent to the method invocation x.op’[e](y), assuming the class of x actually declared a non-operator method named op’ defining the same function as the operator op.[f] This circumlocution is required because x.op(y), where op is an operator, is not legal syntax. However, it is painfully verbose, and we prefer to state this rule once here, and use a concise and clear notation across the specification.
+
+
+When the specification refers to the order given in the program, it means the order of the program source code text, scanning left-to-right and top-to-bottom.
+
+
+Overview
+
+
+Dart is a class-based, single-inheritance, pure object-oriented programming language. Dart is optionally typed and supports reified generics and interfaces. 
+
+
+Dart programs can be statically checked. The static checker will report some violations of the type rules, but such violations do not abort compilation or preclude execution. 
+
+
+Dart programs may be executed in one of two modes: production mode or checked mode. In production mode, static type annotations have absolutely no effect on execution.  In checked mode, assignments[g] are dynamically checked, and certain violations of the type system raise exceptions at run time.
+
+
+
+
+The coexistence between optional typing and reification is based on the following:
+1. Reified type information reflects the types of objects at runtime and may always be queried by dynamic typechecking constructs (the analogs of instanceOf, casts, typecase etc. in other languages). Reified type information includes class and interface declarations, the class of an object, and type arguments to constructors. 
+2. Static type annotations determine the types of variables and function declarations (including methods and constructors). 
+3. Production mode respects optional typing. Static type annotations do not affect[h] runtime behavior.[i]
+4. Checked mode utilizes static type annotations and dynamic type information aggressively yet selectively to provide early error detection during development.
+
+
+
+
+Dart programs are organized in a modular fashion into units called libraries. Libraries are units of encapsulation and may be mutually recursive. 
+
+
+However they are not first class.  To get multiple copies of a library running simultaneously, one needs to spawn an isolate.  
+
+
+Scoping
+
+
+Dart is lexically scoped and uses a single namespace for variables, functions and types.  It is a compile-time error if there is more than one entity with the same name declared in the same scope.  Names in inner scopes may hide names in enclosing scopes, however, it is a static warning if a declaration introduces a name that is available in a lexically enclosing scope.
+
+
+Names may be introduced into a scope by  declarations within the scope or  by other mechanisms such as imports or inheritance.
+
+
+
+
+Privacy
+Dart supports two levels of privacy: public and private. A declaration is private if it begins with an underscore (the _ character) otherwise it is public. 
+
+
+A declaration m is accessible to library L [j]if m is declared in L or if m is public[k].
+
+
+Private declarations may only be accessed within the library in which they are declared.
+
+
+Privacy is, at this point, a static notion tied to a particular piece of code (a library). It is designed to support software engineering concerns rather than security concerns. Untrusted code should always run in an another isolate.  It is possible that libraries will become first class objects and privacy will be a dynamic notion tied to a library instance.
+
+
+Privacy is indicated by the name of a declaration - hence privacy and naming are not orthogonal. This has the advantage that both humans and machines can recognize access to private declarations at the point of use without knowledge of the context from which the declaration is derived.
+
+
+
+
+Concurrency
+Dart code is always single threaded. There is no shared-state concurrency in Dart. Concurrency is supported via actor-like entities called isolates.
+An isolate is a unit of concurrency. It has its own memory and its own thread of control. Isolates communicate by message passing. No mutable state [l]is ever shared between isolates. Isolates are created by spawning.
+
+
+Errors[m] and Warnings
+This specification distinguishes between several kinds of errors.
+
+
+Compile-time errors[n] are errors that preclude execution[o]. A compile time error must be reported by a Dart compiler before the erroneous code is executed. 
+
+
+A Dart implementation has considerable freedom as to when compilation takes place. Modern programming language implementations often interleave compilation and execution, so that compilation of a method may be delayed, e.g.,  until it is first invoked. Consequently, compile-time errors in a method m may be reported as late as the time of m’s first invocation[p].
+
+
+As a web language, Dart is often loaded directly from source, with no intermediate binary representation. In the interests of rapid loading, Dart implementations may choose to avoid full parsing of method bodies, for example. This can be done by tokenizing the input and checking for balanced curly braces on method body entry. In such an implementation, even syntax errors will be detected only when the method needs to be executed, at which time it will be compiled (JITed).
+
+
+In a development environment a compiler should of course report compilation errors eagerly so as to  best serve the programmer.
+
+
+Static warnings are those warnings reported by the static checker. They have no effect on execution. Many, but not all, static warnings relate to types, in which case they are known as static type warnings. Static warnings must be provided by Dart compilers used during development.
+
+
+Dynamic type errors are type errors reported in checked mode.
+
+
+Run time errors are exceptions raised during execution. Whenever we say that an exception ex is raised or thrown, we mean that  a throw statement of the form: throw ex; was implicitly executed. When we say that a C is thrown, where C is an exception class, we mean that an instance of class C is thrown.
+
+
+
+
+Variables
+Variables are storage locations in memory.  
+
+
+variableDeclaration:
+     declaredIdentifier (',' identifier)*
+   ;
+
+initializedVariableDeclaration:
+     declaredIdentifier ('=' expression)? (',' initializedIdentifier)*
+   ;
+
+initializedIdentifierList[q]:
+     initializedIdentifier (',' initializedIdentifier)*
+   ;
+
+initializedIdentifier:
+     identifier ('=' expression)?
+   ;
+
+
+declaredIdentifier:
+     finalVarOrType identifier
+   ;
+
+
+
+
+finalVarOrType:
+     final type?
+   | var
+   | type
+   ;
+
+
+
+
+
+
+
+A variable that has not been initialized has the initial value null.
+A final variable is a variable whose declaration includes the modifier final. A final variable can only be assigned once, when it is initialized, or a compile-time error occurs. [r]
+
+
+A static variable is a variable that is not associated with a particular instance, but rather with an entire library or class.  
+
+
+A variable that is marked both static[s] and final mus[t]t be initialized to a compile-time constant or a compile-time error occurs.
+
+
+Why tie together two orthogonal concepts like static and final by requiring the use of constants? Because we do not want a language where one tends to define expensive initialization computations, causing long application startup times. This is especially crucial for Dart, which is designed for coding client applications.
+One time initializations using constants should incur negligible cost at run time.
+
+
+If a variable declaration does not explicitly specify a type, the type of the declared variable(s) is Dynamic, the unknown type.
+
+
+A top-level variable is implicitly static. It is a compile-time error to preface a top level variable declaration with the built-in identifier static.  A top level variable marked final mus[t]t be initialized to a compile-time constant or a compile-time error occurs.
+
+
+
+
+Functions
+
+
+Functions abstract over executable actions.
+
+
+functionSignature:
+   returnType[u]? identifier formalParameterList
+   ;
+
+returnType:
+     void
+   | type
+    ;
+
+
+functionBody:
+     '=>' expression ';'
+   | block
+   ;[v]
+
+
+block:
+     '{' statements '}'
+   ;
+
+
+
+
+Functions include  function declarations, methods, getters, setters and function literals. 
+
+
+All functions have a signature and a body. The signature describes the formal parameters of the function, and possibly its name and return type. The body is a block statement containing the statements executed by the function. A function body of the form  => e is equivalent to a body of the form {return e;}.
+
+
+If the last statement of a function is not a return statement, the statement return null; is implicitly appended to the function body.
+
+
+Because Dart is optionally typed, we cannot guarantee that a function that does not return a value will not be used in the context of an expression. Therefore, every function must return a value. See the discussion around the return statement. 
+
+
+
+
+
+
+Function Declarations
+
+
+A function declaration is a function that is not a method, getter, setter or function literal. Function declarations include library functions, which are function declarations at the top level of a library, and local functions, which are functions declarations declared inside other functions.
+
+
+A function declaration of the form  T0 id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]){s} is equivalent to a variable declaration of the form[w] final F id = [x](T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]){s} where F is the function type alias typedef T0 F(T1 a1, …, Tn an, [Tn+1  xn+1, …, Tn+k xn+k]).
+ Likewise, a function declaration of the form  id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]){s} is equivalent to a variable declaration of the form final F id = (T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]){s} where F is the function type alias typedef F(T1 a1, …, Tn an, [Tn+1  xn+1, …, Tn+k xn+k]).
+
+
+
+
+Some obvious conclusions:
+
+
+A function declaration of the form  id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]) => e is equivalent to a variable declaration of the form final id = (T1 a1, …, Tn an, [Tn+1  xn+1 = d1,…, Tn+k xn+k = dk])=> e.
+
+
+A function literal of the form (T1 a1, …, Tn an, [Tn+1  xn+1 = d1 ,… ,Tn+k xn+k = dk])=> e is equivalent to a function literal of the form (T1 a1, …, Tn an, [Tn+1  xn+1  = d1,… Tn+k xn+k = dk]){ return e;}.
+
+
+It is a compile-time error to preface a function declaration with the built-in identifier static.
+
+
+
+
+Formal Parameters
+Every function declaration includes a formal parameter list, which consists of a list of required [y]parameters, followed by any optional parameters. Optional parameters consist of  a set of named parameters.
+The following can be simplified to: 
+formalParameterList     
+   : '(' normalFormalParameters (‘,’ optionalFormalParameters)? ')'
+   ;
+optionalFormalParameters 
+: restFormalParameter[z] |
+  namedFormalParameters
+;
+
+   | '(' namedFormalParameters ')'
+   | '(' normalFormalParameters normalFormalParameterTail? ')'
+   ;
+
+
+
+
+
+formalParameterList:     
+       '(' ')' 
+    | '(' normalFormalParameters ( ‘,’ namedFormalParameters)? ')'
+    |  '(' namedFormalParameters ')'
+   ;
+
+normalFormalParameters:
+      normalFormalParameter (',' normalFormalParameter)* 
+   ;
+
+
+namedFormalParameters:
+     '[' defaultFormalParameter (',' defaultFormalParameter)* ']'
+   ;
+
+
+
+Positional Formals 
+A positional formal parameter is a simple variable declaration.
+
+
+
+normalFormalParameter:
+     functionSignature
+   | fieldFormalParameter
+   | simpleFormalParameter
+   ;
+
+
+simpleFormalParameter:
+     declaredIdentifier
+   | identifier
+   ;
+
+fieldFormalParameter:
+  finalVarOrType? this '.' identifier
+  ;
+
+Named Optional Formals
+
+
+Optional parameters may be specified and provided with default values.
+
+
+defaultFormalParameter:
+     normalFormalParameter ('=' constantExpression)?
+   ;
+
+
+It is a compile-time error if the default value of a named parameter is not a compile-time constant. 
+ If no default is explicitly specified for an optional parameter, but a default could legally be provided, an implicit default of null is provided.
+
+
+There are situations (in abstract methods and interfaces) where optional parameters are allowed but an explicit default is illegal. In these cases, no implicit default is provided. This causes no difficulty, as any implementation of the method will provide defaults.
+
+
+ It is a compile-time error if the name of a named optional parameter begins with an ‘_’ character.[aa]
+
+
+The need for this restriction is a direct consequence of the fact that naming and privacy are not orthogonal. If we allowed named parameters to begin with an underscore, they would be considered private and inaccessible to callers from outside the library where it was defined. If a method outside the library overrode a method with a private optional name, it would not be a subtype of the original method. The static checker would of course flag such situations, but the consequence would be that adding a private named formal would break clients outside the library in a way they could not easily correct.
+
+Type of a Function
+If a function does not declare a return type explicitly, its return type is Dynamic.
+ Let F be a function with required formal parameters T1 p1, …, Tn pn., return type T0 and named optional parameters Tn+1 pn+1, . . . , Tn+k pn+k. Then the type of F is
+(T1 , …, Tn, [pn+1:Tn+1, …, pn+k:Tn+k]) →[ab] T0.
+
+
+Classes
+A class defines the form and behavior of a set of objects which are its instances. 
+
+
+classDefinition:
+    class identifier typeParameters? superclass? interfaces?
+     '{' classMemberDefinition* '}'
+   ;
+
+classMemberDefinition:
+     declaration ';'
+   | methodSignature functionBody
+   ;
+
+
+
+methodSignature:
+     factoryConstructorSignature
+   | static functionSignature
+   | getterSignature
+    | setterSignature
+    | operatorSignature
+   | functionSignature initializers?
+   | namedConstructorSignature initializers?
+   ;
+
+declaration:
+     constantConstructorSignature (redirection | initializers)?
+   | functionSignature redirection
+   | namedConstructorSignature redirection
+   | abstract getterSignature
+    | abstract setterSignature
+    | abstract operatorSignature
+   | abstract functionSignature
+   | static final type? staticFinalDeclarationList
+   | static? initializedVariableDeclaration[ac]
+   ;
+
+staticFinalDeclarationList:
+   : staticFinalDeclaration (',' staticFinalDeclaration)*
+   ;
+
+staticFinalDeclaration[ad]:
+     identifier '=' constantExpression
+   ;
+
+
+A[ae] class has constructors,  instance members and static members. The instance members of a class are its instance methods, getters, setters and instance variables. The static members of a class are its static methods, getters, setters and static variables. 
+
+
+Every class has a single superclass except class Object which has no superclass. A class may implement a number of interfaces[af] by declaring them in its implements clause.
+
+
+An abstract class is a class that is either explicitly declared[ag] with the abstract modifier, or a class that declares[ah][ai] at least one abstract method. 
+
+
+The abstract modifier for classes is not yet implemented.
+
+
+The interface of class C is an implicit interface that declares instance members that correspond to the instance members declared by C, and whose direct superinterfaces are the direct superinterfaces of C. When a class name appears as type or interface, that name denotes the interface of the class.
+
+
+It is a compile-time error if a class declares two members of the same name, except that a getter and a setter may be declared with the same name provided both are instance members or both are static members.
+
+
+What about a final instance variable and a setter? This case is illegal as well. If the setter is setting the variable, the variable should not be final. 
+
+
+
+It is a compile-time error if a class has two member variables with the same name. It is a compile-time error if a class has an instance method and a static member method with the same name.
+
+
+It is a static warning if a class C declares an instance member named n and a static member named n is declared in a superclass of C.
+
+
+
+
+
+
+Instance Methods
+
+
+Instance methods are functions whose declarations are immediately contained within a class declaration and that are not declared static. The instance methods of a class C are those instance methods declared by C and the instance methods inherited by C from its superclass.
+
+
+It is a compile-time error if an instance method m1 overrides an instance member m2 and  m1 has a different number of required parameters than m2. It is a compile-time error if an instance method m1 overrides  an instance member m2 and  m1 does not declare all the named parameters declared by m2 in the same order. 
+
+
+
+
+
+
+ It is a static warning if an instance method m1 overrides an instance method m2 and the type of m1 is not a subtype[aj] of the type of m2. 
+
+
+
+
+
+
+Abstract Methods
+
+
+An abstract method declares an instance method without providing an implementation. The declaration of an abstract method is prefixed by the built in identifier abstract. It is a compile-time error to specify a body for an abstract method. It is a compile-time error if any default values are specified in the signature of an abstract method. This could all be enforced syntactically. 
+
+
+The abstract modifier for classes is not implemented. It is intended to be [ak]used in scenarios where an abstract class A inherits from another abstract class B. In such a situation, it may be that A itself does not declare any abstract methods. In the absence of an abstract modifier on the class, the class would be interpreted as[al] a concrete class. However, we want different behavior for concrete classes and abstract classes. If A is intended to be abstract, we want the static checker to warn about any attempt to instantiate A, and we do not want the checker to complain about unimplemented methods in A. In contrast, if A is intended to be concrete, the checker should warn about all unimplemented methods, but allow clients to instantiate it freely.
+
+
+Invoking an abstract method always results in a run-time error. This may be an instance of  NoSuchMethodError or a subclass, such as AbstractMethodError. 
+
+
+These errors are ordinary objects and are therefore catchable.
+
+
+Unless explicitly stated otherwise, all ordinary rules that apply to methods apply to abstract methods.
+
+
+Operators
+
+
+Operators are instance methods with special names. 
+
+
+operatorSignature:
+       returnType? operator operator formalParameterList
+      ;
+
+
+
+operator:
+     unaryOperator
+   | binaryOperator
+   | '[' ']'
+   | '[' ']' '='
+   | negate
+   ;
+
+unaryOperator:
+     negateOperator
+   ;
+
+binaryOperator:
+     multiplicativeOperator
+   | additiveOperator
+   | shiftOperator
+   | relationalOperator
+   | equalityOperator
+   | bitwiseOperator
+   ;
+
+
+prefixOperator:
+      '-'
+    | negateOperator
+   ;
+
+
+
+
+negateOperator:
+     '!'
+   | '~'
+   ;
+
+An operator declaration is identified with built-in identifier operator.
+
+
+The following names are allowed for user-defined operators: ==, <, >, <=, >=, -, +, /, ~/,  *, %, |, ^, &, <<, >>, >>>, []=, [], ~, negate.
+
+
+The built-in identifier negate is used to denote unary minus[am]. 
+
+
+It is a compile-time error if the number of formal parameters of the user-declared operator []= is not 2. It is a compile time error if the number of formal parameters of a user-declared operator with one of the names:  ==, <, >, <=, >=, -, +, /, ~/, *, %, |, ^, &, <<, >>, >>>, [] is not 1. It is a compile time error if the arity of a user-declared operator with one of the names: ~,[an] negate is not 0. 
+
+
+It is a compile-time error to declare an optional named parameter in an operator.
+
+
+
+
+Getters 
+
+
+Getters are functions that are used to retrieve the values of object properties. 
+
+
+getterSignature:
+     static? returnType? get identifier formalParameterList
+
+
+If no return type is specified, the return type of the getter is Dynamic.[ao]
+
+
+A getter definition that is prefixed with the static modifier defines a static[ap] getter. Otherwise, it defines an instance getter. The name of the getter is given by the identifier in the definition.
+
+
+It is a compile-time error if a getter’s formal parameter list is not empty.
+
+
+It is a compile-time error if a class has both a getter and a method with the same name[aq]. This restriction holds regardless of whether the getter is defined explicitly or implicitly, or whether the getter or the method are inherited or not.
+
+
+This implies that a getter can never override a method, and a method can never override a getter or field. 
+
+
+It is a static warning if a getter m1 overrides a getter m2 and the type of m1 is not a subtype of the type of m2[ar].
+
+
+
+
+
+
+Setters
+
+
+Setters are functions that are used to set the values of object properties.
+
+
+setterSignature:
+     static? returnType? set identifier formalParameterList
+
+
+If no return type is specified, the return type of the setter is Dynamic[ao].
+
+
+A setter definition that is prefixed with the static modifier defines a static setter. Otherwise, it defines an instance setter. The name of the setter is given by the identifier in the definition.
+
+
+It is a compile-time error if a setter’s formal parameter list does not include exactly one required  formal parameter p. We could enforce this via the grammar, but we’d have to specify the evaluation rules in that case.
+
+
+It is a compile-time error if a class has both a setter and a method with the same name. This restriction holds regardless of whether the setter is defined explicitly or implicitly, or whether the setter or the method are inherited or not.
+
+
+Hence, a setter can never override a method, and a method can never override a setter. 
+
+
+It is a static warning if a setter declares a return type [as]other than void. It is a static warning if a setter m1 overrides a setter m2 and the type of m1 is not a subtype[at] of the type of m2. It is a static warning if a class has a setter with argument type T and a getter of the same name with return type S, and T may not be assigned to S.
+
+
+
+
+Instance Variables
+Instance variables are variables whose declarations are immediately contained within a class declaration and that are not declared static. The instance variables of a class C are those instance variables declared by C and the instance variables inherited by C from its superclass.
+
+
+If an instance variable declaration has one of the forms T v = e;, var v = e;, final T v = e; or final v = e; then the expression e must be a compile-time constant.
+
+
+In Dart, all uninitialized variables have the value null, regardless of type. Numeric variables in particular must, therefore,  be explicitly initialized; such variables will not be initialized to 0 by default. The form above is intended to ease the burden of such initialization.
+
+
+An instance variable declaration of one of the forms T v = e;, var v = e;, final T v = e; or final v = e; always induces an implicit getter function with signature
+
+
+T get v()
+
+
+whose  invocation evaluates to the value stored in v.
+An instance variable declaration of one of the forms var v;, final v;, var v = e; or final v = e; always induces an implicit getter function with signature
+
+
+get v()
+
+
+whose  invocation evaluates to the value stored in v.
+
+
+Getters are introduced for all instance and static variables, regardless of whether they are final or not.
+
+
+A non-final instance variable declaration of the form T v; or the form T v = e; always induces an implicit setter function with signature
+
+
+void set v(T x)
+
+
+whose execution sets the value of v to the incoming argument x.
+
+
+A non-final instance variable declaration of the form var v; or the form var v = e; always induces an implicit setter function with signature
+
+
+set v(x)
+
+
+whose execution sets the value of v to the incoming argument x.
+
+
+
+
+
+
+Constructors
+
+
+A constructor is a special member that is used in instance creation expressions (instanceCreation) to produce objects. Constructors may be generative or they may be factories. 
+
+
+A constructor name always begins with the name of its immediately enclosing class or interface, and may optionally be followed by a dot and an identifier. The name of a non-factory constructor must be a c[au]onstructor name. 
+
+
+Interfaces can have constructor Signatures (but not bodies). See the discussion of factories.
+
+
+If no constructor is specified for a class C, it implicitly has a default constructor C() : super() {}.[av]
+
+
+
+
+Generative Constructors
+
+
+A generative constructor consists of a constructor name, a constructor parameter list, an initializer list and a[aw]n optional body.
+
+
+
+
+constructorSignature:
+     identifier formalParameterList
+   | namedConstructorSignature
+   ;
+
+
+namedConstructorSignature:
+     identifier '.' identifier formalParameterList
+   ;
+
+
+
+A constructor parameter list is a parenthesized, comma-separated list of formal constructor parameters. A formal constructor parameter is either a formal parameter or an initializing formal. An initializing formal has the form this.id.  It is a compile-time error if id is not the name of an instance variable of the immediately enclosing class.
+
+
+A fresh instance is an instance whose identity is distinct from any previously allocated instance of the class. A generative constructor always allocates a fresh instance of its immediately enclosing class. The above holds if the constructor is actually run, as it is by new. If a constructor c is referenced by const[ax], c may not be run; instead, a canonical object may be looked up. See the section on instance creation.
+
+
+If a generative constructor c  is not a redirecting constructor and no body is provided, then c implicitly has an empty body {}.
+
+
+Redirecting Constructors
+
+
+A generative constructor may be redirecting, in which case its only action is to invoke another generative constructor. A redirecting constructor has no body; instead, it has a redirect clause that specifies which constructor the invocation is redirected to, and with what arguments.
+
+
+redirection:
+    ':' this ('.' identifier)? arguments
+   ;
+
+
+
+Initializer Lists
+
+
+An initializer list begins with a colon, and consists of a comma-separated list of individual initializers. There are two kinds of initializers.
+1. A superinitializer specifies a superconstructor - that is, a specific constructor of the superclass.  Execution of the superinitializer causes the initializer list of the superconstructor to be executed.
+2. An instance variable initializer assigns a value to an individual instance variable. 
+
+
+initializers:
+     ':' superCallOrFieldInitializer (',' superCallOrFieldInitializer)*
+   ;
+
+superCallOrFieldInitializer:
+     super arguments
+   | super '.' identifier arguments
+   | fieldInitializer
+   ;
+
+fieldInitializer:
+       (this '.')? identifier '=' conditionalExpression
+   ;
+
+
+
+Let k be a generative constructor. Then k may include at most one superinitializer in its initializer list or a compile time error occurs.  If no superinitializer is provided, an implicit superinitializer of the form super() is added at the end of k’s  initializer list, unless the enclosing class is class Object. It is a[ay] compile time error if more than one initializer[az] corresponding to a given instance variable appears in k’s list. It is a[ay] compile time error if k’s  initializer list contains an initializer for a variable that is initialized by means of an initializing formal of k.
+
+
+ 
+E[ba]ach final instance variable f declared in the immediately enclosing class must have an initializer in k's initializer list unless it has already been initialized by one of the following means:
+1. Initialization at the declaration of f.
+2. Initialization by means of an initializing formal of k.
+
+
+or a compile-time error occurs. It is a compile-time error if k's initializer list contains an initializer for a variable that is not an instance variable declared in the immediately surrounding class.
+ 
+The  initializer list may of course contain an initializer for any instance variable declared by the immediately surrounding class, even if it is not final. 
+
+
+It is a compile-time error if a generative constructor of class Object includes a superinitializer.
+
+
+Execution of a generative constructor proceeds as follows:
+
+
+First, a fresh instance i of the immediately enclosing class is allocated.  Next, the instance variable declarations of the immediately enclosing class are visited in the order they appear in the program text. For each such declaration d, if d has the form  finalVarOrType v = e;  then the instance variable v of i is bound to the value of e (which is necessarily a compile-time constant).
+Next, any initializing formals declared in the constructor's parameter list are executed in the order they appear in the program.  Then, the constructor's[bb] initializers are executed in the order they appear in the program.
+
+
+We could observe the order by side effecting external routines called. So we need to specify the order.
+
+
+[bc]
+
+
+After all the initializers[bd] have completed, the body of the constructor is executed in a scope where this is bound to i. Execution of the body begins with execution of the body of the superconstructor with respect to the bindings determined by the argument list of the superinitializer[be] of k.
+
+
+This process ensures that no uninitialized final field is ever seen by code. Note that this  is not in scope on the right hand side of an initializer so no instance method can execute during initialization: an instance method cannot be directly invoked, nor can this be passed into any other code being invoked in the initializer. 
+
+
+Execution of an initializer of the form this.v = e proceeds as follows:
+
+
+First, the expression e is evaluated to an object o. Then, the instance variable v of the object denoted by this is bound to o. 
+
+
+An initializer of the form v = e is equivalent to an initializer of the form this.v = e. 
+
+
+Execution of a superinitializer of the form super(a1, …, an, xn+1: an+1[bf], …, xn+k: an+k) (respectively super.id(a1, …, an, xn+1: an+1, …, xn+k: an+k)) proceeds as follows:
+
+
+First, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated.
+Let C be the class in which the superinitializer appears and let S be the superclass of C.  If S is generic[bg], let U1, ,.., Um be the actual type parameters passed to S in the superclass clause of C.
+
+
+Then, the initializer list of the constructor S (respectively S.id) is executed with respect[bh] to the bindings that resulted from the evaluation of the argument list,  with this bound to the current binding of this, and  the type parameters (if any) of class S bound to the current binding of U1, ,.., Um.
+
+
+It is a compile-time error[bi] if class S does not have a constructor named S (respectively S.id)
+
+
+
+
+Factories
+
+
+A factory[bj] is a static method prefaced by the built-in identifier factory. 
+
+
+factoryConstructorSignature:
+     factory qualified typeParameters[bk]? ('.' identifier)? formalParameterList
+   ;
+
+
+It is a static warning if the name of the method is not either:
+1. A constructor name.
+2. The name of a constructor of an interface that is in scope at the point where the factory is declared.
+
+
+The return type of a factory whose signature is of the form factory M or the form factory M.id is M. The return type of a factory whose signature is of the form factory M <T1 extends B1, …, Tn extends Bn> or the form factory M <T1 extends B1, …, Tn extends Bn>.id is M <T1, …, Tn>.
+It is a compile-time error if M is not the name of the immediately enclosing class or the name of an interface in the enclosing lexical scope. It is a compile-time error if the type M declares p type parameters where p != n. 
+
+
+In checked mode, it is a dynamic type error[bl] if a factory returns an object whose type is not a subtype of its actual return type.
+
+
+It seems useless to allow a factory to return null[bm]. But it is more uniform to allow it, as the rules currently do.
+
+
+Factories address classic weaknesses associated with constructors in other languages.
+Factories can produce instances that are not freshly allocated: they can come from a cache. Likewise, factories can return instances of different classes. 
+
+
+
+
+Constant Constructors[bn]
+
+
+A constant constructor may be used to create compile-time constant objects.[bo] A constant constructor is prefixed by the reserved word const. It is a compile-time error if a constant constructor has a body.
+
+
+constantConstructorSignature:
+     const qualified formalParameterList
+   ;
+
+
+All the work of a constant constructor must be handled via its initializers.
+
+
+It is a compile-time error if a constant constructor is declared by a class that has a non-final instance variable. 
+The above refers to both locally declared and inherited instance variables.
+Any expression that appears within the initializer list of a constant constructor must be a potentially constant expression, or a compile-time error occurs.
+
+
+A potentially constant expression is an expression e that would be a valid constant expression if all formal parameters of e’s immediately enclosing constant constructor were treated as compile-time constants that were guaranteed to evaluate to an integer, boolean or string value as required by their immediately enclosing superexpression.
+
+
+The difference between a potentially constant expression and a compile-time constant expression deserves some explanation. 
+
+
+The key issue is whether one treats the formal parameters of a constructor as compile-time constants. 
+
+
+If a constant constructor is invoked from a constant object expression, the actual arguments will be required to be compile-time constants. Therefore, if we were assured that constant constructors were always invoked from constant object expressions, we could assume that the formal parameters of a constructor were compile-time constants.
+
+
+However, constant constructors can also be invoked from ordinary instance creation expressions, and so the above assumption is not generally valid.
+
+
+Nevertheless, the use of the formal parameters of a constant constructor within the constructor is of considerable utility. The concept of potentially constant expressions is introduced to facilitate limited use of such formal parameters. Specifically, we allow the usage of the formal parameters of a constant constructor for expressions that involve built-in operators, but not for constant objects, lists and maps. This allows for constructors such as:
+
+
+class C {
+  final x; final y; final z;
+  const C(p, q): x = q, y = p + 100, z = p + q;
+}
+
+
+The assignment to x is allowed under the assumption that p is a compile-time constant (even though p is not, in general a compile-time constant).  The assignment to y is similar, but raises additional questions. In this case, the superexpression of p is p + 100, and it requires that p be a numeric compile-time constant for the entire expression to be considered constant.  The wording of the specification allows us to assume that p evaluates to an integer. A similar argument holds for p and q in the assignment to z.
+
+
+However, the following constructors are disallowed:
+
+
+class D {
+  final w;
+  const D.makeList(p): w = const [p];  // compile-time error
+  const D.makeMap(p): w = const {“help”: p}; // compile-time error
+  const D.makeC(p): w = const C(p, 12); // compile-time error
+}
+
+
+The problem is not that the assignments to w are not potentially constant; they are.  However, all these run afoul of the rules for constant lists, maps and objects, all of which independently require their subexpressions to constant expressions.
+
+
+All of the illegal constructors of D above could not be sensibly invoked via new, because an expression that must be constant cannot depend on a formal parameter, which may or may not be constant. In contrast, the legal examples make sense regardless of whether the constructor is invoked via const or via new. 
+
+
+Careful readers will of course worry about cases where the actual arguments to C() are constants, but are not of appropriate type. This is precluded by the following rule, combined with the rules for evaluating constant objects.
+
+
+When invoked from a constant object expression, a constant constructor must throw an exception if any of its actual parameters would be a value that would cause one of the potentially constant expressions within it to not be a valid compile-time constant.
+
+
+Static Methods
+
+
+Static methods are functions whose declarations are immediately contained within a class declaration and that are declared static. The static methods of a class C are those static methods declared by C.
+
+
+Inheritance of static methods has little utility in Dart. Static methods cannot be overridden. Any required static function can be obtained from its declaring library, and there is no need to bring it into scope via inheritance. Experience shows that developers are confused by the idea of inherited methods that are not instance methods.
+
+
+Of course, the entire notion of static methods is debatable, but it is retained here because so many programmers are familiar with it. Dart static methods may be seen as functions of the enclosing library. 
+
+
+It is a static warning if a class has a static method with the same name as a static member of one of its superclasses.
+
+
+This last restriction makes classes more brittle with respect to changes in the class hierarchy. It stems from a general observation that shadowing of names in the same scope is questionable and should elicit a warning. 
+
+
+There is no hiding of static methods, or of static variables.
+
+
+
+
+Static Variables
+
+
+Static variables are variables whose declarations are immediately contained within a class declaration and that are declared static. The static variables of a class C are those static variables declared by C.
+
+
+A static variable declaration of one of the forms static T v;, static T v = e; or static final T v = e;always induces an implicit static getter function with signature
+
+
+static T get v()
+
+
+whose invocation evaluates to the value stored in v.
+
+
+A static variable declaration of one of the forms static var  v;, static var  v = e; or static final v = e;always induces an implicit static getter function with signature
+
+
+static get v()
+
+
+whose  invocation evaluates to the value stored in v.
+
+
+A non-final static variable declaration of the form static T v; or the form static T v = e; always induces an implicit static setter function with signature
+
+
+static void set v(T x)
+
+
+whose execution sets the value of v to the incoming argument x.
+
+
+A non-final static variable declaration of the form static var v; or the form static var v = e; always induces an implicit static setter function with signature
+
+
+static set v(x)
+
+
+whose execution sets the value of v to the incoming argument x.
+
+
+It is a static warning if a class has a static variable with the same name as a static member of one of its superclasses.
+
+
+
+
+Superclasses
+The extends clause of a class C specifies its superclass. If no extends clause is specified, then either:
+1. C is Object, which has no superclass. OR
+2. The superclass of C is Object. 
+
+
+It is a compile-time error to specify an extends clause for class Object.
+
+
+
+superclass:
+     extends type
+   ;
+
+
+It is a compile-time error if t[bp]he extends clause of a class C includes a type expression that does not denote a class available in the lexical scope of C.
+
+
+A class S is a superclass of a class C iff either:
+1.  S[bq] is the superclass of C, or 
+2. S is a superclass of a class S’ and S’ is a superclass of C. 
+
+
+It is a compile-time error if a class C is a superclass of itself.
+
+
+
+
+Inheritance and Overriding
+
+
+A class C inherits any instance members of its superclass that are not overridden by instance members declared in C. 
+
+
+A class may override instance members that would otherwise have been inherited from its superclass. 
+
+
+Let C be a class declared in library L with superclass S and let C declare an instance member m[br], and a[bs]ssume S declares an instance member m’ with the same name as m. Then m overrides m’ iff m is accessible to L and one of the following holds:
+1. m is an instance method.
+2. m is a getter and m’ is a getter or a method.
+3. m[bt] is a setter and m’ is a setter or a method.
+Whether an override is legal or not is described elsewhere in this specification. 
+
+
+For example getters and setters may not legally override methods [bu]and vice versa.  
+
+
+It is nevertheless convenient to define the override relation between members in this way, so that we can concisely describe the illegal cases.
+
+
+Note that instance variables do not participate in the override relation, but the getters and setters they induce do. Also, getters don’t override setters and vice versa.  Finally, static members never override anything.
+
+
+Superinterfaces
+A class has a set of direct superinterfaces. This set includes the interface of its superclass and the interfaces specified in the the implements clause of the class.
+
+
+interfaces:
+     implements typeList
+   ;
+
+
+
+It is a compile-time error if [bv]the implements clause of an class C includes a type expression that does not denote a class or interface[bw] available in the lexical scope of C. 
+
+
+In particular, one cannot inherit from a type variable[bx]. 
+
+
+It is a compile-time error if the implements clause of a class includes type Dynamic.
+It is a compile-time error[by] if a type T[bz] appears more than once in the implements clause of  a class.
+
+
+One might argue that it is harmless to repeat a type in this way, so why make it an error? The issue is not so much that the situation described in program source is erroneous, but that it is pointless. As such, it is an indication that the programmer may very well have meant to say something else - and that is a mistake that should be called to her or his attention.  Nevertheless, we could simply issue a warning; and perhaps we should and will. That said, problems like these are local and easily corrected on the spot, so we feel justified in taking a harder line. 
+
+
+It is a compile-time error if the interface induced by a class C is a superinterface of itself.
+
+
+A class does not inherit members from its superinterfaces. However, its implicit interface does.
+
+
+
+
+Interfaces
+An interface defines how one may interact with an object. An interface has[ca] methods, getters, setters and constructors, and a set of superinterfaces.
+
+
+interfaceDefinition:
+     interface identifier typeParameters? superinterfaces?
+     factorySpecification? '{' (interfaceMemberDefinition)* '}'
+   ;
+
+
+
+interfaceMemberDefinition:
+     static final type? initializedIdentifierList ';'
+   | functionSignature ';'
+   | constantConstructorSignature ';'
+   | namedConstructorSignature ';'
+   | getterSignature ';'
+    | setterSignature ';'
+   | operatorSignature ';'
+   | variableDeclaration ';'
+   ;
+
+
+ It is a compile-time error if any default values are specified in the signature of an interface method, getter, setter or constructor.
+
+
+Methods
+An interface method declaration specifies a method signature but no body. 
+
+
+It is a compile-time error if an interface method m1 overrides an interface member m2 and  m1 has a different number of required parameters than m2. It is a compile-time error if an interface method m1 overrides  an interface member m2 and  m1 does not declare all the named parameters declared by m2 in the same order.
+
+
+It is a static warning if an interface method m1 overrides an interface method m2 and the type of m1 is not a subtype of the type of m2.
+Operators
+Operators are instance methods with special names. Some, but not all, operators may be defined by user code, as described below.
+
+
+Getters and Setters
+
+
+An interface may contain getter and/or setter signatures. These are subject to the same compile-time and static checking rules as getters and setters in classes.
+
+
+
+
+Factories and Constructors
+
+
+An interface may specify a factory class, which is a class that will be used to provide instances when constructors are invoked via the interface.
+
+
+factorySpecification:
+    factory qualified typeParameters?
+   ;
+
+
+
+An interface can specify the signatures of constructors that are used to provide objects that conform to the interface.  It is a compile-time error if an interface declares a constructor without declaring a factory class.
+
+
+Let I be an interface named NI with factory class F, and let NF be the name of F. If F implements I then it is a compile-time error if I and F do not have the same number of type parameters.
+
+
+
+
+A constructor kI of interface I with name NI corresponds to a constructor kF of its factory class F with name  NF  iff either:
+1. F does not implement I and kI and kF have the same name, OR
+1. F implements I and either
+1. kI is named NI and kF is named NF, OR
+2. kI is named NI.id and kF is named NF.id.
+
+
+It is a compile-time error if an interface I declares a constructor kI and there is no constructor kF in the factory class F such that kI  corresponds to kF.
+Let kI be a constructor declared in an interface I, and let kF be its corresponding constructor. Then:
+1. It is a compile-time error if kI and kF do not have the same number of required parameters. 
+2. It is a compile-time error if kI and kF do not have identically named optional parameters, declared in the same order.
+3. It is a compile-time error if kI and kF do not have identical type parameters.
+4. It is a static type warning if the type of the nth required formal parameter of kI is not identical to the type of the nth required formal parameter of kF.
+5. It is a static type warning if the types of named optional parameters with the same name differ between kI and kF.
+If F implements I, and F is generic, then the factory clause of I must  include a list of type parameters[cb] that is identical to the type parameters given in the type declaration of F, or a compile-time error occurs. 
+
+
+As an example, consider
+
+
+class HashMapImplementation<K extends Hashable, V> {...}
+
+
+interface Map<K, V> factory HashMapImplementation<K, V> { ... } // illegal
+
+
+interface Map<K, V> factory HashMapImplementation<K extends Hashable, V> { ... } 
+// legal
+
+
+But what about:
+
+
+interface I<T,S> factory F<A,B> ...
+class F<A,B> implements I<int, String> ..
+
+
+This conforms to the spec above but makes no sense[cc].
+
+
+Superinterfaces
+An interface has a set of direct superinterfaces. This set consists of the interfaces specified in the extends clause of the interface.
+
+
+superinterfaces:
+     extends typeList
+   ;
+
+An interface J is a superinterface of an interface I iff either J is a direct superinterface of I or J is a superinterface of a direct superinterface of I.
+
+
+It is a compile-time error if  the extends clause of an interface I includes a type expression that does not denote a class or interface available in the lexical scope of I.
+It is a compile-time error if the extends clause of an interface includes type Dynamic.
+It is a compile-time error if an interface is a superinterface[cd] of itself.
+
+
+
+
+
+
+Inheritance and Overriding
+
+
+An interface I inherits any members of its superinterfaces that are not overridden by members declared in I. 
+
+
+However, if there [ce]are multiple members m1, …,  mk with the same name n that would be inherited (because identically named members existed in several superinterfaces) then at most one member is inherited. If the static types T1, …,  Tk of the members m1, …,  mk are not identical, then there must be a member mx such that Tx <: Ti, 1 <= x <= k for all  i, 1 <= i <=  k, or a static type warning occurs. The member that is inherited is mx, if it exists; otherwise:
+1. If all of m1, …,  mk have the same number r of required parameters and the same set of named parameters s, then I has a method named n, with r required parameters of type Dynamic, named parameters s of type Dynamic and  return type Dynamic.  
+2. Otherwise none of the members  m1, …,  mk is inherited.
+
+
+
+
+The only situation where the runtime would be concerned with this would be during reflection if a mirror attempted to obtain the signature of an interface member. 
+
+
+The current solution is a tad complex, but is robust in the face of type annotation changes.  Alternatives: (a) No member is inherited in case of conflict. (b) The first m is selected (based on order of superinterface list) (c) Inherited member chosen at random.  
+
+
+(a) means that the presence of an inherited member of an interface varies depending on type signatures.  (b) is sensitive to irrelevant details of the declaration and (c) is liable to give unpredictable results between implementations or even between different compilation sessions.
+
+
+
+
+An interface may override instance members that would otherwise have been inherited from its superinterfaces. 
+
+
+Let I be an interface declared in library L with superinterface S, and let I declare an instance member m, and  assume S declares an instance member m’ with the same name as m. Then m overrides m’ iff m is accessible to L and one of the following holds:
+1. m is an instance method.
+2. m is a getter and m’ is a getter or a method.
+3. m is a setter and m’ is a setter or a method.
+Whether an override is legal or not is described elsewhere in this specification. 
+
+
+
+
+
+
+Generics
+A class or  interface declaration G may be generic, that is, G may have formal type parameters declared. A generic declaration induces a family of declarations, one for each set of actual type parameters provided in the program. 
+
+
+typeParameter:
+    identifier (extends type)?
+   ;
+
+
+typeParameters:
+    '<' typeParameter (',' typeParameter)* '>'
+   ;
+
+
+
+A type parameter T may be suffixed with an extends clause that specifies the upper bound for T. If no extends clause is present, the upper bound is Object[cf]. It is a static type warning if a type variable is supertype of its upper bound.
+
+
+The type parameters of a generic declaration G are in scope in the bounds of all of the type parameters of G, in the extends and implements clauses of G (if these exist) and in the non-static members of G. 
+
+
+Because type parameters are in scope in their bounds, we support F-bounded quantification (if you don't know what that is, don't ask[cg]).
+
+
+Even where type parameters are in scope there are numerous restrictions[ch] at this time:
+1. A type parameter cannot be used to name a constructor in an instance creation expression.
+2. A type parameter cannot be[ci] used as an identifier  expression. 
+3. A type parameter cannot be used as a superclass or superinterface.
+
+
+The normative versions of these are given in the appropriate sections of this specification. Some of these restrictions may be lifted in the future.
+
+
+
+
+
+
+
+
+Expressions
+An expression is a fragment of Dart code that can be evaluated at run time to yield a value, which is always an object. Every expression has an associated static type. Every value has an associated dynamic type.
+
+
+
+expression:
+     assignableExpression assignmentOperator expression
+   | conditionalExpression
+   ;
+
+expressionList:
+     expression (',' expression)*
+   ;
+
+
+
+
+
+primary:
+     thisExpression
+   | super assignableSelector
+   | functionExpression
+   | literal
+   | identifier
+   | newExpression
+   | constantObjectExpression
+   | '(' expression ')'
+   ;
+
+
+
+Constants
+A constant expression is an expression whose value can never change, and that can be evaluated entirely at compile time. 
+
+
+A constant expression is one of the following:
+1. A literal number.
+2. A literal boolean.
+3. A literal string that does not involve string interpolation.[cj] It would be tempting to allow string interpolation where the interpolated value is a compile-time constant.  However, this would require running the toString() method for constant objects, which could contain arbitrary code.
+4. null.
+5. A reference to a static final variable or top-level variable.[ck]
+6. A constant constructor invocation.
+7. A constant list literal.
+8. A constant map literal.
+9. An expression of one of the forms e1 ==e2, e1 != e2, e1 === e2 or e1 !== e2 ,where e1 and e2 are constant expressions that evaluate to a numeric, string or boolean value[cl].
+10. An expression of one of the forms e1 && e2 or e1 || e2, where e1 and e2 are constant expressions that evaluate to a boolean value.
+11. An expression of one of the forms ~ e, e1 ~/ e2, e1 ^ e2, e1 & e2, e1 | e2, e1 >> e2 or e1 << e2, where e1 and e2 are constant expressions that evaluate to an integer value.
+12. An expression of one of the forms e1 + e2, e1 - e2, e1 * e2, e1 / e2, e1 >e2, e1 < e2, e1 >= e2, e1 <= e2[cm] or e1 % e2,  where e1 and e2 are constant expressions that evaluate to a numeric value.
+
+
+It is a compile-time error if the value of a compile-time constant expression depends on itself.
+
+
+As an example, consider:
+
+
+class CircularConsts{ // Illegal program - mutually recursive compile-time constants
+  static final i = j; // a compile-time constant
+  static final j = i; // a compile-time constant
+}
+
+
+
+
+literal:
+     nullLiteral
+   | booleanLiteral
+   | numericLiteral
+   | stringLiteral
+   | mapLiteral
+   | listLiteral
+   ;
+
+
+Null
+The reserved word null denotes the null object.
+
+
+
+nullLiteral:
+     null
+;
+The null object is the sole instance of the built-in class Null. Attempting to instantiate Null causes a runtime error. It is a compile-time error for a class or interface attempt to extend or implement Null. Invoking a method on null yields a NullPointerException unless the method is explicitly implemented by class Null.
+
+
+The static type of null is bottom.
+
+
+The decision to use bottom instead of Null allows null to be be assigned everywhere without complaint by the static checker. 
+
+
+Here is one way in which one might implement class Null:
+
+
+class Null {
+   factory Null._() { throw "cannot be instantiated"; }
+   noSuchMethod(InvocationMirror msg) {
+      throw new NullPointerException();[cn]
+   }
+
+
+/* other methods, such as ==  */
+}
+
+
+
+
+Numbers
+
+
+A numeric literal is either a decimal or hexadecimal integer of arbitrary size, or a decimal double.
+
+
+numericLiteral:
+      NUMBER
+   | HEX_NUMBER
+   ;
+
+
+NUMBER:
+     '+'? DIGIT+ ('.' DIGIT+)? EXPONENT?
+   | '+'? '.' DIGIT+ EXPONENT?
+   ;
+
+EXPONENT:
+     ('e' | 'E') ('+' | '-')? DIGIT+
+   ;
+
+
+
+HEX_NUMBER:
+     '0x' HEX_DIGIT+
+   | '0X' HEX_DIGIT+
+   ;
+
+HEX_DIGIT:
+     'a'..'f'
+   | 'A'..'F'
+   | DIGIT
+   ;
+
+If a numeric literal begins with the prefix ‘0x’, it is a hexadecimal integer literal, which denotes the hexadecimal integer represented by the part of the literal following ‘0x’. Otherwise, if the numeric literal does not include a decimal point denotes an it is a decimal integer literal, which denotes a decimal integer.  Otherwise, the numeric literal is a literal double which denotes a 64 bit double precision floating point number as specified by the IEEE 754 standard. 
+
+
+An integer literal or a literal double may optionally be prefixed by a plus sign (+). This ha snos semantic effect.
+
+
+There is no unary plus operator in Dart. However, we allow a leading plus in decimal numeric literals for clarity and to provide some compatibility with Javascript.
+
+
+Integers are not restricted to a fixed range. Dart integers are true integers, not 32 bit or 64 bit or any other fixed range representation. Their size is limited only by the memory available to the implementation.
+
+
+It is a compile-time error for a class or interface to attempt to extend or implement int. It is a compile-time error for a class or interface to attempt to extend or implement double. It is a compile-time error for any type other than the types int and double to attempt to extend or implement num.
+
+An integer literal is either a hexadecimal integer literals or a  decimal integer literal.
+The static type of an integer literal is int. A literal double is a numeric literal that is not an integer literal. The static type of a literal double is double.
+
+Booleans
+The reserved words true and false denote objects that represent the boolean values true and false respectively. They are the boolean literals.
+
+
+booleanLiteral:
+     true
+   | false
+    ;
+
+
+Both  true and false are implement the built-in interface bool. They are the only two instances of bool. It is a compile-time error for a class or interface to attempt to extend or implement bool. 
+
+
+It follows that the two boolean literals are the only two instances of bool. 
+
+
+The static type of a boolean literal is bool.
+
+
+Boolean Conversion
+
+
+Boolean conversion maps any object o into a boolean defined as 
+
+
+(bool v){
+        assert(null != v);
+        return true === v;
+}(o)[co]
+
+
+Boolean conversion is used as part of control-flow constructs and boolean expressions.  Ideally, one would simply insist that control-flow decisions be based exclusively on booleans.  This is straightforward in a statically typed setting. In a dynamically typed language, it requires a dynamic check. Sophisticated virtual machines can minimize the penalty involved. Alas[cp], Dart must be compiled into Javascript. Boolean conversion allows this to be done efficiently. 
+
+
+At the same time, this formulation differs radically from Javascript, where most numbers and objects are interpreted as true.  Dart’s approach prevents usages such  if (a-b) … ; because it does not agree with the low level conventions whereby non-null objects or non-zero numbers are treated as true. Indeed, there is no way to derive true from a non-boolean object via boolean conversion, so this kind of low level hackery is nipped in the bud.
+
+
+Dart also avoids the strange behaviors that can arise due to the interaction of boolean conversion with autoboxing in Javascript. A notorious example is the situation where false can be interpreted as true. In Javascript, booleans are not objects, and instead are autoboxed into objects where “needed”.  If false gets autoboxed into an object, that object can be coerced into true (as it is a non-null object). 
+
+
+
+
+Strings
+
+
+A string is a sequence of valid unicode code points. 
+
+
+stringLiteral:
+     '@'? MULTI_LINE_STRING
+   | SINGLE_LINE_STRING
+   ;
+
+
+A string can be either a single line string or a multiline string. 
+
+
+SINGLE_LINE_STRING:
+     '  '' ' STRING_CONTENT_DQ* ' " '
+   | ' ' ' [cq]STRING_CONTENT_SQ* ' ' '
+   | '@' ' ' ' (~( ' ' ' | NEWLINE ))* ' ' '
+   | '@' ' " ' (~( ' " ' | NEWLINE ))* ' " '
+   ;
+
+A single line string may not span more than one line of source code. A single line string is delimited by either matching single quotes or matching double quotes. 
+
+
+Hence, ‘abc’ and “abc” are both legal strings, as are ‘He said “To be or not to be” did he not?’  and “He said ‘To be or not to be’ didn’t he?”. However “This ‘ is not a valid string, nor is ‘this”.
+
+
+MULTI_LINE_STRING:
+   : '"""'  (~ '"""')* '"""'
+   | ''''' (~ ''''')* '''''
+   ;
+
+
+
+ESCAPE_SEQUENCE:
+     “\n”
+   | “\r”
+   | “\f”
+   | “\b”
+  | “\t”
+  | “\v”
+  | “\x” HEX_DIGIT HEX_DIGIT
+  | “\u” HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+  | “\u{“ HEX_DIGIT_SEQUENCE “}”
+  :
+
+
+HEX_DIGIT_SEQUENCE:
+     HEX_DIGIT HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT? HEX_DIGIT?
+    ;
+
+
+
+
+Multiline strings are delimited by either matching triples of single quotes or matching triples of double quotes.
+
+
+Strings support escape sequences for special characters. The escapes are:
+1.  \n for newline, equivalent to \x0A.
+2. \r for carriage return, equivalent to \x0D.
+3. \f for form feed, equivalent to \x0C.
+4. \b for backspace, equivalent to \x08.
+5. \t for tab, equivalent to \x09.
+6. \v for vertical tab, equivalent to \x0B.
+7. \xHEX_DIGIT1 HEX_DIGIT2, equivalent to \u{ HEX_DIGIT1 HEX_DIGIT2}.
+8. \uHEX_DIGIT1 HEX_DIGIT2 HEX_DIGIT3 HEX_DIGIT4, equivalent to \u{ HEX_DIGIT1 HEX_DIGIT2 HEX_DIGIT3 HEX_DIGIT4}.
+9. \u{HEX_DIGIT_SEQUENCE} is the unicode scalar value represented by the HEX_DIGIT_SEQUENCE. It is a compile-time error if the value of the HEX_DIGIT_SEQUENCE is not a valid unicode scalar value.
+10. $ indicating the beginning of an interpolated expression.
+11. Otherwise, \k indicates the character k for any k not in {n, r, f, b, t, v, x, u}.[cr]
+It is a compile-time error if a string literal to contains a character sequence of the form \x that is not followed by a sequence of two hexadecimal digits. It is a compile-time error if a string literal to contains a character sequence of the form \u that is not followed by either a sequence of four hexadecimal digits, or by curly brace delimited sequence of hexadecimal digits.
+
+
+However, any string may be prefixed with the character @, indicating that it is a raw string, in which case no escapes[cs] are recognized.
+
+
+
+
+
+STRING_CONTENT_DQ:
+     ~( '\\' | '  "  ' | '$' | NEWLINE )
+   | '\\' ~( NEWLINE )
+   | STRING_INTERPOLATION
+   ;
+
+STRING_CONTENT_SQ:
+     ~( '\\' | '\'' | '$' | NEWLINE )
+   | '\\' ~( NEWLINE )
+   | STRING_INTERPOLATION
+   ;
+
+NEWLINE:
+     '\n'
+   | '\r'
+   ;
+
+
+All string literals implement the built-in interface String. It is a compile-time error for a class or interface to attempt to extend or implement String. The static type of a string literal is String.
+
+   
+String Interpolation
+
+
+It is possible to embed expressions within string literals, such that the these expressions are evaluated, and the resulting values are converted into strings and concatenated with the enclosing string. This process is known as string interpolation.
+
+
+STRING_INTERPOLATION:
+     '$' IDENTIFIER_NO_DOLLAR
+   | '$' '{' Expression '}'
+   ;
+
+The reader will note that the expression inside the interpolation could itself include strings, which could again be interpolated recursively. 
+
+
+
+
+An unescaped $ character in a string signifies the beginning of an interpolated expression.  The $ sign may be followed by either:
+1. A single identifier id[ct] that must not contain the $ character. 
+2. An expression e delimited by curly braces.
+
+
+The form $id is equivalent to the form ${id}.  An interpolated string ‘s1${e}s2’  is equivalent to ‘s1’[cu] + e.toString[cv]() + ‘s2’. Likewise an interpolated string “s1${e}s2’” is equivalent to “s1” + e.toString() + “s2”, assuming + is the string concatenation operator.
+
+
+The string interpolation syntax is designed to be familiar and easy to use, if somewhat awkward to parse. The intent is to encourage its use over alternatives such as s1 + s2. In a dynamically typed language, the use of the + operator requires dynamic dispatch. In contrast, in the case of string interpolation  we can statically determine that the string concatenation operation is required, making the operation more efficient. Even more importantly, it helps the system to determine if other uses of + are numeric, helping the implementation speed up those operations. [cw]This is especially crucial for a language that must be efficiently compiled into Javascript.
+
+
+Lists
+
+
+A list literal denotes a list, which is an integer indexed collection of objects. 
+
+
+listLiteral:
+     const? typeArguments? '[' (expressionList ','?)? ']'
+   ;
+
+A list may contain zero or more objects. The number of elements in a list is its size. A list has an associated set of indices.  An empty list has an empty set of indices. A non-empty list has the index set {0 … n -1} where n is the size of the list. It is a runtime error to attempt to access a list using an index that is not a member of its set of indices.
+
+
+If a list literal begins with the reserved word const, it is a constant list literal and it is computed at compile-time. Otherwise, it is a runtime list literal and it is evaluated at runtime.
+
+
+It is a compile time error if an element of a constant list literal is not a compile-time constant. It is a compile time error if the type argument of a constant list literal includes a type variable.[cx]
+The binding of a type variable is not known at compile-time, so we cannot use type variables inside compile-time constants.
+
+
+The value of a constant list literal  const <E>[e1... en] is an object a that implements the built-in interface List<E>[cy]. The ith element of a is vi+1, where vi is the value of the compile time expression ei.  The value of a constant list literal  const [e1... en] is defined as the value of a constant list literal const <Dynamic>[e1... en]. It is a run-time error to attempt to modify a constant list literal. 
+
+
+
+
+Let list1 = const <V>[e11... e1n] and list2 = const <U>[e21... e2n] be two constant list literals and let the  elements of list1 and list2  evaluate to  o11... o1n and o21... o2n respectively. Iff o1i === o2i for 1 <= i <= n and V = U then list1 === list2. 
+
+
+In other words, constant list literals are canonicalized.
+
+
+A runtime list literal <E>[e1... en]  is evaluated as follows:
+1. First, the expressions e1... en are evaluated in left to right order, yielding objects o1... on.
+2. A fresh instance a that implements the built-in interface List<E> is allocated. 
+3. The ith element of a is set to oi+1, 0 <= i <= n.
+4. The result of the evaluation is a.
+
+
+Note that this specification does not specify an order in which the elements are set. This allows for parallel assignments into the list if an implementation so desires.  The order can only be observed in checked mode: if element i is not a subtype of the element type of the list, a dynamic type error will occur when a[i] is assigned oi-1. 
+
+
+A runtime list literal  [e1... en] is evaluated as  <Dynamic>[e1... en].
+
+
+There is no restriction precluding nesting of list literals. It follows from the rules above that
+<List<int>>[[1, 2, 3] [4, 5, 6]] is a list with type parameter List<int>, containing two lists with type parameter Dynamic. 
+
+
+The static type of a list literal of the form  const <E>[e1... en]  or the form <E>[e1... en] is List<E>. The static type a list literal of the form  const [e1... en]  or the form [e1... en] is List<Dynamic>.
+
+
+It is tempting to assume that the type of the list literal would be computed based on the types of its elements. However, for mutable lists this may be unwarranted. Even for constant lists, we found this behavior to be problematic. Since compile-time is often actually runtime, the runtime system must be able to perform a complex least upper bound computation to determine a reasonably precise type. It is better to leave this task to a tool in the IDE. It is also much more uniform (and therefore predictable and understandable) to insist that whenever types are unspecified they are assumed to be the unknown type Dynamic.
+
+
+Maps
+
+
+A map literal denotes a map from strings to objects. 
+
+
+mapLiteral:
+    const? typeArguments? '{' (mapLiteralEntry (',' mapLiteralEntry)* ','?)? '}'
+   ;
+
+mapLiteralEntry:
+    identifier[cz] ':' expression
+    | stringLiteral ':' expression
+   ;
+
+A map literal consists of zero or more entries. Each entry has a key, which is a string, and a value, which is an object. The key of an entry may be specified via an identifier or via a compile-time constant string. If the key is specified via an identifier id, the specification is interpreted as if it was the string ‘id’.
+
+
+The use of identifiers as keys to literal maps is not implemented at the time of this writing.
+ 
+If a map literal begins with the reserved word const, it is a constant map literal and it is computed at compile-time. Otherwise, it is a run-time map literal and it is evaluated at run-time.
+
+
+It is a compile time error if either a key or a value of an entry in a constant map literal is not a compile-time constant. It is a compile time error if either type argument of a constant map literal includes a type variable. 
+
+
+
+
+The value of a constant map literal  const <V>{k1:e1... kn :en} is an object m that implements the built-in interface Map<String, V>. The entries of m are ui:vi, 1 <= i <= n, where ui is the value of the compile time expression ki and vi is the value of the compile time expression ei.  The value of a constant map literal  const {k1:e1... kn :en} is defined as the value of a constant map literal const <Dynamic>{k1:e1... kn :en}.  It is a run-time error to attempt to modify a constant map literal. 
+
+
+As specified, a typed map literal takes only one type parameter. If we generalize literal maps so they can have keys that are not strings, we would need two parameters. The implementation currently insists on two parameters.
+
+
+Let map1 = const <V>{k11:e11... k1n :e1n} and map2 = const <U>{k21:e21... k2n :e2n} be two constant map literals. Let the keys of map1 and map2 evaluate to  s11... s1n  and  s21... s2n respectively, and let the elements of map1 and map2 evaluate to o11... o1n and o21... o2n respectively. Iff o1i === o2i  and s1i === s2i for 1 <= i <= n, and V = U then map1 === map2. 
+
+
+In other words, constant map literals are canonicalized.
+
+
+
+
+A runtime map literal <V>{k1:e1... kn :en}  is evaluated as follows:
+1. First, the expressions e1...en are evaluated in left to right order, yielding objects o1... on. 
+2. A fresh instance m that implements the built-in interface Map<String, V> is allocated. 
+3. Let ui be the value of the compile-time constant string specified by ki. An entry with key ui and value oi is added to m, 0 <= i <= n.
+4. The result of the evaluation is m.
+
+
+A runtime map literal  {k1:e1... kn :en} is evaluated as  <Dynamic>{k1:e1... kn :en}.
+
+
+It is a static warning if the values of any two keys in a map literal are equal.
+
+
+A map literal is ordered: iterating over the keys and/or values of the maps always happens in the order the keys appeared in the source code.
+
+
+Of course,[da] if a key repeats, the order is defined by first occurrence, but the value is defined by the last. 
+
+
+The static type of a map literal of the form  const <V>{k1:e1... kn :en} or the form <V>{k1:e1... kn :en} is Map<String, V>. The static type a map literal of the form  const {k1:e1... kn :en} or the form {k1:e1... kn :en} is Map<String, Dynamic>.
+
+
+Function Expressions
+
+
+A function literal is an object that encapsulates an executable unit of code. 
+
+
+functionExpression:
+   (returnType? identifier)? formalParameterList functionExpressionBody
+   ;
+
+
+functionExpressionBody:
+     '=>' expression
+   | block
+   ;
+
+
+ A function literal implements the built-in interface Function.
+
+
+The static type of a function literal of the form (T1 a1, …, Tn an, [Tn+1  xn+1 = d1, … ,Tn+k xn+k = dk]) => e or the form id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]) => e is (T1, …, Tn, [Tn+1 xn+1, .., Tn+k xn+k]) →T0, where T0 is the static type of e. In any case where Ti ,1 <= i <= n,  is not specified, it is considered to have been specified as Dynamic.
+
+
+The static type of a function literal of the form T0 id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]){s} or the form T0 id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]) => e is (T1, …, Tn, [Tn+1 xn+1, .., Tn+k xn+k]) →T0. In any case where Ti ,1 <= i <= n, is not specified, it is considered to have been specified as Dynamic.
+
+
+The static type of a function literal of the form id(T1 a1, …, Tn an, [Tn+1  xn+1 = d1,… Tn+k xn+k = dk]){s} or the form (T1 a1, …, Tn an, [Tn+1  xn+1 = d1, …, Tn+k xn+k = dk]) {s} is (T1, …, Tn, [Tn+1 xn+1, .., Tn+k xn+k]) → Dynamic. In any case where Ti ,1 <= i <= n, is not specified, it is considered to have been specified as Dynamic.[db]
+
+
+
+This
+The reserved word this denotes the target of the current instance member invocation.
+
+
+thisExpression:
+     this
+     ;
+
+
+The static type of this is the interface of the immediately enclosing class.
+
+
+We do not support self-types at this point. 
+
+
+
+
+Instance Creation
+
+
+Instance creation expressions invoke constructors to produce instances. 
+
+
+It is a static warning to instantiate an abstract class. 
+
+
+It is a compile-time error if any of the type arguments to a constructor of a generic type invoked by a new expression or a constant object expression do not denote types in the enclosing lexical scope. It is a compile-time error if a constructor of a non-generic type invoked by a new expression or a constant object expression is passed any type arguments. It is a compile-time error if a constructor of a generic type with n type parameters invoked by a new expression or a constant object expression is passed m type arguments where m != n. 
+
+
+It is a static type warning if any of the type arguments to a constructor of a generic type invoked by a new expression or a constant object expression are not subtypes of the bounds[dc] of the corresponding formal type parameters.
+
+
+
+
+New
+The new expression invokes a constructor.
+
+
+newExpression:
+new type ('.' identifier)? arguments
+;
+
+
+Let e be a new expression of the form new T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) or the form new T(a1, .., an, xn+1: an+1, …, xn+k: an+k). It is a compile-time error if T is not a class or interface accessible in the current scope, optionally followed by type arguments. 
+
+
+If e is of the form new T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) it is a compile-time error if T is not a class or interface accessible in the current scope, optionally followed by type arguments.  It is a compile-time error if T.id is not the name of a constructor declared by the type T. If e of the form new T(a1, .., an, xn+1: an+1, …, xn+k: an+k) it is a compile-time error if the type T does not declare a constructor with the same name as the declaration of T. 
+
+
+If T is a parameterized type S<U1, ,.., Um>, let R = S.  It is a compile time error if S is not a generic type with m type parameters. If T is not a parameterized type, let R = T.
+If R is an interface, let C be the factory class of R. Otherwise let C = R. Furthermore, if e is of the form new T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) then let  q be the constructor of C that corresponds to the constructor T.id, otherwise let q be the constructor of C that corresponds to the constructor T. Finally, if C is generic but T is not a parameterized type, then for 1 <= i <= m, let Vi = Dynamic, otherwise let Vi = Ui.  
+
+
+Evaluation of e proceeds as follows:
+
+
+First, if q is a generative constructor, then:
+
+
+Let Ti be the type parameters of C (if any) and let Bi be the bounds of Ti, 1 <= i <= m. It is a dynamic type error if, in checked mode, Vi is not a subtype of  [V1,  ..., Vm/T1,  ..., Tm]Bi, 1 <= i <= m.
+
+
+A fresh instance, i,  of class C is allocated. For each instance variable f of i,  if the variable declaration of f has an initializer, then f is bound to that value (which is necessarily a compile-time constant). Otherwise f is bound to null.  
+
+
+Next, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated. Then, the initializer list of q is executed with respect to the bindings that resulted from the evaluation of the argument list, and with this bound to i and  the type parameters (if any) of C bound to the actual type arguments V1, ,.., Vm. Finally, the body of q is executed with respect to the bindings that resulted from the evaluation of the argument list. The result of the evaluation of e is i.
+
+
+Otherwise, if q is a redirecting constructor, then:
+The argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated. Then, the redirect clause of q is executed with respect to the bindings that resulted from the evaluation of the argument list and the type parameters (if any) of C bound to the actual type arguments V1, ,.., Vm.  resulting in an object i that is necessarily the result of another constructor call. The result of the evaluation of e is i.
+
+
+Otherwise, q is a factory constructor. Then:
+
+
+Let Ti be the type parameters of q (if any) and let Bi be the bounds of Ti, 1 <= i <= m. In checked mode, it is a dynamic type error if Vi is not a subtype of  [V1,  ..., Vm/T1,  ..., Tm]Bi, 1 <= i <= m.
+
+
+The argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated Then, the body of k is executed  with respect to the bindings that resulted from the evaluation of the argument list and the type parameters (if any) of q bound to the actual type arguments V1, ,.., Vm resulting in an object i. The result of the evaluation of e is i.
+
+
+
+
+The static type of a new expression of either the form new T.id(a1, .., an) or the form new T(a1, .., an) is T. It is a static warning if the static type of ai, 1 <= i <= n+ k may not be assigned to the type of the corresponding formal parameter of the constructor T.id (respectively T).
+
+
+Const
+A constant object expression invokes a constant constructor. 
+
+
+constObjectExpression:
+const type ('.' identifier)? arguments
+;
+
+
+
+
+Let e be a constant object expression of the form const T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) or the form const T(a1, .., an, xn+1: an+1, …, xn+k: an+k). It is a compile-time error if T is not a class or interface accessible in the current scope, optionally followed by type arguments.  It is a compile-time error if T includes any type variables.
+
+
+If e is of the form const T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) it is a compile-time error if T is not a class or interface accessible in the current scope, optionally followed by type arguments.  It is a compile-time error if T.id is not the name of a constant constructor declared by the type T. If e of the form const T(a1, .., an, xn+1: an+1, …, xn+k: an+k) it is a compile-time error if the type T does not declare a constant constructor with the same name as the declaration of T. 
+
+
+In all of the above cases, it is a compile-time error if ai, 1 < = i <= n + k, is not a compile-time constant expression.
+
+
+If T is a parameterized type S<U1, ,.., Um>, let R = S; It is a compile time error if S is not a generic type with m type parameters. If T is not a parameterized type, let R = T.
+If R is an interface, let C be the factory class of R. Otherwise let C = R. Furthermore, if e is of the form const T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) then let  k be the constructor C.id, otherwise let k be the constructor C. Finally, if C is generic but T is not a parameterized type, then for 1 <= i <= m, let Vi = Dynamic, otherwise let Vi = Ui.  
+
+
+Evaluation of e proceeds as follows:
+
+
+First, if e is of the form const T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k) then let i be the value of the expression new T.id(a1, .., an, xn+1: an+1, …, xn+k: an+k). Otherwise, e must be of the form  const T(a1, .., an, xn+1: an+1, …, xn+k: an+k), in which case let i be the result of evaluating new T(a1, .., an, xn+1: an+1, …, xn+k: an+k) . Then:
+1. If during execution of the program, a constant object expression has already evaluated to an instance j of class C with type arguments Vi 1 <= i <= m, then: 
+1. For each instance variable f of i, let vif be the value of the f in i, and let vjf be the value of the field f in j. If  vif  === vjf for all fields f in i, then the value of e is j, otherwise the value of e is i.
+1. Otherwise the value of e is i.
+ 
+In other words, constant objects are canonicalized.  In order to determine if an object is actually new, one has to compute it; then it can be compared to any cached instances. If an equivalent object exists in the cache, we throw away the newly created object and use the cached one. Objects are equivalent if they have identical fields and identical type arguments. Since the constructor cannot induce any side effects, the execution of the constructor is unobservable.  The constructor need only be executed once per call site, at compile-time.
+
+
+The static type of a constant object expression of either the form const T.id(a1, .., an) or the form const T(a1, .., an) is T. It is a static warning if the static type of ai, 1 <= i <= n+ k may not be assigned to the type of the corresponding formal parameter of the constructor T.id (respectively T).
+
+
+It is a compile-time error if evaluation of a constant object results in an uncaught exception being thrown.
+
+
+To see how such situations might arise, consider the following examples:
+
+
+class A {
+   static final x;
+   const A(var p): p = x * 10;
+}
+
+
+const A(“x”); //compile-time error
+const A(5); // legal
+
+
+class IntPair {
+   const IntPair(this.x, this.y);
+   final int x;
+   final int y;
+   operator *(v) => new IntPair(x*v, y*v);
+}
+
+
+const A(const IntPair(1, 2)); // compile-time error: illegal in a subtler way
+
+
+Due to the rules governing constant constructors, evaluating the constructor A() with the argument “x” or the argument const IntPair(1, 2) would cause it to throw an exception, resulting in a compile-time error.
+
+
+
+
+
+
+Spawning an Isolate
+
+
+Spawning an isolate is accomplished via what is syntactically an ordinary library call, invoking the instance method spawn() defined in class Isolate. However, such calls  have the  semantic effect of creating a new isolate with its own memory and thread of control.
+Property Extraction
+Property extraction allows for a member of an object to be concisely extracted from the object.
+If o is an object, and if m is the name of a method member of o, then o.m[dd] is defined to be equivalent to (r1, .., rn, [p1 = d1, …, pk = dk]){return o.m(r1, .., rn, p1, .., pk);} if m has required parameters r1, …, rn, and named parameters p1 .. pk with defaults d1, …, dk. Otherwise, if m is the name of a getter member of o (declared implicitly or explicitly) then o.m evaluates to the result of invoking the getter.
+Observations:
+1. One cannot extract a getter or a setter.
+2. One can tell whether one implemented a property via a method or via field/getter, which means that one has to plan ahead as to what construct to use, and that choice is reflected in the interface of the class.  
+
+
+Function Invocation[de]
+Function invocation occurs in the following cases: when a function expression is invoked, when a method is invoked or when a constructor is invoked (either via instance creation , constructor redirection or super initialization). The various kinds of function invocation differ as to how the function to be invoked, f,  is determined as well as whether this is bound. Once f has been determined, the formal parameters of f are bound to the corresponding actual arguments. The body of f is then executed with the aforementioned bindings. Execution of the body terminates when the first of the following occurs;
+1. An uncaught exception is thrown 
+2. A return statement immediately nested in the body of f is executed.
+3. The last statement of the body completes execution. 
+
+
+
+Actual Argument List Evaluation
+Function invocation involve evaluation of the list of actual arguments to the function and binding of the results to the function’s formal parameters.
+
+
+arguments:
+     '(' argumentList? ')'
+   ;
+
+argumentList:
+     namedArgument (',' namedArgument)*
+   | expressionList (',' namedArgument)*
+   ;
+
+namedArgument:
+     label expression
+   ;
+
+
+
+Evaluation of an actual argument list of the form (a1 .. am, q1: am+1, …, ql: am+l) proceeds as follows:
+
+
+The arguments a1, …, am+l are evaluated in the order they appear in the program, yielding objects o1 .. om+l.
+
+
+Simply stated, an argument list consisting of m positional arguments and l named arguments is evaluated from left to right. 
+
+
+
+
+Binding Actuals to Formals
+
+
+Let f be the function, let p1, …, pn be the positional parameters of f and let pn+1, …, pn+k be the named parameters declared by f.
+
+
+An evaluated actual argument list (o1, …, om+l) derived from an actual argument list of the form (a1 .. am, q1: am+1, …, ql: am+l) is bound to the formal parameters of f as follows:
+
+
+Again, we have an argument list consisting of m positional arguments and l named arguments. We have a function with n required parameters and k named parameters. The number of positional arguments must be at least as large as the number of required parameters. All named arguments must have a corresponding named parameter. You may not provide the same parameter as both a positional and a named argument. If an optional parameter has no corresponding argument, it gets its default value. In checked mode, all arguments must belong to subtypes of the type of their corresponding formal.
+
+
+If  m < n, a run-time error occurs. Furthermore, each qi, 1 <= i <= l,  must be a member of the set {pm+1, …, pm+k}[df] or a run time error occurs. Then pi is bound to the value of oi, 1 <= i <= m, and qj is bound to the value of om+j, 1 <= j <= l. All remaining formal parameters of f are bound to their default values. 
+
+
+All of these remaining parameters are necessarily optional and thus have default values.
+
+
+In checked mode, it is a dynamic type error if oi [dg]is not null and the actual type of pi is not a supertype of the type of oi, 1 <= i <= m. It is a dynamic type error if, in checked mode, om+j [dg]is not null and the actual type of qj is not a supertype of the type of om+j, 1 <= j <= l. 
+
+
+It is a compile-time error if qi = qj for any i != j.
+
+
+
+
+
+
+Unqualified Invocation
+
+
+An unqualified function invocation i has the form id(a1, …, an, xn+1[dh]: an+1, …, xn+k: an+k), where id is an identifier.  
+
+
+If there exists a lexically visible declaration named id, let fid be the innermost such declaration. Then:
+1.  If fid is a local function, a library function, a library or static getter or a variable then i is interpreted as a function expression invocation.
+2. Otherwise, If fid is a static method of the enclosing class C, i is equivalent to the static method invocation C.id(a1, …, an, xn+1: an+1, …, xn+k: an+k).
+
+
+Otherwise, if there is an accessible static method named id declared in a superclass S of the immediately enclosing class C then i is equivalent to the static method invocation S.id(a1, …, an, xn+1: an+1, …, xn+k: an+k).  
+
+
+Unqualified access to static methods of superclasses is inconsistent with the idea that static methods are not inherited. It is not particularly necessary and  may be restricted in future versions. 
+
+
+Otherwise, i is equivalent to the ordinary method invocation this.id(a1, …, an, xn+1: an+1, …, xn+k: an+k). 
+
+
+Function Expression Invocation
+
+
+A function expression invocation i has the form ef(a1, …, an, xn+1: an+1, …, xn+k: an+k), where ef is an expression. If ef is an identifier id, then id must necessarily denote a local function, a library function, a library or static getter or a variable as described above, or i is not considered a function expression invocation. If ef is a property access expression, then i is treated as an ordinary method invocation. Otherwise:
+
+
+Evaluation of a function expression invocation i of the form  ef(a1, …, an, xn+1: an+1, …, xn+k: an+k) proceeds as follows:
+
+
+First, ef is evaluated to a value vf  of type Tf. If Tf is not a function type, an ObjectNotAClosure is thrown.[di] Next, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated[dj]. The body of vf is then executed with respect to the bindings that resulted from the evaluation of the argument list.[dk] The value of i is the value returned after vf is executed.
+
+
+It is a static type warning if the static type F of ef may not be assigned to a function type.  If F is not a function type, the static type of i is Dynamic. Otherwise:
+1. The static type of i is the declared return type of F. 
+2. Let Ti be the static type of ai, 1 <= i <= n+k. It is a static warning if F is not a supertype of  (T1, …, Tn, [Tn+1 xn+1, …, Tn+k xn+k]) → bottom.
+
+
+
+
+
+
+
+
+Method Invocation
+Method invocation can take several forms as specified below. 
+Ordinary Invocation
+An ordinary method invocation i has the form o.m(a1, …, an, xn+1: an+1, …, xn+k: an+k).  
+
+
+The result of looking up a method m in object o with respect to library L is the result of looking up method m in class C with respect to library L, where C is the class of o.
+
+
+The result of looking up method m in class C with respect to library L is:
+
+
+1. If C declares an instance method named m that is accessible to L,  then that method is the result of the lookup. Otherwise, if C has a superclass S, then the result of the lookup is the result of looking up method m in S with respect to L. Otherwise, we say that the lookup has failed.
+
+
+
+
+Evaluation of an ordinary method invocation i of the form o.m(a1, …, an, xn+1: an+1, …, xn+k: an+k) proceeds as follows:
+
+
+First, the expression o is evaluated to a value vo.[dl] Next, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated yielding actual objects o1, …, on+k. Let f be the result of looking up method  m in vo  with respect to the current library L. If the method lookup succeeded, the body of f is executed with respect to the bindings that resulted from the evaluation of the argument list, and with this bound to vo. The value of i is the value returned after f is executed.
+
+
+If the method lookup has failed, then let g be the result of looking up getter m in vo[dm] with respect to L. If the getter lookup succeeded, let vg be the value of the getter invocation o.m. If vg is a function then it is executed with respect to the bindings of the evaluated argument list. The value of i is the value returned after vg is executed.
+
+
+If vg is not a function then an ObjectNotAClosure is thrown.
+
+
+It is quite possible that this behavior will change. We could invoke apply() on the result and let noSuchMethod take its course. That would allow anyone to implement and emulate Function.
+
+
+If getter lookup has also failed, then a new instance im  of the predefined interface  InvocationMirror[dn]  is created by calling its[do] factory constructor with arguments ‘m’,  this, [o1, …, on] and {xn+1:on+1, …, xn+k : on+k}. Then the method noSuchMethod() is looked up in o and invoked with argument im, and the result of this invocation is the result of evaluating i.
+
+
+Notice that the wording carefully avoids re-evaluating the receiver o and the arguments ai. 
+
+
+Let T be the  static type of o. It is a static type warning if T does not have an accessible  instance member named m. If T.m exists, it is a static warning if the type F of T.m may not be assigned to a function type. If T.m does not exist, or if F is not a function type, the static type of i is Dynamic. Otherwise:
+1. The static type of i is the declared return type of F. 
+2. Let Ti be the static type of ai, 1 <= i <= n+k. It is a static warning if F is not a supertype of  (T1, …, Tn, [Tn+1 xn+1, …, Tn+k xn+k]) → bottom.
+
+
+
+
+
+
+
+
+Static Invocation
+
+
+A static method invocation i has the form C.m(a1, …, an, xn+1: an+1, …, xn+k: an+k).  It is a compile-time error if C does not denote a class in the current scope. It is a compile-time error if C does not declare a static method or getter m[dp].
+
+
+Note the requirement that C declare the method. This means that static methods declared in superclasses of C cannot be invoked via C.
+
+
+Evaluation of i proceeds as follows:
+
+
+First, if the member m declared by C is a getter, then let f be the result of evaluating the getter invocation C.m.  If f is not a function then an ObjectNotAClosure is thrown. Otherwise, let f be the method m declared in class C. Next, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated.
+
+
+The body of f is then executed with respect to the bindings that resulted from the evaluation of the argument list. The value of i is the value returned after the body of f is executed.
+
+
+It is a static type warning if the type F of C.m may not be assigned to a function type.  If F is not a function type, the static type of i is Dynamic. Otherwise:
+1. The static type of i is the declared return type of F. 
+2. Let Ti be the static type of ai, 1 <= i <= n+k. It is a static warning if F is not a supertype of  (T1, …, Tn, [Tn+1 xn+1, …, Tn+k xn+k])  → bottom.
+
+
+
+
+
+
+Super Invocation
+
+
+A super method invocation has the form super[dq].m(a1, …, an, xn+1: an+1, …, xn+k: an+k).
+
+
+Evaluation of a[dr] super method invocation i of the form super.m(a1, …, an, xn+1: an+1, …, xn+k: an+k) proceeds as follows:
+
+
+First, the argument list (a1, …, an, xn+1: an+1, …, xn+k: an+k) is evaluated yielding actual objects o1, …, on+k. Let S be the superclass of the class of this and let f be the result of looking up method m in S with respect to the current library L. If the method lookup succeeded, the body of f is executed with respect to the bindings that resulted from the evaluation of the argument list, and with this bound to the current value of this. The value of i is the value returned after f is executed.
+
+
+If the method lookup has failed, then let g be the result of looking up getter m in [dm]S with respect to L.  If the getter lookup succeeded, let vg be the value of the getter invocation super.m. If vg is a function then it is called with the evaluated argument list. The value of i is the value returned after vg is executed.
+
+
+If vg is not a function then an ObjectNotAClosure is thrown.
+
+
+If the getter lookup has also failed,  then a new instance im  of the predefined interface  InvocationMirror  is created  by calling its factory[ds] constructor with arguments ‘m’,  this, [e1, …, en] and {xn+1:en+1, …, xn+k : en+k}. Then the method noSuchMethod() is looked up in S and invoked with argument im, and the result of this invocation is the result of evaluating i.
+
+
+It is a compile-time error if a super method invocation occurs in a top-level function or variable initializer, in class Object, or in a static method or variable initializer.
+
+
+It is a static type warning if S does not have an accessible instance member named m. If S.m exists, it is a static warning if the type F of S.m may not be assigned to a function type. If S.m does not exist, or if F is not a function type, the static type of i is Dynamic. Otherwise:
+1. The static type of i is the declared return type of F. 
+2. Let Ti be the static type of ai, 1 <= i <= n+k. It is a static warning if F is not a supertype of  (T1, …, Tn, [Tn+1 xn+1, …, Tn+k xn+k])  → bottom.
+
+
+
+
+Sending Messages
+
+
+Messages are the sole means of communication among isolates. Messages are sent by invoking specific  methods in the Dart libraries; there is no specific syntax for sending a message. 
+
+
+In other words, the methods supporting sending messages embody primitives of Dart that are not accessible to ordinary code, much like the methods that spawn isolates.
+
+
+
+
+Getter Invocation
+
+
+A getter invocation provides access to the value of a property.
+
+
+The result of looking up a getter (respectively setter) m in object o with respect to library L is the result of looking up getter (respectively setter) m in class C with respect to L, where C is the class of o.
+
+
+The result of looking up getter (respectively setter) m in class C with respect to library L is:
+
+
+1. If C declares an instance  getter (respectively setter) named m that is accessible to L,  then that getter (respectively setter) is the result of the lookup. Otherwise, if C has a superclass S, then the result of the lookup is the result of looking up getter (respectively setter) m in S with respect to L. Otherwise, we say that the lookup has failed.
+
+
+
+
+
+
+Evaluation of a getter invocation i of the form e.m proceeds as follows:
+
+
+First, the expression e is evaluated to an object o. Then, the getter function m is looked up in o with respect to the current library, and its body is executed with this bound to o.  The value of the getter invocation expression is the result returned by the call to the getter function. 
+
+
+If the getter lookup has failed, then a new instance im  of the predefined interface  InvocationMirror  is created by calling its factory[dt] constructor with arguments ‘get m’, o, [] and {}. Then the method noSuchMethod() is looked up in o and invoked with argument im, and the result of this invocation is the result of evaluating i.
+
+
+Let T be the  static type of e. It is a static type warning if T does not have a getter named m. The static type of i is the declared return type of T.m, if T.m exists; otherwise the static type of i  is Dynamic. 
+
+
+Evaluation of a getter invocation i of the form C.m proceeds as follows:
+
+
+The getter function C.m is invoked. The value of i is the result returned by the call to the getter function. 
+
+
+It is a compile-time error if there is no class C in the enclosing lexical scope of i, or if  C does not declare, implicitly or explicitly, a getter named m. The static type of i is the declared return type of C.m. 
+
+
+Evaluation of a top-level getter invocation i of the form m, where m is an identifier, proceeds as follows:
+
+
+The getter function m is invoked. The value of i is the result returned by the call to the getter function.
+
+
+The static type of i is the declared return type of m. 
+
+
+
+
+
+
+
+
+Assignment
+An assignment changes the value associated with a mutable variable or property.
+
+
+assignmentOperator:
+     '='
+   | compoundAssignmentOperator
+   ;
+
+Evaluation of an assignment of the form v = e proceeds as follows:
+
+
+If there is no declaration d with name v in the lexical scope[du] enclosing the assignment, then the assignment is equivalent to the assignment this.v = e. Otherwise,  let d be the innermost declaration whose name is v, if it exists.
+
+
+If d is the declaration of a local or library[dv] variable, the expression e is evaluated to an object o. Then, the variable v is bound to o. The value of the assignment expression is o. 
+
+
+Otherwise, if d is the declaration of a static variable in class C, then the assignment is equivalent to the assignment C.v = e.
+
+
+Otherwise, the assignment is equivalent to the assignment this.v = e. 
+
+
+In checked mode, it is a dynamic type error if o is not null and the interface induced by the class of o is not a subtype of the actual type of v.
+
+
+It is a static type warning if the static type of e may not be assigned to the static type of v.
+
+
+Evaluation of an assignment of the form C.v = e proceeds as follows:
+
+
+The expression e is evaluated to an object o. Then, the setter C.v is invoked with its formal parameter bound to o. The value of the assignment expression is o. 
+
+
+It is a compile-time error if there is no class C in the enclosing lexical scope of assignment, or if C does not declare, implicitly or explicitly, a setter v.
+
+
+In checked mode, it is a dynamic type error if o is not null and the interface induced by the class of o is not a subtype of the static type of C.v.
+
+
+It is a static type warning if the static type of e may not be assigned to the static type of C.v.
+
+
+Evaluation of an assignment of the form e1.v = e2 proceeds as follows:
+
+
+The expression e1 is evaluated to an object o1. Then, the expression e2  is evaluated to an object [dw]o2. Then, the setter v is looked up in o1 with respect to the current library, and its body is executed with its formal parameter bound to o2 and this bound to o2.  If the setter lookup has failed, then a new instance im  of the predefined interface  InvocationMirror is created by calling its factory constructor [dx]with arguments ‘set v’, o1, [o2] and {}. Then the method noSuchMethod() is looked up in o1 with argument im. The value of the assignment expression is o2 irrespective of whether setter lookup has failed or succeeded.
+
+
+In checked mode, it is a dynamic type error if o2 is not null and the interface induced by the class of o2 is not a subtype of the actual type of e1.v.
+
+
+It is a static type warning if the static type of e2 may not be assigned to the static type of e1.v.
+
+
+
+
+Compound Assignment
+
+
+A compound assignment of the form v op= e is equivalent to v = v op e. A compound assignment of the form C.v op= e is equivalent to C.v = C.v op e. A compound assignment of the form e1.v op= e2 is equivalent to ((x) => x.v = x.v op e2)(e1)[dy] where x is a variable that is not used in e2.
+
+
+
+
+compoundAssignmentOperator:
+     ‘*='
+   | '/='
+   | '~/='
+   | '%='
+   | '+='
+   | '-='
+   | '<<='
+   | '>>>='
+   | '>>='
+   | '&='
+   | '^='
+   | '|='
+   ;
+
+Conditional
+
+
+A conditional expression evaluates one of two expressions based on a boolean condition.
+
+
+conditionalExpression:
+    logicalOrExpression ('?' expression ':' expression)[dz]?
+   ;
+
+
+Evaluation of a conditional expression c of the form e1 ? e2 : e3 proceeds as follows:
+
+
+First, e1 is evaluated to an object o1. In checked mode, it is a dynamic type error if o1 is not of type bool. Otherwise o1 is then subjected to boolean conversion producing an object r.  If r is true, then the value of c is the result of evaluating the expression e2. Otherwise the value of c is the result of evaluating the expression e3. 
+
+
+ It is a static type warning if the type of e1 may not be assigned to bool.  The static type of  c is the least upper bound of the static type of e2 and the static type of e3.
+ 
+Logical Boolean Expressions
+
+
+The logical boolean expressions combine boolean objects using the boolean conjunction and disjunction operators.
+
+
+
+logicalOrExpression:
+     logicalAndExpression ('||' logicalAndExpression)*
+   ;
+
+logicalAndExpression:
+     bitwiseOrExpression ('&&' bitwiseOrExpression)*
+   ;
+
+A logical boolean expression is either a bitwise expression[ea], or an invocation of a logical boolean operator on an expression e1 with argument e2.
+
+
+Evaluation of a logical boolean expression b of the form e1 || e2 causes the evaluation of e1; if e1 evaluates to true[eb], the result of evaluating b is true, otherwise e2 is evaluated to an object o, which is then subjected to boolean conversion producing a an object r, which is the value of b. 
+
+
+Evaluation a logical boolean expression b of the form e1 && e2 causes the evaluation e1; if e1 does not evaluate to true, the result of evaluating b is false, otherwise e2 is evaluated to an object o, which is then subjected to boolean conversion producing an object r, which is the value of b. 
+
+
+The static type of a logical boolean expression is bool.
+
+
+Bitwise Expressions
+
+
+Bitwise expressions invoke the bitwise operators on objects.
+
+
+
+
+
+bitwiseOrExpression:
+     bitwiseXorExpression ('|' bitwiseXorExpression)*
+   | super ('|' bitwiseXorExpression)+
+   ;
+
+bitwiseXorExpression:
+     bitwiseAndExpression ('^' bitwiseAndExpression)*
+   | super ('^' bitwiseAndExpression)+
+   ;
+
+bitwiseAndExpression:
+     equalityExpression ('&' equalityExpression)*
+   | super ('&' equalityExpression)+
+
+
+bitwiseOperator:
+     '&'
+   | '^'
+   | '|'
+   ;
+
+
+A bitwise expression is either an equality expression, or an invocation of a bitwise operator on either super or an expression e1, with argument e2.
+
+
+A bitwise expression [ec]of the form  e1[ed] op e2 is equivalent to the method invocation e1.op(e2).
+A bitwise expression of the form  [ee]super[ef] op e2 is equivalent to the method invocation super.op(e2).
+
+
+It should be obvious that the static type rules for these expressions are defined by the equivalence above - ergo, by the type rules for method invocation and the signatures of the operators on the type e1. The same holds in similar situations throughout this specification.
+
+
+Equality
+
+
+Equality expressions test objects for identity or equality.
+
+
+equalityExpression:
+     relationalExpression (equalityOperator relationalExpression)?
+   | super equalityOperator relationalExpression
+   ;
+
+equalityOperator:
+     '=='
+   | '!='
+   | '==='
+   | '!=='
+   ;
+
+
+An equality expression is either a relational expression, or an invocation of a equality operator on  on either super or an expression e1, with argument e2.
+
+
+An equality expression of the form  e1 == e2 is equivalent to the method invocation e1.==(e2).
+An equality expression of the form  super == e is equivalent to the method invocation super.==(e).
+
+
+An equality expression of the form e1 != e2  is equivalent to the expression !(e1 == e2 ). An equality expression of the form  super != e is equivalent to the expression !(super == e)).
+
+
+
+
+Evaluation of an equality expression ee of the form e1 === e2 proceeds as follows:
+The expression e1 is evaluated to an object o1; then the expression e2 is evaluated to an object o2.  Next, if o1 and o2 are the same object, then ee evaluates to true, otherwise ee evaluates to false. 
+
+
+An equality expression of the form  super === e[eg] is equivalent to the expression this === e.
+
+
+An equality expression of the form e1 !== e2  is equivalent to the expression !(e1 === e2 ). An equality expression of the form  super !== e is equivalent to the expression !(super === e).
+
+
+The static type of an equality expression of the form e1 === e2 is bool.
+
+
+The static types of other equality expressions follow from the definitions above.  The forms  e1 != e2, e1 !== e2 , super != e and super !== e are negations and have static type bool. The expression e1 == e2 is typed as a method invocation so its static type depends on the operator method declaration. It had better be bool.
+
+Relational Expressions
+
+
+Relational expressions invoke the relational operators on objects.
+
+
+
+relationalExpression:
+     shiftExpression (isOperator type | relationalOperator shiftExpression)?
+   | super relationalOperator shiftExpression
+   ;
+
+
+
+
+
+relationalOperator:
+     '>='
+   | '>'
+   | '<='
+   | '<'
+   ;
+
+
+A relational expression is either a shift expression, or an invocation of a relational operator on  on either super or an expression e1, with argument e2.
+
+
+A relational expression of the form  e1 op e2 is equivalent to the method invocation e1.op(e2).
+A relational expression of the form  super op e2 is equivalent to the method invocation super.op(e2).
+
+
+
+
+
+
+Shift
+
+
+Shift expressions invoke the shift operators on objects.
+
+
+
+shiftExpression:
+     additiveExpression (shiftOperator additiveExpression)*
+   | super (shiftOperator additiveExpression)+
+   ;
+
+
+shiftOperator:
+     '<<'
+   | '>>>' 
+   | '>>' 
+   ;
+
+A shift expression is either an additive expression, or an invocation of a shift operator on  on either super or an expression e1, with argument e2.
+
+
+A shift expression of the form  e1 op e2 is equivalent to the method invocation e1.op(e2).
+A shift expression of the form  super op e2 is equivalent to the method invocation super.op(e2).
+
+
+Note that this definition implies left-to-right evaluation order among shift expressions: 
+
+
+e1 << e2 << e3
+
+
+is evaluated as  (e1 << e2 ).<< (e3)  which is equivalent to (e1 << e2) << e3.
+The same holds for additive and multiplicative expressions. 
+
+
+Additive Expressions
+
+
+Additive expressions invoke the addition operators on objects.
+
+
+
+
+
+
+
+additiveExpression:
+     multiplicativeExpression (additiveOperator multiplicativeExpression)*
+   | super (additiveOperator multiplicativeExpression)+
+   ;
+
+
+additiveOperator:
+     '+'
+   | '-'
+   ;
+
+An additive expression is either a multiplicative expression, or an invocation of an additive operator on  on either super or an expression e1, with argument e2.
+
+
+An additive expression of the form  e1 op e2 is equivalent to the method invocation e1.op(e2).
+An additive expression of the form  super op e2 is equivalent to the method invocation super.op(e2).
+
+
+
+
+Multiplicative Expressions
+
+
+Multiplicative expressions invoke the multiplication operators on objects.
+
+
+
+
+
+multiplicativeExpression:
+     unaryExpression (multiplicativeOperator unaryExpression)*
+   | super (multiplicativeOperator unaryExpression)+
+   ;
+
+multiplicativeOperator:
+     '*'
+   | '/[eh]'
+   | '%[ei]'
+   | '~/[ej]'
+   ;
+
+
+
+
+A multiplicative expression is either a unary expression, or an invocation of a multiplicative operator on either super or an expression e1, with argument e2.
+
+
+A multiplicative expression of the form  e1 op e2 is equivalent to the method invocation e1.op(e2). A multiplicative expression of the form  super op e2 is equivalent to the method invocation super.op(e2).
+
+
+
+Unary Expressions
+
+
+Unary expressions invoke unary operators on objects.
+
+
+
+unaryExpression:
+     prefixOperator unaryExpression
+   | postfixExpression
+   | unaryOperator super
+   | '-' super 
+   | incrementOperator assignableExpression
+   ;
+
+A unary expression is either a postfix expression, an invocation of a prefix operator on an expression e, or an invocation of a unary operator on either super or an expression e.
+
+
+The expression !e is equivalent to the expression e? false: true.
+Evaluation of an expression of the form ++e is equivalent to e += 1.  Evaluation of an expression of the form --e is equivalent to e -= 1. 
+
+
+The expression -e is equivalent to the method invocation e.negate().  The expression -super is equivalent  to the method invocation super.negate().
+
+
+A unary expression u of the form op e is equivalent to a method invocation  expression e.op().
+An expression of the form op super is equivalent to the method invocation super.op().
+
+
+
+
+
+
+Postfix Expressions
+
+
+Postfix expressions invoke the postfix operators on objects.
+
+
+
+postfixExpression:
+     assignableExpression postfixOperator
+   | primary selector*
+   ;
+
+
+postfixOperator:
+     incrementOperator
+   ;
+
+
+incrementOperator:
+     '++'
+   | '--'
+   ;
+
+
+
+A postfix expression is either a primary expression, a function, method or getter invocation, or an invocation of a postfix operator on an expression e.
+
+
+Evaluation of a postfix expression of the form v ++, where v is an identifier, is equivalent to (){var r = v; v = r + 1; return r}().
+
+
+The above ensures that if v is a field, the getter gets called exactly once. Likewise in the cases below. 
+
+
+Evaluation of a postfix expression of the form C.v ++ is equivalent to (){var r = C.v; C.v = r + 1; return r}().
+
+
+A postfix expression of the form e1.v++ is equivalent to (x){var r = x.v; x.v = r + 1; return r}(e1).
+
+
+Evaluation of a postfix expression of the form e-- is equivalent to e ++ (-1).  
+
+
+Assignable Expressions
+
+
+Assignable expressions are expressions that can appear on the left hand side of an assignment.
+
+
+Of course, if they always appeared as the left hand side, one would have no need for their value, and the rules for evaluating them would be unnecessary. However,  assignable expressions can be subexpressions of other expressions and therefore must be evaluated.
+
+
+
+
+assignableExpression:
+     primary (arguments* assignableSelector)+
+   | super assignableSelector
+   | identifier
+   ;
+
+
+selector:
+     assignableSelector
+   | arguments
+   ;
+assignableSelector:
+     '[' expression ']'
+   | '.' identifier
+   ;
+
+An assignable expression is either:
+1.  An identifier. 
+2. An invocation of a method, getter or list access operator on an expression e.
+3. An invocation of a getter or list access operator on super.
+
+
+An assignable expression of the form id is evaluated as an identifier expression.
+
+
+An assignable expression of the form e.id(a1, …, an)[ek] is evaluated as a method invocation.
+
+
+An assignable expression of the form e.id is evaluated as a getter invocation.
+
+
+An assignable expression of the form e1[e2] is evaluated as a method invocation of the operator method [] on e1 with argument e2.
+
+
+An assignable expression of the form super.id is evaluated as a getter invocation.
+
+
+An assignable expression of the form super[e2] is equivalent to the method invocation  super.[e2].
+
+
+
+
+Identifier Reference
+
+
+An identifier expression consists of a single identifier; it provides access to an object via an unqualified name.
+
+
+identifier:
+     IDENTIFIER_NO_DOLLAR
+   | IDENTIFIER
+    | BUILT_IN_IDENTIFIER
+    ;
+
+
+
+
+IDENTIFIER_NO_DOLLAR:
+     IDENTIFIER_START_NO_DOLLAR IDENTIFIER_PART_NO_DOLLAR*
+   ;
+
+IDENTIFIER:
+     IDENTIFIER_START IDENTIFIER_PART*
+   ;
+
+    ;
+
+
+BUILT_IN_IDENTIFIER:
+      abstract
+   | assert
+    | Dynamic
+   | factory
+   | get
+   | implements
+   | import
+   | interface
+   | library
+   | negate
+   | operator
+   | set
+   | source[el]
+   | static
+   | typedef
+   ;
+
+
+IDENTIFIER_START:
+     IDENTIFIER_START_NO_DOLLAR
+   | '$'
+   ;
+
+IDENTIFIER_START_NO_DOLLAR:
+     LETTER
+   | '_'
+   ;
+
+IDENTIFIER_PART_NO_DOLLAR:
+     IDENTIFIER_START_NO_DOLLAR
+   | DIGIT
+   ;
+
+
+
+
+IDENTIFIER_PART:
+     IDENTIFIER_START
+   | DIGIT
+   ;
+
+
+
+qualified:
+     identifier ('.' identifier)?
+   ;
+
+
+
+
+Built-in identifiers are identifiers that are used as keywords in Dart, but are not reserved words in Javascript. To minimize incompatibilities when porting Javascript code to Dart, we do not make these into reserved words.
+
+
+Evaluation of an identifier expression e of the form id proceeds as follows:
+Let d be the innermost declaration in the enclosing lexical scope whose name is id. It is a compile-time error if d is a class, interface or type variable. If no such declaration exists in the lexical scope, let d be the declaration of the inherited member[em] named id if it exists. If no such member exists, let d be the declaration of the static member named id declared in a superclass of the current class, if it exists.
+
+
+1. If d is a library variable, local variable, or formal parameter, then e evaluates to the current binding of id.  This case also applies if d is a library or local function declaration, as these are equivalent to function-valued variable declarations.
+2. If d is a static method, then e evaluates to the function defined by d.
+3. If d is the declaration of a static variable or static getter declared in class C, then e is equivalent to the getter invocation C.id. 
+4. If d is the declaration of a top level getter, then e is equivalent to the getter invocation id. 
+5. Otherwise e is equivalent to the property extraction  this.id. 
+
+
+
+
+
+
+Type Test
+
+
+The is-expression tests if an object is a member of a type.
+
+
+isOperator:
+is '!'[en]?
+   ;
+
+Evaluation of the is-expression e is T proceeds as follows:
+
+
+The expression e is evaluated to a value v. Then, if the interface induced by the class of v is a subtype of T, the is-expression evaluates to true. Otherwise it evaluates to false.
+
+
+It follows that e is Object[eo] is always true. This makes sense in a language where everything is an object. 
+
+
+Also note that null is T is false unless T = Object or T = Null. Since the class Null is not exported by the core library, the latter will not occur in user code. The former is useless, as is anything of the form e is Object.  Users should test for a null value directly rather than via type tests.
+
+
+The is-expression e is! T is equivalent to the expression !(e is T).
+It is a compile-time error if T does not denote a type available in the current lexical scope.
+The static type of an is-expression is bool.
+
+
+Statements
+
+
+statements:
+     statement*
+   ;
+
+
+
+statement:
+     label* nonLabelledStatement
+   ;
+
+nonLabelledStatement:
+     block 
+    | initializedVariableDeclaration ';'
+   | forStatement
+    | whileStatement
+   | doStatement
+   | switchStatement
+    | ifStatement
+   | tryStatement
+   | breakStatement
+   | continueStatement
+    | returnStatement
+   | throwStatement
+   | expressionStatement
+   | assertStatement
+   | functionSignature functionBody
+   ;
+
+
+
+Blocks
+
+
+A block statement supports sequencing of code.
+
+
+Execution of a block statement {s1 …  sn} proceeds as follows:
+
+
+For i = 1 .. n, si is executed.
+
+
+Expression Statements
+
+
+An expression statement consists of an expression. 
+
+
+expressionStatement:
+  expression? ';'
+
+Execution of an expression statement e; proceeds by evaluating e. 
+
+
+Variable Declaration
+
+
+A variable declaration statement declares a new local variable.
+
+
+A variable declaration statement T id; or T id = e; introduces a new variable id with static type T into the innermost enclosing scope[ep]. A variable declaration statement var id; or var id = e; introduces a new variable named id with static type Dynamic into the innermost enclosing scope.
+In all cases, iff the variable declaration is prefixed with the final modifier, the variable is marked as final. 
+
+
+Executing a variable declaration statement T id = e; is equivalent to evaluating the assignment expression id = e, except that the assignment is considered legal even if the variable is final.   
+
+
+However, it is still illegal to assign to a final variable from within its initializer.
+
+
+A variable declaration statement of the form T id; is equivalent to T id = null;.
+
+
+This holds regardless of the type T. For example, int i; does not cause i to be initialized to zero. Instead, i is initialized to null, just as if we had written var i; or Object i; or Collection<String> i;
+To do otherwise would undermine the optionally typed nature of Dart, causing type annotations to modify program behavior.
+
+
+
+
+
+
+If
+
+
+The if statement allows for conditional execution of statements.
+
+
+ifStatement:
+     if '(' expression ')' statement (else statement)?
+   ;
+
+Execution of an if statement of the form if(b) s1 else s2 proceeds as follows:
+ 
+First, the expression b is evaluated to [eq]an object o. In checked mode, it is a dynamic type error if o is not of type bool. Otherwise, o is then subjected to boolean conversion, producing an object r.  If r is true, then the statement s1 is executed, otherwise statement s2 is executed.
+
+
+ It is a static type warning if the type of the expression b may not be assigned to bool.  
+  
+ An if statement of the form  if (b) s1 is equivalent to the if statement if(b) s1 else {}.
+
+
+
+
+
+
+For
+
+
+The for statement supports iteration.
+
+
+forStatement:
+    for '(' forLoopParts ')' statement
+   ;
+
+
+
+forLoopParts:
+     forInitializerStatement expression? ';' expressionList?
+   | declaredIdentifier in expression
+   | identifier in expression
+   ;
+
+forInitializerStatement:
+     initializedVariableDeclaration ';'
+   | expression? ';'
+   ;
+
+
+The for statement has two forms - the traditional for loop and the foreach statement.
+
+
+For Loop
+
+
+Execution of a for statement of the form  for (var v = e0 ; c e) s proceeds as follows:
+
+
+If c is empty let c’ be true, otherwise let c’ be c. 
+
+
+First the variable declaration statement var v = e0  is executed. Then:
+1. If this is the first iteration of the for loop, let v’ be v. Otherwise,  let v’ be the variable v’’ created in the previous execution of step 4.
+2. The expression [v’/v]c is evaluated and subjected to boolean conversion. If the result is false, the for loop completes. Otherwise, execution continues at step 3.
+3. The statement [v’/v]s is executed.
+4. Let v’’ be a fresh variable.  v’’ is bound to the value of v’.
+5. The expression [v’’/v]e is evaluated, and the process recurses at step 1.
+
+
+The definition above is intended to prevent the common error where users create a closure inside a for loop, intending to close over the current binding of the loop variable, and find (usually after a painful process of debugging and learning) that all the created closures have captured the same value - the one current in the last iteration executed.
+
+
+Instead, each iteration has its own distinct variable.  The first iteration uses the variable created by the initial declaration. The expression executed at the end of each iteration uses a fresh variable v’’, bound on the value of the current iteration variable, and then modifies $v’’ as required for the next iteration.
+
+
+Foreach
+A for statement of the form  for (finalVarOrType id in e) s is equivalent to the the following code:
+
+
+var n0 = e.iterator();
+while (n0.hasNext()) {
+   finalVarOrType id = n0.next();
+   s
+}
+where n0 is an identifier that does not occur anywhere in the program.
+
+While
+
+
+The while statement supports conditional iteration, where the condition is evaluated prior to the loop.
+
+
+whileStatement:
+     while '(' expression ')' statement  
+;
+
+
+Execution of a while statement of the form while (e) s; proceeds as follows: 
+
+
+The expression e is evaluated to an object o. In checked mode, it is a dynamic type error if o is not of type bool. Otherwise, o is subjected to boolean conversion, producing an object r.  If r is true, then s is executed and then the while statement is re-executed recursively. If r is false, execution of the while statement is complete.
+
+
+It is a static type warning if the type of e may not be assigned to bool. 
+ 
+Do
+
+
+The do statement supports conditional iteration, where the condition is evaluated after the loop.
+
+
+doStatement:
+   do statement while '(' expression ')' ';'
+     ;
+
+Execution of a do statement of the form do s while (e); proceeds as follows: 
+
+
+The statement s is executed. Then, the expression e is evaluated to an object o. In checked mode, it is a dynamic type error if o is not of type bool. Otherwise, o is then subjected to boolean conversion, producing an object r. If r is false, execution of the do statement is complete. If r is true, then the do statement is re-executed recursively. 
+
+
+It is a static type warning if the type of e not be assigned to bool.  
+
+
+
+
+Switch
+
+
+The switch statement supports dispatching control among a large number of cases.
+
+
+switchStatement:
+     switch '(' expression ')' '{' switchCase* defaultCase? '}'
+   ;
+
+
+
+switchCase:
+     label? (case expression ':')+ statements
+   ;
+
+defaultCase:
+     label? (case expression ':')* default ':' statements
+   ;
+
+Execution of a switch statement switch (e) { case e1: s1 … case en: sn default sn+1} proceeds as follows:
+
+
+The statement var n = e; is evaluated, where n is a variable whose name is distinct from any other variable in the program.  Next, the case clause case e1: s1 is executed if it exists. If case e1: s1 does not exist, then the default clause is executed by executing sn+1.
+
+
+
+
+Execution of a case clause case ek: sk of a [er]switch statement switch (e) { case e1: s1 … case en: sn default sn+1} proceeds as follows:
+
+
+The expression n == ek is evaluated to a value v.[es] 
+
+
+If v is false, or if sk is empty, the following case,  case ek+1: sk+1 is executed if it exists. If case ek+1: sk+1 does not exist, then the default clause is executed by executing sn+1.
+If v is true, the statement sequence sk is executed.[et]  
+
+
+A switch statement switch (e) { case e1: s1 … case en: sn} is equivalent to the switch statement switch (e) { case e1: s1 … case en: sn default }
+
+
+It is a static warning if the type of e is may not be assigned to the type of ek for all 1 <= k <= n. 
+
+
+
+
+
+
+Try
+
+
+The try statement supports the definition of exception handling code in a structured way.
+
+
+tryStatement:
+     try block (catchPart+ finallyPart? | finallyPart)
+   ;
+
+catchPart:
+     catch '(' simpleFormalParameter (',' simpleFormalParameter)? ')' block
+   ;
+
+finallyPart:
+     finally block
+   ;
+
+A try statement consists of a block statement, followed by at least one of:
+1. A set of catch clauses, each of which specifies one or two exception parameters and a block statement.
+2. A finally clause, which consists of a block statement. 
+
+
+A catch clause of one of the forms  catch (T1 p1, T p2) s or  catch (T1 p1, p2) matches an object o if o is null or if the type of o is a subtype of T.  It is a compile-time error if T1 does not denote a type available in the lexical scope of the catch clause.
+
+
+A catch clause of one of the forms  catch (p1, T p2) s or  catch (p1, p2) always matches an object o.
+
+
+The definition below is an attempt to characterize exception handling without resorting to a normal/abrupt completion formulation. It has the advantage that one need not specify abrupt completion behavior for every compound statement.  On the other hand, it is new different and needs more thought.
+
+
+A try statement try s1 catch1 ... catchn finally sf  defines an exception handler h that executes as follows:
+
+
+The catch clauses are examined in order, starting with catch1, until either a catch clause that matches[eu] the current exception is found, or the list of catch clauses has been exhausted. If a catch clause catchk is found, then pk1 is bound to the current exception,  pk2[ev] is bound to the current stack trace, and then catchk is executed. If no catch clause is found, the finally clause is executed. Then, execution resumes at the end of the try statement.
+
+
+
+
+A finally clause finally s defines an exception handler h that executes by executing the finally clause. Then, execution resumes at the end of the try statement.
+
+
+Execution of a catch clause catch (p1, p2) s of a try statement t proceeds as follows: The statement s is executed in the dynamic scope of the exception handler defined by the finally clause of t[ew]. Then, the current exception and current stack trace both become undefined.[ex]
+
+
+Execution of a finally clause finally s of a try statement proceeds as follows: 
+
+
+The statement s is executed. Then, if the current exception is defined, control is transferred to the nearest dynamically enclosing exception handler.
+
+
+Execution of a try statement of the form try s1[ey] catch1 ... catchn finally sf  proceeds as follows:
+
+
+The statement s1 is executed in the dynamic scope of the exception handler defined by the try statement. Then, the finally clause is executed.[ez]
+
+
+Whether any of the catch clauses is executed depends on whether a matching exception has been raised by s1 (see the specification of the throw statement). 
+
+
+If s1 has raised an exception, it will transfer control to the try statement’s handler, which will examine the catch clauses in order for a match as specified above. If no matches are found, the handler will execute the finally clause. 
+
+
+If a matching catch was found, it will execute first, and then the finally clause will be executed. 
+
+
+If an exception is raised during execution of a catch clause, this will transfer control to the handler for the finally clause, causing the finally clause to execute in this case as well. 
+
+
+If no exception was raised, the finally clause is also executed. Execution of the finally clause could also raise an exception, which will cause transfer of control to the next enclosing handler. 
+
+
+
+
+
+
+Return
+
+
+The return statement returns a result to the caller of a function.
+
+
+returnStatement:
+   return expression? ';'
+   ;
+
+
+Executing a return statement 
+
+
+return e;
+
+
+first causes evaluation of the expression e, producing an object o. Next, control is transferred to the caller [fa]of the current function activation, and the object o is provided to the caller as the result of the function call.
+
+
+It is a static type warning if the type of e may not be assigned to the declared return type of the immediately enclosing function. 
+It is a compile-time error if a return statement of the form return e; appears in a generative constructor.
+
+
+It is quite easy to forget to add the factory prefix for a constructor, accidentally converting a factory into a generative constructor. The static checker may detect a type mismatch in some, but not all, of these cases. The rule above helps catch such errors, which can otherwise be very hard to recognize. There is no real downside to it, as returning a value from a generative constructor is meaningless.
+
+
+Let f be the function immediately enclosing a return statement of the form return; It is a static warning if both of the following conditions hold:
+1.  f is not a generative constructor. 
+2. The return type of f may not be assigned to void. 
+
+
+Hence, a static warning will not be issued if f has no declared return type, since the return type would be Dynamic and Dynamic may be assigned to void. However, any function that declares a return type must return an expression explicitly.
+
+
+This helps catch situations where users forget to return a value in a return statement.
+
+
+A return statement with no expression, return; is executed by executing the statement return null; if it occurs inside a method, getter, setter or factory; otherwise, the return statement necessarily occurs inside a generative constructor, in which case it is executed by executing return this;.
+
+
+
+
+Despite the fact that return; is executed as if by a return e;, it is important to understand that it is not a static warning to include a statement of the form return; in a generative constructor. The rules relate only to the specific syntactic form return e;.
+
+
+The motivation for formulating return; in this way stems from the basic requirement that all function invocations indeed return a value. Function invocations are expressions, and we cannot rely on a mandatory typechecker to always prohibit use of void functions in expressions. Hence, a return statement must always return a value, even if no expression is specified.
+
+
+The question then becomes, what value should a return statement return when no return expression is given. In a generative constructor, it is obviously the object being constructed (this). In void functions we use null. A void function is not expected to participate in an expression, which is why it is marked void in the first place. Hence, this situation is a mistake which should be detected as soon as possible. The static rules help here, but if the code is executed, using null leads to fast failure, which is desirable in this case. The same rationale applies for function bodies that do not contain a return statement at all[fb].
+
+
+
+
+
+
+Labels
+A label is an identifier followed by a colon. A labeled statement is a statement prefixed by a label L.   A labeled case clause is a case clause within a switch statement prefixed by a label L.
+The sole role of labels is to provide targets for the break and continue statements.
+
+
+
+label:
+     identifier ':'
+   ;
+
+The semantics of a labeled statement L: s are identical to those of the statement s. The namespace of labels is distinct from the one used for types, functions and variables.
+
+
+The scope of a label that labels a statement s is s. The scope of a label that labels a case clause of a switch statement s is s.
+
+
+
+
+Labels should be avoided by programmers at all costs. The motivation for including labels in the language is primarily making Dart a better[fc] target for code generation.
+
+
+
+
+
+
+Break
+
+
+The break statement consists of the reserved word break and an optional label. 
+
+
+breakStatement:
+    break identifier? ';'
+   ;
+
+
+
+Let sb be a break statement. If sb is of the form break L; then let sE be the the innermost labeled statement with label L enclosing sb. If sb is of the form break; then let sE be the the innermost  do, for, switch or while statement enclosing sb. It is a compile-time error if no such statement sE exists within the innermost function in which sb occurs.  Furthermore, let s1... sn be those try statements that are both enclosed in sE and that enclose sb, and that have a finally clause. Lastly, let fj be the finally clause of sj, 1 <= j <= n.   Executing sb first executes f1 ... fn in innermost-clause-first order and then terminates sE[fd]. 
+
+
+
+
+Continue
+
+
+The continue statement consists of the reserved word continue and an optional label. 
+
+
+continueStatement:
+   continue identifier? ';'
+       ;
+
+
+
+Let sc be a continue statement. If sc is of the form continue L; then let sE be the the innermost labeled statement or case clause with label L that encloses sc. If sc is of the form continue; then let sE be the the innermost  do, for or while statement enclosing sc. It is a compile-time error if no such statement or case clause sE exists within the innermost function in which sc occurs.  Furthermore, let s1... sn be those try statements that are both enclosed in sE and that enclose sc, and that have a finally clause. Lastly, let fj be the finally clause of sj, 1 <= j <= n.   Executing sc first executes f1 ... fn in innermost-clause-first order and then transfers control to sE. 
+
+
+
+
+
+
+Throw
+
+
+The throw statement is used to raise or re-raise an exception.
+
+
+throwStatement:
+    throw expression? ';'
+   ;
+
+The current exception is the last unhandled exception thrown. The current stack trace is a record of all the function activations within the current isolate that had not completed execution at the point where the current exception was thrown. For each such function activation, the current stack trace includes the name of the function, the bindings of all its formal parameters, local variables and this, and the position at which the function was executing.
+
+
+The term position should not be interpreted as a line number, but rather as a precise position - the exact character index of the expression that raised in the exception.
+
+
+Execution of a throw statement of the form throw e ; proceeds as follows:
+The expression e is evaluated yielding a value v[fe]. Then, control is transferred to the nearest dynamically enclosing exception handler, with the current exception set to v and the current stack trace set to the series of activations that led to execution of the current function.
+
+
+There is no requirement that the expression e evaluate to a special kind of exception or error object.
+
+
+Execution of a statement of the form throw; proceeds as follows:
+Control is transferred to the nearest dynamically enclosing exception handler.
+
+
+No change is made to the current stack trace or the current exception.
+
+
+It is a compile-time error if a statement of the form throw; is not enclosed within a catch[ff] clause.
+
+
+
+
+
+
+Assert
+
+
+An assert statement is used to disrupt normal execution if a given boolean condition does not hold.
+
+
+assertStatement:
+  assert '(' conditionalExpression ')' ';'
+     ;
+
+The assert statement has no effect in production mode. In checked mode, execution of an assert statement assert(e); proceeds as follows:
+
+
+The conditional expression e is evaluated to an object o. If the class of o is a subtype of Function then let r be the result of invoking o with no arguments. Otherwise, let r be o.  It is a dynamic error if o is not of type bool or of type Function, or if r is not of type bool.  If r is false, we say that the assertion failed. If r is true, we say that the assertion succeeded. If the assertion succeeded, execution of the assert statement is complete. If the assertion failed, an AssertionError is thrown.
+
+
+ It is a static type warning if the type of e may not be assigned to either bool or () → bool 
+
+
+Why is this a statement, not a built in function call? Because it is handled magically so it has no effect and no overhead in production mode. Also, in the absence of final methods. one could not prevent it being overridden (though there is no real harm in that). Overall, perhaps it could be defined as a function, and the overhead issue could be viewed as an optimization.
+
+
+Libraries and Scripts
+
+
+A library consists of (a possibly empty) set of imports, and a set of top level declarations. A top level declaration is either a class, an interface, a type declaration, a function or a variable declaration.
+
+
+topLevelDefinition:
+     classDefinition
+   | interfaceDefinition
+   | functionTypeAlias
+   | functionSignature functionBody
+   | returnType? getOrSet identifier formalParameterList functionBody
+   | final type? staticFinalDeclarationList ';'
+   | variableDeclaration ';'
+   ;
+
+
+
+getOrSet:
+   get 
+ | set
+ ;
+
+
+
+
+libraryDefinition:
+     scriptTag? libraryName import* include* [fg]resource* topLevelDefinition*
+     ;
+
+
+scriptTag:
+   “#!” (~NEWLINE)* NEWLINE
+ ;
+
+
+libraryName:
+   “#” “library” “(” stringLiteral “)” “;”
+   ;
+
+
+A library may optionally begin with a script tag, which can be used to identify the interpreter of the script to whatever computing environment the script is embedded in. A script  tag begins with the characters #! and ends at the end of the line. Any characters after #! are ignored by the Dart implementation.
+
+
+Libraries are units of privacy. A private declaration declared within a library L can only be accessed by code within L. Any attempt to access a private member declaration from outside L will cause a run-time error. Since top level privates are not imported, using them is a compile time error and not an issue here. 
+
+
+The scope of a library L consists of the names introduced of all top level declarations declared in L, and the names of  the names added by L's imports.
+
+
+Libraries may include extralinguistic resources (e.g., audio, video or graphics files) 
+
+
+resource:
+   “#” “resource” “(” stringLiteral “)” “;”[fh]
+ ;
+
+
+
+
+Imports
+
+
+An import specifies a library to be used in the scope of another library. 
+
+
+import:
+   “#” “import” “(” stringLiteral (“,” “prefix:[fi]” stringLiteral[fj])? “)” “;”
+   ;
+
+
+An import provides a URI where the declaration of the imported library is to be found. The effect of an import of library B with prefix P within the declaration of library A is:
+1. If P is the empty string,  each non-private top level declaration d of B is added to the scope of A. 
+2. Otherwise, each non-private top level declaration d of B is added to the scope of A under the name P.d, as is the name P. 
+
+
+Imports assume a global namespace of libraries (at least per isolate). They also assume the library is in control, rather than the other way around. 
+
+
+It is a compile-time error if a name N is introduced into the library scope of a library A, and either:
+1. N is declared by A, OR 
+2. Another import introduces N into the scope of A. 
+
+
+This implies that it is a compile-time error for a library to import itself, as the names of its members will be duplicated.
+
+
+The current library is the library currently being compiled.
+
+
+Compiling an import directive of the form #import(s1, prefix: s2); proceeds as follows: 
+ 
+1. If the contents of the URI that is value of s1 have not yet been compiled in the current isolate then they are compiled to yield a library B. It is a compile-time error if s1 does not denote a URI that contains the source code for a Dart library.
+2. Otherwise, the contents of  URI denoted by s1 have been compiled into a library B within the current library.
+3. Then, the library B is imported into the current library with prefix p, where p is the value of s2.
+
+
+Compiling an import directive of the form #import(s) is equivalent to compiling the directive #import(s, prefix: “”);.
+
+
+It is a compile-time error to import two or more libraries that define the same name.  It is a compile-time error if either s1 or s2  is not a compile-time constant. It is a compile-time error if the value of s2 is not a valid identifier.
+
+
+
+
+
+
+Includes
+
+
+An include directive specifies a URI where a Dart compilation unit that should be incorporated into the current library may be found.
+
+
+include:
+   “#”  “source”  “(” stringLiteral “)” “;”
+    ;
+
+compilationUnit:
+     topLevelDefinition* EOF
+   ;
+
+
+
+A compilation unit is a sequence of top level declarations.
+
+
+Compiling an include directive of the form #source(s); causes the Dart system to attempt to compile the contents of the URI that is the value of s. The top level declarations at that URI are then compiled by the Dart compiler in the scope of the current library. It is a compile time error if the contents of the URI are not a valid compilation unit.
+
+
+It is a compile-time error if s is not a compile-time constant.
+
+
+Scripts
+
+
+A script is a library with a top level function main(). 
+
+
+scriptDefinition:
+   scriptTag? libraryName? import* include* resource* topLevelDefinition*
+ ;
+
+
+A script S may be executed as follows:
+
+
+First, S is compiled as a library as specified above. Then, the top level function main() that is in scope in S is invoked with no arguments. It is a run time error if S does not declare or import a top level function main().
+
+
+The names of scripts are optional, in the interests of interactive, informal use. However, any script of long term value should be given a name as a matter of good practice. Named scripts are composable: they can be used as libraries by other scripts and libraries. 
+
+
+Types
+Dart supports optional typing based on interface types.
+The type system is unsound, due to the covariance of generic types[fk]. This is a deliberate choice (and undoubtedly controversial).  Experience has shown that sound type rules for generics fly in the face of programmer intuition. It is easy for tools to provide a sound type analysis if they choose[fl], which may be useful for tasks like refactoring.
+
+
+
+
+Static Types
+Static type annotations are used in variable declarations (including formal parameters) and in the return types of functions.  Static type annotations are used during static checking and when running programs in checked mode. They have no effect whatsoever in production mode.
+
+
+type:
+     qualified typeArguments?
+   ;
+
+
+typeArguments:
+     '<' typeList '>'
+   ;
+
+typeList:
+     type (',' type)*
+   ;
+
+
+
+A Dart implementation must provide a static checker that detects and reports exactly those situations this specification identifies as static warnings. However:
+1. Running  the static checker on a program P is not required for compiling and running P.  
+2. Running the static checker on a program P must not prevent successful compilation of P nor may it prevent the execution of P, regardless of whether any static warnings occur.
+Nothing precludes additional tools that implement alternative static analyses (e.g., interpreting the existing type annotations in a sound manner such as either non-variant generics, or inferring declaration based variance from the actual declarations). However, using these tools does not preclude successful compilation and execution of Dart code.
+
+
+Should we do something with respect to non-nullable types[fm]?
+
+
+
+
+
+
+Dynamic Type System
+A Dart implementation must support execution in both production mode and checked mode.  Those dynamic checks specified as occurring specifically in checked mode must be performed iff the code is executed in checked mode.
+
+
+
+
+
+
+Type Declarations
+Typedef
+
+
+A type alias declares a name for a type expression.
+
+
+functionTypeAlias:
+     typedef functionPrefix typeParameters[fn]? formalParameterList ';'
+   ;
+
+functionPrefix:
+   returnType? identifier
+   ;
+
+The effect of a type alias of the form  typedef T id (T1 p1, .., Tn pn, [Tn+1 pn+1, …, Tn+k pn+k]) declared in a library L is is to introduce the name id into the scope of L, bound to the function type (T1, .., Tn, [ Tn+1 pn+1:, …,  Tn+k pn+k])  → T.  If no return type is specified, it is taken to be Dynamic. Likewise, if a type annotation is omitted on a formal parameter, it is taken to be Dynamic.
+
+
+Currently, type aliases are restricted to function types. It is a compile-time error if any default values are specified in the signature of a function type alias. 
+
+
+
+
+Interface Types
+An interface I is a direct supertype of an interface J iff:
+1. If I is Object, and J has no extends clause.
+2. if I is listed in the extends clause of J.
+
+
+The supertypes of an interface are its direct supertypes and their supertypes. 
+
+
+A type T is more specific than a type S, written T ≪ S,  if one of the following conditions is met:
+1. Reflexivity: T is S.
+2. T is bottom.
+3. S is Dynamic.
+4. Direct supertype: S is a direct supertype of T.
+5.  T is a type variable and S is the upper bound of T.
+6. Covariance: T is of the form I<T1, ..., Tn> and S is of the form I<S1, ..., Sn> and Ti  ≪ Si , 1 <= i <= n.
+7. Transitivity: T ≪ U and U ≪ S.
+
+
+≪ is a partial order on types.
+T is a subtype[fo] of S, written T <: S, iff [bottom/[fp]Dynamic]T[fp] ≪ S.
+Note that <: is not a partial order on types, it is only binary relation on types. This is because <: is not transitive. If it was, the subtype rule would have a cycle. For example:
+List <: List<String> and List<int> <: List, but List<int> is not a subtype of List<String>.
+Although <: is not a partial order on types, it does contain a partial order, namely ≪. This means that, barring raw types, intuition about classical subtype rules does apply.
+
+
+S is a supertype of T, written S :> T, iff T is a subtype of S.
+
+
+A type T may be assigned to a type S, written  T ⇔ S, iff either T <: S or S <: T. 
+This rule may surprise readers accustomed to conventional typechecking. The intent of the ⇔ relation is not to ensure that an assignment is correct. Instead, it aims to only flag assignments that are almost certain to be erroneous, without precluding assignments that may work. 
+
+
+For example, assigning a value of static type Object to a variable with static type String, while not guaranteed to be correct, might be fine if the runtime value happens to be a string.
+
+
+Function Types
+
+
+A function type (T1, ..., Tn, [Tx1 x1, …, Txk xk]) → T is a subtype of the function type (S1, ..., Sn, [Sy1 y1, …, Sym ym]) → S, if all of the following conditions are met:
+1. Either
+1. S is void,
+2. or T ⇔ S.
+1. For all i , 1 <= i <=  n, Ti ⇔ Si.
+2. k >= m and xi = yi, 1 <= i <= m. It is necessary, but not sufficient, that the optional arguments of the subtype  be a subset of those of the supertype. We cannot treat them as just sets, because optional arguments can be invoked positionally, so the order matters.
+3. For all y in {y1, …, ym} Sy ⇔ Ty.
+
+
+
+
+We write (T1, ..., Tn) → T as a shorthand for the type (T1, ..., Tn, []) → T.
+
+
+All functions implement the interface Function, so all function types are a subtype of Function.
+ 
+
+
+Type Dynamic
+
+
+The built-in identifier Dynamic denotes the unknown type. 
+
+
+If no static type annotation has been provided the type system assumes the declaration has the type Dynamic. If a generic type is used but the corresponding type arguments are not provided, then the missing type arguments default to the unknown type.
+
+
+This means that given a generic declaration G<T1, …, Tn>, the type G is equivalent to G<Dynamic, …, Dynamic>.
+
+
+Type Dynamic has methods for every possible identifier and arity, with every possible combination of named parameters[fq]. These methods all have Dynamic as their return type, and their formal parameters all have type Dynamic.
+Type Dynamic has properties for every possible identifier. These properties all have type Dynamic.
+
+
+From a usability perspective, we want to ensure that the checker does not issue errors everywhere an unknown type is used. The definitions above ensure that no secondary errors are reported when accessing an unknown type. 
+
+
+The current rules say that missing type arguments are treated as if they were the type Dynamic. An alternative is to consider them as meaning Object.  This would lead to earlier error detection in checked mode, and more aggressive errors during static typechecking. For example:
+
+
+(1) typedAPI(G<String> g){...}
+(2) typedAPI(new G()); 
+
+
+Under the alternative rules, (2) would cause a runtime error in checked mode. This seems desirable from the perspective of error localization. However, when a Dynamic error is raised at (2), the only way to keep running is rewriting (2) into
+
+
+(3) typedAPI(new G<String>());
+
+
+This forces users to write type information in their client code just because they are calling a typed API.  We do not want to impose this on Dart programmers, some of which may be blissfully unaware of types in general, and genericity in particular.
+
+
+What of static checking? Surely we would want to flag (2) when users have explicitly asked for static typechecking? Yes, but the reality is that the Dart static checker is likely to be running in the background by default. Engineering teams typically desire a “clean build” free of warnings and so the checker is designed to be extremely charitable. Other tools can interpret the type information more aggressively and warn about violations of conventional (and sound) static type discipline.
+
+
+ 
+Type Void
+
+
+The special type void may only be used as the return type of a function: it is a compile-time error to use void in any other context. 
+
+
+For example, as a type argument, or as the type of a variable or parameter
+
+
+Void is not an interface type. 
+
+
+The only subtype relations that pertain to void are therefore:
+1. void <: void(by reflexivity)
+2. bottom <: void (as bottom is a subtype of all types).
+3. void <: Dynamic (as Dynamic is a supertype of all types)
+
+
+Hence, the static checker will issue warnings if one attempts to access a member of the result of a void method invocation (even for members of null, such as ==).  Likewise, passing the result of a void method as a parameter or assigning it to a variable will cause a warning unless the variable/formal; parameter has type Dynamic.
+
+
+On the other hand, it is possible to return the result of a void method from within a void method. One can also return null; or a value of type Dynamic. Returning any other result will cause a type warning (or a dynamic type error in checked mode).
+
+
+
+
+Parameterized Types
+
+
+A parameterized type is an invocation of a generic type declaration.
+
+
+Let p = G<A1, …, An> be a parameterized type. 
+
+
+It is a static type warning if G is not an accessible generic type declaration with n type parameters. It is a static type warning if Ai, 1 <= i <= n  does not denote a type in the enclosing lexical scope.
+
+
+
+
+
+
+If S is the static type of of a member m of G, then the static type of the member m of G<A1, …, An> is [A1, …, An/T1, …, Tn]S where T1, …, Tn are the formal type parameters of G. Let Bi be the bounds of Ti, 1 <= i <= n. It is a static type warning if Ai is not a subtype of [A1, …, An/T1, …, Tn]Bi, 1 <= i <= n.
+
+
+
+
+Actual Type of a Declaration
+
+
+A type T depends on a type variable U iff:
+1. T is U.
+2. T is a parameterized type, and one of the type arguments of T depends on U.
+
+
+Let T be the declared type of a declaration d, as it appears in the program source. The actual type of d is
+
+
+1.  [A1, ..., An/U1, ..., Un]T if d depends on type variables U1, ..., Un, and Ai is the actual value of Ui, 1 <= i <= n.
+2. T otherwise.
+
+
+Least Upper Bounds
+
+
+Given two interfaces I and J, let SI be the set of superinterfaces of I,  let SJ be the set of superinterfaces of J and let S = (I SI ) (J  SJ ). Furthermore, we define Sn = {T | T  S   depth(T) =n} for any finite n, and k=max(depth(T1), ..., depth(Tm)), Ti  S, 1 <= i <= m, where depth(T) is the number of steps in the shortest inheritance path from T to Object. Let q be the smallest number such that Sq has cardinality one. The least upper bound of I and J is the sole element of Sq.
+
+
+
+
+
+
+
+
+Reference
+Lexical Rules
+
+
+Dart source text is represented as a sequence of Unicode code points normalized to Unicode Normalization Form C. 
+Reserved Words 
+break, case, catch, class, const, continue, default, do, else, extends, false, final, finally, for, if, in, is, new, null, return, super, switch, this, throw, true, try, var, void, while.
+
+
+
+
+ LETTER[fr]:
+     'a'..'z'
+   | 'A'..'Z'
+   ;
+
+DIGIT:
+     '0'..'9'
+   ;
+
+WHITESPACE:
+     ('\t' | ' ' | NEWLINE)+
+   ;
+
+Comments
+
+
+Comments are sections of program text that are used for documentation.
+
+
+SINGLE_LINE_COMMENT:
+     '//' ~(NEWLINE)* (NEWLINE)?
+   ;
+
+MULTI_LINE_COMMENT:
+     '/*' (MULTI_LINE_COMMENT | ~ '*/')* '*/'
+   ;
+  
+Dart supports both single-line and multi-line comments. A single line comment[fs] begins with the token //. Everything between // and the[ft] end of line must be ignored by the Dart compiler. 
+
+
+A multi-line comment begins with the token /* and ends with the token */.  Everything between /* and */ must be ignored by the Dart compiler unless the comment is a documentation comment. Comments may nest. 
+
+
+Documentation comments are multi-line comments that begin with the tokens[fu] /**. Inside a documentation comment, the Dart compiler ignores all text unless[fv] it is enclosed in brackets.
+
+
+
+
+ 
+
+
+Operator Precedence
+
+
+Operator precedence is given implicitly by the grammar.
