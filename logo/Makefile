@@ -2,13 +2,13 @@ tdir = ../../../shared/tools
 sdflib = ../../../../sdf-library/trunk/library/languages/logo/syntax
 
 all:
-	make build
+	make extract
 	make test
 
-build:
-	${tdir}/sdf2bgf ${sdflib}/*.sdf logo.sdf.ext.bgf
-	${tdir}/subgrammar logo.sdf.ext.bgf Program logo.tmp.bgf
-	${tdir}/xbgf refactor.xbgf logo.tmp.bgf logo.sdf.rec.bgf
+extract:
+	${tdir}/sdf2bgf ${sdflib}/*.sdf raw.bgf
+	${tdir}/subgrammar raw.bgf Program ext.bgf
+	${tdir}/xbgf refactor.xbgf ext.bgf grammar.bgf
 
 test:
 	ls -1 *.xbgf | xargs -n1 ${tdir}/validate xbgf

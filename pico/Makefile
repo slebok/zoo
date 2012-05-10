@@ -2,13 +2,13 @@ tdir = ../../../shared/tools
 sdflib = ../../../../sdf-library/trunk/library/languages/pico/syntax
 
 all:
-	make build
+	make extract
 	make test
 
-build:
-	${tdir}/sdf2bgf ${sdflib}/*.sdf pico.sdf.ext.bgf
-	${tdir}/subgrammar pico.sdf.ext.bgf PROGRAM pico.tmp.bgf
-	${tdir}/xbgf refactor.xbgf pico.tmp.bgf pico.sdf.rec.bgf
+extract:
+	${tdir}/sdf2bgf ${sdflib}/*.sdf raw.bgf
+	${tdir}/subgrammar raw.bgf PROGRAM ext.bgf
+	${tdir}/xbgf refactor.xbgf ext.bgf grammar.bgf
 
 test:
 	ls -1 *.xbgf | xargs -n1 ${tdir}/validate xbgf

@@ -3,10 +3,10 @@ all:
 	make run
 
 extract:
-	../../../extraction/antlr/antlrpp.py java.rsc.g java.pp.g
-	java -cp ${CLASSPATH}:../../../../download/antlrworks-1.1.7.jar:../../../extraction/antlr slps.antlr2bgf.Tool java.pp.g stahl.ext.bgf
-	../../../../shared/tools/xbgf post-extraction.xbgf stahl.ext.bgf stahl.fix.bgf
-	../../../../shared/tools/subgrammar stahl.fix.bgf compilationUnit grammar.bgf
+	../../../extraction/antlr/antlrpp.py java.rsc.g java.prepared.g
+	java -cp ${CLASSPATH}:../../../../download/antlrworks-1.1.7.jar:../../../extraction/antlr slps.antlr2bgf.Tool java.prepared.g raw.bgf
+	../../../../shared/tools/xbgf post-extraction.xbgf raw.bgf ext.bgf
+	../../../../shared/tools/subgrammar ext.bgf compilationUnit grammar.bgf
 
 build:
 	java -cp ../../../../download/antlr-3.2.jar antlr.Tool java.g java.tree.g
