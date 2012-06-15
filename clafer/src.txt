@@ -1,0 +1,121 @@
+⟨Module ⟩	::=	⟨ListDeclaration ⟩
+⟨Declaration ⟩	::= enum ⟨Ident ⟩ = ⟨ListEnumId ⟩
+| ⟨Clafer ⟩ 
+| ⟨Constraint ⟩
+⟨Clafer ⟩	::=	⟨Abstract ⟩ ⟨GCard ⟩ ⟨Ident ⟩ ⟨Super ⟩ ⟨Card ⟩ ⟨Elements ⟩
+⟨Constraint ⟩	::=	[ ⟨ListLExp ⟩ ]
+⟨Abstract ⟩::=	o| abstract
+⟨Elements ⟩::= o|{ ⟨ListElement ⟩ }
+⟨Element ⟩::= ⟨Clafer ⟩
+| ‘ ⟨Name ⟩ ⟨Card ⟩ ⟨Elements ⟩
+| ⟨Constraint ⟩
+⟨Super ⟩	::=o
+| ⟨Name ⟩
+|extends ⟨Name ⟩
+| −> ⟨ListModId ⟩ ⟨SExp ⟩
+⟨GCard ⟩	::=o
+| xor
+|or
+|mux
+|opt
+| < ⟨GNCard ⟩ >
+⟨Card ⟩	::= o
+| ?
+| +
+| *
+|	⟨NCard ⟩
+⟨GNCard ⟩	::=	⟨Integer ⟩ − ⟨ExInteger ⟩
+⟨NCard ⟩	::= ⟨Integer ⟩ .. ⟨ExInteger ⟩
+⟨ExInteger ⟩	::=	*
+| ⟨Integer ⟩
+⟨Name ⟩::= ⟨ListModId ⟩ ⟨Ident ⟩
+⟨LExp ⟩ ::= ⟨LExp ⟩ ⟨Iff ⟩ ⟨LExp1 ⟩
+| ⟨LExp1 ⟩
+⟨LExp1 ⟩ ::= ⟨LExp1 ⟩ ⟨Implies ⟩ ⟨LExp2 ⟩
+|⟨LExp1 ⟩ ⟨Implies ⟩ ⟨LExp2 ⟩ else ⟨LExp2 ⟩
+| ⟨LExp2 ⟩
+⟨LExp2 ⟩::= ⟨LExp2 ⟩ ⟨Or ⟩ ⟨LExp3 ⟩
+|⟨LExp3 ⟩
+⟨LExp3 ⟩	::=⟨LExp3 ⟩ ⟨Xor ⟩ ⟨LExp4 ⟩
+|⟨LExp4 ⟩
+⟨LExp4 ⟩	::=⟨LExp4 ⟩ ⟨And ⟩ ⟨LExp5 ⟩
+|⟨LExp5 ⟩
+⟨LExp5 ⟩	::=⟨Neg ⟩ ⟨LExp6 ⟩
+|
+⟨LExp6 ⟩
+⟨LExp6 ⟩	::=⟨Term⟩
+|
+(⟨LExp⟩)
+⟨Term ⟩	::=⟨CmpExp ⟩
+|
+⟨SExp ⟩
+|⟨Quant ⟩ ⟨SExp ⟩
+| ⟨ListDecl ⟩ | ⟨LExp ⟩
+⟨Iff ⟩	::=
+<=>
+⟨Implies ⟩ ::=	=>
+⟨And⟩ ::= &&
+⟨Xor⟩ ::= xor
+⟨Or ⟩	::=	||
+⟨Neg⟩ ::= ~
+⟨CmpExp ⟩	::= ⟨Exp ⟩ < ⟨Exp ⟩
+| ⟨Exp ⟩ > ⟨Exp ⟩
+| ⟨Exp ⟩ = ⟨Exp ⟩
+|⟨Exp⟩ == ⟨Exp⟩
+|⟨Exp⟩ <= ⟨Exp⟩
+|⟨Exp⟩ >= ⟨Exp⟩
+|⟨Exp ⟩ != ⟨Exp ⟩
+|⟨Exp ⟩ /= ⟨Exp ⟩
+|⟨Exp⟩in⟨Exp⟩
+|⟨Exp⟩not in⟨Exp⟩
+⟨Exp ⟩	::=⟨AExp ⟩
+|⟨StrExp ⟩
+⟨Quant ⟩	::=	no| lone| one| some
+⟨ExQuant ⟩	::=	all
+|⟨Quant ⟩
+⟨SExp ⟩::= ⟨SExp ⟩ ++ ⟨SExp1 ⟩
+| ⟨SExp1 ⟩
+⟨SExp1 ⟩::= ⟨SExp1 ⟩ & ⟨SExp2 ⟩
+| ⟨SExp2 ⟩
+⟨SExp2 ⟩::= ⟨SExp2 ⟩ <: ⟨SExp3 ⟩
+| ⟨SExp3 ⟩
+⟨SExp3 ⟩::= ⟨SExp3 ⟩ :> ⟨SExp4 ⟩
+| ⟨SExp4 ⟩
+⟨SExp4 ⟩::= ⟨SExp4 ⟩ . ⟨SExp5 ⟩
+| ⟨SExp5 ⟩
+⟨SExp5 ⟩ ::= ⟨Ident ⟩
+| (⟨SExp⟩)
+⟨Decl ⟩	::=	⟨ExQuant ⟩ ⟨Disj ⟩ ⟨ListLocId ⟩ : ⟨SExp ⟩
+⟨Disj ⟩	::=	o| disj
+⟨AExp ⟩ ::= ⟨AExp ⟩ + ⟨AExp1 ⟩
+|⟨AExp ⟩ − ⟨AExp1 ⟩
+|⟨AExp1 ⟩
+⟨AExp1 ⟩ ::= ⟨AExp1 ⟩ * ⟨AExp2 ⟩
+| ⟨AExp2 ⟩
+⟨AExp2 ⟩ ::= # ⟨SExp ⟩
+|⟨SExp ⟩
+|⟨Integer⟩
+| (⟨AExp ⟩)
+⟨StrExp ⟩::=
+⟨StrExp ⟩ ++ ⟨StrExp ⟩
+| ⟨String⟩
+⟨EnumId ⟩::=⟨Ident ⟩
+⟨ModId ⟩::=⟨Ident ⟩
+⟨LocId ⟩	::=	⟨Ident ⟩
+⟨ListDeclaration ⟩	::=	o
+| ⟨Declaration ⟩ ⟨ListDeclaration ⟩
+⟨ListEnumId ⟩	::=⟨EnumId ⟩
+| ⟨EnumId ⟩ | ⟨ListEnumId ⟩
+⟨ListElement ⟩	::=o
+|⟨Element ⟩ ⟨ListElement ⟩
+⟨ListLExp ⟩	::=o
+|
+⟨LExp ⟩ ⟨ListLExp ⟩
+⟨ListDecl ⟩	::=⟨Decl ⟩
+|⟨Decl ⟩ , ⟨ListDecl ⟩
+⟨ListLocId ⟩::=
+⟨LocId ⟩
+|⟨LocId ⟩ , ⟨ListLocId ⟩
+⟨ListModId ⟩::=
+o
+|⟨ModId ⟩ / ⟨ListModId ⟩
