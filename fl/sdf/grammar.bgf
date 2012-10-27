@@ -1,0 +1,132 @@
+<bgf:grammar xmlns:bgf="http://planet-sl.org/bgf">
+  <bgf:production>
+  <nonterminal>Program</nonterminal>
+  <bgf:expression>
+    <plus><bgf:expression>
+    <nonterminal>Function</nonterminal>
+  </bgf:expression></plus>
+  </bgf:expression>
+</bgf:production>
+<bgf:production>
+  <nonterminal>Function</nonterminal>
+  <bgf:expression>
+  <sequence>
+     <bgf:expression>
+    <nonterminal>Name</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <plus><bgf:expression>
+    <nonterminal>Name</nonterminal>
+  </bgf:expression></plus>
+  </bgf:expression> <bgf:expression>
+    <terminal>=</terminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <plus><bgf:expression>
+    <nonterminal>Newline</nonterminal>
+  </bgf:expression></plus>
+  </bgf:expression>
+  </sequence>
+</bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>binary</label>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+  <sequence>
+     <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Ops</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression>
+  </sequence>
+</bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>apply</label>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+  <sequence>
+     <bgf:expression>
+    <nonterminal>Name</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <plus><bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression></plus>
+  </bgf:expression>
+  </sequence>
+</bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>ifThenElse</label>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+  <sequence>
+     <bgf:expression>
+    <terminal>if</terminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <terminal>then</terminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <terminal>else</terminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression>
+  </sequence>
+</bgf:expression>
+</bgf:production>
+<bgf:production>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+  <sequence>
+     <bgf:expression>
+    <terminal>(</terminal>
+  </bgf:expression> <bgf:expression>
+    <nonterminal>Expr</nonterminal>
+  </bgf:expression> <bgf:expression>
+    <terminal>)</terminal>
+  </bgf:expression>
+  </sequence>
+</bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>argument</label>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+    <nonterminal>Name</nonterminal>
+  </bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>literal</label>
+  <nonterminal>Expr</nonterminal>
+  <bgf:expression>
+    <nonterminal>Int</nonterminal>
+  </bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>minus</label>
+  <nonterminal>Ops</nonterminal>
+  <bgf:expression>
+    <terminal>-</terminal>
+  </bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>plus</label>
+  <nonterminal>Ops</nonterminal>
+  <bgf:expression>
+    <terminal>+</terminal>
+  </bgf:expression>
+</bgf:production>
+<bgf:production>
+  <label>equal</label>
+  <nonterminal>Ops</nonterminal>
+  <bgf:expression>
+    <terminal>==</terminal>
+  </bgf:expression>
+</bgf:production>
+</bgf:grammar>
