@@ -1,130 +1,205 @@
-@contributor{bgf2src automated exporter - SLPS}
+@contributor{BGF2Rascal automated exporter - SLPS - http://github com/grammarware/slps/wiki/BGF2Rascal}
 @contributor{Vadim Zaytsev - vadim@grammarware.net - CWI}
-module ABS
+@contributor{Stijn de Gouw - CWI, Leiden University}
+module lang::ABS
+
+// Comments and whitespace
+syntax LAYOUT
+  = [\  \t \n \r \f]
+  | Comment
+  ;
+layout LAYOUTLIST 
+  = LAYOUT* !>> "//" !>> "/*" !>> [\t\n\ \r\f]
+  ;
+
+lexical Comment
+  = @category="Comment" "//" ![\n]* [\n] 
+    | @category="Comment" "/*" CommentChar* "*/" 
+  ;
+
+lexical CommentChar
+  = ![*] 
+    | Asterisk !>> [/] 
+  ;
+
+lexical Asterisk
+  = [*] 
+  ;
 
 // from ABS.flex
-//lexical LineTerminator = [\r\n] | "\r\n";
-//lexical InputCharacter = ![\r\n];
-//layout WhiteSpace = LineTerminator | [ \t\f];
-layout WS = [\t-\n \r \ ]* !>> [\t-\n \r \ ];
-lexical Comment = TraditionalComment	| EndOfLineComment;
-lexical TraditionalComment = "/*" ![*] "*/" | "/*" "*"+ "/" | "/*" "*"+ ![*/] "*/"; 
-lexical EndOfLineComment = "//" InputCharacter* LineTerminator?;
-lexical IDENTIFIER  = [a-z] ([a-zA-Z] | [0-9] | "_")*;
-lexical TYPE_IDENTIFIER  = [A-Z] ([a-zA-Z] | [0-9] | "_")*;
-lexical IntLiteral = [0] | [1-9][0-9]*;
+lexical IDENTIFIER_OLD = [a-z] ([a-zA-Z0-9_])*;
+syntax IDENTIFIER
+  = @category="Identifier" IDENTIFIER_OLD \ YYINITIAL;
 
-keyword YYINITIAL =  "module" | "import" | "export" | "from" | "class" | "interface" | "extends" |
-"data" | "def" | "implements" | "delta" | "adds" | "modifies" | "removes" | "hasField" | "hasMethod" |
-"hasInterface" | "productline" | "features" | "after" | "when" | "product" | "while" | "return" | "skip" |
-"get" | "null" | "await" | "if" | "then" | "else" | "suspend" | "duration" | "new" | "this" | "core" |
-"original" | "case" | "let" | "in" | "cog" | "type" | "assert" | "builtin" | "root" | "extension" | "group" |
-"opt" | "oneof" | "allof" | "ifin" | "ifout" | "exclude" | "require" ;
+keyword YYINITIAL =  "module" | "import" | "export" | "from" | "class" | "interface" | "extends" | "data" | "def" | "implements" | "delta" | "uses" | "adds" | "modifies" | "removes" | "hasField" | "hasMethod" | "hasInterface" | "productline" | "features" | "after" | "when" | "product" | "by" | "while" | "return" | "skip" | "get" | "null" | "await" | "if" | "then" | "else" | "suspend" | "duration" | "new" | "movecogto" | "this" | "core" | "original" | ".original" | "case" | "let" | "in" | "cog" | "type" | "assert" | "builtin" | "root" | "extension" | "group" | "opt" | "oneof" | "allof" | "ifin" | "ifout" | "exclude" | "require" | "critical" | "port" | "rebind" | "location" | "move" | "father" | "sql" ;
 
-lexical PRODUCTLINE = "productline" ;
-lexical LBRACKET = "[" ;
-lexical MINUS = "-" ;
-lexical GROUP = "group" ;
-lexical RPAREN = ")" ;
-lexical PLUS = "+" ;
-lexical IMPORT = "import" ;
-lexical PRIME = "\'" ;
-lexical IMPLEMENTS = "implements" ;
-lexical GT = "\>" ;
-lexical RBRACE = "}" ;
-lexical IFOUT = "ifout" ;
-lexical MODULE = "module" ;
-lexical EXTENDS = "extends" ;
-lexical ADDS = "adds" ;
-lexical THIS = "this" ;
-lexical HASMETHOD = "hasMethod" ;
-lexical AFTER = "after" ;
-lexical NEGATION = "~" ;
-lexical ASSIGN = "=" ;
-lexical INTERFACE = "interface" ;
-lexical OROR = "||" ;
-lexical RETURN = "return" ;
-lexical EQEQ = "==" ;
-lexical REQUIRE = "require" ;
-lexical HASINTERFACE = "hasInterface" ;
-lexical USCORE = "_" ;
-lexical DEF = "def" ;
-lexical GET = "get" ;
-lexical RARROW = "=\>" ;
-lexical COLON = ":" ;
-lexical MODIFIES = "modifies" ;
-lexical ROOT = "root" ;
-lexical ELSE = "else" ;
-lexical UNTIL = ".." ;
-lexical OPT = "opt" ;
-lexical LBRACE = "{" ;
-lexical AWAIT = "await" ;
-lexical REMOVES = "removes" ;
-lexical MOD = "%" ;
-lexical THEN = "then" ;
-lexical GTEQ = "\>=" ;
-lexical IFIN = "ifin" ;
-lexical WHILE = "while" ;
-lexical COG = "cog" ;
-lexical ORIGINAL = "original" ;
-lexical NEW = "new" ;
-lexical DOT = "." ;
-lexical CASE = "case" ;
-lexical SEMICOLON = ";" ;
-lexical GUARDAND = "&" ;
-lexical NOTEQ = "!=" ;
-lexical CORE = "core" ;
-lexical IMPLIES = "-\>" ;
-lexical PRODUCT = "product" ;
-lexical ANDAND = "&&" ;
-lexical QMARK = "?" ;
-lexical LTEQ = "\<=" ;
-lexical LET = "let" ;
-lexical TYPE = "type" ;
-lexical BAR = "|" ;
-lexical EXTENSION = "extension" ;
-lexical OPTFEATURES = "features" ;
-lexical DOTORIGINAL = ".original" ;
-lexical ASSERT = "assert" ;
-lexical BUILTIN = "builtin" ;
-lexical EXPORT = "export" ;
-lexical DURATION = "duration" ;
-lexical DIV = "/" ;
-lexical NULL = "null" ;
-lexical DATA = "data" ;
-lexical MULT = "*" ;
-lexical SUSPEND = "suspend" ;
-lexical WHEN = "when" ;
-lexical LT = "\<" ;
-lexical COMMA = "," ;
-lexical EXCLUDE = "exclude" ;
-lexical CLASS = "class" ;
-lexical ALLOF = "allof" ;
-lexical SKIP = "skip" ;
-lexical BANG = "!" ;
-lexical LPAREN = "(" ;
-lexical IN = "in" ;
-lexical IF = "if" ;
-lexical ONEOF = "oneof" ;
-lexical FROM = "from" ;
-lexical DELTA = "delta" ;
-lexical HASFIELD = "hasField" ;
-lexical RBRACKET = "]" ;
-lexical EQUIV = "\<-\>" ;
+keyword SQL =  "select" | "distinct" | "count" | "as" | "from" | "left" | "right" | "join" | "where" | "group" | "by" | "order" | "asc" | "desc" | "insert" | "into" | "values" | "update" | "set" | "not" | "and" | "or" | "true" | "false" | "is" | "null" | "case" | "when" | "then" | "else" | "end" ;
+  
+lexical TYPE_IDENTIFIER_OLD = [A-Z] ([a-zA-Z0-9_])*;
+syntax TYPE_IDENTIFIER
+   = @category="Type" TYPE_IDENTIFIER_OLD;
 
+lexical INTLITERAL_OLD = [0] | [1-9][0-9]*;
+syntax INTLITERAL
+  = @category="Constant" INTLITERAL_OLD \ YYINITIAL;
 
+lexical MODULE = "module";
+lexical IMPORT = "import";
+lexical EXPORT = "export";
+lexical FROM = "from";
+lexical CLASS = "class";
+lexical INTERFACE = "interface";
+lexical EXTENDS = "extends";
+lexical DATA = "data";
+lexical DEF = "def";
+lexical IMPLEMENTS = "implements";
+lexical DELTA = "delta";
+lexical USES = "uses";
+lexical ADDS = "adds";
+lexical MODIFIES = "modifies";
+lexical REMOVES = "removes";
+lexical HASFIELD = "hasField";
+lexical HASMETHOD = "hasMethod";
+lexical HASINTERFACE = "hasInterface";
+lexical PRODUCTLINE = "productline";
+lexical OPTFEATURES = "features";
+lexical AFTER = "after";
+lexical WHEN = "when";
+lexical PRODUCT = "product";
+lexical BY = "by";
+lexical WHILE = "while";
+lexical RETURN = "return";
+lexical SKIP = "skip";
+lexical GET = "get";
+lexical NULL = "null";
+lexical AWAIT = "await";
+lexical IF = "if";
+lexical THEN = "then";
+lexical ELSE = "else";
+lexical SUSPEND = "suspend";
+lexical DURATION = "duration";
+lexical NEW = "new";
+lexical MOVECOGTO = "movecogto";
+lexical THIS = "this";
+lexical CORE = "core";
+lexical ORIGINAL = "original";
+lexical DOTORIGINAL = ".original";
+lexical CASE = "case";
+lexical LET = "let";
+lexical IN = "in";
+lexical COG = "cog";
+lexical TYPE = "type";
+lexical ASSERT = "assert";
+lexical BUILTIN = "builtin";
+lexical ROOT = "root";
+lexical EXTENSION = "extension";
+lexical GROUP = "group";
+lexical OPT = "opt";
+lexical ONEOF = "oneof";
+lexical ALLOF = "allof";
+lexical IFIN = "ifin";
+lexical IFOUT = "ifout";
+lexical EXCLUDE = "exclude";
+lexical REQUIRE = "require";
+lexical CRITICAL = "critical";
+lexical PORT = "port";
+lexical REBIND = "rebind";
+lexical LOC = "location";
+lexical SUBLOC = "move";
+lexical FATHER = "father";
+lexical SQL = "sql";
+lexical LPAREN = "(";
+lexical RPAREN = ")";
+lexical LPAREN = "(";
+lexical RPAREN = ")";
+lexical LBRACE = "{";
+lexical RBRACE = "}";
+lexical LBRACKET = "[";
+lexical RBRACKET = "]";
+lexical COMMA = ",";
+lexical SEMICOLON = ";";
+lexical COLON = ":";
+lexical QMARK = "?";
+lexical UNTIL = "..";
+lexical DOT = ".";
+lexical BANG = "!";
+lexical ASSIGN = "=";
+lexical GUARDAND = "&";
+lexical EQEQ = "==";
+lexical NOTEQ = "!=";
+lexical RARROW = "=\>";
+lexical IMPLIES = "-\>";
+lexical EQUIV = "\<-\>";
+lexical PLUS = "+";
+lexical MINUS = "-";
+lexical MULT = "*";
+lexical DIV = "/";
+lexical MOD = "%";
+lexical ANDAND = "&&";
+lexical OROR = "||";
+lexical BAR = "|";
+lexical NEGATION = "~";
+lexical LT = "\<";
+lexical GT = "\>";
+lexical LTEQ = "\<=";
+lexical GTEQ = "\>=";
+lexical USCORE = "_";
+lexical PRIME = "\'";
+lexical SELECT = "select";
+lexical DISTINCT = "distinct";
+lexical COUNT = "count";
+lexical AS = "as";
+lexical FROM = "from";
+lexical LEFT = "left";
+lexical RIGHT = "right";
+lexical JOIN = "join";
+lexical WHERE = "where";
+lexical GROUP = "group";
+lexical BY = "by";
+lexical ORDER = "order";
+lexical ASC = "asc";
+lexical DESC = "desc";
+lexical INSERT = "insert";
+lexical INTO = "into";
+lexical VALUES = "values";
+lexical UPDATE = "update";
+lexical SET = "set";
+lexical NOT = "not";
+lexical AND = "and";
+lexical OR = "or";
+lexical TRUE = "true";
+lexical FALSE = "false";
+lexical IS = "is";
+lexical NULL = "null";
+lexical CASE = "case";
+lexical WHEN = "when";
+lexical THEN = "then";
+lexical ELSE = "else";
+lexical END = "end";
+lexical DOT = ".";
+lexical EQ = "=";
+lexical PLUS = "+";
+lexical MINUS = "-";
+lexical MULT = "*";
+lexical DIV = "/";
+lexical CONCAT = "||";
+lexical LT = "\<";
+lexical GT = "\>";
+lexical LTEQ = "\<=";
+lexical GTEQ = "\>=";
+lexical NOTEQ = "\<\>";
 
 // from ABS.parser
-start syntac Goal
+syntax ABSGoal
         = CompilationUnit cu
  ;
 syntax CompilationUnit
         = 
-        ModuleDeclList m? RootfeatureList r FextensionList ext
+        ModuleDeclList m? DeltaDeclList d? ProductLine pl? ProductList p? Featuremodeldecl fm
  ;
 syntax ModuleDecl
         = 
-        ModuleNameDecl n ExportList el? ImportList il? DeclList dl? ProductLine pr? ProductList pl? MainBlock b?
+        ModuleNameDecl n ExportList el? ImportList il? DeclList dl? MainBlock b?
  ;
 syntax ModuleDeclList
         = ModuleDecl t
@@ -199,7 +274,6 @@ syntax Decl
         | FunctionDecl
         | InterfaceDecl
         | ClassDecl
-        | DeltaDecl
  ;
 syntax MainBlock
         = 
@@ -234,12 +308,31 @@ syntax ExpFunctionDef
 syntax InterfaceDecl
         = AnnotationList al? INTERFACE TYPE_IDENTIFIER id ExtendsInterfaces i? LBRACE MethodsigList l? RBRACE
  ;
+syntax QualifiedInterfaceDecl
+        = 
+        AnnotationList al? INTERFACE TypeName id ExtendsInterfaces i? LBRACE MethodsigList l? RBRACE
+ ;
 syntax ClassDecl
         = AnnotationList annotations? CLASS TYPE_IDENTIFIER id ParamDecls params? ImplementInterfaces i? LBRACE FieldDeclList fields? InitBlock initBlock? MethodList methods? RBRACE
  ;
+syntax QualifiedClassDecl
+        = AnnotationList annotations? CLASS TypeName id ParamDecls params? ImplementInterfaces i? LBRACE FieldDeclList fields? InitBlock initBlock? MethodList methods? RBRACE
+ ;
 syntax DeltaDecl
         = 
-        AnnotationList annotations? DELTA TYPE_IDENTIFIER id DeltaParamDecls params? LBRACE FunctionalModifierList fnmodifiers? ClassModifierList modifiers? RBRACE
+        DELTA TYPE_IDENTIFIER id DeltaParamDecls params? SEMICOLON DeltaAccessList uses? ModuleModifierList modifiers?
+ ;
+syntax DeltaDeclList
+        = DeltaDecl t
+        | DeltaDeclList l DeltaDecl t
+ ;
+syntax DeltaAccessList
+        = DeltaAccess t
+        | DeltaAccessList l DeltaAccess t
+ ;
+syntax DeltaAccess
+        = 
+        USES ModuleName m SEMICOLON
  ;
 syntax DeltaParamDecls
         = 
@@ -258,32 +351,27 @@ syntax HasCondition
         | HASMETHOD Methodsig ms
         | HASINTERFACE TypeName n
  ;
-syntax FunctionalModifierList
+syntax ModuleModifierList
+        = ModuleModifier m
+        | ModuleModifierList l ModuleModifier m
+ ;
+syntax ModuleModifier
         = FunctionalModifier m
-        | FunctionalModifierList l FunctionalModifier m
+        | OoModifier m
  ;
 syntax FunctionalModifier
         = ADDS FunctionDecl functiondecl
         | ADDS DatatypeDecl datatypedecl
         | ADDS TypesynDecl typesyndecl
+        | MODIFIES TypesynDecl typesyndecl
+        | MODIFIES DatatypeDecl datatypedecl
  ;
-syntax ClassModifierList
-        = ClassModifier m
-        | ClassModifierList l ClassModifier m
- ;
-syntax ClassModifier
+syntax OoModifier
         = ADDS QualifiedClassDecl classdecl
-        | REMOVES CLASS TYPE_IDENTIFIER id SEMICOLON
-        | MODIFIES CLASS TYPE_IDENTIFIER id ImplementInterfaces iface? LBRACE ModifierFragmentList fragments? RBRACE
-        | ADDS InterfaceDecl ifacedecl
-        | MODIFIES INTERFACE TYPE_IDENTIFIER id LBRACE InfModifierFragmentList fragments? RBRACE
- ;
-syntax QualifiedClassDecl
-        = AnnotationList annotations? CLASS SimpleQualName id ParamDecls params? ImplementInterfaces i? LBRACE FieldDeclList fields? InitBlock initBlock? MethodList methods? RBRACE
- ;
-syntax SimpleQualName
-        = TYPE_IDENTIFIER id
-        | TYPE_IDENTIFIER mod DOT TYPE_IDENTIFIER id
+        | REMOVES CLASS TypeName id SEMICOLON
+        | MODIFIES CLASS TypeName id ImplementInterfacesAdd ifadd? ImplementInterfacesRemove ifremove? LBRACE ModifierFragmentList fragments? RBRACE
+        | ADDS QualifiedInterfaceDecl ifacedecl
+        | MODIFIES INTERFACE TypeName id LBRACE InfModifierFragmentList fragments? RBRACE
  ;
 syntax InfModifierFragmentList
         = InfModifierFragment f
@@ -328,6 +416,14 @@ syntax ImplementInterfaces
         = 
         IMPLEMENTS IfnameList i
  ;
+syntax ImplementInterfacesAdd
+        = 
+        ADDS IfnameList i
+ ;
+syntax ImplementInterfacesRemove
+        = 
+        REMOVES IfnameList i
+ ;
 syntax ExtendsInterfaces
         = 
         EXTENDS IfnameList i
@@ -363,6 +459,8 @@ syntax FieldDeclList
 syntax FieldDecl
         = AnnotationList an? TypeExp t IDENTIFIER i ASSIGN DataExp e
         | AnnotationList an? TypeExp t IDENTIFIER i
+        | AnnotationList an? PORT TypeExp t IDENTIFIER i ASSIGN DataExp e
+        | AnnotationList an? PORT TypeExp t IDENTIFIER i
  ;
 syntax ParamDecls
         = 
@@ -402,6 +500,7 @@ syntax DatatypeparamList
  ;
 syntax Method
         = Methodsig ms Block b
+        | CRITICAL Methodsig ms Block b
  ;
 syntax Methodsig
         = 
@@ -410,6 +509,8 @@ syntax Methodsig
 syntax PureExp
         = PureExpNoIf
         | IfExp
+        | LocationExp "/"* Component* "/"
+        | FatherExp "/"* Component* "/"
  ;
 syntax PureExpNoIf
         = VarOrFieldRef
@@ -420,6 +521,14 @@ syntax PureExpNoIf
         | FnappExp
         | FnappListExp
         | CaseExp
+ ;
+syntax LocationExp
+        = 
+        LOC LPAREN PureExp param RPAREN
+ ;
+syntax FatherExp
+        = 
+        FATHER LPAREN PureExp param RPAREN
  ;
 syntax VarOrFieldRef
         = THIS DOT IDENTIFIER id
@@ -505,6 +614,10 @@ syntax StringLiteral
         = 
         STRINGLITERAL s
  ;
+syntax SqlStringLiteral
+        = 
+        SQLSTRINGLITERAL s
+ ;
 syntax IntLiteral
         = 
         INTLITERAL i
@@ -541,7 +654,7 @@ syntax PatternList
  ;
 syntax Cog
         = 
-        COG g
+        AnnotationList annotations? COG
  ;
 syntax Exp
         = EffExp e
@@ -554,14 +667,165 @@ syntax PureExpPrefix
 syntax EffExp
         = PureExpPrefix p DOT GET
         | NewExp
+        | SQL LPAREN SqlExp e RPAREN
         | AsyncCall
         | SyncCall
         | OriginalCall
-        | IncompleteExp e
+        | NewlocExp "/"* Component* "/"
+        | IncompleteExp
  ;
 syntax NewExp
         = 
         NEW Cog c? TypeName i LPAREN DataExpList l? RPAREN
+ ;
+syntax NewlocExp
+        = 
+        NEW LOC
+ ;
+syntax SqlExp
+        = SELECT SqlAttrsDef a FROM SqlRelationRef r OptSqlCondition c SqlGroupingAttributes g SqlOrderingAttributes o
+        | SELECT DISTINCT SqlAttrsDef a FROM SqlRelationRef r OptSqlCondition c SqlGroupingAttributes g SqlOrderingAttributes o
+        | INSERT INTO SqlRelationRef r LPAREN SqlAttrRefList a RPAREN VALUES LPAREN SqlTupleConstantList v RPAREN
+        | UPDATE SqlRelationRef r SET SqlAttrAssignmentList a OptSqlCondition c
+ ;
+syntax SqlAttrsDef
+        = MULT
+        | SqlAttrDefList l
+ ;
+syntax SqlAttrDefList
+        = SqlAttrDef a
+        | SqlAttrDefList l COMMA SqlAttrDef a
+ ;
+syntax SqlAttrDef
+        = Factor f
+        | SqlAggregateFunction fun AS DataExp e
+ ;
+syntax SqlAttrRefList
+        = SqlAttrRef a
+        | SqlAttrRefList l COMMA SqlAttrRef a
+ ;
+syntax SqlAttrRef
+        = 
+        DataExp
+ ;
+syntax SqlAttrAssignment
+        = 
+        DataExp e EQ SqlTupleScalarFunction f
+ ;
+syntax SqlAttrAssignmentList
+        = SqlAttrAssignment a
+        | SqlAttrAssignmentList l COMMA SqlAttrAssignment a
+ ;
+syntax SqlRelationRef
+        = SqlAtomicRelationRef
+        | SqlRelationRef r1 JOIN SqlAtomicRelationRef r2
+        | SqlRelationRef r1 LEFT JOIN SqlAtomicRelationRef r2
+        | SqlRelationRef r1 RIGHT JOIN SqlAtomicRelationRef r2
+ ;
+syntax SqlAtomicRelationRef
+        = StringLiteral r
+        | VarOrFieldRef r
+ ;
+syntax OptSqlCondition
+        = WHERE SqlOrCondition c
+        | ()
+ ;
+syntax SqlOrCondition
+        = SqlAndCondition
+        | SqlOrCondition c1 OR op SqlAndCondition c2
+ ;
+syntax SqlAndCondition
+        = SqlCondition
+        | SqlAndCondition c1 AND op SqlCondition c2
+ ;
+syntax SqlCondition
+        = LPAREN SqlOrCondition c RPAREN
+        | SqlTupleScalarFunction f1 SqlComparisonRelation r SqlTupleScalarFunction f2
+        | StringLiteral a IS NULL
+        | NOT SqlCondition c
+ ;
+syntax SqlTupleScalarFunction
+        = 
+        SqlTupleScalarFunctionConcat
+ ;
+syntax SqlTupleScalarFunctionConcat
+        = SqlTupleScalarFunctionSum
+        | SqlTupleScalarFunctionConcat f1 CONCAT SqlTupleScalarFunctionSum f2
+ ;
+syntax SqlTupleScalarFunctionSum
+        = SqlTupleScalarFunctionProduct
+        | SqlTupleScalarFunctionSum f1 PLUS SqlTupleScalarFunctionProduct f2
+        | SqlTupleScalarFunctionSum f1 MINUS SqlTupleScalarFunctionProduct f2
+        | SqlTupleScalarFunctionSum f1 MINUS LPAREN SqlTupleScalarFunctionSum f2 RPAREN
+ ;
+syntax SqlTupleScalarFunctionProduct
+        = SqlTupleScalarFunctionQuotient
+        | SqlTupleScalarFunctionProduct f1 MULT SqlTupleScalarFunctionQuotient f2
+        | SqlTupleScalarFunctionProduct f1 MULT LPAREN SqlTupleScalarFunctionSum f2 RPAREN
+ ;
+syntax SqlTupleScalarFunctionQuotient
+        = AtomicSqlTupleScalarFunction
+        | SqlTupleScalarFunctionQuotient f1 DIV AtomicSqlTupleScalarFunction f2
+        | SqlTupleScalarFunctionQuotient f1 DIV LPAREN SqlTupleScalarFunctionSum f2 RPAREN
+ ;
+syntax AtomicSqlTupleScalarFunction
+        = StringLiteral a
+        | SqlTupleConstant
+        | SqlTupleCaseFunction
+ ;
+syntax SqlTupleConstant
+        = SqlStringLiteral s
+        | IntLiteral i
+        | MINUS IntLiteral i
+        | TRUE
+        | FALSE
+        | VarOrFieldRef r
+ ;
+syntax SqlTupleConstantList
+        = SqlTupleConstant c
+        | SqlTupleConstantList l COMMA SqlTupleConstant c
+ ;
+syntax SqlTupleCaseFunction
+        = 
+        CASE SqlTupleCaseBranches b ELSE SqlTupleScalarFunction f END
+ ;
+syntax SqlTupleCaseBranches
+        = SqlTupleCaseBranch b
+        | SqlTupleCaseBranches l SqlTupleCaseBranch b
+ ;
+syntax SqlTupleCaseBranch
+        = 
+        WHEN SqlOrCondition c THEN SqlTupleScalarFunction f
+ ;
+syntax SqlComparisonRelation
+        = EQ
+        | LT
+        | GT
+        | LTEQ
+        | GTEQ
+        | NOTEQ
+ ;
+syntax SqlAggregateFunction
+        = COUNT LPAREN MULT RPAREN
+        | SqlTupleScalarFunction f
+        | IDENTIFIER i LPAREN SqlTupleScalarFunction f RPAREN
+ ;
+syntax SqlGroupingAttributes
+        = GROUP BY SqlAttrRefList a
+        | ()
+ ;
+syntax SqlOrderingAttributes
+        = ORDER BY SqlOrderingAttributeList l
+        | ()
+ ;
+syntax SqlOrderingAttributeList
+        = SqlOrderingAttribute a
+        | SqlOrderingAttributeList l COMMA SqlOrderingAttribute a
+ ;
+syntax SqlOrderingAttribute
+        = DataExp e ASC
+        | DataExp e DESC
+        | DataExp e
  ;
 syntax AsyncCall
         = THIS callee BANG IDENTIFIER method LPAREN DataExpList params? RPAREN
@@ -574,7 +838,7 @@ syntax SyncCall
 syntax OriginalCall
         = ORIGINAL LPAREN DataExpList params? RPAREN
         | DeltaId delta DOTORIGINAL LPAREN DataExpList params? RPAREN
-        | CORE DOT ORIGINAL LPAREN DataExpList params? RPAREN
+        | CORE DOTORIGINAL LPAREN DataExpList params? RPAREN
  ;
 syntax DeltaId
         = 
@@ -593,12 +857,16 @@ syntax StmtWithoutAnnotations
         = VarOrFieldRef r ASSIGN Exp e
         | AWAIT Guard
         | SKIP
+        | MOVECOGTO DataExp
         | SUSPEND
         | DURATION LPAREN DataExp min COMMA DataExp max RPAREN
         | RETURN Exp e
         | VarDecl vd
         | ASSERT DataExp e
         | EffExp e
+        | REBIND Exp obj COLON IDENTIFIER field ASSIGN Exp e
+        | REBIND IDENTIFIER field ASSIGN Exp e
+        | SUBLOC PureExp sub IN PureExp father
  ;
 syntax CompoundStmt
         = IfThenElseStmt
@@ -630,10 +898,11 @@ syntax Guard
         | DURATION LPAREN DataExp min COMMA DataExp max RPAREN
         | DataExp e
         | Guard g1 GUARDAND Guard g2
+        | BAR Exp e BAR
  ;
 syntax ProductLine
         = 
-        PRODUCTLINE TYPE_IDENTIFIER id LBRACE OptfeatureList o CorefeatureList c DeltaclauseList d RBRACE
+        PRODUCTLINE TYPE_IDENTIFIER id SEMICOLON OptfeatureList o CorefeatureList c DeltaclauseList d
  ;
 syntax OptfeatureList
         = ()
@@ -669,7 +938,7 @@ syntax DeltaclauseList
  ;
 syntax DeltaClause
         = 
-        DELTA Deltaspec d AfterCondition a? WhenCondition w?
+        DELTA Deltaspec d AfterCondition a? FromCondition f? WhenCondition w?
  ;
 syntax AfterCondition
         = 
@@ -700,33 +969,55 @@ syntax Deltaparam
         | INTLITERAL i
         | TYPE_IDENTIFIER c
  ;
-syntax WhenCondition
+syntax FromCondition
         = 
-        WHEN ApplicationCondition dl
+        FROM Appcond ac
  ;
-syntax ApplicationCondition
+syntax WhenCondition
+        = WHEN Appcond ac
+        | TO Appcond ac
+ ;
+syntax Appcond
+        = 
+        OrAppcond
+ ;
+syntax OrAppcond
+        = AndAppcond
+        | OrAppcond ac1 OROR AndAppcond ac2
+ ;
+syntax AndAppcond
+        = FactorAppcond
+        | AndAppcond ac1 ANDAND FactorAppcond ac2
+ ;
+syntax FactorAppcond
         = Feature f
-        | ApplicationCondition l ANDAND Feature f
+        | NEGATION FactorAppcond ac
+        | LPAREN Appcond ac RPAREN
  ;
 syntax ProductList
         = Product p
         | ProductList l Product p
  ;
 syntax Product
-        = 
-        PRODUCT TYPE_IDENTIFIER id LPAREN FeatureList l? RPAREN SEMICOLON
+        = PRODUCT TYPE_IDENTIFIER id LPAREN FeatureList l? RPAREN SEMICOLON
+        | PRODUCT TYPE_IDENTIFIER id LPAREN FeatureList l? RPAREN LBRACE AdaptationList al RBRACE
  ;
-syntax FextensionList
+syntax AdaptationList
+        = Adaptation ad
+        | AdaptationList l Adaptation ad
+ ;
+syntax Adaptation
+        = 
+        TYPE_IDENTIFIER product BY TYPE_IDENTIFIER update SEMICOLON
+ ;
+syntax Featuremodeldecl
         = ()
-        | FextensionList l Fextension ext
+        | Featuremodeldecl l ROOT FeatureDecl f
+        | Featuremodeldecl l EXTENSION Fextension ext
  ;
 syntax Fextension
         = 
-        EXTENSION TYPE_IDENTIFIER f LBRACE Group g? AttributeConstraintList acl RBRACE
- ;
-syntax RootfeatureList
-        = ()
-        | RootfeatureList l ROOT FeatureDecl f
+        TYPE_IDENTIFIER f LBRACE Group g? AttributeConstraintList acl RBRACE
  ;
 syntax FeatureDecl
         = TYPE_IDENTIFIER f
@@ -756,11 +1047,18 @@ syntax BoundaryInt
         | INTLITERAL i
         | MINUS INTLITERAL i
  ;
+syntax IntList
+        = INTLITERAL i
+        | IntList il COMMA INTLITERAL i
+        | MINUS INTLITERAL i
+        | IntList il COMMA MINUS INTLITERAL i
+ ;
 syntax AttributeConstraintList
-        = ()
+        = "/"* Attributes* "/"
+        | AttributeConstraintList acl TYPE_IDENTIFIER t IDENTIFIER id IN LBRACE IntList il RBRACE SEMICOLON
         | AttributeConstraintList acl TYPE_IDENTIFIER t IDENTIFIER id IN LBRACKET BoundaryInt b1 UNTIL BoundaryInt b2 RBRACKET SEMICOLON
         | AttributeConstraintList acl TYPE_IDENTIFIER t LBRACKET BoundaryInt b1 UNTIL BoundaryInt b2 RBRACKET IDENTIFIER id SEMICOLON
-        | AttributeConstraintList acl TYPE_IDENTIFIER t IDENTIFIER id SEMICOLON
+        | AttributeConstraintList acl TYPE_IDENTIFIER t IDENTIFIER id SEMICOLON "/"* Constraints* "/"
         | AttributeConstraintList acl IFIN COLON Mexp e SEMICOLON
         | AttributeConstraintList acl IFOUT COLON Mexp e SEMICOLON
         | AttributeConstraintList acl EXCLUDE COLON Featvar f SEMICOLON
