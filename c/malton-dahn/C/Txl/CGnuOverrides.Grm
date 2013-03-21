@@ -1,0 +1,1106 @@
+% GNU C Extensions
+% Christopher Dahn, Drexel University, August 2003
+% Revised and corrected Jim Cordy, Queen's University, May 2004
+
+% Extensions to C.Grm by Andrew Malton
+
+% GNU C files contain directives that are valid only to GCC and
+% appear sprinkled throughout standard C. To operate on a GNU C file,
+% you must include these extensions to the grammar. This grammar includes
+% extensions for GCC 2.95 -> 3.3.1. Some of the extensions may not be
+% implemented because they are semantic extensions, as opposed to syntactic
+% extensions, and, therefore, are irrelevant to the grammar.
+
+% Note, this doesn't include the ability to do the full array of GNU
+% preprocessor commands. GNU allows you to put preprocessor statements in
+% strange places, like the middle of lists. The grammatical implementation of
+% this ends up being a hacky kludgy mess with too many ambiguities for TXL to
+% be able to handle.
+
+% The following GNU extensions to C are supported. The GCC version is included
+% after the extension.  Those that are not in quotes
+% are syntax that was seen in source code that I don't know what standard it
+% comes from. 
+% The GNU C extensions can be found at
+% http://gcc.gnu.org/onlinedocs/
+%
+% 1. Allows for empty declarations.
+% 2. "Nested Functions" 3.0.4
+% 3. "Specifying Attributes of Types" 3.0.4
+% 4. "Specifying Attributes of Variables" 3.0.4
+% 5. "Specifying Attributes of Functions" 3.0.4
+% 6. "Alternate Keywords" 3.0.4
+% 7. "Designated Initializers" 3.0.4
+% 8. General use of the __extension__ keyword
+% 9. "Alternate Keywords" 3.0.4
+% 10. Allow empty declaration in structs and unions
+% 11. "Assembler Instructions with C Expression Operands" 3.0.4
+% 12. "Statements and Declarations in Expressions" 3.0.4
+% 13. "Compound Literals" 3.0.4
+% 14. "Referring to a Type with typeof" 3.0.4
+% 15. GNU preprocessor statements have extra information in them
+% 16. "Assembler Instructions with C Expression Operands" 3.0.4
+% 17. GNU C will allow you to leave a trailing ',' in enums
+% 18. "Attribute Syntax" 3.0.4
+% 19. "Conditionals with Omitted Operands" 3.0.4
+% 20. Need to allow things like "int foo(int[]);" for function prototypes. 
+% 21. "Hex Floats" 3.0.4
+% 22. Allow types to be passed as arguments. Things like va_arg() do this.
+% 23. "Inquiring on Alignment of Types or Variables" 3.0.4
+% 24. "Variables in Specified Registers" 3.0.4
+% 25. "Function Names as Strings" 3.0.4
+% 26. "Locally Declared Labels" 3.0.4
+% 27. "Labels as Values" 3.0.4
+% 28. "Case Ranges" 3.0.4
+% 29. "Dollar Signs in Identifier Names" 3.0.4
+% 30. "Complex Numbers" 3.0.4
+% 31. "Mixed Declarations and Code" 3.0.4
+
+keys
+        __asm           asm__           asm         __asm__
+        __inline        inline__        inline      __inline__
+        __restrict      restrict__      restrict    __restrict__
+        __typeof__      __typeof        typeof__    typeof
+        __alignof__     __alignof
+        __signed__      __signed        
+        __const         __const__       const__
+        __volatile      __volatile__    volatile__
+        __extension__   
+        __attribute__ 
+        __label__
+        _Complex
+end keys
+
+% 1. "Hex Floats"
+% 2. "Function Names as Strings"
+% 3. "Dollar Signs in Identifier Names"
+% 4. One form of 'float' also matches 'long'. This can result in illegal 
+% parses of
+% input, even though the documentation for TXL claims it will attempt to match
+% the longest input for tokens. For example:
+% int main()
+% {
+%    long long i = 9223372036854775807LL;
+% }
+%
+% Will result in an error because it thinks "9223372036854775807L" is a float,
+% followed by the identifier 'L', even though the whole thing matches the
+% 'long' type. By putting 'long' first in the tokens list, it works around this
+% bug.
+tokens
+    long        "\d+[LUlu]+"                %% CSD - 4
+    hex           "0[xX][\dAaBbCcDdEeFf]+(.\d*)?p\d+[FLfl]?"    %% CSD - 1
+                | "0[xX][\dAaBbCcDdEeFf]+[LUlu]*"
+    stringlit     "\"[(\\\c)#\"]*\""
+                | "__FUNCTION__"            %% CSD - 2
+                | "__PRETTY_FUNCTION__"     %% CSD - 2
+                | "__func__"                %% CSD - 2
+    float		"\d+.\d*([eE][+-]?\d+)?[FLfl]?"         %% CSD - 4
+           	|	"\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
+           	|	"\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
+    id            "[\u$][\i$]*"             %% CSD - 3
+#ifdef PREPROCESSOR
+    		|	"\#\i+"
+#endif
+end tokens
+
+% TXL claims there is ambiguity with the definition in C.Grm, this fixes it.
+redefine type_specifiers
+	[repeat type_qualifier] [type_specifier] [repeat type_qualifier]
+    |	[repeat type_qualifier]
+end redefine
+
+% 1. Allows for empty declarations.
+redefine declaration
+        [null_declaration]  %% CSD - 1
+    |   [declaration_body] [semi]
+#ifdef PREPROCESSOR
+    |   [preprocessor]
+#endif
+end redefine
+
+define null_declaration
+        [semi]
+end define
+
+% 1. "Specifying Attributes of Types"
+% 2. "Locally Declared Labels"
+% 3. Allow useless keywords in empty declarations of enums and structs.
+% 4. "Assembler Instructions with C Expression Operands"
+redefine declaration_body
+        [decl_specifiers] [list init_declarator+]
+    |   [repeat decl_qualifier] [struct_or_union_specifier]     %% CSD - 3
+    |   [repeat decl_qualifier] 
+        [enum_specifier] [repeat attribute_spec]                %% CSD - 1,3
+    |   [local_label] [list declarator+]                        %% CSD - 2
+    |   [asm_spec]                                              %% CSD - 4
+end redefine
+
+% Removing ambiguity
+redefine decl_specifiers
+        [repeat decl_qualifier] [type_specifier] [repeat decl_qualifier] %% CSD
+    |   [repeat decl_qualifier]     %% CSD
+end redefine
+
+% 1. "Specifying Attributes of Variables"
+redefine init_declarator
+        [declarator] [opt initialization] [repeat attributes_or_asm] %% CSD - 1
+end redefine
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Functions"
+redefine declarator
+        [repeat attribute_spec] 
+        [repeat ptr_operator] 
+        [base_declarator] [repeat declarator_extension]
+        [repeat attribute_spec]  %% CSD - 1,2
+end redefine
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Functions"
+redefine base_declarator
+        [repeat attribute_spec] [reference_id]      %% CSD - 1,2,3
+    |   [repeat attribute_spec] ( [declarator] )    %% CSD - 1,2,3
+end redefine
+
+% 1. "Alternate Keywords"
+redefine ptr_operator
+        '* [repeat ptr_qualifier]    %% CSD - 1
+end redefine
+
+define local_label
+        '__label__
+end define
+
+% 1. "Alternate Keywords"
+define ptr_qualifier
+        [restrict_qualifier]
+    |   [cv_qualifier]
+end define
+
+% 1. "Alternate Keywords"
+define restrict_qualifier
+        '__restrict      
+    |   'restrict__      
+    |   'restrict    
+    |   '__restrict__
+end define
+
+% 1. "Designated Initializers"
+redefine initializer
+        %[expression]
+        [assignment_expression]
+    |   [NL] { [IN] [list designated_initializer] [opt ',] [EX] }   %% CSD - 1
+end redefine
+
+%% What's this one for?? JRC
+redefine assignment_expression
+        [conditional_expression]
+    |   [conditional_expression] [assignment_operation]
+end redefine
+
+% 1. I want to favor parseable forms without the designator so that the
+%    initializer "L'\0'" is parsed as a GNU long int charlit instead of the
+%    designator "L" followed by a char lit. If the element doesn't parse as an
+%    assignment expression, then it must be a designator.
+redefine designated_initializer
+        [assignment_expression]
+    |   [repeat designator] [opt designator_assignment] [assignment_expression]
+    |   [repeat designator] [opt designator_assignment]
+        [NL] { [IN] [list designated_initializer] [opt ',] [EX] }
+end redefine
+
+define designator
+        [array_designator]
+    |   [struct_or_union_designator]
+end define
+
+define array_designator
+        '[ [constant_expression] '] [repeat postfix_extension]
+    |   '[ [constant_expression]
+        [SP] '... [SP]
+        [constant_expression] '] [repeat postfix_extension]
+end define
+
+define struct_or_union_designator
+        [opt '.] [id] [repeat postfix_extension]
+end define
+
+define designator_assignment
+        ':
+    |   '=
+end define
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Types"
+% 3. General use of GNU extensions
+redefine decl_qualifier
+        [sc_specifier]		% In ANSI C, not allowed for member_declaraton.
+    |   [type_qualifier]
+    |   [attribute_spec]     %% CSD - 1,2
+    |   [extension_specifier]    %% CSD - 3
+end redefine
+
+% 1. General use of GNU extensions
+define extension_specifier
+        '__extension__      %% CSD - 1
+end define
+
+% 1. "Alternate Keywords"
+redefine cv_qualifier
+        'const
+    |   'volatile
+    |   '__const            %% CSD - 1
+    |   '__const__          %% CSD - 1
+    |   'const__            %% CSD - 1
+    |   '__volatile__       %% CSD - 1
+    |   '__volatile         %% CSD - 1
+    |   'volatile__         %% CSD - 1
+end redefine
+
+% 1. "Alternate Keywords"
+% 2. Makes expanding shorthand much easier:
+%    long i; -> long int i;
+redefine type_qualifier
+        [bit_qualifier]         %% CSD - 2
+    |   [inline_qualifier]      %% CSD - 1
+    |   [cv_qualifier]          %% CSD - 1
+    |   [restrict_qualifier]    %% CSD - 1
+end redefine
+
+% 1. "Alternate Keywords"
+define bit_qualifier
+        'long
+    |   'short
+    |   'signed
+    |   'unsigned
+    |   '__signed__     %% CSD - 1
+    |   '__signed       %% CSD - 1
+end define
+
+% 1. "Alternate Keywords"
+define inline_qualifier
+        '__inline           %% CSD - 1
+    |   '__inline__         %% CSD - 1
+    |   'inline__           %% CSD - 1
+    |   'inline             %% CSD - 1
+end define
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Types"
+redefine struct_or_union_specifier
+        [struct_or_union] 
+        [repeat attribute_spec]   %%CSD - 2
+        [opt tagged_reference_id] 
+        {   [IN] [NL]
+            [repeat member_declaration] [EX]
+        } [repeat attribute_spec]                   %%CSD - 1
+    |   [struct_or_union] [repeat attribute_spec] [tagged_reference_id]  %%CSD
+end redefine
+
+% 1. Allow empty declaration in structs and unions
+% 2. You can actually specify a struct definition inside of a struct, without 
+%    providing a declarator. This is here to maintain the spirit of the
+%    declaration grammar, as opposed to pulling the + off of the list form.
+redefine member_declaration
+        [decl_specifiers] [list member_declarator+] [semi]
+    |   [repeat decl_qualifier] [struct_or_union_specifier] [semi]  %% CSD - 2
+    |   [semi]    %%CSD - 1
+#ifdef PREPROCESSOR
+    |   [preprocessor]
+#endif
+end redefine
+
+% 1. "Specifying Attributes of Variables"
+redefine member_declarator
+        [declarator] [opt bitfieldsize] [repeat attributes_or_asm]    %%CSD - 1
+    |   [bitfieldsize]
+end redefine
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Types"
+% 3. "Specifying Attributes of Functions"
+% 4. "Assembler Instructions with C Expression Operands"
+define attributes_or_asm
+        [attribute_spec]
+    |   [asm_spec]
+end define
+
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Types"
+% 3. "Specifying Attributes of Functions"
+define attribute_spec
+    '__attribute__ '('( [list attribute_extension] ')')
+end define
+
+% All of these started in GCC 3.0.4 unless otherwise specified
+% 1. "Specifying Attributes of Variables"
+% 2. "Specifying Attributes of Types"
+% 3. "Specifying Attributes of Functions"
+define attribute_extension
+        [attribute_alias] '( [string] ')
+    |   [attribute_aligned]
+    |   [attribute_aligned] '( [tagged_attribute_number] ')
+    |   [attribute_aligned] '( [alignof_expression] ')
+    |   [attribute_always_inline]   %% 3.1.1
+    |   [attribute_cdecl]
+    |   [attribute_cleanup] '( [tagged_attribute_id] ')     %% 3.3.1
+    |   [attribute_const]
+    |   [attribute_constructor]
+    |   [attribute_deprecated]  %% 3.1.1
+    |   [attribute_destructor]
+    |   [attribute_dllexport]   %% 3.1.1
+    |   [attribute_dllimport]   %% 3.1.1
+    |   [attribute_eightbit]
+    |   [attribute_exception] '( [exception_function] [list exception_arg] ')
+    |   [attribute_far]         %% 3.3.1
+    |   [attribute_funvector]
+    |   [attribute_format] '( [format_archetype] ', [tagged_attribute_number] ',
+                              [tagged_attribute_number] ')
+    |   [attribute_format_arg] '( [tagged_attribute_number] ')
+    |   [attribute_interrupt]
+    |   [attribute_interrupt] '( [string] ')
+    |   [attribute_interrupt_handler]
+    |   [attribute_interrupt_handler] '( [string] ')
+    |   [attribute_longcall]
+    |   [attribute_long_call]
+    |   [attribute_malloc]
+    |   [attribute_may_alias]       %% 3.3.1
+    |   [attribute_mode] '( [tagged_attribute_id] ')
+    |   [attribute_model] '( [attribute_model_name] ')
+    |   [attribute_naked]
+    |   [attribute_near]            %% 3.3.1
+    |   [attribute_no_check_mem]
+    |   [attribute_no_instrument]
+    |   [attribute_nocommon]
+    |   [attribute_noinline]        %% 3.1.1
+    |   [attribute_nonnull]         %% 3.3.1
+    |   [attribute_nonnull] '( [list tagged_attribute_number+] ')    %% 3.3.1
+    |   [attribute_noreturn]
+    |   [attribute_nothrow]         %% 3.3.1
+    |   [attribute_packed]
+    |   [attribute_pure]
+    |   [attribute_regparm] '( [tagged_attribute_number] ')
+    |   [attribute_section] '( [string] ')
+    |   [attribute_shared]
+    |   [attribute_short_call]
+    |   [attribute_signal] '( [string] ')
+    |   [attribute_sp_switch] '( [string] ')
+    |   [attribute_stdcall]
+    |   [attribute_tiny]
+    |   [attribute_tls_model] '( [tls_model_type] ')    %% 3.3.1
+    |   [attribute_trans_union]
+    |   [attribute_trap_exit] '( [tagged_attribute_number] ')
+    |   [attribute_used]        %% 3.1.1
+    |   [attribute_unused]
+    |   [attribute_vector_size] '( [tagged_attribute_number] ')      %% 3.1.1
+    |   [attribute_visibility] '( [visibility_type] ')      %% 3.3.1
+    |   [attribute_weak]
+end define
+
+define tagged_attribute_id
+        [id]
+end define
+
+define tagged_attribute_number
+        [number]
+end define
+
+define attribute_near
+        '__near__
+    |   '__near
+    |   'near__
+    |   'near
+end define
+
+define attribute_far
+        '__far__
+    |   '__far
+    |   'far__
+    |   'far
+end define
+
+define attribute_visibility
+        '__visibility__
+    |   '__visibility
+    |   'visibility__
+    |   'visibility
+end define
+
+define visibility_type
+        "default"
+    |   "hidden"
+    |   "protected"
+    |   "internal"
+end define
+
+define attribute_nonnull
+        '__nonnull__
+    |   '__nonnull
+    |   'nonnull__
+    |   'nonnull
+end define
+
+define attribute_nothrow
+        '__nothrow__
+    |   '__nothrow
+    |   'nothrow__
+    |   'nothrow
+end define
+
+define attribute_may_alias
+        '__may_alias__
+    |   '__may_alias
+    |   'may_alias__
+    |   'may_alias
+end define
+
+define attribute_tls_model
+        '__tls_model__
+    |   '__tls_model
+    |   'tls_model__
+    |   'tls_model
+end define
+
+define tls_model_type
+        "global-dynamic"
+    |   "local-dynamic"
+    |   "initial-exec"
+    |   "local-exec"
+end define
+
+
+define attribute_cleanup
+        '__cleanup__
+    |   '__cleanup
+    |   'cleanup__
+    |   'cleanup
+end define
+
+define attribute_dllexport
+        '__dllexport__
+    |   '__dllexport
+    |   'dllexport__
+    |   'dllexport
+end define
+
+define attribute_used
+        '__used__
+    |   '__used
+    |   'used__
+    |   'used
+end define
+
+define attribute_always_inline
+        '__always_inline__
+    |   '__always_inline
+    |   'always_inline__
+    |   'always_inline
+end define
+
+define attribute_noinline
+        '__noinline__
+    |   '__noinline
+    |   'noinline__
+    |   'noinline
+end define
+
+define attribute_vector_size
+        '__vector_size__
+    |   '__vector_size
+    |   'vector_size__
+    |   'vector_size
+end define
+
+define attribute_deprecated
+        '__deprecated__
+    |   '__deprecated
+    |   'deprecated__
+    |   'deprecated
+end define
+
+define attribute_mode
+        '__mode__
+    |   '__mode 
+    |   'mode__
+    |   'mode 
+end define
+
+define attribute_format
+        '__format__
+    |   '__format 
+    |   'format__
+    |   'format 
+end define
+
+define attribute_format_arg
+        '__format_arg__
+    |   '__format_arg 
+    |   'format_arg__
+    |   'format_arg 
+end define
+
+define attribute_aligned
+        '__aligned__
+    |   '__aligned
+    |   'aligned__
+    |   'aligned                
+end define
+
+define attribute_weak
+        'weak
+    |   '__weak__
+    |   '__weak
+    |   'weak__
+end define
+
+define attribute_alias
+        'alias
+    |   '__alias__
+    |   '__alias
+    |   'alias__
+end define
+
+define attribute_no_check_mem
+        'no_check_memory_usage
+    |   '__no_check_memory_usage__
+    |   '__no_check_memory_usage
+    |   'no_check_memory_usage__
+end define
+
+define attribute_regparm
+        'regparm
+    |   '__regparm__
+    |   '__regparm
+    |   'regparm__
+end define
+
+define attribute_stdcall
+        'stdcall
+    |   '__stdcall__
+    |   '__stdcall
+    |   'stdcall__
+end define
+
+define attribute_cdecl
+        'cdecl
+    |   '__cdecl__
+    |   '__cdecl
+    |   'cdecl__
+end define
+
+define attribute_longcall
+        'longcall
+    |   '__longcall__
+    |   '__longcall
+    |   'longcall__
+end define
+
+define attribute_long_call
+        'long_call
+    |   '__long_call__
+    |   '__long_call
+    |   'long_call__
+end define
+
+define attribute_short_call
+        'short_call
+    |   '__short_call__
+    |   '__short_call
+    |   'short_call__
+end define
+
+define attribute_dllimport
+        'dllimport
+    |   '__dllimport__
+    |   '__dllimport
+    |   'dllimport__
+end define
+
+define attribute_exception
+        'exception
+    |   '__exception__
+    |   '__exception
+    |   'exception__
+end define
+
+define exception_function
+        [repeat stringlit] [stringlit]
+    |   [tagged_attribute_id]
+end define
+
+define exception_arg
+        [repeat stringlit] [stringlit]
+    |   [tagged_attribute_id]
+end define
+
+define attribute_funvector
+        'function_vector
+    |   '__function_vector__
+    |   '__function_vector
+    |   'function_vector__
+end define
+
+define attribute_interrupt
+        'interrupt
+    |   '__interrupt__
+    |   '__interrupt
+    |   'interrupt__
+end define
+
+define attribute_interrupt_handler
+        'interrupt_handler
+    |   '__interrupt_handler__
+    |   '__interrupt_handler
+    |   'interrupt_handler__
+end define
+
+define attribute_sp_switch
+        'sp_switch
+    |   '__sp_switch__
+    |   '__sp_switch
+    |   'sp_switch__
+end define
+
+define attribute_trap_exit
+        'trap_exit
+    |   '__trap_exit__
+    |   '__trap_exit
+    |   'trap_exit__
+end define
+
+define attribute_eightbit
+        'eightbit_data
+    |   '__eightbit_data__
+    |   '__eightbit_data
+    |   'eightbit_data__
+end define
+
+define attribute_tiny
+        'tiny_data
+    |   '__tiny_data__
+    |   '__tiny_data
+    |   'tiny_data__
+end define
+
+define attribute_signal
+        'signal
+    |   '__signal__
+    |   '__signal
+    |   'signal__
+end define
+
+define attribute_naked
+        'naked
+    |   '__naked__
+    |   '__naked
+    |   'naked__
+end define
+
+define attribute_model
+        'model
+    |   '__model__
+    |   '__model
+    |   'model__
+end define
+
+define attribute_model_name
+        'small
+    |   '__small__
+    |   '__small
+    |   'small__
+    |   'medium
+    |   '__medium__
+    |   '__medium
+    |   'medium__
+    |   'large
+    |   '__large__
+    |   '__large
+    |   'large__
+end define
+
+define attribute_nocommon
+        'nocommon
+    |   '__nocommon__
+    |   'nocommon__
+    |   '__nocommon
+end define
+
+define attribute_shared
+        'shared
+    |   '__shared__
+    |   '__shared
+    |   'shared__
+end define
+
+define attribute_malloc
+        'malloc
+    |   '__malloc__
+    |   '__malloc
+    |   'malloc__
+end define
+
+define format_archetype
+        'printf
+    |   '__printf__
+    |   '__printf
+    |   'printf__
+    |   'scanf
+    |   '__scanf__
+    |   '__scanf
+    |   'scanf__
+    |   'strftime
+    |   '__strftime__
+    |   '__strftime
+    |   'strftime__
+    |   'strfmon
+    |   '__strfmon__
+    |   '__strfmon
+    |   'strfmon__
+end define
+
+define attribute_noreturn
+        '__noreturn__
+    |   '__noreturn
+    |   'noreturn__
+    |   'noreturn
+end define
+
+define attribute_const
+        '__const__
+    |   '__const
+    |   'const__
+    |   'const                    
+end define
+
+define attribute_pure
+        '__pure__
+    |   '__pure
+    |   'pure__
+    |   'pure
+end define
+
+define attribute_trans_union
+        '__transparent_union__
+    |   '__transparent_union
+    |   'transparent_union__
+    |   'transparent_union
+end define
+
+define attribute_unused
+        '__unused__
+    |   '__unused                  
+    |   'unused__
+    |   'unused                  
+end define
+
+define attribute_packed
+        '__packed__
+    |   '__packed
+    |   'packed__
+    |   'packed               
+end define
+
+define attribute_no_instrument
+        'no_instrument_function
+    |   '__no_instrument_function__
+    |   '__no_instrument_function
+    |   'no_instrument_function__
+end define
+
+define attribute_section
+        'section
+    |   '__section__
+    |   '__section
+    |   'section__
+end define
+
+define attribute_constructor
+        'constructor
+    |   '__constructor__
+    |   '__constructor
+    |   'constructor__
+end define
+
+define attribute_destructor
+        'destructor
+    |   '__destructor__
+    |   '__destructor
+    |   'destructor__
+end define
+
+define asm_statement
+        [asm_spec] [semi]
+end define
+
+% 1. "Assembler Instructions with C Expression Operands"
+% 2. "Variables in Specified Registers"
+define asm_spec
+        [repeat asm_or_cv+] '( [asm_template] 
+                                     [opt asm_output_operands]
+                                     [opt asm_input_operands] 
+                                     [opt asm_clobbered_registers]
+                                  ')
+end define
+
+% "Assembler Instructions with C Expression Operands"
+define asm_or_cv
+        '__asm__
+    |   'asm
+    |   'asm__
+    |   '__asm
+    |   [cv_qualifier]
+end define
+
+define asm_template
+        [string]
+end define
+
+define asm_output_operands
+        ': [list asm_operand]
+end define
+
+define asm_input_operands
+        ': [list asm_operand]
+end define
+
+define asm_operand
+        [string] '( [expression] ')
+end define
+
+define asm_clobbered_registers
+        ': [list string]
+end define
+
+% 1. "Statements and Declarations in Expressions"
+% 2. "Compound Literals"
+% 3. General use of the __extension__ keyword
+redefine nonreferential_primary
+        [constant]
+    |   [string]
+    |   '( [expression] ')
+    |   [compound_statement_expression]                 %% CSD - 1
+    |   [compound_literal]                              %% CSD - 2
+    |   [extension_specifier] [compound_statement_expression] %% CSD - 1
+    |   [extension_specifier] '( [expression] ')              %% CSD - 3
+end redefine
+
+% 1. "Inquiring on Alignment of Types or Variables"
+redefine unary_expression
+        ...
+    |   [alignof_expression]    %% CSD - 1
+end redefine
+
+% 1. "Labels as Values"
+redefine unary_operator
+	...
+    |	'&&              %% CSD - 1
+end redefine
+
+redefine for_statement
+        ...
+    |   'for ( [declaration_body] '; [opt expression] '; [opt expression] )
+        [statement]
+end redefine
+
+% 1. "Labels as Values"
+redefine jump_statement
+        ...
+    |   'goto [ptr_operator] [expression] [semi]    %% CSD - 1
+end redefine
+
+% 1. "Alternate Keywords"
+redefine constant_expression
+        ...
+    |   [restrict_qualifier]        %% CSD - 1
+end redefine
+
+define compound_statement_expression
+        '( [compound_statement] ')                      %% CSD 8/23/2003
+end define
+
+% 1. "Mixed Declarations and Code" 3.0.4
+redefine compound_statement
+    { [NL] 
+	[repeat compound_statement_body]        %% CSD - 1
+    } [opt ';] [NL]
+end redefine
+ 
+% 1. "Nested Functions"
+% 2. I need to favor declarations, since that's what I'm transforming, so I
+% have re-ordered the statements and declarations to disfavor statements if
+% possible.
+% 3. "Mixed Declarations and Code" 3.0.4
+redefine compound_statement_body
+        [IN] [declaration] [EX]                 %% CSD - 2,3
+    |   [IN] [function_definition] [EX]         %% CSD - 1,3
+    |   [IN] [statement] [EX]                   %% CSD - 2,3
+end redefine
+
+% 1. "Compound Literals"
+define compound_literal
+        '( [struct_or_union_specifier] ') 
+         { [list designated_initializer] [opt ',] }
+    |   '( [compound_literal_array_type] ')
+         { [list designated_initializer] [opt ',] }
+    |   '( [compound_literal] ')
+end define
+
+define compound_literal_array_type
+        [type_specifiers] [compound_literal_array_declarator]
+end define
+
+define compound_literal_array_declarator
+        [repeat ptr_operator] [repeat array_declarator_extension]
+    |   ( [compound_literal_array_declarator] ) [repeat array_declarator_extension]
+end define
+
+% 1. I've switched the order of the parse from the original. This causes the
+% parse to be more accurate. Before, sizeof (foo[2]);, where foo was the
+% declarator name of a variable would be parsed as a [type_name]. By switching
+% them, it is correctly parsed as a [unary_expression]. It will also continue
+% to parse, sizeof (int [2]);, as a [type_name] as it should.
+redefine sizeof_expression
+        'sizeof [unary_expression]
+    |   'sizeof ( [type_name] )
+end redefine
+
+% 1. "Referring to a Type with typeof"
+% 2. "Complex Numbers"
+redefine type_specifier
+        ...
+    |   [typeof_expression]          %% CSD - 1
+    |   [complex_specifier]         %% CSD - 2
+end redefine
+
+% 1. "Referring to a Type with typeof"
+define typeof_expression
+        [typeof_specifier] '( [simple_type_name] ')      %% CSD - 1
+    |   [typeof_specifier] '( [expression] ')            %% CSD - 1
+end define
+
+% 1. "Referring to a Type with typeof"
+define typeof_specifier
+        '__typeof            %% CSD - 1
+    |   'typeof              %% CSD - 1
+    |   '__typeof__          %% CSD - 1
+    |   'typeof__            %% CSD - 1
+end define
+
+% 1. "Complex Numbers"
+define complex_specifier
+        '_Complex [repeat simple_type_or_qualifier]
+end define
+
+define simple_type_or_qualifier
+        [simple_type_name]
+    |   [type_qualifier]
+end define
+
+% 1. long int
+% 2. "Hex Floats"
+redefine constant
+        ...
+    |   [gnu_long_int]                      %% CSD - 1
+    |   [repeat gnu_long_int_string+]       %% CSD - 1
+    |   [hexfloat]                          %% CSD - 2
+end redefine
+
+define gnu_long_int
+        [gnu_long_int_string]
+    |   [gnu_long_int_charlit]
+end define
+
+define gnu_long_int_string
+        'L [SPOFF] [string] [SPON]
+end define
+
+define gnu_long_int_charlit
+        'L [SPOFF] [charlit] [SPON]
+end define
+
+define hexfloat
+        [extension_specifier] [hex]  
+end define
+
+% 1. GNU preprocessor statements have extra information in them
+redefine preprocessor
+	...
+    |   '# [integernumber] [string] [repeat integernumber] [NL] %% CSD 1
+    |   '#pragma [SPON] [repeat id] '( [list id] ') [NL]          %% CSD-1
+end redefine
+
+% 1. "Assembler Instructions with C Expression Operands"
+redefine unlabeled_statement
+        ...
+    |   [asm_statement]           %% CSD - 1
+end redefine
+
+% 1. GNU C will allow you to leave a trailing ',' in enums
+redefine enum_specifier
+        'enum [tagged_reference_id]
+    |   'enum [opt tagged_reference_id] { [list enumerator] [opt ',] }  %%CSD 1
+end redefine
+
+% 1. "Attribute Syntax"
+% 2. "Case Ranges"
+redefine label
+        [label_id] ': [repeat attribute_spec]       %% CSD - 1
+    |   [EX][SP][SP] 'case [constant_expression] ': [IN] [NL] 
+    |   [EX][SP][SP] 'case [constant_expression] [SP] '... [SP] [constant_expression] ': [IN] [NL]   %%% CSD - 2
+    |   [EX][SP][SP] 'default ': [IN] [NL] 
+end redefine
+
+% 1. Allow types to be passed as arguments. Things like va_arg() allow this.
+%    This was originally in [unary_expression], then in
+%    [assignment_expression], but that caused an ambiguity
+%    with type casts and conditional expressions respectively.
+redefine postfix_extension
+        '[ [expression] ']
+    |   '( [list argument_expression] ')    %% CSD - 1
+    |   '. [id]
+    |   '-> [id]
+    |   '++
+    |   '--
+end redefine
+
+define argument_expression
+        [assignment_expression]
+    |   [type_name]
+end define
+
+redefine conditional_expression
+    [binary_expression] [repeat conditional_operation]
+end redefine
+
+% 1. "Conditionals with Omitted Operands"
+redefine conditional_operation
+        %? [opt expression] : [binary_expression]
+    %|   ? [opt expression] : [binary_expression] [conditional_operation]
+        ? [opt expression] : [binary_expression]
+end redefine
+
+% 1. Need to allow things like "int foo(int[]);" for function prototypes. Having
+% the '+' on the [repeat ptr_operator] prevents this from happening.
+redefine abstract_declarator
+        [repeat ptr_operator+] [repeat declarator_extension]     %% CSD - 1
+    |   [repeat array_declarator_extension]
+    |   ( [abstract_declarator] ) [repeat declarator_extension]
+end redefine
+
+define alignof_expression
+        '__alignof__ '( [unary_expression] ')
+    |   '__alignof '( [unary_expression] ')
+    |   '__alignof__ '( [type_name] ')
+    |   '__alignof '( [type_name] ')
+end define
+
+% 1. Allow labels with no subsequent statements to exist at the end of a switch
+% block:
+% switch (foo){
+%   default:
+% }
+redefine statement
+        ...
+    |   [label]                          %% CSD - 1
+end redefine
