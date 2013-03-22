@@ -1,0 +1,797 @@
+% TXL ANSI C++ Basis Grammar
+% Copyright 2001 TXL Software Research Inc. and James R. Cordy
+
+% Adapted from the original C++ 3.0 TXL grammar by Mike Elges and Jim Cordy, 1992-1995
+% Portions Copyright 1995 Mike Elges & James R. Cordy 
+
+% Revised Nov 2002 JRC
+% - added bool to simple type names
+% - fixed problem with parsing parameter declarators
+
+
+% Include "CppCommentOverrides.Grammar" after this grammar to preserve comments
+
+#pragma -width 128
+
+
+% Lexical conventions of C++
+
+tokens
+    id          + "\#\i+"
+    hexnumber   "0[XxZz][\dABCDEFabcdef]+[UulL]?[uUlL]?"
+    number      + "\d+[uUlL][lLuU]?"                                % cast integer
+                + "\d+(.\d*)?([eE][+-]?\d+)([fFUuLl]?[fFUuLl]?)"    % float constants
+                + "\d+.\d*([fFUuLl]?[fFUuLl]?)"
+                + ".\d+([eE][+-]?\d+)([fFUuLl]?[fFUuLl]?)"
+                + ".\d+([fFUuLl]?[fFUuLl]?)"
+end tokens
+
+comments
+    //
+    /*  */
+end comments
+
+compounds
+    !=  '%=  &&  &=  *=  ++  +=  -+  --  -=  
+    ->  ->*  .*  /=  ::  <<  <<=  <=  
+    ==  >=  >>  >>=  ^=  |=  ||  **
+end compounds
+
+keys
+    'asm 'auto 'bool 'break 'case 'catch 'char 'class 'const
+    'continue 'default 'delete 'do 'double 'else 'enum 'extern
+    'float 'for 'friend 'goto 'if 'inline 'int 'long
+    'namespace 'new 'operator 'private 'protected 'public 'register 'return 'short
+    'signed 'sizeof 'static 'struct 'switch 'template 'this 'throw 'try 'typedef
+    'union 'unsigned 'using 'virtual 'void 'volatile 'while 'declare
+    '#define '#else '#endif '#if '#ifdef '#ifndef '#include '#line '#undef '#indent '#LINK
+end keys
+
+
+% Syntax of ANSI C++ 
+
+define program
+    [declaration_list]
+end define
+
+
+% Declarations
+
+define declaration_list
+    [repeat declaration]
+end define
+
+define declaration
+        [asm_declaration]
+    |   [class_definition]
+    |   [function_definition]
+    |   [namespace_definition]
+    |   [template_declaration]
+    |   [linkage_specification]
+    |   [exception_specification] 
+    |   [using_declaration]
+    |   [opt decl_specifiers] [declarator_list] '; [NL]    
+    |   [decl_specifiers] '; [NL]    
+    |   '; [NL]    
+    |   [preprocessor] [NL]                
+end define
+
+
+% Asm declarations
+
+define asm_declaration
+    'asm '( [string_constant] ') '; [NL]
+end define
+
+
+% Class definitions
+
+define class_definition
+    [NL] [repeat storage_class_specifier] [class_specifier] [opt declarator_list] '; [NL] [NL]
+end define
+
+define storage_class_specifier
+        'auto
+    |   'register
+    |   'static
+    |   'extern
+end define
+
+define class_specifier
+    [class_head] '{           [NL][IN]
+        [repeat  member]      [EX]
+    '}
+end define
+
+define class_head
+        [class_key] [opt id] [opt base_spec]
+    |   [class_key] [nested_name_spec] [id] [opt base_spec]
+    |   [class_key] [class_name] [opt base_spec]
+end define
+
+define class_key
+    'class | 'struct | 'union
+end define
+
+define base_spec
+    ': [base_list]
+end define
+
+define base_list
+    [base_specifier] [opt ',] [list base_specifier]
+end define
+
+define base_specifier
+        [opt '::] [opt nested_name_spec] [class_name]
+    |   'virtual [opt access_specifier] [opt '::] [opt nested_name_spec] [class_name]
+    |   [access_specifier] [opt 'virtual] [opt '::] [opt nested_name_spec] [class_name]
+end define
+
+define access_specifier
+        'private
+    |   'protected
+    |   'public
+end define
+
+define member
+	[opt access_specifier_colon] [member_declaration] 
+end define
+
+define access_specifier_colon
+    [EX_2] [NL] [access_specifier] [SPOFF] ': [SPON] [IN_2] [NL]
+end define
+
+define member_declaration
+        [function_definition]  [opt ';]
+    |   [qualified_name] ';    [NL]
+    |   [using_declaration]
+    |   [opt decl_specifiers] [member_declarator_list] '; [NL]    
+    |   [decl_specifiers] '; [NL]    
+    |   '; [NL]    
+    |   [preprocessor] [NL]
+end define
+
+define member_declarator_list
+    [list member_declarator+]
+end define
+
+define member_declarator
+        [declarator] [opt initializer]            % GCC extension
+    |   [opt id]  [SPOFF] ': [SPON]  [constant_expression]
+end define
+
+
+% Function definitions
+
+define function_definition
+    [NL] [opt decl_specifiers] [function_declarator] [opt ctor_initializer] 
+        [opt exception_specification] [function_body]
+end define
+
+define function_declarator
+    % like [declarator], but requires a [declarator_extension]
+        [repeat pointer_operator] [declared_item] [repeat declarator_extension+]
+end define
+
+define function_body
+        [NL] [compound_statement] [opt ';] [NL] 
+    |   'try [opt ctor_initializer] [NL] [compound_statement] [opt ';] [NL] [handler_list]
+end define
+
+define ctor_initializer
+    [SPOFF] ': [SPON] [mem_initializer_list]
+end define
+
+define mem_initializer_list
+    [list mem_initializer+]
+end define
+
+define mem_initializer
+        [opt '::] [opt nested_name_spec] [class_name] '(  [opt expression_list]  ')
+end define
+
+
+% Namespace definitions
+
+define namespace_definition
+        'namespace [opt id] '{         [NL] [IN] 
+            [opt declaration_list]     [EX] 
+        '}                             [NL] [NL]
+    |   'namespace [id] '= [qualified_namespace_spec]
+end define
+
+define qualified_namespace_spec
+    [opt '::] [opt nested_name_spec] [class_or_namespace_name]
+end define
+
+define nested_name_spec
+    [class_or_namespace_name] ':: [opt nested_name_spec]
+end define
+
+define class_or_namespace_name
+        [class_name]
+    |   [namespace_name]
+end define
+
+define namespace_name
+    [id]
+end define
+
+
+% Template declarations
+
+define template_declaration
+    template < [template_parameter_list] > [declaration]
+end define
+
+define template_parameter_list
+        [template_parameter]
+    |   [template_parameter_list] , [template_parameter]
+end define
+
+define template_parameter
+        [type_parameter]
+    |   [parameter_declaration]
+end define
+
+define type_parameter
+    class [id]
+end define
+
+
+% Linkage specifications
+
+define linkage_specification
+                                     [NL] 
+        'extern [stringlit] '{       [NL][IN]
+            [declaration_list]       [EX]
+        '} [opt ';]                  [NL][NL]
+
+    |   'extern [stringlit] [declaration]
+end define
+
+
+% Exception specifications
+
+define exception_specification
+    throw '( [opt type_list] ')
+end define
+
+define type_list
+        [type_name]
+    |   [type_list] , [type_name]
+end define
+
+
+% Using declarations
+
+define using_declaration
+        'using [opt '::] [opt nested_name_spec] [name] ';
+    |   'using 'namespace [opt '::] [opt nested_name_spec] [id] ';
+end define
+
+
+% Variable declarations
+
+define declarator_list
+    [list init_declarator+]
+end define
+
+define init_declarator
+    [declarator] [opt initializer]
+end define
+
+define declarator
+	[repeat pointer_operator] [declared_item] [repeat declarator_extension]
+end define
+
+define declared_item
+        [declared_name] 
+    |   '( [declarator] ') 
+end define
+
+define declarator_extension
+        [parenthesized_parameter_declaration_list] [opt const_volatile_qualifier_list]
+    |   '[  [opt constant_expression]  ']
+end define
+
+define parenthesized_parameter_declaration_list
+        '( [parameter_declaration_list] ')
+    |   '( [parenthesized_parameter_declaration_list] ')
+end define
+
+define pointer_operator
+        [stars]  [opt const_volatile_qualifier_list]
+    |   & [opt const_volatile_qualifier_list]
+    |   [id] ':: [stars]  [opt const_volatile_qualifier_list]
+    |   [opt '::] [nested_name_spec] * [const_volatile_qualifier_list]
+end define
+
+define stars
+    '* | '**
+end define
+
+define const_volatile_qualifier_list
+    [repeat const_volatile_qualifier+]
+end define
+
+define const_volatile_qualifier
+        'const
+    |   'volatile
+end define
+
+define declared_name
+        [opt nested_name_spec] [name]
+    |   '~ [SPOFF] [id] [SPON]
+end define
+
+define type_name
+    [type_specifiers] [opt abstract_declarator]
+end define
+
+define abstract_declarator
+        [repeat abstract_extension+]
+    |   '( [abstract_declarator] ') [repeat abstract_extension]
+end define
+
+define abstract_extension
+        '(  [parameter_declaration_list]  ')  [opt const_volatile_qualifier_list]
+    |   '[  [opt constant_expression]  ']
+    |   [pointer_operator]
+    |   '(  [abstract_declarator]  ')
+end define
+
+define parameter_declaration_list
+    [list parameter_declaration]  [opt comma_dotdotdot]
+end define
+
+define comma_dotdotdot
+    [opt ',] '...
+end define
+
+define parameter_declaration
+        [decl_specifiers] [parameter_declarator] [opt equal_expression]
+end define
+
+define parameter_declarator
+		[declarator]
+	|	[opt abstract_declarator]
+end define
+
+define equal_expression
+    '= [expression]
+end define
+
+define initializer
+        '= [initial_value]
+    |   '( [opt expression_list] ')
+end define
+
+define initial_value
+        [assignment_expression]
+    |   '{ [IN] [initializer_list] [opt ',] [EX] '}
+end define
+
+define initializer_list
+    [list initializer_element+]
+end define
+
+define initializer_element
+        [assignment_expression]
+    |   [NL] '{ [IN] [initializer_list] [opt ',] [EX] '}
+end define
+
+define decl_specifier
+        [storage_class_specifier]
+    |   [type_specifier]
+    |   [function_specifier]
+    |   'friend
+    |   'typedef
+end define
+
+define decl_specifiers
+    [repeat decl_specifier+]
+end define
+
+define function_specifier
+        'inline
+    |   'virtual
+end define
+
+define type_specifier
+        [simple_type_name]
+    |   [class_specifier]
+    |   [enum_specifier]
+    |   [elaborated_type_specifier]
+    |   [const_volatile_qualifier]
+end define
+
+define type_specifiers
+    [repeat type_specifier+]
+end define
+
+define simple_type_name
+        'char | 'bool | 'short | 'int | 'long | 'signed | 'unsigned 
+    |   'float | 'double | 'void
+    |   [opt '::] [opt nested_name_spec] [id]
+    |   [opt '::] [opt nested_name_spec] [template_class_name]
+end define
+
+define template_class_name
+    [id] [template_arguments]
+end define
+
+define template_arguments
+    '< [template_argument_list] '>
+end define
+
+define template_argument_list
+        [template_argument]
+    |   [template_argument_list] ', [template_argument]
+end define
+
+define template_argument
+        [type_name]
+    |   [non_gt_binary_expression]
+end define
+
+define non_gt_binary_expression
+    [cast_expression] [repeat non_gt_binary_operation]
+end define
+
+define non_gt_binary_operation
+    [non_gt_binary_operator] [cast_expression]
+end define
+
+define non_gt_binary_operator
+        '|| | '&& | '| | '^ | '& | '== | '!= | '< | '<= | '>=  
+    |   '<< | '>> | '+ | '- | '* | '/ | '% | '.* | '->*  
+end define
+
+define elaborated_type_specifier
+        [class_key] [opt '::] [opt nested_name_spec] [class_name]
+    |   'enum [opt '::] [opt nested_name_spec] [id]
+end define
+
+define enum_specifier
+    'enum [opt id] '{ [opt enum_list] '}
+end define
+
+define enum_list
+    [list enumerator+] [opt ',]  
+end define
+
+define enumerator
+    [id] [opt equal_constant_expression]
+end define
+
+define equal_constant_expression
+    '= [constant_expression]
+end define
+
+define constant_expression
+    [conditional_expression]
+end define
+
+define conversion_function_name
+    'operator [conversion_type_name]
+end define
+
+define conversion_type_name
+    [type_specifiers] [opt pointer_operator]
+end define
+
+define operator_function_name
+    'operator [operator]
+end define
+
+define operator
+        'new | 'delete
+    |   '+ | '- | '* | '/ | '% | '^ | '& | '| | '~
+    |   '! | '= | '< | '> | '+= | '-= | '-+ | '*= | '/= | '%=
+    |   '^= | '&= | '|= | '<< | '>> | '>>= | '<<= | '== | '!=
+    |   '<= | '>= | '&& | '|| | '++ | '-- | ', | '->* | '->
+    |   '( [opt type_specifier] ') | '[ ']
+end define
+
+
+% Statements
+
+define statement
+    [repeat label] [unlabeled_statement]
+end define
+
+define unlabeled_statement
+        [null_statement]        
+    |   [expression_statement]      
+    |   [compound_statement]    
+    |   [selection_statement]    
+    |   [iteration_statement]    
+    |   [jump_statement]        
+    |   [declaration_statement]    
+    |   [try_block]
+end define
+
+define try_block
+    try [compound_statement] [handler_list]
+end define
+
+define handler_list
+    [handler] [opt handler_list] 
+end define
+
+define handler
+    catch '( [exception_declaration] ') [compound_statement]
+end define
+
+define exception_declaration
+        [type_specifiers] [opt exception_declarator]
+    |   '...
+end define
+
+define exception_declarator
+		[declarator]
+	|	[abstract_declarator]
+end define
+
+define label
+        [id] [SPOFF] : [SPON] 
+    |   [EX] 'case [constant_expression] [SPOFF] ': [SPON]    [NL][IN]
+    |   [EX] 'default [SPOFF] ': [SPON]                       [NL][IN]
+end define
+
+define expression_statement
+    [expression] '; [NL]
+end define
+
+define null_statement
+    '; [NL]
+end define
+
+define compound_statement
+    '{                          [NL][IN]
+        [opt statement_list]    [EX]
+    '}                          [NL]
+end define
+
+define statement_list
+    [repeat statement+]
+end define
+
+define selection_statement
+        'if '( [expression] ') [statement] [opt else_statement]
+    |   'switch  '( [expression] ') [statement]
+end define
+
+define else_statement
+    'else [statement]
+end define
+
+define iteration_statement
+        'while '( [expression] ') [statement]
+    |   'do [statement] 'while '( [expression] ') ';    [NL]
+    |   'for '( [for_init_statement] [opt expression] ';  [opt expression] ') 
+        [for_body]
+end define
+
+define for_init_statement
+        [expression] ';        
+    |   [opt decl_specifiers] [declarator_list] ';
+    |   [decl_specifiers] ';
+    |   ';
+end define
+
+define for_body
+        [compound_statement]
+    |   [IN] [NL] [statement] [EX]
+end define
+
+define jump_statement
+        'break ';                    [NL]
+    |   'continue ';                 [NL]
+    |   'return  [opt expression] '; [NL]
+    |   'goto [id] ';                [NL]
+end define
+
+define declaration_statement
+    [declaration]
+end define
+
+
+% Preprocessor directives
+
+define preprocessor
+        '#define [id] '( [list id+] ')  [expression]
+    |   '#define [id]  [expression] 
+    |   [EX] '#else  [IN]
+    |   [EX] '#endif [NL]
+    |   [NL] '#if [expression] [IN]
+    |   [NL] '#ifdef [id] [IN]
+    |   [NL] '#ifndef [id] [IN]
+    |   '#ident [stringlit]
+    |   '#include [stringlit]
+    |   '#include < [SPOFF] [filename] > [SPON]
+    |   '#line [integernumber] [opt stringlit]
+    |   '#undef [id]
+    |   '#LINK [stringlit]
+end define
+
+define file_identifier
+        [id]
+    |   [key]
+end define
+
+define filename
+    [file_identifier] [repeat dot_slash_identifier]
+end define
+
+define dot_slash_identifier
+    [opt '.]  [opt '/] [file_identifier]
+end define
+
+
+% Expressions
+
+define expression
+        [assignment_expression]
+    |   [expression] ', [assignment_expression]
+end define
+
+define assignment_expression
+        [conditional_expression]
+    |   [unary_expression] [assignment_operator] [assignment_expression]
+end define
+
+define assignment_operator
+    '= | '*= | '/= | '%= | '+= | '-= | '>>= | '<<= | '&= | '^= | '|=
+end define
+
+define conditional_expression
+    [binary_expression] [opt conditional_operation]
+end define
+
+define conditional_operation
+    '? [expression]  ':  [conditional_expression]
+end define
+
+define binary_expression
+    [cast_expression] [repeat binary_operation]
+end define
+
+define binary_operation
+    [binary_operator] [cast_expression]
+end define
+
+define binary_operator
+        '|| | '&& | '| | '^ | '& | '== | '!= | '< | '> | '<= | '>=  
+    |   '<< | '>> | '+ | '- | '* | '/ | '% | '.* | '->*  
+end define
+
+define cast_expression
+        [unary_expression]
+    |   '(  [type_name]  ')  [cast_expression]
+end define
+
+define unary_expression
+        [postfix_expression]
+    |   '++ [unary_expression]
+    |   '-- [unary_expression]
+    |   [unary_operator] [cast_expression]
+    |   'sizeof [unary_expression]
+    |   'sizeof '( [type_name] ')
+    |   [allocation_expression]
+    |   [deallocation_expression]
+    |   [throw_expression]
+end define
+
+define throw_expression
+    'throw [opt assignment_expression]
+end define
+
+define unary_operator
+    '** | '* | '& | '+ | '- | '! | '~
+end define
+
+define allocation_expression
+    [opt '::] 'new [opt placement] [allocation_type_name] [opt initializer]
+end define
+
+define placement
+    '( [expression_list] ')
+end define
+
+define allocation_type_name
+        [type_specifiers] [opt allocation_declarator]
+    |   '( [type_name] ') [opt allocation_declarator] 
+end define
+
+define allocation_declarator
+        [allocation_array_declarator]
+    |   '* [opt const_volatile_qualifier_list] [opt allocation_declarator]
+    |   [opt '::] [nested_name_spec] '* [opt const_volatile_qualifier_list] [opt allocation_declarator]
+    |   [qualified_name] ':: '* [opt const_volatile_qualifier_list] [opt allocation_declarator]
+end define
+
+define allocation_array_declarator
+        '[ [opt expression] ']
+    |   [allocation_array_declarator] '[ [opt expression] ']
+end define
+
+define deallocation_expression
+        [opt '::]  'delete [cast_expression]
+    |   [opt '::]  'delete  '[ [opt expression] ']  [cast_expression]
+end define
+
+define postfix_expression
+        [primary_expression] [repeat postfix_extension]
+    |   [simple_type_name]  '(  [opt expression_list]  ') [repeat postfix_extension]
+end define
+
+define postfix_extension
+        '[  [opt expression]  ']
+    |   '(  [opt expression_list]  ')
+    |   '.  [name]
+    |   '->  [name]
+    |   '++
+    |   '--
+end define
+
+define expression_list
+    [list assignment_expression+]
+end define
+
+define primary_expression
+        [literal]
+    |   'this
+    |   '::  [id]
+    |   '::  [operator_function_name]
+    |   '(  [expression]  ')
+    |   [name]
+end define
+
+define name
+        [id] 
+    |   [template_class_name]
+    |   [qualified_name]    
+    |   [operator_function_name]
+    |   [conversion_function_name]
+end define
+
+define class_name
+    [id] [opt template_arguments]
+end define
+
+define qualified_name
+    [class_name]  '::  [class_component]
+end define
+
+define class_component
+        [class_name]        
+    |   '~ [SPOFF] [class_name] [SPON]        
+    |   [operator_function_name]
+    |   [conversion_function_name]
+    |   [qualified_name]
+end define
+
+define literal
+        [number_constant]
+    |   [character_constant]
+    |   [string_constant]
+end define
+
+define string_constant
+    [stringlit] [IN] [repeat NL_stringlit] [EX]
+end define
+
+define NL_stringlit
+    [NL] [stringlit]
+end define
+
+define character_constant
+    [charlit]
+end define
+
+define number_constant
+        [opt '-] [number]
+    |   [hexnumber]
+end define

@@ -1,0 +1,103 @@
+% Overrides to preserve comments in C++\% Jim Cordy, March 2001
+
+% Note that these overrides are an approximation - 
+% only the most common placements of C++ comments are allowed.  
+% Properly handling arbitrarily placed comments requires 
+% a robust grammar of somewhat greater sophistication.
+
+#pragma -comment
+
+% Can have comments as statements 
+redefine statement
+	...
+|	[comment_NL]
+end redefine
+
+% Can have comments as declarations
+redefine declaration
+	...
+|	[comment_NL]
+end redefine
+
+redefine member_declaration
+	...
+|	[comment_NL]
+end redefine
+
+% Can have comments before initial values ...
+redefine initial_value
+	[repeat comment_NL] ...
+end redefine
+
+% ... or before =initializers 
+redefine initializer
+	[repeat comment_NL] ...
+end redefine
+
+redefine equal_expression
+	[repeat comment_NL] ...
+end redefine
+
+% Can have comments before formal parameters ...
+redefine parameter_declaration
+	[repeat comment_NL] ...
+end redefine
+
+% ... or after formal parameters ...
+redefine parameter_declaration
+	...  [repeat comment_NL]
+end redefine
+
+% ... or after a parameter list 
+redefine parameter_declaration_list
+	... [repeat comment_NL]
+end redefine
+
+% Can have comments before arguments ...
+redefine template_argument
+	[repeat comment_NL] ...
+end redefine
+
+% ... or after arguments ...
+redefine template_argument
+	...  [repeat comment_NL]
+end redefine
+
+% ... or after an argument list 
+redefine template_argument_list
+	... [repeat comment_NL]
+end redefine
+
+% Can have comments after an if condition
+redefine selection_statement
+		'if '( [expression] ')	[repeat comment_NL] 
+			[statement] [opt else_statement]
+	|   'switch '( [expression] ')  [repeat comment_NL]
+			[statement]
+end redefine
+
+% Can have comments on a block
+redefine compound_statement
+	[repeat comment_NL] ...
+end redefine
+
+% Can have comments on a preprocessor statement
+redefine preprocessor
+		[EX] '#endif [opt comment] [NL]
+	|	...
+end redefine
+
+redefine preprocessor
+	... [opt comment]
+end redefine
+
+% Can have comments before an expression
+redefine expression
+	[repeat comment_NL] ...
+end redefine
+
+% Need newlines after comments
+define comment_NL
+	[comment] [NL]
+end define
+
