@@ -1,0 +1,1976 @@
+% TXL C# Edition 3 Basis Grammar
+% Version 2.1, October 2010
+
+% Copyright 2006-2010 James R. Cordy
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+%    Redistributions of source code must retain the above copyright notice, 
+%    this list of conditions and the following disclaimer.
+%    Redistributions in binary form must reproduce the above copyright notice,
+%    this list of conditions and the following disclaimer in the documentation
+%    and/or other materials provided with the distribution.
+%
+%    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+%    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+%    AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+%    AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+%    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%    POSSIBILITY OF SUCH DAMAGE.
+
+% Originally based on the ECMA-334  C# Standard, 3rd edition, June 2005, Appendix A
+
+% Modification Log:
+
+% v2.1, Jim Cordy, Feb 2009.
+%   Added "this" type names.
+%   Added query expressions (Linq).
+%   Added lambda expressions.
+
+% v2.0, Jim Cordy, July 2008.
+%   Validated on a range of open source C# software including VMukti-Chat,
+%   Linq Rev. 1712, Rss-Bandit 1.5.0.17, Castle 0.85, SMC 5.1.0, and Nant 0.86b1.
+%   Updated to address slight problems.
+
+% v1.0, Jim Cordy, March 2006.
+% Direct adaptation of the C# Edition 3 reference grammar to TXL.
+% Suitable for syntax checking and source analysis tasks but 
+% not an ideal transformation grammar.
+
+% Remaining issues to address:
+%
+%  - comment overrides to parse and preserve comments in source
+%
+%  - preprocessor overrides to parse preprocessor statements
+%    (treated as comments in this grammar)
+%
+%  - a tuned and factored grammar more suitable for transformation tasks
+
+
+% Allow for long lines in C# source output
+#pragma -w 1024 
+
+
+% A.1.3 Comments
+
+comments 
+    // 
+    /* */ 
+end comments 
+
+
+% A.1.7 Keywords
+
+keys 
+    abstract   as         base       bool       break 
+    byte       case       catch      char       checked 
+    class      const      continue   decimal    default 
+    delegate   do         double     else       enum 
+    event      explicit   extern     false      finally 
+    fixed      float      for        foreach    goto 
+    if         implicit   in         int        interface 
+    internal   is         lock       long       namespace 
+    new        null       object     operator   out 
+    override   params     private    protected  public 
+    readonly   ref        return     sbyte      sealed 
+    short      sizeof     stackalloc static     string 
+    struct     switch     this       throw      true 
+    try        typeof     uint       ulong      unchecked 
+    unsafe     ushort     using      virtual    void 
+    volatile   while 
+end keys 
+
+
+% A.1.8 Literals
+
+# pragma -esc '"'
+
+tokens 
+    hexadecimal_integer_literal        "0x[\dABCDEFabcdef]+[(UL)(Ul)(uL)(ul)(LU)(Lu)(lU)(lu)UuLl]?"
+
+    real_literal                "\d+.\d+([eE][+-]?\d+)?[fFDdMm]?" 
+                            |        ".\d+([eE][+-]?\d+)?[fFDdMm]?"
+                            |        "\d+([eE][+-]?\d+)[fFDdMm]?"
+                            |        "\d+[fFDdMm]"
+
+    decimal_integer_literal        "\d+[(UL)(Ul)(uL)(ul)(LU)(Lu)(lU)(lu)UuLl]?"
+
+    charlit                       "'[(\\\c)#']*'"
+    stringlit                     "\"[(\\\c)#\"]*\""
+			    |	      "@\"[(\"\")#\"]*\""
+    id                                "@?[\a_][\a\d_]*"
+end tokens 
+
+define literal
+      [boolean_literal]
+    | [integer_literal]
+    | [real_literal]
+    | [character_literal]
+    | [string_literal]
+    | [null_literal]
+end define
+
+define boolean_literal
+    'true | 'false
+end define
+
+define integer_literal
+    [decimal_integer_literal] | [hexadecimal_integer_literal]
+end define
+
+define character_literal
+    [charlit]
+end define
+
+define string_literal
+    [stringlit]
+end define
+
+define null_literal
+    'null
+end define
+
+
+% A.1.9 Operators and punctuators
+
+compounds 
+    ??  ::  ++  --  &&  || 
+    ->  ==  !=  <=  >=  +=  -=  *=  /=  '%= 
+    &=  |=  ^=  <<  <<=  
+    %% >>  >>= 
+end compounds 
+
+
+% A.1.10 Pre-processing directives
+
+% (for now we treat these as comments - JRC)
+
+comments
+    '#
+end comments
+
+
+% A.2.1 Basic concepts
+
+define program 
+    [compilation_unit]
+end define
+
+define compilation_unit
+    [opt extern_alias_directives] 
+    [opt using_directives] 
+    [opt global_attributes]
+    [opt namespace_member_declarations] 
+end define 
+
+define namespace_name 
+    [namespace_or_type_name] 
+end define 
+
+define type_name 
+    [namespace_or_type_name] 
+end define 
+
+define namespace_or_type_name 
+	  [opt 'this] [id] [opt colon_colon_id] [repeat dot_id] [opt type_argument_list]
+end define
+
+define colon_colon_id
+    ':: [id]
+end define
+
+define dot_id
+    '. [id]
+end define
+
+
+% A.2.2 Types
+
+define type
+      [value_type]
+    | [reference_type]
+    | [type_parameter]
+end define
+
+define value_type
+      [struct_type]
+    | [enum_type]
+end define
+
+define struct_type
+      [type_name]
+    | [simple_type]
+    | [nullable_type]
+end define
+
+define simple_type
+      [numeric_type]
+    | 'bool
+end define
+
+define numeric_type
+      [integral_type]
+    | [floating_point_type]
+    | 'decimal
+end define
+
+define integral_type 
+      'sbyte 
+    | 'byte 
+    | 'short 
+    | 'ushort 
+    | 'int 
+    | 'uint 
+    | 'long 
+    | 'ulong 
+    | 'char 
+end define 
+
+define floating_point_type 
+      'float
+    | 'double
+end define
+
+define enum_type
+    [type_name]
+end define
+
+define nullable_type
+    [non_nullable_value_type] '?
+end define
+
+define non_nullable_value_type
+      [enum_type]
+    | [type_name]
+    | [simple_type]
+end define
+
+define reference_type
+      [class_type]
+    | [interface_type]
+    | [array_type]
+    | [delegate_type]
+end define
+
+define class_type
+      [type_name]
+    | 'object
+    | 'string
+end define
+
+define interface_type
+    [type_name]
+end define
+
+define array_type
+    [non_array_type] [rank_specifiers]
+end define
+
+define non_array_type
+      [value_type]
+    | [class_type]
+    | [interface_type]
+    | [delegate_type]
+    | [type_parameter]
+end define
+
+define rank_specifiers
+    [repeat rank_specifier]
+end define
+
+define rank_specifier
+    '[ [repeat',] ']
+end define
+
+define delegate_type
+    [type_name]
+end define
+
+
+% A.2.3 Variables
+
+define variable_reference
+    [expression]
+end define
+
+
+% A.2.4 Expressions
+
+define argument_list
+    [list argument]
+end define
+
+define argument
+      [expression]
+    | 'ref [variable_reference]
+    | 'out [variable_reference]
+end define
+
+define primary_expression
+      [array_creation_expression]
+    | [primary_no_array_creation_expression]
+    | [object_initializer_expression]	% JRC 21.2.09
+end define
+
+define primary_no_array_creation_expression
+      [simple_primary_expression] [repeat primary_expression_modifier]
+end define
+
+define simple_primary_expression
+    % Left-factored for TXL parse efficiency - JRC
+      [literal] 
+    | [simple_name]
+    | [parenthesized_expression] 
+    | [this_access]
+    | [base_access] 
+    | [object_or_delegate_creation_expression] 
+    | [typeof_expression] 
+    | [checked_expression] 
+    | [unchecked_expression] 
+    | [default_value_expression]
+    | [anonymous_method_expression] 
+    | [predefined_type] [member_access_operator]
+    | [qualified_alias_member] [member_access_operator]
+end define 
+
+define primary_expression_modifier
+      [member_access_operator]
+    | [invocation_operator]
+    | [element_access_operator]
+    | [post_increment_operator]
+    | [post_decrement_operator]
+end define
+
+define simple_name
+    [id] [opt type_argument_list]
+end define
+
+define parenthesized_expression
+    '( [expression] ')
+end define
+
+define member_access_operator
+	'. [id] [opt type_argument_list]
+end define
+
+define predefined_type
+      'bool | 'byte | 'char | 'decimal | 'double | 'float | 'int | 'long 
+    | 'object | 'sbyte | 'short | 'string | 'uint | 'ulong | 'ushort 
+end define
+
+define invocation_operator
+    '( [list argument] ') 
+end define 
+
+define element_access_operator
+    '[ [list expression+] '] 
+end define
+
+define this_access
+    'this
+end define
+
+define base_access 
+      'base '. [id] [opt type_argument_list] 
+    | 'base '[ [list expression+] '] 
+end define 
+
+define post_increment_operator
+    '++ 
+end define
+
+define post_decrement_operator
+    '--
+end define
+
+define object_or_delegate_creation_expression 
+    'new [type] '( [opt argument_list] ') 
+end define 
+
+define array_creation_expression 
+      'new [non_array_type] '[ [expression_list] '] [opt rank_specifiers] [opt array_initializer] 
+    | 'new [array_type] [array_initializer] 
+end define
+
+% Object initializer expressions - JRC 21.2.09
+define object_initializer_expression
+    'new [opt array_type] [opt object_formals] [opt rank_specifiers] [object_initializer]
+end define 
+
+define object_formals
+    '( [opt formal_parameter_list] ')
+end define
+
+define object_initializer 
+    '{ [opt member_initializer_list] [opt ',] '} 
+end define 
+
+define member_initializer_list
+    [list member_initializer+]
+end define
+
+define member_initializer
+      [opt member_name_equals] [expression]
+    | [opt member_name_equals] [array_initializer]
+end define
+
+define member_name_equals
+    [simple_name] '=
+end define
+% End Object initializer expressions 
+
+define expression_list
+    [list expression+]
+end define
+
+define typeof_expression 
+      'typeof '( [type] ') 
+    | 'typeof '( [unbound_type_name] ')
+    | 'typeof '( 'void ')
+    | 'typeof '( ')	%% Observed - JRC
+end define 
+
+define unbound_type_name
+    [id] [opt colon_colon_id] [opt generic_dimension_specifier] [repeat dot_id_generic_dimension_specifier]
+end define
+
+define dot_id_generic_dimension_specifier
+    '. [id] [opt generic_dimension_specifier]
+end define
+
+define generic_dimension_specifier
+    '< [repeat ',] '>
+end define
+
+define checked_expression 
+    'checked '( [expression] ') 
+end define 
+
+define unchecked_expression 
+    'unchecked '( [expression] ') 
+end define 
+
+define default_value_expression
+    'default '( [type] ') 
+end define 
+
+define anonymous_method_expression
+    'delegate [opt anonymous_method_signature] [block]
+end define
+
+define anonymous_method_signature
+    '( [opt anonymous_method_parameter_list] ')
+end define
+
+define anonymous_method_parameter_list
+    [list anonymous_method_parameter+]
+end define
+
+define anonymous_method_parameter
+    [opt parameter_modifier] [type] [id]
+end define
+
+define unary_expression
+      [primary_expression]
+    | '+ [unary_expression]
+    | '- [unary_expression]
+    | '! [unary_expression]
+    | '~ [unary_expression]
+    | [pre_increment_expression]
+    | [pre_decrement_expression]
+    | [cast_expression]
+end define
+
+define pre_increment_expression
+    '++ [unary_expression]
+end define
+
+define pre_decrement_expression
+    '-- [unary_expression]
+end define
+
+define cast_expression
+    '( [type] ') [unary_expression]
+end define
+
+define multiplicative_expression 
+      [unary_expression] 
+    | [multiplicative_expression] '* [unary_expression] 
+    | [multiplicative_expression] '/ [unary_expression] 
+    | [multiplicative_expression] '% [unary_expression] 
+end define
+
+define additive_expression 
+      [multiplicative_expression] 
+    | [additive_expression] '+ [multiplicative_expression] 
+    | [additive_expression] '- [multiplicative_expression] 
+end define
+
+define shift_expression
+      [additive_expression]  
+    | [shift_expression] '<< [additive_expression] 
+    | [shift_expression] '>> [additive_expression] 
+end define
+
+define relational_expression 
+      [shift_expression] 
+    | [relational_expression] '< [shift_expression] 
+    | [relational_expression] '> [shift_expression] 
+    | [relational_expression] '<= [shift_expression] 
+    | [relational_expression] '>= [shift_expression] 
+    | [relational_expression] 'is [type] 
+    | [relational_expression] 'as [type] 
+end define
+
+define equality_expression 
+      [relational_expression] 
+    | [equality_expression] '== [relational_expression] 
+    | [equality_expression] '!= [relational_expression] 
+end define
+
+define and_expression 
+      [equality_expression] 
+    | [and_expression] '& [equality_expression] 
+end define
+
+define exclusive_or_expression 
+      [and_expression] 
+    | [exclusive_or_expression] '^ [and_expression] 
+end define
+
+define inclusive_or_expression 
+      [exclusive_or_expression] 
+    | [inclusive_or_expression] '| [exclusive_or_expression] 
+end define
+
+define conditional_and_expression 
+      [inclusive_or_expression] 
+    | [conditional_and_expression] '&& [inclusive_or_expression] 
+end define
+
+define conditional_or_expression 
+      [conditional_and_expression] 
+    | [conditional_or_expression] '|| [conditional_and_expression] 
+end define
+
+define null_coalescing_expression 
+      [conditional_or_expression] 
+    | [conditional_or_expression] '?? [null_coalescing_expression] 
+end define
+
+define conditional_expression 
+      [null_coalescing_expression] 
+    | [null_coalescing_expression] '? [expression] ': [expression] 
+end define
+
+define assignment 
+    [unary_expression] [assignment_operator] [expression] 
+end define
+
+define assignment_operator 
+    '= | '+= | '-= | '*= | '/= | '%= | '&= | '|= | '^= | '<<= | '>>=
+end define
+
+define expression
+      [conditional_expression]
+    | [assignment]
+    | [query_expression]	% JRC 20.2.09
+    | [lambda_expression]	% JRC 20.2.09
+end define
+
+define constant_expression
+    [expression]
+end define
+
+define boolean_expression
+    [expression]
+end define
+
+% Linq query expressions - JRC 20.2.09
+define query_expression
+    [from_clause] [IN] [query_body] [EX]
+end define
+
+define query_body
+    [repeat query_body_clause] [final_query_clause] [opt query_continuation]
+end define
+
+define query_body_clause
+      [NL] [from_clause]
+    | [NL] [join_clause]
+    | [NL] [let_clause]
+    | [NL] [where_clause]
+    | [NL] [orderby_clause]
+end define
+
+define from_clause
+    'from [item_name] 'in [src_expr]
+end define
+
+define join_clause
+    'join [item_name] 'in [src_expr] 'on [key_expr] 'equals [key_expr] [opt into_item_name]
+end define
+
+define into_item_name
+    'into [item_name]
+end define
+
+define let_clause
+    'let [item_name] '= [sel_expr]
+end define
+
+define where_clause
+    'where [pred_expr]
+end define
+
+define orderby_clause
+    'orderby [list key_expr_ascending_descending]
+end define
+
+define key_expr_ascending_descending
+    [key_expr] [opt ascending_descending]
+end define
+
+define ascending_descending
+    'ascending | 'descending
+end define
+
+define final_query_clause
+      [NL] [select_clause]
+    | [NL] [groupby_clause]
+end define
+
+define select_clause
+    'select [sel_expr]
+end define
+
+define groupby_clause
+    'group [sel_expr] 'by [key_expr]
+end define
+
+define query_continuation
+    'into [item_name] [query_body]
+end define
+
+define item_name
+    [opt type] [simple_name]
+end define
+
+define sel_expr
+    [expression]
+end define
+
+define key_expr
+    [expression]
+end define
+
+define src_expr
+    [expression]
+end define
+
+define pred_expr
+    [expression]
+end define
+% End Linq query expressions
+
+% Lambda expressions - JRC 21.2.09
+define lambda_expression
+      [input_parameters] '=> [expression]
+    | [input_parameters] '=> [block]
+end define
+
+define input_parameters
+      [input_parameter]
+    | '( [list input_parameter] ')
+end define
+
+define input_parameter
+    [opt type] [id]
+end define
+% End Lambda expressions
+
+define constant_expression
+    [expression]
+end define
+
+define boolean_expression
+    [expression]
+end define
+
+
+% A.2.5 Statements
+
+define statement 
+      [labeled_statement] 
+    | [declaration_statement] 
+    | [embedded_statement] 
+end define 
+
+define embedded_statement
+      [block] 
+    | [empty_statement] 
+    | [expression_statement] 
+    | [selection_statement] 
+    | [iteration_statement] 
+    | [jump_statement] 
+    | [try_statement] 
+    | [checked_statement] 
+    | [unchecked_statement] 
+    | [lock_statement] 
+    | [using_statement] 
+    | [yield_statement]
+end define 
+
+define block
+    '{                         [NL] [IN]
+        [opt statement_list]   [EX]
+    '} [opt ';]                        
+end define
+
+define statement_list
+    [repeat statement+]
+end define
+
+define empty_statement 
+    ';        
+end define 
+
+define labeled_statement 
+      [id] ': [statement] 
+end define 
+
+define declaration_statement 
+      [local_variable_declaration] ';   [NL]
+    | [local_constant_declaration] ';   [NL]
+end define 
+
+define local_variable_declaration 
+    [type] [local_variable_declarators] 
+end define 
+
+define local_variable_declarators
+    [list local_variable_declarator+]
+end define
+
+define local_variable_declarator
+    [id] [opt equals_local_variable_initializer]
+end define
+
+define equals_local_variable_initializer
+    '= [local_variable_initializer]
+end define
+
+define local_variable_initializer
+      [expression]
+    | [array_initializer]
+end define
+
+define local_constant_declaration 
+    'const [type] [constant_declarators] 
+end define 
+
+% constant_declarators, constant_declarator already defined below,
+% apparent redundancy in specification - JRC
+
+define expression_statement 
+    [statement_expression] ';   [NL]
+end define 
+
+define statement_expression 
+    % Left-factored for TXL parse efficiency - JRC
+      [primary_no_array_creation_expression]
+    | [object_creation_expression]
+    | [assignment]
+    | [pre_increment_expression]
+    | [pre_decrement_expression]
+end define 
+
+define object_creation_expression
+    'new [type] '( [opt argument_list] ')
+end define
+
+define selection_statement 
+      [if_statement] 
+    | [switch_statement] 
+end define 
+
+define if_statement 
+    'if '( [boolean_expression ]')
+        [nested_statement]                                 
+    [repeat else_if_clause]
+    [opt else_clause]   [NL]
+end define
+
+define else_if_clause
+    'else 'if '( [boolean_expression ]')
+        [nested_statement] 
+end define
+
+define else_clause
+    'else
+        [nested_statement]                         
+end define 
+
+define nested_statement
+      [block]
+    |                        [IN] [NL]
+      [embedded_statement]   [EX]
+end define
+
+define switch_statement 
+    'switch '( [expression ]') 
+        [switch_block] 
+end define 
+
+define switch_block 
+    '{                      [NL] [IN]
+        [switch_sections]   [EX]
+    '}                      [NL]
+end define 
+
+define switch_sections
+    [repeat switch_section+]
+end define
+
+define switch_section 
+    [switch_labels]        [NL] [IN]
+        [statement_list]   [EX]
+end define 
+
+define switch_labels
+    [repeat switch_label+]
+end define
+
+define switch_label 
+      'case [constant_expression ] ': 
+    | 'default ': 
+end define 
+
+define iteration_statement 
+      [while_statement] 
+    | [do_statement] 
+    | [for_statement] 
+    | [foreach_statement] 
+end define 
+
+define while_statement 
+    'while '( [boolean_expression ]')                
+        [nested_statement]   [NL]
+end define 
+
+define do_statement 
+    'do                                    [NL] [IN]
+        [embedded_statement]               [EX]
+    'while '( [boolean_expression ]') ';   [NL]
+end define 
+
+define for_statement 
+    'for '( [opt for_initializer] '; [opt for_condition] '; [opt for_iterator] ')
+        [nested_statement]   [NL] 
+end define 
+
+define for_initializer 
+      [local_variable_declaration] 
+    | [statement_expression_list]
+end define 
+
+define for_condition 
+    [boolean_expression] 
+end define 
+
+define for_iterator 
+    [statement_expression_list]
+end define 
+
+define statement_expression_list
+    [list statement_expression+]
+end define
+
+define foreach_statement 
+    'foreach '( [type] [id] 'in [expression ]')                
+        [nested_statement]   [NL] 
+end define 
+
+define jump_statement 
+      [break_statement] 
+    | [continue_statement] 
+    | [goto_statement] 
+    | [return_statement] 
+    | [throw_statement] 
+end define 
+
+define break_statement 
+    'break ';   [NL] 
+end define 
+
+define continue_statement 
+    'continue ';   [NL] 
+end define 
+
+define goto_statement 
+      'goto [id] ';   [NL] 
+    | 'goto 'case [constant_expression] ';   [NL] 
+    | 'goto 'default ';   [NL] 
+end define 
+
+define return_statement 
+    'return [opt expression] ';   [NL] 
+end define 
+
+define throw_statement 
+    'throw [opt expression] ';   [NL] 
+end define 
+
+define try_statement 
+    'try [block]   [NL] 
+        [opt catch_clauses] 
+        [opt finally_clause]
+end define
+
+define catch_clauses
+    [opt specific_catch_clauses]
+    [opt general_catch_clause]
+end define
+
+define specific_catch_clauses
+    [repeat specific_catch_clause+]
+end define
+
+define specific_catch_clause 
+    'catch '( [class_type] [opt id] ') [block]   [NL] 
+end define 
+
+define general_catch_clause 
+    'catch [block]   [NL] 
+end define 
+
+define finally_clause
+    'finally [block]   [NL] 
+end define 
+
+define checked_statement 
+    'checked [block]   [NL] 
+end define 
+
+define unchecked_statement 
+    'unchecked [block]   [NL]
+end define 
+
+define lock_statement 
+    'lock '( [expression] ')   [NL]
+        [embedded_statement] 
+end define 
+
+define using_statement 
+    'using '( [resource_acquisition] ')   [NL]
+        [embedded_statement] 
+end define 
+
+define resource_acquisition 
+      [local_variable_declaration] 
+    | [expression] 
+end define
+
+define yield_statement
+      'yield 'return [expression] ';   [NL]
+    | 'yield 'break ';   [NL]
+end define
+
+define namespace_declaration 
+    'namespace [qualified_identifier]   [NL] 
+        [namespace_body]
+end define 
+
+define qualified_identifier
+    [id] [repeat dot_id]
+end define
+
+define namespace_body 
+    '{                                        [NL] [IN] 
+        [opt extern_alias_directives]                 
+        [opt using_directives]                 
+        [opt namespace_member_declarations]   [EX] 
+    '} [opt ';]                               [NL]
+end define 
+
+define extern_alias_directives
+    [repeat extern_alias_directive+]   [NL]
+end define
+
+define extern_alias_directive 
+    'extern [id] [id] ';   [NL] 
+end define 
+
+define using_directives
+    [repeat using_directive+]   [NL]
+end define
+
+define using_directive 
+      [using_alias_directive] 
+    | [using_namespace_directive] 
+end define 
+
+define using_alias_directive 
+    'using [id] '= [namespace_or_type_name]';   [NL] 
+end define 
+
+define using_namespace_directive 
+    'using [namespace_name]';   [NL] 
+end define 
+
+define namespace_member_declarations
+    [repeat namespace_member_declaration+]
+end define
+
+define namespace_member_declaration 
+      [namespace_declaration]   [NL]
+    | [type_declaration]        [NL]
+end define 
+
+define type_declaration 
+      [class_declaration] 
+    | [struct_declaration] 
+    | [interface_declaration] 
+    | [enum_declaration] 
+    | [delegate_declaration] 
+end define 
+
+define qualified_alias_member
+    % Redundant? - JRC
+    [id] ':: [id] [opt type_argument_list]
+end define
+
+
+% A.2.6 Classes
+
+define class_declaration 
+    [opt attributes] [opt class_modifiers] [opt 'partial] 
+    'class [id] [opt type_parameter_list] [opt class_base] [opt type_parameter_constraints_clauses]   [NL] 
+        [class_body] 
+end define 
+
+define class_modifiers
+    [repeat class_modifier+]
+end define
+
+define class_modifier 
+      'new 
+    | 'public 
+    | 'protected 
+    | 'internal 
+    | 'private 
+    | 'abstract 
+    | 'sealed 
+    | 'static 
+end define 
+
+define class_base 
+    ': [class_and_interface_type_ist] 
+end define 
+
+define class_and_interface_type_ist
+    [list class_or_interface_type+]
+end define
+
+define class_or_interface_type
+      [class_type]
+    | [interface_type]
+end define
+
+define class_body 
+    '{                                    [NL] [IN] 
+        [opt class_member_declarations]   [EX] 
+    '} [opt ';]                           [NL]
+end define 
+
+define class_member_declarations
+    [repeat class_member_declaration+]
+end define
+
+define class_member_declaration 
+      [constant_declaration] 
+    | [field_declaration] 
+    | [method_declaration] 
+    | [property_declaration] 
+    | [event_declaration] 
+    | [indexer_declaration] 
+    | [operator_declaration] 
+    | [constructor_declaration] 
+    | [finalizer_declaration] 
+    | [static_constructor_declaration] 
+    | [type_declaration] 
+end define 
+
+define constant_declaration 
+    [opt attributes] [opt constant_modifiers] 'const [type] [constant_declarators] ';   [NL] 
+end define 
+
+define constant_modifiers
+    [repeat constant_modifier+]
+end define
+
+define constant_modifier
+      'new
+    | 'public
+    | 'protected
+    | 'internal
+    | 'private
+end define
+
+define constant_declarators
+    [list constant_declarator+]
+end define
+
+define constant_declarator 
+    [id] '= [constant_expression] 
+end define 
+
+define field_declaration 
+    [opt attributes] [opt field_modifiers] [type] [variable_declarators] ';   [NL] 
+end define 
+
+define field_modifiers
+    [repeat field_modifier+]
+end define
+
+define field_modifier
+      'new
+    | 'public
+    | 'protected
+    | 'internal
+    | 'private
+    | 'static
+    | 'readonly
+    | 'volatile
+end define
+
+define variable_declarators
+    [list variable_declarator+]
+end define
+
+define variable_declarator 
+      [id] [opt equals_variable_initializer]
+end define
+
+define equals_variable_initializer
+    '= [variable_initializer] 
+end define 
+
+define variable_initializer 
+      [expression] 
+    | [array_initializer] 
+end define 
+
+define method_declaration 
+    [method_header]     [NL] 
+        [method_body]   [NL]
+end define 
+
+define method_header 
+    [opt attributes] [opt method_modifiers] [return_type] 
+        [member_name] [opt type_parameter_list] '( [opt formal_parameter_list] ') 
+		[opt type_parameter_constraints_clauses] 
+end define 
+
+define method_modifiers
+    [repeat method_modifier+]
+end define
+
+define method_modifier
+      'new 
+    | 'public 
+    | 'protected 
+    | 'internal 
+    | 'private 
+    | 'static 
+    | 'virtual 
+    | 'sealed 
+    | 'override 
+    | 'abstract 
+    | 'extern 
+    | 'partial
+end define
+
+define return_type
+      [type]
+    | 'void
+end define
+
+define member_name
+    [opt interface_type_dot] [id]
+end define
+
+define interface_type_dot
+    [interface_type] '.
+end define
+
+define method_body 
+      [block]   [NL]
+    | ';        [NL]
+end define 
+
+define formal_parameter_list 
+    [fixed_parameters] [opt comma_parameter_array]
+end define
+
+define comma_parameter_array
+    ', [parameter_array] 
+end define 
+
+define fixed_parameters
+    [list fixed_parameter+]
+end define
+
+define fixed_parameter 
+    [opt attributes] [opt parameter_modifier] [type] [id]
+    | [parameter_array]  %% JRC 18jun08
+end define 
+
+define parameter_modifier 
+    'ref | 'out 
+end define 
+
+define parameter_array 
+    [opt attributes] 'params [array_type] [id] 
+end define 
+
+define property_declaration 
+    [NL]
+    [opt attributes] [opt property_modifiers] [type] [member_name] 
+    '{                            [NL] [IN] 
+        [accessor_declarations]   [EX]
+    '}                            [NL]
+end define 
+
+define property_modifiers
+    [repeat property_modifier+]
+end define
+
+define property_modifier
+      'new 
+    | 'public 
+    | 'protected 
+    | 'internal 
+    | 'private 
+    | 'static 
+    | 'virtual 
+    | 'sealed 
+    | 'override 
+    | 'abstract 
+    | 'extern 
+end define
+
+define accessor_declarations
+      [get_accessor_declaration] [opt set_accessor_declaration]
+    | [set_accessor_declaration] [opt get_accessor_declaration]
+end define
+
+define get_accessor_declaration
+    [opt attributes] [opt accessor_modifier] 'get [accessor_body]
+end define
+
+define set_accessor_declaration
+    [opt attributes] [opt accessor_modifier] 'set [accessor_body]
+end define
+
+define accessor_modifier
+      'protected 
+    | 'internal 
+    | 'private 
+    | 'protected 'internal 
+    | 'internal 'protected 
+end define
+
+define accessor_body
+      [block]   [NL]
+    | ';        [NL]
+end define
+
+define event_declaration 
+      [opt attributes] [opt event_modifiers] 'event [type] [variable_declarators] ';   [NL] 
+    | [opt attributes] [opt event_modifiers] 'event [type] [member_name] 
+      '{                                    [NL] [IN] 
+            [event_accessor_declarations]   [EX]
+      '}                                    [NL] [EX] 
+end define 
+
+define event_modifiers
+    [repeat event_modifier+]
+end define
+
+define event_modifier
+      'new 
+    | 'public 
+    | 'protected 
+    | 'internal 
+    | 'private 
+    | 'static 
+    | 'virtual 
+    | 'sealed 
+    | 'override 
+    | 'abstract 
+    | 'extern 
+end define
+
+define event_accessor_declarations 
+      [add_accessor_declaration] [remove_accessor_declaration]
+    | [remove_accessor_declaration] [add_accessor_declaration] 
+end define 
+
+define add_accessor_declaration 
+    [opt attributes] 'add 
+        [block]   [NL]
+end define 
+
+define remove_accessor_declaration 
+    [opt attributes] 'remove 
+        [block]   [NL] 
+end define 
+
+define indexer_declaration 
+    [opt attributes] [opt indexer_modifiers] [indexer_declarator] 
+    '{                            [NL] [IN] 
+        [accessor_declarations]   [EX] 
+    '}                            [NL]
+end define 
+
+define indexer_modifiers
+    [repeat indexer_modifier+]
+end define
+
+define indexer_modifier
+      'new 
+    | 'public 
+    | 'protected 
+    | 'internal 
+    | 'private 
+    | 'virtual 
+    | 'sealed 
+    | 'override 
+    | 'abstract 
+    | 'extern 
+end define
+
+define indexer_declarator 
+    [type] [opt interface_type_dot] 'this '[ [formal_parameter_list] '] 
+end define 
+
+define operator_declaration 
+    [opt attributes] [opt operator_modifiers] [operator_declarator] 
+        [operator_body] 
+end define 
+
+define operator_modifiers
+    [repeat operator_modifier+]
+end define
+
+define operator_modifier
+      'public
+    | 'static
+    | 'extern
+end define
+
+define operator_declarator 
+      [unary_operator_declarator]
+    | [binary_operator_declarator]
+    | [conversion_operator_declarator]
+end define
+
+define unary_operator_declarator
+    [type] 'operator [overloadable_unary_operator] '( [type] [id] ')
+end define
+
+define overloadable_unary_operator
+    '+ | '- | '! | '~ | '++ | '-- | 'true | 'false
+end define
+
+define binary_operator_declarator
+    [type] 'operator [overloadable_binary_operator] '( [type] [id] ')
+end define
+
+define overloadable_binary_operator 
+      '+ | '- | '* | '/ | '% 
+    | '& | '| | '^
+    | '<< | '>>
+    | '== | '!= | '> | '< | '>= | '<= 
+end define
+
+define conversion_operator_declarator
+      'implicit 'operator [type] '( [type] [id] ')
+    | 'explicit 'operator [type] '( [type] [id] ')
+end define
+
+define operator_body 
+      [block]   [NL]
+    | ';        [NL]
+end define 
+
+define constructor_declaration 
+    [opt attributes] [opt constructor_modifiers] [constructor_declarator]   [NL]
+        [constructor_body]   [NL]
+end define 
+
+define constructor_modifiers
+    [repeat constructor_modifier+]
+end define
+
+define constructor_modifier
+      'public
+    | 'protected
+    | 'internal
+    | 'private
+    | 'extern
+end define
+
+define constructor_declarator 
+    [id] '( [opt formal_parameter_list] ') [opt constructor_initializer] 
+end define 
+
+define constructor_initializer
+      ': 'base '( [opt argument_list] ')
+    | ': 'this '( [opt argument_list] ')
+end define
+
+define constructor_body 
+      [block]   [NL]
+    | ';        [NL]
+end define 
+
+define static_constructor_declaration
+    [opt attributes] [static_constructor_modifiers] [id] '( ')   [NL]
+        [static_constructor_body]   [NL]
+end define 
+
+define static_constructor_modifiers
+      [opt 'extern] 'static
+    | 'static [opt 'extern]
+end define
+ 
+define static_constructor_body 
+      [block]   [NL]
+    | ';        [NL]
+end define 
+
+define finalizer_declaration
+    [opt attributes] [opt 'extern] '~ [id] '( ') 
+        [finalizer_body]
+end define 
+
+define finalizer_body 
+      [block]   [NL]
+    | ';        [NL]
+end define 
+
+
+% A.2.7 Structs
+
+define struct_declaration 
+    [opt attributes] [opt struct_modifiers] [opt 'partial] 'struct [id] [opt type_parameter_list] 
+    [opt struct_interfaces] [opt type_parameter_constraints_clauses]   [NL]
+        [struct_body]   [NL]
+end define 
+
+define struct_modifiers
+    [repeat struct_modifier+]
+end define
+
+define struct_modifier
+      'new
+    | 'public
+    | 'proctected
+    | 'internal
+    | 'private
+end define
+
+define struct_interfaces
+    ': [interface_type_list]
+end define
+
+define interface_type_list
+    [list interface_type+]
+end define
+
+define struct_body 
+    '{                                     [NL] [IN]
+        [opt struct_member_declarations]   [EX] 
+    '} [opt ';]                            [NL]
+end define 
+
+define struct_member_declarations
+    [repeat struct_member_declaration+]
+end define
+
+define struct_member_declaration 
+      [constant_declaration] 
+    | [field_declaration] 
+    | [method_declaration] 
+    | [property_declaration] 
+    | [event_declaration] 
+    | [indexer_declaration] 
+    | [operator_declaration] 
+    | [constructor_declaration] 
+    | [static_constructor_declaration] 
+    | [type_declaration] 
+end define 
+
+
+% A.2.8 Arrays
+
+% array_type, non_array_type, rank_specifiers, variable_initializer already defined above,
+% apparent redundancy in specification - JRC
+
+define array_initializer 
+    '{ [opt variable_initializer_list] [opt ',] '} 
+end define 
+
+define variable_initializer_list
+    [list variable_initializer+]
+end define
+
+
+% A.2.9 Interfaces
+
+define interface_declaration 
+    [opt attributes] [opt interface_modifiers] [opt 'partial] 'interface [id] 
+    [opt type_parameter_list] [opt interface_base] [opt type_parameter_constraints_clauses]   [NL]
+        [interface_body]   [NL]
+end define 
+
+define interface_modifiers
+    [repeat interface_modifier]
+end define
+
+define interface_modifier
+      'new
+    | 'public
+    | 'protected
+    | 'internal
+    | 'private
+end define
+
+define interface_base
+    ': [interface_type_list]
+end define
+
+define interface_body 
+    '{                                        [NL] [IN] 
+        [opt interface_member_declarations]   [EX] 
+    '} [opt ';]                               [NL]
+end define 
+
+define interface_member_declarations
+    [repeat interface_member_declaration+]
+end define
+
+define interface_member_declaration 
+      [interface_method_declaration] 
+    | [interface_property_declaration] 
+    | [interface_event_declaration] 
+    | [interface_indexer_declaration] 
+end define 
+
+define interface_method_declaration 
+    [opt attributes] [opt 'new] [return_type] [id] [opt type_parameter_list] '( [opt formal_parameter_list] ') 
+        [opt type_parameter_constraints_clauses] ';   [NL]
+end define 
+
+define interface_property_declaration 
+    [opt attributes] [opt 'new] [type] [id]   [NL]
+    '{                          [NL] [IN] 
+        [interface_accessors]   [EX]
+    '}                          [NL]
+end define
+
+define interface_accessors
+      [opt attributes] 'get ';
+    | [opt attributes] 'set ';
+    | [opt attributes] 'get '; [opt attributes] 'set ';
+    | [opt attributes] 'set '; [opt attributes] 'get ';
+end define
+
+define interface_event_declaration 
+    [opt attributes] [opt 'new] 'event [type] [id] ';   [NL]
+end define
+
+define interface_indexer_declaration 
+    [opt attributes] [opt 'new] [type] 'this '[ [formal_parameter_list] '] 
+    '{                          [NL] [IN] 
+        [interface_accessors]   [EX] 
+    '}                          [NL]
+end define 
+
+
+% A.2.10 Enums
+
+define enum_declaration 
+    [opt attributes] [opt enum_modifiers] 'enum [id] [opt enum_base] 
+        [enum_body]   [NL]
+end define 
+
+define enum_base
+    ': [integral_type]
+end define
+
+define enum_body 
+    '{                                            [NL] [IN]
+        [opt enum_member_declarations] [opt ',]   [EX]
+    '} [opt ';]                                   [NL]
+end define 
+
+define enum_modifiers
+    [repeat enum_modifier+]
+end define
+
+define enum_modifier
+      'new
+    | 'public
+    | 'protected
+    | 'internal
+    | 'private
+end define
+
+define enum_member_declarations
+    [list enum_member_declaration+]
+end define
+
+define enum_member_declaration 
+      [opt attributes] [id] [opt equals_constant_expression] 
+end define 
+
+define equals_constant_expression
+    '= [constant_expression]
+end define
+
+
+% A.2.11 Delegates
+
+define delegate_declaration 
+    [opt attributes] [opt delegate_modifiers] 'delegate [return_type] [id] [opt type_parameter_list]
+        '( [opt formal_parameter_list] ') [opt type_parameter_constraints_clauses] ';   [NL] 
+end define 
+
+define delegate_modifiers
+    [repeat delegate_modifier+]
+end define
+
+define delegate_modifier
+      'new
+    | 'public
+    | 'protected
+    | 'internal
+    | 'private
+end define
+
+
+% A.2.12 Attributes
+
+define global_attributes 
+    [global_attribute_sections] 
+end define 
+
+define global_attribute_sections
+    [repeat global_attribute_section+]
+end define
+
+define global_attribute_section
+    '[ [global_attribute_target_specifier] [attribute_list] [opt ',] ']
+end define
+
+define global_attribute_target_specifier
+    [global_attribute_target] ':
+end define
+
+define global_attribute_target
+    [id] | [key]
+end define
+
+define attributes
+    [attribute_sections]
+end define
+
+define attribute_sections
+    [repeat attribute_section+] 
+end define 
+
+define attribute_section 
+    '[ [opt attribute_target_specifier ] [attribute_list] [opt ',] '] 
+end define 
+
+define attribute_target_specifier 
+    [attribute_target] ': 
+end define 
+
+define attribute_target 
+    [id] | [key]
+end define 
+
+define attribute_list
+    [list attribute+]
+end define
+
+define attribute 
+    [attribute_name] [opt attribute_arguments] 
+end define 
+
+define attribute_name 
+    [type_name] 
+end define 
+
+define attribute_arguments 
+    '( [attribute_argument_list] ') 
+end define 
+
+define attribute_argument_list
+    [list attribute_argument]
+end define
+
+define attribute_argument
+      [positional_argument]
+    | [named_argument]
+end define 
+
+define positional_argument
+    [attribute_argument_expression] 
+end define 
+
+define named_argument 
+    [id] '= [attribute_argument_expression] 
+end define 
+
+define attribute_argument_expression
+    [expression]
+end define
+
+
+% A.2.13 Generics
+
+define type_parameter_list
+	'< [type_parameters] '> 
+end define
+
+define type_parameters
+    [list attributes_type_parameter+]
+end define
+
+define attributes_type_parameter
+    [opt attributes] [type_parameter]
+end define
+
+define type_parameter
+    [id]
+end define
+
+define type_argument_list
+	'< [list type_argument+] '>
+end define
+
+define type_argument
+    [type]
+end define
+
+define type_parameter_constraints_clauses
+    [repeat type_parameter_constraints_clause+]
+end define
+
+define type_parameter_constraints_clause
+    'where [type_parameter] ': [type_parameter_constraints]
+end define
+
+define type_parameter_constraints
+    [list type_parameter_constraint]
+end define
+
+define type_parameter_constraint
+      [primary_constraint]
+    | [secondary_constraint]
+    | [constructor_constraint]
+end define
+
+define primary_constraint
+      [class_type]
+    | 'class
+    | 'struct
+end define
+
+define secondary_constraint
+      [interface_type]
+    | [type_parameter]
+end define
+
+define constructor_constraint
+    'new '( ')
+end define
+
+
+% A.3 Grammar extensions for unsafe code
+
+redefine class_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine struct_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine interface_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine delegate_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine field_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine method_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine property_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine event_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine indexer_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine operator_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine constructor_modifier
+      ...
+    | 'unsafe
+end redefine
+
+redefine finalizer_declaration
+      [opt attributes] [opt 'extern] [opt 'unsafe] '~ [id] '( ')   [NL]
+          [finalizer_body]   [NL]
+    | [opt attributes] [opt 'unsafe] [opt 'extern] '~ [id] '( ')   [NL]
+          [finalizer_body]   [NL]
+end redefine 
+
+redefine static_constructor_modifiers
+      [opt 'extern] [opt 'unsafe] 'static
+    | [opt 'unsafe] [opt 'extern] 'static
+    | [opt 'extern] 'static [opt 'unsafe]
+    | [opt 'unsafe] 'static [opt 'extern] 
+    | 'static [opt 'extern] [opt 'unsafe]
+    | 'static [opt 'unsafe] [opt 'extern] 
+end redefine
+
+redefine embedded_statement
+      ...
+    | [unsafe_statement]
+end redefine
+
+define unsafe_statement
+    'unsafe [block]
+end define
+
+redefine type
+      [pointer_type]
+end redefine
+
+define pointer_type
+      [unmanaged_type] [repeat '*]
+    | 'void '* [repeat '*]
+end define
+
+define unmanaged_type
+      [value_type]
+    | [reference_type]
+    | [type_parameter]
+end define
+
+redefine primary_no_array_creation_expression
+      ...
+    | [sizeof_expression]
+end redefine
+
+redefine primary_expression_modifier
+      ...
+    | [pointer_member_access_operator]
+    | [pointer_element_access_operator]
+end redefine
+
+redefine unary_expression
+       ...
+     | [pointer_indirection_expression]
+     | [addressof_expression]
+end redefine
+
+define pointer_indirection_expression
+    '* [unary_expression]
+end define
+
+define pointer_member_access_operator
+    '-> [id] [opt type_argument_list]
+end define
+
+define pointer_element_access_operator
+    '[ [expression] ']
+end define
+
+define addressof_expression
+    '& [unary_expression]
+end define
+
+define sizeof_expression
+    'sizeof '( [unmanaged_type] ')
+end define
+
+redefine embedded_statement
+      ...
+    | [fixed_statement]
+end redefine
+
+define fixed_statement
+    'fixed '( [pointer_type] [fixed_pointer_declarators] ') [embedded_statement]
+end define
+
+define fixed_pointer_declarators
+    [list fixed_pointer_declarator+]
+end define
+
+define fixed_pointer_declarator
+    [id] '= [fixed_pointer_initializer]
+end define
+
+define fixed_pointer_initializer
+      '& [variable_reference]
+    | [expression]
+end define
+
+redefine local_variable_initializer
+      [expression]
+    | [array_initializer]
+    | [stackalloc_initializer]
+end redefine
+
+define stackalloc_initializer
+    'stackalloc [unmanaged_type] '[ [expression] ']
+end define
+
+% End of grammar

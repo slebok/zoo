@@ -1,0 +1,184 @@
+% ECMA-334 Edition 3 (June 2005) Standard C# Grammar 
+% Commenting overrides - Jim Cordy (cordy@cs.queensu.ca) 
+% March 2006
+
+% Revised 24 Aug 2006 JRC
+% - Allow for comments preceding else if, else, case, and switch blocks,
+%   property, class and type bodies, and embedded in expressions  
+
+% This is a preliminary version of the overrides to allow for comment
+% preservation and formatting in C# transformations using the ECMA-334 grammar.
+% Feel free to add and report any other overrides that seem to be needed.
+
+% Note that when using these overrides, transformation patterns should
+% include the possibility of optional comments on blocks and bodies
+% in order not to miss cases where comments are present.
+
+#pragma -comment 
+
+% Formatted comments
+define comments_
+    [repeat comment_NL]
+end define
+
+define comment_NL
+      [comment] [NL]
+end define
+
+% Allow them anywhere in place of a statement or declaration 
+redefine embedded_statement
+      ...
+    | [comment_NL]
+end redefine
+
+redefine namespace_member_declaration
+      ...
+    | [comment_NL]
+end redefine
+
+redefine class_member_declaration
+      ...
+    | [comment_NL]
+end redefine
+
+redefine struct_member_declaration
+      ...
+    | [comment_NL]
+end redefine
+
+redefine interface_member_declaration
+      ...
+    | [comment_NL]
+end redefine
+
+redefine enum_member_declaration
+      ...
+    | [comment_NL]
+end redefine
+
+redefine extern_alias_directive 
+      ...
+    | [comment_NL]
+end redefine
+
+redefine using_directive 
+      ...
+    | [comment_NL]
+end redefine
+
+redefine global_attribute_section
+      ...
+    | [comment_NL]
+end redefine
+
+redefine attribute_section
+      ...
+    | [comment_NL]
+end redefine
+
+% Allow them preceding any block
+redefine namespace_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine class_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine method_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine accessor_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine operator_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine constructor_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine static_constructor_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine finalizer_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine struct_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine interface_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine enum_body
+    [opt comments_]
+    ...
+end redefine
+
+redefine block
+	[opt comments_]
+	...
+end redefine
+
+redefine block
+	...
+	[opt comments_]
+end redefine
+
+redefine else_if_clause
+	[opt comments_]
+	...
+end redefine
+
+redefine else_clause
+	[opt comments_]
+	...
+end redefine
+
+redefine switch_block
+	[opt comments_]
+	...
+end redefine
+
+redefine switch_label
+	[opt comments_]
+	...
+end redefine
+
+% Allow for embedded comments in expressions
+redefine primary_expression
+	[opt comments_]
+	...
+end redefine
+
+% Allow for comments after declared member names, that is,
+% before blocks of property, class, and type declarations
+redefine member_name
+	...
+	[opt comments_]
+end redefine
+
+% Allow comment labelled nested statements
+redefine nested_statement
+      [block]
+    |                        [IN][NL]
+      [opt comments_]
+      [embedded_statement]   [EX]
+end redefine

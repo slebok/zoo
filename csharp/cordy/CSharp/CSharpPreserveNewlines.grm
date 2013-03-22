@@ -1,0 +1,46 @@
+% Preserve intentional newlines in C# 
+% J.R. Cordy
+% August  2006
+
+% This module will preserve intentional extra vertical spacing in transformed
+% C# programs processed using the C# grammar with comment preserving overrides.
+%
+% Use this module as shown below.  
+% It is essential that the CommentOverrides grammar is included, 
+% and that the [preserveNewlines] rule is run before any other.
+%        
+%     include "Csharp_ECMA_334.Grm"
+%     include "Csharp_ECMA_334_CommentOverrides.Grm"
+%     include "Csharp_PreserveNewlines.Grm"
+%
+%     function main
+%         replace [program]
+%             CsharpProgram [program]
+%         by
+%             CsharpProgram [preserveNewlines]
+%                           [other rules ...]
+%     end function
+
+% So here's how to we do it:
+% First, tell TXL that newlines are visible tokens
+#pragma -newline 
+
+% Second, allow for newlines in place of comments
+redefine comment_NL
+      [comment] 
+    | [repeat newline]
+end redefine
+
+% Third, strip out redundant single newlines, since the grammar already
+% provides one for each line.  Intentional (extra) ones are kept by not
+% looking deeper than the first one in a sequence.
+% This rule should be run first, before any other rules in the program.
+rule preserveNewlines
+    skipping [repeat newline]
+    replace $ [repeat newline]
+        RedundantNewline [newline]
+        OtherNewlines [repeat newline]
+    by
+        OtherNewlines
+end rule
+
