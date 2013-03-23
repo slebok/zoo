@@ -1,0 +1,234 @@
+% Name:   delphidpp.grammar
+% Purpose:  TXL Grammar for Borland Delphi preprocessor
+% Author:   Jorge L. Cangas
+
+#if not _delphipp_grammar then
+#define _delphipp_grammar
+
+#pragma -char -case
+
+compounds
+    :=  >=  <=  <>  {$  (*$  (*  *)  //  
+end compounds
+
+tokens
+    charlit "[(\#\d+)(\#$[\dABCDEFabcdef]+)('[('')#']*')]+"
+    hexnumber  "$[\dABCDEFabcdef]+" | "0[\dABCDEFabcdef]+H"
+    EOL  "\n"
+end tokens
+
+redefine anynumber
+    [number] | [hexnumber]
+end define
+
+define ident
+    [id] | [key] % string is a valid type id but is a key
+end define
+
+define namespace
+    [id] '.
+end define
+
+define nested_id
+    [SPOFF][repeat namespace] [ident][SPON]
+end define
+
+define filenamelit
+    [charlit] | [stringlit] | [nested_id]
+end define
+
+define delphipp_file
+        [repeat pp_stmt_or_water]
+end define
+
+define pp_stmt_or_water
+        [pp_stmt][!]
+    |   [pp_comment][!]
+    |   [pp_any][!]
+end define
+
+define pp_comment
+        [cmbracketblock]
+    |   [cmstarblock]
+    |   [cmline]
+end define
+
+define cmbracketblock
+  '{ [repeat bracketbody] '}
+end define
+
+define cmstarblock
+  '(* [repeat starbody] '*)
+end define
+
+define bracketbody
+    [not '}] [pp_any]
+end define
+
+define starbody
+    [not *)][pp_any]
+end define
+
+define cmline
+  '// [repeat cmlinebody] [EOL]
+end define
+
+define cmlinebody
+     [not EOL] [pp_any]
+end define
+
+define pp_any
+    [id][repeat codetoken][!]
+    | [key]| [token] 
+end define
+
+define codetoken
+      '( | ') | '. | '; | ': | ', | '[ | ']
+    | '+ | '- | '* | '/ | '^ | '= | '@ | '> | '< 
+    | '<> | '>= | '<= | ':= | '//
+    | [id] | [anynumber] | [charlit] | [space]
+end define
+
+define pp_stmt
+        [pp_ifstmt]
+    |   [pp_directivestmt][!]
+end define
+
+define pp_directivestmt
+       '{$ [opt space][list pp_directive] [repeat bracketbody] '}
+    |  '(*$ [opt space][list pp_directive] [repeat starbody] '*)
+end define
+
+define pp_directive
+        'DEFINE[space][id]
+    |   'UNDEF[space][id]
+    |   'INCLUDE[opt space][filenamelit]
+    |   'I[opt space][filenamelit]
+    |   'LINK[opt space][filenamelit]
+    |   'L[opt space][filenamelit]
+    |   'RESOURCE[opt space][filenamelit][opt space][opt filenamelit]
+    |   'R[opt space][filenamelit][opt space][opt filenamelit]
+    |   'HPPEMIT [opt space][charlit]
+    |   'EXTERNALSYM [space][id]
+    |   'NODEFINE
+    |   'MINENUMSIZE
+    |   'DENYPACKAGEUNIT | 'WEAKPACKAGEUNIT
+    |   'IMAGEBASE [opt space][anynumber]
+    |   'C[space][id] % i.e. PRELOAD
+    |   'MINENUMSIZE [space][anynumber] | [pp_minenumsize]
+    |   'ALIGN [opt space][anynumber]| [pp_align]
+    |   'M [opt space][list anynumber]
+    |   'MAXSTACKSIZE [space][anynumber]
+    |   'MINSTACKSIZE [space][anynumber] 
+    |   'RESOURCERESERVE [space][anynumber]
+    |   'NOINCLUDE
+    |   'WARN
+    |   'MESSAGE
+    |   'APPTYPE
+    |   'LIBPREFIX [opt space][charlit] | 'LIBSUFIX [opt space][charlit] | 'LIBVERSION [opt space][charlit]
+    |   'DESCRIPTION [opt space][charlit] | 'D [opt space][charlit]
+    |   'EXTENSION [space][id] | 'E [space][id]
+    |   [not else_alt][not endif_alt][pp_switch][opt space]
+end define
+
+define pp_align
+    'A1 |'A2 |'A4 |'A8
+end define
+
+define pp_minenumsize
+    'Z1 |'Z2 |'Z4
+end define
+
+define pp_switch
+    [id][opt space][pp_switchopt]
+end define
+
+define pp_switchopt
+    '+ | '- | 'ON | 'OFF
+end define
+
+define pp_ifstmt
+    [pp_ifblock]
+    [repeat pp_elseifblock]
+    [pp_endif]
+end define
+
+define pp_ifblock
+    [pp_ifexpr][!]
+    [repeat pp_content]
+end define
+
+define pp_content
+    [not pp_elseifexpr][not pp_endif ][pp_stmt_or_water][!]
+end define
+
+define pp_elseifblock
+    [pp_elseifexpr][!]
+    [repeat pp_content]
+end define
+
+define pp_ifexpr
+        '{$[opt space][if_alt][repeat bracketbody] '}
+    |   '(*$[opt space][if_alt][repeat starbody] '*)
+end define
+
+define pp_elseifexpr
+        '{$[opt space][else_alt][opt space][repeat bracketbody]'}
+    |   '(*$[opt space][else_alt][opt space][repeat starbody]'*)
+end define
+
+define pp_endif
+        '{$[opt space][endif_alt][repeat bracketbody]'}
+    |   '(*$[opt space][endif_alt][repeat starbody]'*)
+end define
+
+define if_alt
+        'IF [opt space][pp_boolexpr] 
+    |   'IFDEF [opt space][id]
+    |   'IFNDEF [opt space][id]
+    |   'IFOPT[opt space][pp_switch]
+end define
+
+define else_alt
+        'ELSEIF [opt space][pp_boolexpr]
+    |   'ELSE[opt space]
+end define
+
+define endif_alt
+        'ENDIF
+    |   'IFEND
+end define
+
+define pp_boolexpr
+        [booleanlit]
+    |   [boolfunc][opt space]'([id]')
+    |   'NOT[opt space][pp_boolexpr]
+    |   [id]
+    |   [pp_boolexpr] pp_boolopr [pp_boolexpr]
+    |   [pp_litexpr] pp_compareopr [pp_litexpr]
+    |   '( [pp_boolexpr]')
+end define
+
+define boolfunc
+        'DEFINED
+    |   'DECLARED
+    |   'OPTION
+end define
+
+define booleanlit
+    'FALSE  |  'TRUE
+end define
+
+define pp_litexpr
+    [id] | [charlit] | [anynumber]
+end define
+
+define pp_boolopr
+        'AND | 'OR | 'XOR
+end define
+
+define pp_compareopr
+        '> | '< | '= | '>= | '<= | '<>
+end define
+
+#end if

@@ -1,0 +1,264 @@
+#if not _delphi_asm_grammar_ then
+#define _delphi_asm_grammar_
+
+tokens
+	asmlbl "@(\d+\u+\i*)"
+end tokens
+
+redefine procedure_body
+	...
+	|   [asm_stmtblock]
+end redefine
+
+redefine unlabeled_stm
+	...
+	|   [asm_stmtblock]
+end redefine
+
+define asm_stmtblock
+	'asm 
+		[repeat asm_stm]
+	[end_struct]
+end define
+
+define asm_stm  
+		[opt asmlabel_colon] [opt asm_unlabeledstm_semi]
+end define
+
+define asmlabel_colon
+	[asmlabel][colon]
+end define
+
+define asm_unlabeledstm_semi
+	[asm_unlabeledstm] [opt ';] [NL]
+end define
+
+define asmid
+	  [repeat '@][asmlbl]
+	| [repeat '@+][id]
+	| [repeat '@+][anynumber] 
+	| [repeat '@+][key] % some delphi keywords can be asm op or labels: SHR, SHL, etc.
+end define
+
+define asmlabel
+	[SPOFF] [repeat asmid+] [SPON]
+	| [label_id]
+end define
+
+define asm_expr
+	[asm_term][repeat asm_infix_expr]
+end define
+
+define asm_infix_expr
+	[asm_infixop][asm_term]
+end define
+
+define asm_term
+	  [repeat asm_prefixop][asm_primary][repeat asm_postfixop]
+end define
+
+define asm_primary
+	  '[[asm_expr]']
+	| '([asm_expr]')
+	| [asm_register] 
+	| [id] | [anynumber] | [charlit] | [stringlit] | [asmhex] | [SP][asmlabel]
+end define
+
+define asmhex
+	%in asm hex don't must start by zero, only must end by 'H' i.e. 800AH.
+	%We cannot redefine hexnumber token: FFFFH will be [id] or [hexnumber] ??
+	[number] [SPOFF] [id] [SPON] % because 7ff3H is a asmhex !!
+end define
+
+define asm_unlabeledstm
+		[asm_directive] [list asm_directive_arg]
+	 |  [opt asm_opcode_prefix][asm_opcode][list asm_expr]
+end define
+
+define asm_opcode_prefix
+	'lock [opt space]
+end define
+
+define asm_opcode
+	  'adc
+	| 'add
+	| 'and
+	| 'bswap
+	| 'bt
+	| 'btr
+	| 'bts
+	| 'call
+	| 'cdq
+	| 'cld
+	| 'cmp
+	| 'dec
+	| 'div
+	| 'f2xm1
+	| 'fabs
+	| 'fadd
+	| 'faddp
+	| 'fbstp
+	| 'fchs
+	| 'fclex
+	| 'fcom
+	| 'fcomp
+	| 'fcos
+	| 'fdiv
+	| 'fdivp
+	| 'fdivrp
+	| 'ffree
+	| 'fiadd
+	| 'fidiv
+	| 'fild
+	| 'fimul
+	| 'fistp
+	| 'fld
+	| 'fld1
+	| 'fldcw
+	| 'fldl2e
+	| 'fldlg2
+	| 'fldln2
+	| 'fldz
+	| 'fmul
+	| 'fmulp
+	| 'fnclex
+	| 'fninit
+	| 'fnstcw
+	| 'fnstsw
+	| 'fpatan
+	| 'fprem
+	| 'fptan
+	| 'frndint
+	| 'fscale
+	| 'fsin
+	| 'fsincos
+	| 'fsqrt
+	| 'fstcw
+	| 'fstp
+	| 'fstsw
+	| 'fsub
+	| 'fsubp
+	| 'fsubr
+	| 'fwait
+	| 'fxch
+	| 'fxtract
+	| 'fyl2x
+	| 'fyl2xp1
+	| 'imul
+	| 'inc
+	| 'int
+	| 'ja
+	| 'jae
+	| 'jb
+	| 'jbe
+	| 'jc
+	| 'je
+	| 'jecxz
+	| 'jg
+	| 'jge
+	| 'jl
+	| 'jle
+	| 'jmp
+	| 'jnc
+	| 'jne
+	| 'jnl
+	| 'jns
+	| 'jnz
+	| 'jo
+	| 'jp
+	| 'js
+	| 'jz
+	| 'lea
+	| 'leave
+	| 'lodsb
+	| 'lodsw
+	| 'loop
+	| 'mov
+	| 'movsb
+	| 'movsx
+	| 'movzx
+	| 'mul
+	| 'neg
+	| 'not
+	| 'or
+	| 'pop
+	| 'popfd
+	| 'push
+	| 'pushfd
+	| 'rcl
+	| 'rcr
+	| 'rep
+	| 'repe
+	| 'repne
+	| 'ret
+	| 'rol
+	| 'ror
+	| 'sahf
+	| 'sar
+	| 'sbb
+	| 'seto
+	| 'shl
+	| 'shld
+	| 'shr
+	| 'shrd
+	| 'std
+	| 'stosb
+	| 'stosd
+	| 'stosw
+	| 'sub
+	| 'test
+	| 'wait
+	| 'xadd
+	| 'xchg
+	| 'xor
+end define
+
+define asm_directive
+	'DB | 'DW | 'DD  | 'DQ
+end define
+
+define asm_directive_arg
+	[charlit] | [opt sign][anynumber] | [asm_expr]
+end define
+
+define asm_register
+	  'ST '([integernumber]') 
+	| 'ST %Coprocessor register stack
+	| 'FS  | 'GS %32-bit segment registers
+	| 'EAX | 'EBX | 'ECX | 'EDX %32-bit general purpose	
+	| 'ESP | 'EBP | 'ESI | 'EDI %32-bit general purpose
+	| 'AX  | 'BX  | 'CX  | 'DX	%16-bit general purpose
+	| 'SP  | 'BP  | 'SI  | 'DI  %16-bit pointer or index
+	| 'AL  | 'BL  | 'CL  | 'DL	%8-bit low registers
+	| 'CS  | 'DS  | 'SS  | 'ES  %16-bit segment registers
+	| 'AH  | 'BH  | 'CH  | 'DH  %8-bit high registers
+	| 'CS  [opt segmt_overr]
+	| 'DS  [opt segmt_overr]
+	| 'SS  [opt segmt_overr]
+	| 'FS  [opt segmt_overr]
+	| 'GS  [opt segmt_overr]
+	| 'ES  [opt segmt_overr]
+end define
+
+define segmt_overr
+   [SPOFF] ': [asm_expr] [SPON]
+end define
+
+define asm_prefixop
+		'high   | 'low 
+	|   'offset | 'dmtindex | 'vmtoffset 
+	|   'type   | 'not      
+	|   '&      | [sign] | '@
+end define
+
+define asm_infixop
+	 '. | '+ | '- | '* | '/
+	| 'ptr | 'mod | 'xor | 'and | 'or | 'shr | 'shl 
+end define
+
+define asm_postfixop
+		'[ [asm_expr] ']
+	| '. [asm_expr]
+end define
+
+#end if

@@ -1,0 +1,1065 @@
+%+
+%	Name:		ObjectPascal.Grammar
+%
+% 	Purpose:	TXL Basis Grammar for Borland Delphi Object Pascal
+%	Author:		S.P. Leblanc, Royal Military College of Canada
+%
+%	Revision History:
+%	1.0 	April 2002 S.P. Leblanc 
+%		- initial version
+%	1.1	May-June 2002
+%		- modifications to parse everything
+%		- Helen Jong, T. Dean, Z. Nasser, Queen's University
+%-
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Tokens, comments, compounds and Keys
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+tokens
+    charlit "'[('')#']*'"
+end tokens
+
+comments
+     { }
+     (* *)
+      //
+end comments
+
+compounds
+        :=  >= <= <>
+end compounds
+
+keys
+      array begin boolean case const char do downto
+      else 'end for For 'function if If on except
+      integer of packed procedure real record
+      'repeat type var file program write read
+      then while until to with and or
+      'not true false set goto in 'try
+      unit package library interface implementation
+      label class real48 single double extended
+      currency comp shortint smallint byte
+      int64 word widechar longword variant
+      olevariant string ansistring widestring
+      nil is as As xor div mod shl shr inherited out
+      cdecl  dynamic virtual 'export 'external
+      far forward override overload pascal reintroduce
+      safecall stdcall 'object constructor destructor
+      initialization finalization public protected Protected
+      private published property stored default
+      nodefault implements interface requires contains uses 'Not
+end keys
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% top level - file types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define program
+      [program_definition]
+    | [package_definition]
+    | [library_definition]
+    | [unit_definition]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% top level - program defintion (.dpr)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define program_definition
+    'program [decl_name] [opt program_file_list] '; 			[NL] %TD, Hellen
+    [program_block] .
+end define
+
+define program_file_list
+   ( [list id] ')	% TD ignore file parameter for now.
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% top level - package defintion (.???)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define package_definition
+    package [decl_name] ';						 [NL]
+    [opt requires_clause]
+    [opt contains_clause]
+    'end .
+end define
+
+define requires_clause
+    [repeat requires_idList_semicolon]
+end define
+
+define contains_clause
+    [repeat contains_idList_semicolon]
+end define
+
+define requires_idList_semicolon
+    requires [list ref_name+] ;						[NL]
+end define
+
+define contains_idList_semicolon
+    contains [list ref_name+] ;						[NL]		
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% top level - library defintion (.???)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define library_definition
+    library [decl_name] ';						[NL]
+    [program_block] .
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% top level - unit defintion (.pas)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define unit_definition
+    unit [decl_name] ';            					[NL]
+    [interface_section]     						[NL]
+    [implementation_section]						[NL]
+    [init_section] .
+end define
+
+define interface_section
+    interface                       					[NL][NL]
+    [opt uses_clause]               					[NL]
+    [repeat interface_declaration]
+end define
+
+define implementation_section
+        implementation                  				[IN][NL]
+	    [opt uses_clause]
+	    [repeat declaration_section]    				[EX][NL]
+end define
+
+define init_section
+      intitialization							[IN][NL]
+	 [statement_list]
+	 [opt fin_statement_list]					[EX][NL]
+      'end
+    | [compound_statement]
+    | 'end
+end define
+
+define interface_declaration
+      [constant_section]
+    | [type_section]
+    | [var_section]
+    | [exported_heading] [opt directive] 	%Hellen
+end define
+
+define exported_heading
+      [procedure_heading] ';						[NL]
+    | [function_heading] ';						[NL]
+    | [constructor_heading] ';						[NL]
+    | [destructor_heading] ';	 					[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% common definitions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define program_block
+    [opt uses_clause]
+    [block]
+end define
+
+% TD. should not be part of program_block , but in library and 
+% program
+define uses_clause
+    uses                    						[IN][NL]
+	[list uses_item+] ';   						[EX][NL] %TD
+end define
+
+define uses_item %TD
+   [ref_name] [opt in_clause]
+end define
+
+define in_clause %TD
+    in [charlit]
+end define
+
+define block
+    [repeat declaration_section]
+    [compound_statement]
+end define
+
+%=====================================================================
+% Declarations
+%=====================================================================
+
+define declaration_section
+      [label_declaration_section]
+    | [constant_section]
+    | [type_section]
+    | [var_section]
+    | [procedure_section]
+end define
+
+define label_declaration_section
+    label [decl_name]
+end define
+
+%-------------------------------------
+% Constant Delcarations
+%-------------------------------------
+
+define constant_section
+    const                           					[IN][NL]
+        [repeat constant_declaration]   				[EX][NL]
+end define
+
+define constant_declaration
+      [decl_name] = [expression] ;					[NL]	%Hellen
+    | [decl_name] : [typeId] = [typed_constant] ; 			[NL]
+end define
+
+%-------------------------------------
+% Type Delcarations
+%-------------------------------------
+
+define type_section
+    'type                           					[IN][NL]
+        [repeat type_declaration+]      				[EX][NL]
+end define
+
+define type_declaration
+    [decl_name] = [type_or_restrictedType]	%Hellen
+end define
+
+define type_or_restrictedType
+      [type] ;                 						[NL]
+    | [restrictedType] ';  						[NL]
+end define
+
+define typed_constant
+      [expression]		%Hellen
+    | [array_constant]
+    | [record_constant]
+end define
+
+define array_constant
+    ( [list typed_constant] )	%Hellen
+end define
+
+define record_constant
+    ( [typed_constant] [repeat semicolon_record_field_constant] )	%Hellen
+end define
+
+define semicolon_record_field_constant	%Hellen
+    '; [decl_name] : [typed_constant]	%Hellen 
+end define
+
+define type
+      [typeId]
+    | [simpleType]
+    | [structType]
+    | [pointerType]
+    | [stringType]
+    | [procedureType] 
+    | [variantType]
+    | [class_referenceType]
+end define
+
+define restrictedType
+      [objectType]
+    | [classType]
+    | [interfaceType]
+end define
+
+define class_referenceType
+    class of [typeId]
+end define
+
+define simpleType
+      [ordinalType]
+    | [realType]
+end define
+
+define realType
+      real48 | real | single | double | extended | currency | comp
+end define
+
+define ordinalType
+      [subrangeType]
+    | [enumeratedType]
+    | [ordinal_identifier]
+end define
+
+define enumeratedType
+    ( [list decl_name] )
+end define
+
+define ordinal_identifier
+      shortint | smallint | integer | byte |longint | int64 | word
+    | boolean | char | widechar | longchar | pchar
+end define
+
+define variantType
+      variant | olevariant
+end define
+
+define subrangeType
+    [expression] .. [expression]	%Hellen
+end define
+
+
+define stringType
+    'string | ansistring | widestring | 'string '[ [expression] ']	%Hellen
+end define
+
+define structType
+      [arrayType] [opt 'packed]
+    | [setType] [opt 'packed]
+    | [fileType] [opt 'packed]
+    | [recordType] [opt 'packed]
+end define
+
+define arrayType
+    [array_word] [opt square_ordinalType] of [type]	%Hellen
+end define
+
+define array_word
+    'array | 'Array
+end define
+
+define square_ordinalType	%Hellen
+    '[ [list ordinalType] ']
+end define
+
+define recordType
+    record [field_list] 'end
+end define
+
+define field_list
+    [repeat field_declaration+] [opt variant_section]
+end define
+
+define field_declaration
+    [list decl_name+] : [type] ;  					[NL]
+end define
+
+define variant_section
+    case [opt id_colon] [typeId] of
+    [repeat record_variant_semicolon+] [opt ;]
+end define
+
+define id_colon
+    [decl_name] : 
+end define
+
+define record_variant_semicolon
+    [record_variant] ;							[NL]
+end define
+
+define record_variant
+    [list expression+] : ( [opt field_list] )	%Hellen
+end define
+
+define setType
+    set of [ordinalType]
+end define
+
+define fileType
+    file of [typeId]
+end define
+
+define pointerType
+    ^ [typeId]
+end define
+
+define procedureType
+    [proc_or_func_heading] [opt of_object] 
+end define
+
+define proc_or_func_heading
+    [procedure_heading] | [function_heading]
+end define
+
+define of_object	%Hellen
+    'of 'object
+end define
+
+define typeId
+        [ref_name]			
+    |   [predefinedType]
+end define
+
+define predefinedType
+        'integer
+    |   'real
+    |   'boolean
+    |   'char
+    |	'byte
+end define
+
+%-------------------------------------
+% Class and Object Type Declarations
+%-------------------------------------
+
+define objectType
+    'object [opt object_heritage] [opt object_field_list] 
+        [opt method_list] 
+    'end
+end define
+
+define object_heritage
+    ( [ref_name] )
+end define
+
+define method_list
+    [virtual_method_heading] [repeat semi_virtual_method_heading]
+end define
+
+define semi_virtual_method_heading
+   '; [NL] [virtual_method_heading]
+end define
+
+define virtual_method_heading
+    [method_heading] [opt semi_directive] [opt semicolon_virtual]	%Hellen
+end define
+
+define semicolon_virtual
+    ; virtual
+end define
+
+define method_heading
+      [procedure_heading]
+    | [function_heading]
+    | [destructor_heading]
+    | [constructor_heading]
+end define
+
+define semi_directive
+    '; [directive]
+end define
+
+define constructor_heading
+    constructor [decl_name] [opt formal_parameters]
+end define
+
+define destructor_heading
+    destructor [decl_name] [opt formal_parameters]
+end define
+
+define object_field_list
+    [ident_list_colonType] [repeat semi_ident_list_colonType]
+end define
+
+define semi_ident_list_colonType
+   '; [NL] [ident_list_colonType]
+end define
+
+define ident_list_colonType
+    [list decl_name+] : [type]		
+end define
+
+define fin_statement_list
+    finalization [statement_list]
+end define
+
+define classType
+    class [opt class_heritage]					[IN][NL]
+	[opt class_element_list]
+	[repeat vis_spec_element_list]				[EX][NL]
+    [opt 'end]
+end define
+
+define class_heritage
+    ( [list ref_name] )
+end define
+
+define class_visibility
+    public | protected | Protected | private | published
+end define
+
+define vis_spec_element_list
+							[NL]
+    [class_visibility] [opt class_element_list]
+end define
+
+define class_element_list
+    [repeat class_element_semi+]
+end define
+
+define class_element_semi
+							[NL]
+    [class_element] ';
+end define
+
+define class_element
+      [virtual_method_heading]
+    | [ident_list_colonType]
+    | [property_list]
+    | [empty] %TD
+end define
+
+define class_method_list
+    [repeat class_visibility_method_list]
+end define
+
+define class_visibility_method_list
+    [class_visibility] [method_list]
+end define
+
+define class_property_list
+    [repeat class_visibility_property_list]
+end define
+
+define class_visibility_property_list
+    [class_visibility] [property_list]
+end define
+
+define property_list
+    [property_word] [decl_name] [opt property_interface] [repeat property_specifiers]	%Hellen
+end define
+
+define property_word	%Hellen
+    'property | 'Property
+end define
+
+define property_interface
+    [opt property_parameter_list] : [type]
+end define
+
+define property_parameter_list
+    '[ [repeat idList_colonTypeId_semicolon] ']
+end define
+
+define idList_colonTypeId_semicolon
+    [list decl_name+] : [typeId] ;  [NL]		
+end define
+
+define property_specifiers
+      [index_expession]
+    | [read_id]
+    | [write_id]
+    | [stored_id_OR_stored_expression]
+    | [default_expression_OR_nodefault]
+    | [implementsTypeId]
+end define
+
+define index_expession		%Hellen
+    index [expression]
+end define
+
+define read_id
+        read [ref_name]		
+end define
+
+define write_id
+        write [ref_name]		
+end define
+
+define stored_id_OR_stored_expression		%Hellen
+        stored [id_or_expression]
+end define
+
+define default_expression_OR_nodefault		%Hellen
+        default [expression]
+        | nodefault
+end define
+
+define implementsTypeId
+        implements [typeId]
+end define
+
+define interfaceType
+        interface [opt interface_heritage] [opt class_method_list]	%Hellen
+        [opt class_property_list] 'end
+end define
+
+define interface_heritage
+        ( [list ref_name] )
+end define
+
+%-------------------------------------
+% Variable Declarations
+%-------------------------------------
+
+define var_section
+    [var]								[NL][IN]
+	[repeat var_declaration_semicolon]				[NL][EX]	%Hellen
+end define
+
+define var	%Hellen
+      'var | 'Var
+end define
+
+define var_declaration_semicolon
+    [var_declaration] ; 						[NL]
+end define
+
+define var_declaration
+    [list decl_name+] : [type] [opt var_assignment]
+end define
+
+define var_assignment
+      [absolute_assignment]
+    | [constant_assignment]
+end define
+
+define absolute_assignment
+    absolute [id_or_expression]	%Hellen
+end define
+
+define id_or_expression		%Hellen
+      [ref_name]			
+    | [expression]
+end define
+
+define constant_assignment
+    = [expression]		%Hellen
+end define
+
+%-------------------------------------
+% Procedure and Method Declarations
+%-------------------------------------
+
+define procedure_section
+      [procedure_declaration]
+    | [function_declaration]
+    | [constructor_declaration]
+    | [destructor_declaration]
+end define
+
+define constructor_declaration
+    [constructor_heading] ; 						[IN][NL]
+	[block]        							[EX][NL]
+	;								[NL]
+end define
+
+define destructor_declaration
+    [destructor_heading] ;						[IN][NL]
+        [block]         						[EX][NL]
+        ;								[NL]
+end define
+
+define procedure_declaration
+    [procedure_heading] ;						[IN][NL]
+        [block]         						[EX][NL]
+        ;  								[NL]
+end define
+
+define function_declaration
+    [function_heading] [opt semi_directive] ;				[IN][NL]
+	[block]         						[EX][NL]
+        ;								[NL]
+end define
+
+define function_heading
+    [function_word] [decl_name] [opt formal_parameters] : [type_or_string]	%Hellen
+end define
+
+define type_or_string		%Hellen
+    [type] | [charlit]
+end define
+
+define function_word		%Hellen
+    'function | 'Function
+end define
+
+define procedure_heading
+      [procedure] [decl_name] [opt formal_parameters]
+end define
+
+define procedure
+    'procedure | 'Procedure
+end define
+
+define formal_parameters
+    ( [formal_parameter][repeat semi_formal_parameter] )
+end define
+
+define semi_formal_parameter
+    '; [NL] [formal_parameter]
+end define
+
+define formal_parameter
+    [opt parm_qual] [parameter]
+end define
+
+define parm_qual
+    [var] | 'const | 'out
+end define
+
+define parameter
+    [list decl_name] [opt parameter_type]   
+end define
+
+define parameter_type
+    : [opt array_of] [type] [opt param_init]
+end define
+
+define param_init
+   '= [expression]	%Hellen
+end define
+
+define array_of
+    [array_word] [opt set_constructor] of
+end define
+
+%=====================================================================
+% Statements
+%=====================================================================
+
+% this has to be fixed. We have statement possibly empty, so repeat
+% statement_semi should work but doesn't (Tom)
+
+define statement_list
+    [statement] [repeat semi_statement] 
+end define
+
+define semi_statement
+    ; 									[NL]
+    [statement]
+end define
+
+define statement
+      [opt labelId_colon] [unlabeled_statement]
+    | [empty]
+end define
+
+define labelId_colon
+    [labelId] :
+end define
+
+define unlabeled_statement
+      [simple_statement]
+    | [struct_statement]
+end define
+
+%-----------------------------------
+% Simple statments
+%	- assignment, function call, etc
+%-----------------------------------
+
+define simple_statement
+      [ref_name] [opt assign_expression]	% assignment statement and procedure/method call
+    | inherited [opt ref_name]
+    | goto [labelId]
+end define
+
+define assign_expression
+     := [expression]
+end define
+
+define labelId
+    label [list number+] ;  [NL]
+end define
+
+%-----------------------------------
+% Structured statements
+%   - statements that contain statements
+%   - if, while, case, etc.
+%-----------------------------------
+
+define struct_statement
+      [compound_statement]
+    | [conditional_statement]
+    | [loop_statement]
+    | [with_statement]
+    | [try_finally_statement]
+    | [try_except_statement]	%Hellen
+    | [raise_statement]
+end define
+
+define compound_statement
+    [begin]                   						[IN][NL]
+      [statement_list]  						[EX][NL]
+    'end                    						[NL]
+end define
+
+define begin
+    'begin | 'Begin
+end define
+
+define conditional_statement
+      [if_statement]
+    | [case_statement]
+end define
+
+define if_statement
+    [if] [expression]
+    then
+     [opt statement]
+    [opt else_statement] 
+end define
+
+define else_statement
+    else [opt statement]
+end define
+
+define if		%Hellen
+    'if | 'If
+end define
+
+define case_statement
+    case [expression] of [case_selector]    				[IN][NL]
+	[repeat semi_case_selector] [opt ';]    			[EX][NL]
+	[opt else_statement] [opt ';]           			[NL]
+	% else is also part of if, so defined above TD
+    'end
+end define
+
+define semi_case_selector
+    ; [NL] [case_selector]
+end define
+
+define case_selector
+    [case_label] [repeat comma_case_label] : [statement]
+end define
+
+define comma_case_label
+    , [case_label]
+end define
+
+define case_label
+    [expression] [opt dotDot_expression]	%Hellen
+end define
+
+define loop_statement
+      [repeating_statement]
+    | [while_statement]
+    | [for_statement]
+end define
+
+define repeating_statement
+    'repeat [statement] [opt ;] until [expression]
+end define
+
+define while_statement
+    while [expression] [do] [statement]
+end define
+
+define for_statement
+    [for] [ref_name] := [expression] [to_or_downto] [expression] [do]
+	[statement]
+end define
+
+define to_or_downto
+    'to | 'downto
+end define
+
+define for
+    'for | 'For
+end define
+
+define do
+    'do | 'Do | 'DO
+end define
+
+define with_statement
+    with [list ref_name+] [do] [statement]
+end define
+
+define try_finally_statement
+    try                 						[IN][NL]
+      [statement_list]  						[EX][NL]
+    finally             						[IN][NL]
+      [statement_list]  						[EX][NL]
+    'end
+end define
+
+define try_except_statement		%Hellen
+    'try                 						[IN][NL]
+      [statement_list]							[EX][NL]
+    [except] [opt ;]     						[IN][NL]
+      [exception_block]							[EX][NL]
+    'end 
+end define
+
+define except		%Hellen
+    'except | 'Except
+end define
+
+define exception_block		%Hellen
+      [empty]
+    | [statement_list]
+    | [exception_else]
+end define
+
+define exception_else
+    [exception_handler_list]   						[NL][EX]
+    [opt else_statement]
+end define
+
+define exception_handler_list	%Hellen
+       [exception_handler] [repeat semi_exception_handler] [opt ;]
+end define
+
+define semi_exception_handler	%Hellen
+    ; [exception_handler]
+end define
+
+define exception_handler			% TD
+    'on [opt exception_var] [type] [do]        				[IN][NL]
+    	[statement]                 					[EX]
+end define
+
+define exception_var
+    [decl_name] ':
+end define
+
+define raise_statement		%Hellen
+    'raise [opt ref_name] [opt at_address]
+end define
+
+define at_address
+    'at [ref_name]			
+end define
+
+%=====================================================================
+% Expressions
+%=====================================================================
+
+define expression
+      [factor] [repeat op_factor]
+    | [repeat op_factor+]
+end define
+
+define op_factor
+    [op] [factor]
+end define
+
+define op
+      > |  < | <= | >= | <> | = | in | is | + | - | or
+    | xor | * | / | div | mod | and | shl | shr | DIV | AND %| [as]
+end define 
+
+define rel_op_simple_expression
+    [rel_op] [simple_expression]
+end define
+
+define simple_expression
+    [opt term] [repeat add_op_term]	%TD
+end define
+
+define add_op_term
+    [add_op] [term]
+end define
+
+define term
+    [factor] [repeat mul_op_factor]
+end define
+
+define mul_op_factor
+    [mul_op] [factor]
+end define
+
+define factor
+          [ref_name]			%Hellen
+        | [charlit]
+        | [repeat pond_number+]
+	| '@ [opt '@] [ref_name]					
+        | nil
+        | ( [expression] )
+        | [not_word] [factor]		%Hellen
+        | [set_constructor]
+        | [predefinedType] ( [expression] )
+        | [bool_value]			%Hellen
+	| [opt '-] [number]
+end define
+
+define pond_number
+	'# [number]
+end define
+
+define not_word		%Hellen
+    'not | Not | NOT
+end define
+
+define bool_value	%Hellen
+    true | false | True | False
+end define
+
+define arguments
+   '( [list expression] ')
+end define
+
+define rel_op
+     > |  < | <= | >= | <> | = | in | is
+end define
+
+define add_op
+    + | - | or | xor
+end define
+
+define mul_op
+    * | / | div | mod | and | shl | shr | DIV | AND %| [as]
+end define
+
+define set_constructor
+    '[ [list set_element] ']
+end define
+
+define set_element
+    [expression] [opt dotDot_expression]
+end define
+
+define dotDot_expression
+    .. [expression]
+end define
+
+%===================================================================
+% Name Grammar
+%===================================================================
+
+define startNameTag
+    [SPOFF] [SP]<UID [SP] 'name = [stringlit]> [SPON]
+end define
+
+define endNameTag
+   [SPOFF] [SP]</UID> [SPON]
+end define
+
+define decl_name    %ZN
+     [id] [repeat dot_id]
+end define
+
+define ref_name    %ZN
+    [object]
+end define
+
+define object
+      [id] [repeat object_modifier]			% ??? Unsure if this is a declaration or a reference - ZN
+    | '( [ref_name] ') [repeat object_modifier]
+end define
+
+define object_modifier
+      '. [id]			% ???
+    | [array_subscript]
+    | [arguments]
+    | '^
+    | [as_type]
+end define
+
+
+define dot_id
+   '. [id]
+end define
+
+define array_subscript
+    '[ [list expression] ']
+end define
+
+define as_type
+    [as] [type]
+end define
+
+define as
+    'As | 'as
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Misc
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define directive
+      cdecl | register | dynamic | virtual | 'export | 'external | far
+    | forward | message [opt ref_name] | override | overload | pascal | reintroduce
+    | safecall | stdcall | Override
+end define

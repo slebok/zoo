@@ -18,19 +18,10 @@ Description:
     Comments may optionally be ignored (for analysis tasks)
     or preserved in the output using the commenting overrides and -comment
 
-Files:
-    ada.grm - Ada 2005 grammar based on the Ada 2005 LRM
-    ada_commentoverrides.grm - Grammar overrides to parse and preserve comments
-    ada.txl, adb.txl, ads.txl - TXL programs to parse .ada, .adb and .ads files
-
 Authors:
     Bruno Le Hyaric, Thales Avionics
     Jim Cordy, Queen's University
 
-Example:
-    txl Examples/small.ada
-    txl -comment Examples/small.ada
-
-Notes:
-    This is an ongoing project - you can find the latest version here:
-    http://github.com/bu2/ada-2005-txl-grammar
+For other information, consult the 'source' directory submodule or the project directly at
+	http://github.com/bu2/ada-2005-txl-grammar
+Grammar extracted and added to the Grammar Zoo on 21 March 2013 by Vadim Zaytsev.

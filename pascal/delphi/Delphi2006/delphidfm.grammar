@@ -1,0 +1,123 @@
+% Name:   delphidfm.grammar
+% Purpose:  TXL Grammar for Borland Delphi Forms files
+% Author:   Jorge L. Cangas
+
+#if not _delphidfm_grammar_ then
+#define _delphidfm_grammar_
+
+#pragma -case
+
+tokens
+    % (char const as decimal)(char const as hex)( str const)
+    charlit "[(\#\d+)(\#$[\dABCDEFabcdef]+)('[('')#']*')]+"
+    hexnumber "$[\dABCDEFabcdef]+" | "0[\dABCDEFabcdef]+H"
+    binnumber "[\d]+[ABCDEFabcdef]+[\dABCDEFabcdef]*"
+end tokens
+
+keys
+    'object | 'inherited | 'inline | 'item
+end keys
+
+define colon
+    [SPOFF]':[SPON]
+end define
+
+define equal
+    '=
+end define
+
+define end_struct
+    'end [NL]
+end define
+
+define sign
+        '+ [SPOFF]
+    |   '- [SPOFF]
+end define
+
+define anynumber
+        [hexnumber]   |
+        [binnumber]   |
+        [opt sign][number][SPON]
+end define
+
+define name
+    [id]
+end define
+
+define nestedname
+    [SPOFF]'.[id]
+end define
+
+define nested_id
+    [name][repeat nestedname][SPON]
+end define
+
+define dfm_file % (*.dfm, *.xfm)
+    [dfm_object]
+end define
+
+define dfm_object_keyword
+    'object | 'inherited | 'inline
+end define
+
+define id_colon
+    [id][colon]
+end define
+
+define dfm_object
+    [dfm_object_keyword][opt id_colon][id] [opt dfm_index]
+    [IN]
+        [repeat dfm_property]
+    [NL]    
+        [repeat dfm_object]
+    [EX]
+    [end_struct]
+end define
+
+define dfm_item
+    [NL]
+    'item
+        [IN]
+        [repeat dfm_property] [NL]    
+        [EX]
+    'end
+end define
+
+define dfm_index
+    '[ [number] ']
+end define
+
+define dfm_property
+        [NL][nested_id][equal][dfm_value]
+end define
+
+define dfm_value
+        [dfm_constant]
+    |   '[ [list dfm_constant] ']   %set of TXxx
+    |   '( [IN][repeat dfm_constant_item] [EX]') %list of
+    |   '<[IN][repeat dfm_item][EX][SPOFF]'>[SPON]     %TCollection
+    |   '{[IN][repeat dfmdatabody][EX] '}
+end define
+
+define dfm_constant_item
+    [NL][dfm_constant]
+end define
+
+define dfm_constant
+        [anynumber]
+    |   [charlit][repeat dfm_addcharlit]
+    |   [nested_id]
+end define
+
+define dfm_addcharlit
+    '+ [charlit]
+end define
+
+define dfmdatabody
+      [NL][id] 
+    | [NL][number]
+    | [NL][binnumber]
+end define
+
+#end if

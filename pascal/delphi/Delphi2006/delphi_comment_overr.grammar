@@ -1,0 +1,161 @@
+#if not _delphi_comment_overr_grammar_ then
+#define _delphi_comment_overr_grammar_
+
+% Name:   delphi_comment_overr.grammar
+% Purpose:  TXL Grammar to allow comment overrides for Borland Delphi Object Pascal
+% Author:   Jorge L. Cangas
+
+#pragma -in 2 
+#pragma -comment
+
+define bodyany
+ [key] | [token] 
+end define
+
+define bracketbody
+    [not '} ] [bodyany]
+end define
+
+define starbody
+    [not '*) ] [bodyany]
+end define
+
+define commentblock
+    '{ [repeat bracketbody] '}
+ |  '(* [repeat starbody] '*)
+end define
+
+define directiveblock
+    '{$ [repeat bracketbody] '}
+ |  '(*$ [repeat starbody] '*)
+end define
+
+define commentline
+  [comment]
+end define
+
+define anycomment
+    [commentblock] | [directiveblock] | [commentline]
+end define
+
+define many_comments
+    [repeat anycomment+][NL]
+end define
+
+define commentlist
+    [opt many_comments]
+end define
+
+
+% overrides
+
+redefine ident_decl
+   [commentlist] ...
+end redefine
+
+redefine end_struct
+    [commentlist]...
+end redefine
+
+redefine visibility
+  [commentlist] ...
+end redefine
+
+redefine accessor_verb
+    [commentlist] ...
+end redefine
+
+redefine argm
+    [commentlist] ...
+end redefine
+
+redefine term
+    [commentlist] ...
+end redefine
+
+redefine directive
+    [commentlist] ...
+end redefine
+
+redefine statement
+    [commentlist] ...
+end redefine
+
+redefine statement_semi
+    [opt statement][commentlist] '; [NL]
+end redefine
+
+
+redefine sequence_stm
+  [commentlist] ...
+end redefine
+
+redefine formal_parameter
+  [commentlist] ...    
+end redefine
+
+redefine uses_item
+  [commentlist] ...
+end redefine
+
+redefine uses_clause
+  [commentlist] ...
+end redefine
+
+redefine unit_decl
+    [commentlist] ... 
+end redefine
+
+redefine type_decl
+  [commentlist] ...
+end redefine
+
+redefine type_spec
+    [commentlist] ...
+end redefine
+
+redefine typed_const
+    [commentlist] ...
+end redefine
+
+redefine enum_spec
+    [commentlist] ...
+end redefine
+
+redefine enum_spec
+    [commentlist] ...
+end redefine
+
+redefine var_decl
+  [commentlist] ...
+end redefine
+
+redefine constant_decl
+  [commentlist] ...
+end redefine
+
+redefine class_member
+  [commentlist] ...
+end redefine
+
+redefine procedure_intf_decl
+  [commentlist] ...
+end redefine
+
+redefine procedure_impl_decl
+  [commentlist] ...
+end redefine
+
+redefine case_label
+    [commentlist]...
+end redefine
+
+redefine case_else
+  [commentlist] ...
+end redefine
+
+redefine else_stm
+  [commentlist] ...
+end redefine
+
+#end if
