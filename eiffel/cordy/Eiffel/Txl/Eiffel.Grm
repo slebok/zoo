@@ -1,0 +1,1097 @@
+% Eiffel Version 3 (June/July 1995) Grammar
+% Adapted directly from 
+% Eiffel: The Reference, ISE Technical Report TR-EI-41/ER, version 3, June/July 1995
+% by Jim Cordy (cordy@cs.queensu.ca)
+% March 2006
+
+% This is a direct adaptation of the Eiffel Version 3 reference grammar to TXL.
+% As such, it may be suitable for syntax checking and small scale source 
+% analysis tasks but is not an ideal transformation grammar.
+
+% Remaining issues to address:
+%
+%  - comment overrides to parse and preserve comments in source
+%
+%  - a tuned and factored grammar more suitable for transformation tasks
+
+
+% 25 Lexical components
+
+% 25.4 Comments
+
+%  comment
+% A comment is made of one or more line segments, each beginning with two consecutive 
+% dash characters '--' and extending to the spacers.
+
+comments
+    --
+end comments
+
+
+% 25.9 Identifiers
+
+% An identifier is a terminal construct (Identifier) consisting of a sequence of 
+% one or more characters, of which the first is a letter and each of the subsequent ones, 
+% if any, are alphabetic.  An alphabetic character is a letter, a digit, or an underscore '_'.
+
+tokens
+    id		"\a\i*"
+end tokens
+
+
+% 25.10 Operators
+
+% A free operator is a terminal construct (Free_operator) consisting of a sequence of 
+% one or more characters, whose first character is one of:
+%	@ # | &
+% and whose subsequent characters, if any, are any usable character. 
+% There is no limit to the length of a free operator
+% and all characters are significant. Letter case though is not significant.
+
+tokens
+    free_operator "[@\#|&][\i~\s]*"
+end tokens
+
+
+% 25.12 Integers
+
+% An integer is a terminal construct (Integer) consisting of a sequence of characters, 
+% whose first character is a digit or underscore. If any underscore is present, 
+% then there must be three consecutive digits.  Except for underscores, no intervening 
+% characters are permitted between digits.
+
+% 25.13 Real Numbers
+
+% A real number is a terminal construct (Real) made up of the following elements in order:
+% - An optional integer, giving the integral part.
+% - A required "." (dot) fractional part.
+% - An optional exponent.
+
+% No intervening character is allowed between these elements. 
+% The integral and fractional part may not both be absent. If underscores appear in either 
+% the integral or fractional part they must appear in the other, unless it has three digits
+% or less.
+
+% A fractional part is a sequence of characters, whose last character is a digit and whose 
+% preceding characters, if any, are digits or underscores. If any underscore is present, 
+% then there must be three consecutive digits to the left of every underscore, 
+% and there must not be any consecutive group of four digits.
+
+% An exponent part is the following:
+% - the required character 'e' or 'E';
+% - optionally either a '-' or a '+' character;
+% - a required integer.
+
+tokens 
+    real_number "\d*.[\d_]+([eE][+-]?\d+)?"
+    integer	"\d+"
+    	     |	"_\d+"
+end tokens
+
+
+% 25.14 Bit Sequences
+
+% A bit sequence is a terminal construct (Bit_sequence) consisting of a sequence of one or 
+% more '0' or '1' characters, followed by a 'b' or a 'B', with no other intervening characters
+
+tokens
+    bit_sequence "[01]+[bB]"
+end tokens
+
+
+% 25.15 Character Constants
+
+% A character constant is a terminal construct (Character_constant) consisting of a single quote, 
+% followed by either an encoded character or a double quote, and terminated by another single quote.
+
+tokens
+    character_constant "'#'*'"
+end tokens
+
+
+% 25.11 Strings
+
+% A string is a terminal construct (Manifest_string) that starts with a double quote, 
+% followed by any number of either encoded characters or single quotes, and terminated by 
+% a double quote. For ease of use a string can be split onto several lines by inserting 
+% string breaks at any position between the double quotes. A string break is not allowed in
+% the middle of a C2, or C3 character encoding sequence.
+
+% A string break is the following sequence of characters:
+% A required percent '%'
+% Any number of spacers
+% A required end of line marker
+% Any number of spacers
+% A required percent '%'
+
+% Eiffel strings can be multi-line
+#pragma -multiline
+
+tokens
+    string	"\"#\"*\""
+end tokens
+
+
+% G Reserved Words and Special Symbols
+
+% G.1 Overview
+
+% This document gives the reserved words and the reserved special 
+% (non-alphabetic) symbols linking them the the syntax and lexical elements that use them.
+
+% G.2 Reserved Words
+
+% Eiffel is case-insensitive
+#pragma -case
+
+% Keywords
+keys
+    alias all and as
+    check class creation 
+    debug deferred do 
+    else elseif 'end ensure expanded export external
+    false feature from frozen
+    if implies indexing infix inherit inspect invariant is 
+    like local loop
+    not
+    obsolete old once or
+    prefix 
+    redefine rename require rescue retry 
+    select separate strip 
+    then true
+    undefine unique until
+    variant
+    when
+    xor
+end keys
+
+% G.3 Special Symbols
+compounds 
+    << 	>>
+    ->
+    --
+    ..
+    ?=
+    /=
+    :=
+    //
+    \\
+    !!
+end compounds
+
+
+% H - Syntax Summary
+
+% H.1 Overview
+
+% This document describes the syntax of the Eiffel language using a meta language 
+% and in a roughly top down fashion.  Extra navigation links have been provided 
+% so that you can go back up the structure as well as down it.
+
+% An alphabetical list of constructs is also available.
+
+define program
+    [repeat Class_declaration]
+end define
+
+
+% H.2
+
+% CLASS TEXT STRUCTURE
+
+define Class_declaration 
+    [opt Indexing]
+    [NL]
+    [Class_header] [opt Formal_generics] [NL][IN]
+	[opt Obsolete]
+	[opt Inheritance]
+	[opt Creators]
+	[opt Features]
+	[opt Invariant]
+    [EX] 'end
+end define
+
+% INDEXING A CLASS
+
+define Indexing
+    [NL] 'indexing [Index_list]
+end define
+
+define Index_list
+    [NL][IN] [repeat Index_clause_Separator] [EX]
+end define
+
+define Index_clause_Separator
+    [Index_clause] [Separator] 
+end define
+
+define Index_clause
+    [opt Index] [Index_terms]
+end define
+
+define Index
+    [Identifier] ':
+end define
+
+define Index_terms
+    [list Index_value]
+end define
+
+define Index_value
+    [repeat Identifier+] | [Manifest_constant]
+end define
+
+% CLASS HEADER
+
+define Class_header
+    [opt Header_mark] 'class [Class_name]
+end define
+
+define Header_mark
+    'deferred | 'expanded
+end define
+
+define Class_name
+    [Identifier]
+end define
+
+% FORMAL GENERIC PARAMETERS
+
+define Formal_generics
+    '[ [Formal_generic_list] ']
+end define
+
+define Formal_generic_list
+    [list Formal_generic]
+end define
+
+define Formal_generic
+    [Formal_generic_name] [opt Constraint]
+end define
+
+define Formal_generic_name
+    [Identifier]
+end define
+
+define Constraint
+    '-> [Restricted_type]
+end define
+
+% OBSOLETE CLAUSE
+
+define Obsolete
+    'obsolete [Message] [NL]
+end define
+
+define Message
+    [Manifest_string]
+end define
+
+% FEATURES PART
+
+define Features
+    [repeat feature_Feature_clause+]
+end define
+
+define feature_Feature_clause
+    [NL] 'feature [opt Clients] 
+        [Feature_clause]
+end define
+
+define Feature_clause
+    [opt Header_comment]
+    [Feature_declaration_list]
+end define
+
+define Feature_declaration_list
+    [IN][NL] [repeat Feature_declaration_Separator] [EX]
+end define
+
+define Feature_declaration_Separator
+    [Feature_declaration] [Separator] |
+    [Routine_feature_declaration] [Separator]
+end define
+
+define Header_comment
+    [Comment]
+end define
+
+% FEATURE DECLARATIONS
+
+define Feature_declaration
+    [New_feature_list] [Declaration_body]
+end define
+
+define Declaration_body
+    [opt Formal_arguments]
+    [opt Type_mark]
+    [opt is_Constant]
+end define
+
+define is_Constant
+    'is [Feature_value]
+end define
+
+define Feature_value
+    [Manifest_constant] | [Unique] 
+end define
+
+define Routine_feature_declaration
+    [NL]
+    [New_feature_list] [Routine_declaration_body]
+end define
+
+define Routine_declaration_body
+    [opt Formal_arguments]
+    [opt Type_mark]
+    [opt is_Routine]
+end define
+
+define is_Routine
+    'is [NL] 
+        [Routine]
+end define
+
+% COMPONENTS OF A FEATURE DECLARATION
+
+define New_feature_list
+    [list New_feature+]
+end define
+
+define New_feature
+    [opt 'frozen] [Feature_name]
+end define
+
+% FEATURE NAMES
+
+define Feature_name
+    [Identifier] | [Prefix] | [Infix]
+end define
+
+define Prefix
+    'prefix [Prefix_name]
+end define
+
+define Infix
+    'infix [Infix_name]
+end define
+
+define Prefix_name
+    [Manifest_string]
+end define
+
+define Infix_name
+    [Manifest_string]
+end define
+    
+% OPERATORS
+
+define Unary
+    'not | '+ | '-
+end define
+
+define Binary
+    '+ | '- | '* | '/ |
+    '< | '> | '<= | '>= |
+    '// | '\\ | '^ |
+    'and | 'or | 'xor | 
+    'and 'then | 'or 'else | 'implies 
+end define
+
+% INHERITANCE PART
+
+define Inheritance
+    'inherit [NL][IN]
+        [Parent_list] [EX] 
+end define
+
+define Parent_list
+    [repeat Parent_Separator]
+end define
+
+define Parent_Separator
+    [Parent] [Separator] 
+end define
+
+define Parent
+    [Restricted_class_type] [opt Feature_adaptation]
+end define
+
+define Feature_adaptation
+    [NL][IN] 
+        [opt Rename]
+	[opt New_exports]
+	[opt Undefine]
+	[opt Redefine]
+	[opt Select]
+    [EX] 'end
+end define
+
+% RENAMING
+
+define Rename
+    'rename [Rename_list] [NL]
+end define
+
+define Rename_list
+    [list Rename_pair]
+end define
+
+define Rename_pair
+    [Feature_name] 'as [Feature_name]
+end define
+
+% CLIENTS PART
+
+define Clients
+    '{ [Class_list] '}
+end define
+
+define Class_list
+    [list Class_name]
+end define
+
+% ADAPTING THE EXPORT STATUS
+
+define New_exports
+    'export [New_export_list] [NL]
+end define
+
+define New_export_list
+    [repeat New_export_item_Separator]
+end define
+
+define New_export_item_Separator
+    [New_export_item] [Separator]
+end define
+
+define New_export_item
+    [Clients] [Feature_set]
+end define
+
+define Feature_set
+    [Feature_list] | 'all
+end define
+
+define Feature_list
+    [IN][NL] [list Feature_name] [EX]
+end define
+
+% FORMAL ARGUMENTS
+
+define Formal_arguments
+    '( [Formal_entity_declaration_list] ')
+end define
+
+define Formal_entity_declaration_list
+    [repeat Formal_entity_declaration_group_Separator]
+end define 
+
+define Formal_entity_declaration_group_Separator
+    [Entity_declaration_group] [opt ';]
+end define
+
+define Entity_declaration_list
+    [IN][NL] [repeat Entity_declaration_group_Separator] [EX]
+end define 
+
+define Entity_declaration_group_Separator
+    [Entity_declaration_group] [Separator]
+end define
+
+define Entity_declaration_group
+    [Identifier_list] [Type_mark]
+end define
+
+define Identifier_list
+    [list Identifier+]
+end define
+
+define Type_mark
+    ': [Type]
+end define
+
+% ROUTINE STRUCTURE
+
+define Routine
+    [opt Obsolete]
+    [opt Header_comment] 
+    [opt Precondition]
+    [opt Local_declarations]
+    [Routine_body]
+    [opt Postcondition]
+    [opt Rescue]
+    'end 
+end define
+
+% ROUTINE BODY
+
+define Routine_body
+    [Effective] | [Deferred]
+end define
+
+define Effective
+    [Internal] | [External]
+end define
+
+define Internal
+    [Routine_mark] [Compound] 
+end define
+
+define Routine_mark
+    'do | 'once
+end define
+
+define Deferred
+    [IN] 'deferred [NL][EX]
+end define
+
+% LOCAL ENTITIES
+
+define Local_declarations
+    'local 
+        [Entity_declaration_list]
+end define
+
+% TYPES OF INSTRUCTION
+
+define Instruction
+    [Creation] |
+    [Call] |
+    [Assignment] |
+    [Assignment_attempt] |
+    [Conditional] | [Multi_branch] | [Loop] |
+    [Debug] | [Check] | [Retry] | [Null]
+end define
+
+% FORM OF ASSERTIONS
+
+define Precondition
+    'require [opt 'else] [Assertion] 
+end define
+
+define Postcondition
+    'ensure [opt 'then] [Assertion]
+end define
+
+define Invariant
+    'invariant [Assertion]
+end define
+
+define Assertion
+    [NL][IN] [repeat Assertion_clause_Separator] [EX]
+end define
+
+define Assertion_clause_Separator
+    [Assertion_clause] [Separator] 
+end define
+
+define Assertion_clause
+    [opt Tag_mark] [Unlabeled_assertion_clause]
+end define
+
+define Unlabeled_assertion_clause
+    [Boolean_expression] | [Comment]
+end define
+
+define Tag_mark
+    [Tag] ':
+end define
+
+define Tag
+    [Identifier]
+end define
+
+% OLD EXPRESSION
+
+define Old
+    'old [Expression]
+end define
+
+% CHECK INSTRUCTIONS
+
+define Check
+    'check [Assertion] 'end
+end define
+
+% LOOP VARIANTS
+
+define Variant
+    'variant [opt Tag_mark] [Expression]
+end define
+
+% REDEFINITION AND UNDEFINITION
+
+define Redefine
+    'redefine [Feature_list] [NL]
+end define
+
+define Undefine
+    'undefine [Feature_list] [NL]
+end define
+
+define Select
+    'select [Feature_list] [NL]
+end define
+
+define Type
+    [Class_type] |
+    [Class_type_expanded] |
+    [Formal_generic_name] |
+    [Anchored] |
+    [Bit_type]
+end define
+
+define Class_type
+    [Class_name] [opt Actual_generics]
+end define
+
+define Actual_generics
+    '[ [Type_list] ']
+end define
+
+define Type_list
+    [list Type]
+end define
+
+define Class_type_expanded
+    'expanded [Class_type]
+end define
+
+define Bit_type
+    'BIT [Constant]
+end define
+
+define Anchored
+    'like [Anchor]
+end define
+
+define Anchor
+    [Identifier] | 'Current
+end define
+
+% RESTRICTED TYPE DECLARATION
+
+define Restricted_type
+    [Restricted_class_type] |
+    [Formal_generic_name] 
+end define
+
+define Restricted_class_type
+    [Class_name] [opt Restricted_actual_generics]
+end define
+
+define Restricted_actual_generics
+    '[ [Restricted_type_list] ']
+end define
+
+define Restricted_type_list
+    [list Restricted_type]
+end define
+
+% COMPOUND
+
+define Compound
+    [IN][NL] [repeat Instruction_Separator] [EX]
+end define
+
+define Instruction_Separator
+    [Instruction] [Separator]
+end define
+
+define Separator
+    [opt ';] [NL]
+end define
+
+% NULL
+
+define Null
+    '; [NL]		% this is the only visible kind of null statement
+end define
+
+define Conditional
+    'if [Then_part_list] [opt Else_part] 'end
+end define
+
+define Then_part_list
+    [Then_part]
+    [repeat elseif_Then_part]
+end define
+
+define elseif_Then_part
+    'elseif [Then_part]
+end define
+
+define Then_part
+    [Boolean_expression] 'then [Compound]
+end define
+
+define Else_part
+    'else [Compound]
+end define
+
+% MULTI-BRANCH CHOICE
+
+define Multi_branch
+    'inspect [Expression]
+    [opt When_part_list] 
+    [opt Else_part] 
+    'end
+end define
+
+define When_part_list
+    [repeat when_When_part+]
+end define
+
+define when_When_part
+    'when [When_part]
+end define
+
+define When_part
+    [Choices] 'then [Compound]
+end define
+
+define Choices
+    [list Choice]
+end define
+
+define Choice
+    [Constant] | [Interval]
+end define
+
+define Interval
+    [Constant] '.. [Constant]
+end define
+
+% LOOP
+
+define Loop
+    [Initialization]
+    [opt Invariant]
+    [opt Variant]
+    [Loop_body]
+    'end
+end define
+
+define Initialization
+    'from [Compound]
+end define
+
+define Loop_body
+    [Exit] [NL]
+    'loop [Compound]
+end define
+
+define Exit
+    'until [Boolean_expression]
+end define
+
+% DEBUG
+
+define Debug
+    'debug [opt Debug_keys] [Compound] 'end
+end define
+
+define Debug_keys
+    '( [Debug_key_list] ')
+end define
+
+define Debug_key_list
+    [list Debug_key]
+end define
+
+define Debug_key
+    [Manifest_string]
+end define
+
+% RESCUE
+
+define Rescue
+    'rescue [Compound] 
+end define
+
+define Retry
+    'retry
+end define
+
+% UNIQUE ATTRIBUTES
+
+define Unique
+    'unique
+end define
+
+% ENTITIES
+
+define Entity
+    [Writable] | [Read_only]
+end define
+
+define Writable
+    [Attribute] | [Local]
+end define
+
+define Attribute
+    [Identifier]
+end define
+
+define Local
+    [Identifier] | 'Result
+end define
+
+define Read_only
+    [Formal] | 'Current
+end define
+
+define Formal
+    [Identifier]
+end define
+
+% CREATION PART
+
+define Creators
+    [repeat creation_Creation_clause+]
+end define
+
+define creation_Creation_clause
+    [NL] 'creation [Creation_clause]
+end define
+
+define Creation_clause
+    [opt Clients] 
+    [opt Header_comment] 
+    [Feature_list] [NL]
+end define
+
+% CREATION PROCEDURE
+
+define Creation
+    '!! [Writable] [opt Creation_call] |
+    '! [opt Type] '! [Writable] [opt Creation_call]
+end define
+
+define Creation_call
+    '. [Unqualified_call]
+end define
+
+% DIRECT REATTACHMENT
+
+define Assignment
+    [Writable] ':= [Expression]
+end define
+
+% ASSIGNMENT_ATTEMPT
+
+define Assignment_attempt
+    [Writable] '?= [Expression]
+end define
+
+% FORM OF A CALL
+
+define Call
+    [opt Parenthesized_qualifier] [Call_chain]
+end define
+
+define Parenthesized_qualifier
+    [Parenthesized] '.
+end define
+
+define Call_chain
+    [Unqualified_call] [repeat dot_Unqualified_call]
+end define
+
+define dot_Unqualified_call
+    '. [Unqualified_call]
+end define
+
+define Unqualified_call
+    [Entity] [opt Actuals]
+end define
+
+define Actuals
+    '( [Actual_list] ')
+end define
+
+define Actual_list
+    [list Actual]
+end define
+
+define Actual
+    [Expression] | [Address]
+end define
+
+define Address
+    '$ [Address_mark]
+end define
+
+define Address_mark
+    [Feature_name] | 'Current | 'Result
+end define
+
+% GENERAL FORM OF EXPRESSIONS
+
+define Expression
+    [Equality]
+end define
+
+define Primitive_expression
+    [Call] | 
+    [Manifest_constant] | 
+    [Manifest_array] |
+    [Old] | 
+    [Strip] |
+    [Parenthesized]
+end define
+
+define Boolean_expression
+    [Expression]
+end define
+
+% EQUALITY EXPRESSIONS
+
+define Equality
+    [Operator_expression] [repeat Comparison_Operator_expression]
+end define
+
+define Comparison_Operator_expression
+    [Comparison] [Operator_expression]
+end define
+
+define Comparison
+    '= | '/=
+end define
+
+% OPERATOR EXPRESSIONS
+
+define Operator_expression
+    [Parenthesized] | 
+    [Binary_expression]
+end define
+
+define Parenthesized
+    '( [Expression] ')
+end define
+
+define Unary_expression
+    [repeat Prefix_operator] [Primitive_expression]
+end define
+
+define Binary_expression
+    [Unary_expression] [repeat Infix_operator_Unary_expression]
+end define
+
+define Infix_operator_Unary_expression
+    [Infix_operator] [Unary_expression]
+end define
+
+define Prefix_operator
+    [Unary] | [Free_operator]
+end define
+
+define Infix_operator
+    [Binary] | [Free_operator]
+end define
+
+% CONSTANTS
+
+define Constant
+    [Manifest_constant] | [Constant_attribute]
+end define
+
+define Constant_attribute
+    [Entity]
+end define
+
+define Manifest_constant
+    [Boolean_constant] | [Character_constant] |
+    [Integer_constant] | [Real_constant] |
+    [Manifest_string] | [Bit_constant]
+end define
+
+define Sign
+    '+ | '-
+end define
+
+define Integer_constant
+    [opt Sign] [Integer]
+end define
+
+define Real_constant
+    [opt Sign] [Real]
+end define
+
+define Boolean_constant
+    'true | 'false
+end define
+
+define Bit_constant
+    [Bit_sequence]
+end define
+
+% MANIFEST ARRAYS
+
+define Manifest_array
+    '<< [Expression_list] '>>
+end define
+
+define Expression_list
+    [list Expression]
+end define
+
+% STRIP EXPRESSIONS
+
+define Strip
+    'strip '( [Attribute_list] ')
+end define
+
+define Attribute_list
+    [list Identifier]
+end define
+
+% EXTERNAL ROUTINES
+
+define External
+    'external [Language_name] [opt External_name] [NL]
+end define
+
+define Language_name
+    [Manifest_string]
+end define
+
+define External_name
+    'alias [Manifest_string]
+end define
+
+
+% Terminal symbols
+
+define Identifier
+    [id]
+end define
+
+define Manifest_string
+    [string]
+end define
+
+define Comment
+    [comment]
+end define
+
+define Character_constant
+    [character_constant]
+end define
+
+define Integer
+    [integer]
+end define
+
+define Real
+    [real_number]
+end define
+
+define Bit_sequence
+    [bit_sequence]
+end define
+
+define Free_operator
+    [free_operator]
+end define
