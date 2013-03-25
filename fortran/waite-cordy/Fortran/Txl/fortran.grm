@@ -1,0 +1,2982 @@
+% TXL Grammar for Fortran 77 and Fortran 90
+% Version 1.0, September 2009
+
+% Copyright 1998, 2009 by W.M. Waite and J.R. Cordy
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+%    Redistributions of source code must retain the above copyright notice, 
+%    this list of conditions and the following disclaimer.
+%    Redistributions in binary form must reproduce the above copyright notice,
+%    this list of conditions and the following disclaimer in the documentation
+%    and/or other materials provided with the distribution.
+%
+%    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+%    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+%    AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+%    AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+%    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%    POSSIBILITY OF SUCH DAMAGE.
+
+% Adapted from the Eli grammar for Fortran by W.M. Waite, University of Colorado, January 1998
+% For more information on Eli and the grammar, see http://eli-project.sourceforge.net/EliExamples.html
+
+% Adaptation by J.R. Cordy, Queen's Univerity, September 2009
+
+% Note: While the original Eli grammar works in TXL more or less as written,
+% this version has been slightly modified to be more TXL-idiomatic
+
+% The grammar is structured according to Appendix F of X39-1978,
+% and contains references to the rule numbers in ISO/IEC 1539
+
+% Maintenance Log
+% v1.0  JRC        7.9.09        Initial Revision, adapted and tuned from Eli original
+% v1.1  JRC        13.9.09       Added INCLUDE statements
+
+% Known problems
+% - cannot handle F77 sequence numbers and other stuff in columns 73-80.
+%   (workaround: run the separate program f77trim.txl to trim them off first)
+%
+% - even though TXL can accurately parse LabelDoStmts, it can't always get
+%   the indentation right in the output for the ending label line
+%
+% - this is still a syntax checker, as the original Eli grammar is.
+%   since TXL grammars are normally used for processing valid programs,
+%   it would probably make more sense to remove all the Fortan local restrictions
+%   to make a more lenient, consistent and simpler grammar
+%
+% - clearly cannot handle all nonstandard Fortran extensions and vendor
+%   dialects.  In particular, canot handle working precision (_WP) declarations
+%
+% - lexing of Hollerith constants (e.g. 3Hx y) is an approximation,
+%   and cannot handle Holleriths with commas in them
+%
+% - although contiuations are handled in in the input, they are not preserved
+%   in the output since TXL has no way to express it
+
+% Enable Fortran 90 features - comment out to limit to Fortran 77
+#define F90
+
+% Fortran is newline-sensitive and case-insensitive
+#pragma -newline -case -w 32000 
+
+% Preserve comments in the result - comment out to ignore comments
+#pragma -comment
+
+% Comments 
+tokens
+        % F77 and F90 comment conventions
+        %   - for F77, C or * in column 1 begins a line comment
+        %   - for F90, ! to end of line is a comment
+        comment        "\n[cC\*]#n*"
+                | "!#n*"
+        % Ignore Fortran continuation syntax
+        %  - in F77, a nonblank character in column 6 marks a contination line
+        %  - in F90, an & in column 6 marks a continuation, and there may 
+        %    also be an & at the end of the previous line
+        % Note that continuations in string literals are preserved as part of the literal
+        ignore        "&\n?"
+                | "\n     # "
+end tokens
+
+% Lexical classes 
+tokens
+        % Order matters, since some of these overlap
+        Dop        ".\a+."
+        % Can't do Holleriths perfectly, but approximating to ending at a , or ) works almost always
+        Hcon        "1[hH]\c"
+                | "2[hH]\c\c"
+                | "3[hH]\c\c\c"
+                | "\d+[hH]#[,\)\n]+"
+        Bcon        "[bB]'[01]+'"
+                | "[bB]\"[01]+\""
+        Ocon        "[oO]'[01234567]+'"
+                | "[oO]\"[01234567]+\""
+        Zcon        "[zZ]'[abcdefABCDEF\d]+'"
+                | "[zZ]\"[abcdefABCDEF\d]+\""
+        Pcon        "[+-]?\d+[pP]"
+        Xcon        "\d+[xX]"
+        % Rcons and Dcons overlap anyway, so unify them
+        RDcon        "\d+(.\d*)?([eEdD][+-]?\d+)[eEdD]?"
+                | "\d*.\d+([eEdD][+-]?\d+)?[eEdD]?"
+                | "\d+.[eEdD]?#\:\a"        % Note disambiguating lookahead restriction to avoid eating .op.
+        Icon        "\d+"
+        Scon        "'[('')#']*'" 
+                | "\"[(\"\")#\"]*\""
+        % Some formats come out as [id]s or RDcons, so the grammar must accept those also 
+        % - see [MislexedFcon] in section 60 below 
+        Fcon        "[aAbBeEdD([eE][nNsS])qQfFgGiIlLoOzZ][(\d+)\*](.\d+([eEdDqQ]\d+)?)"
+end tokens
+
+define Ident
+        [id]
+end define
+
+% End of statement
+define EOS
+  [CommentOrNewline] [repeat CommentOrNewline]
+end define
+
+define CommentOrNewline
+  [comment]
+| [newline]
+end define
+
+define program
+  [IN_6]
+  [repeat CommentOrNewline]
+  [ExecutableProgram]
+  [repeat CommentOrNewline]
+  [EX_6]
+end define
+
+% Productions Common to FORTRAN 77 and FORTRAN 90
+
+% 1
+
+% R201
+define ExecutableProgram
+  [repeat ProgramUnit+] 
+end define
+
+% R202
+define ProgramUnit
+  [MainProgram] 
+| [FunctionSubprogram] 
+| [SubroutineSubprogram] 
+| [BlockDataSubprogram] 
+end define
+
+% 2
+
+% R1101
+define MainProgram
+  [opt ProgramStmt] [MainRange] 
+end define
+
+define MainRange
+  [opt Body] [EndProgramStmt] 
+end define
+
+define EndProgramStmt
+  [LblDef] 'end [EOS] 
+end define
+
+define Body
+  [repeat BodyConstruct+] 
+end define
+
+define BodyConstruct
+  [SpecificationPartConstruct] 
+| [ExecutableConstruct] 
+end define
+
+% R204
+define SpecificationPartConstruct
+  [ImplicitStmt] 
+| [ParameterStmt] 
+| [FormatStmt] 
+| [EntryStmt] 
+| [DeclarationConstruct] 
+| [IncludeStmt]
+end define
+
+% Added v1.1 - JRC
+define IncludeStmt
+  'include [Scon] [EOS]
+end define
+
+% R207
+define DeclarationConstruct
+  [TypeDeclarationStmt] 
+| [SpecificationStmt] 
+end define
+
+% 3
+
+% R1215
+define FunctionSubprogram
+  [LblDef] [FunctionPrefix] [FunctionName] [FunctionRange] 
+end define
+
+define FunctionRange
+  [FunctionParList] [EOS] [opt Body] [EndFunctionStmt] 
+end define
+
+define EndFunctionStmt
+  [LblDef] 'end [EOS] 
+end define
+
+% 4
+
+% R1219
+define SubroutineSubprogram
+  [LblDef] 'subroutine [SubroutineName] [SubroutineRange] 
+end define
+
+define SubroutineRange
+  [SubroutineParList] [EOS] [opt Body] [EndSubroutineStmt] 
+end define
+
+define EndSubroutineStmt
+  [LblDef] 'end [EOS] 
+end define
+
+% 5
+
+% R1110
+define BlockDataSubprogram
+  [BlockDataStmt] [BlockDataBody] [EndBlockDataStmt] 
+| [BlockDataStmt] [EndBlockDataStmt] 
+end define
+
+define EndBlockDataStmt
+  [LblDef] 'end [EOS] 
+end define
+
+define BlockDataBody
+  [BlockDataBodyConstruct] 
+| [BlockDataBody] [BlockDataBodyConstruct] 
+end define
+
+define BlockDataBodyConstruct
+  [SpecificationPartConstruct] 
+end define
+
+% 6
+
+define SpecificationStmt
+  [CommonStmt] 
+| [DataStmt] 
+| [DimensionStmt] 
+| [EquivalenceStmt] 
+| [ExternalStmt] 
+| [IntrinsicStmt] 
+| [SaveStmt] 
+end define
+
+% 7
+
+define ExecutionPartConstruct
+  [ExecutableConstruct] 
+| [FormatStmt] 
+| [DataStmt] 
+| [EntryStmt] 
+end define
+
+define ExecutableConstruct
+  [ActionStmt] 
+| [DoConstruct] 
+| [IfConstruct] 
+end define
+
+define ActionStmt
+  [ArithmeticIfStmt] 
+| [AssignmentStmt] 
+| [AssignStmt] 
+| [BackspaceStmt] 
+| [CallStmt] 
+| [CloseStmt] 
+| [ContinueStmt] 
+| [EndfileStmt] 
+| [GotoStmt] 
+| [ComputedGotoStmt] 
+| [AssignedGotoStmt] 
+| [IfStmt] 
+| [InquireStmt] 
+| [OpenStmt] 
+| [PauseStmt] 
+| [PrintStmt] 
+| [ReadStmt] 
+| [ReturnStmt] 
+| [RewindStmt] 
+| [StmtFunctionStmt] 
+| [StopStmt] 
+| [WriteStmt] 
+end define
+
+% 8
+define ProgramStmt
+  [LblDef] 'program [ProgramName] [EOS] 
+end define
+
+% 9 see Entry Statement
+
+% 10
+
+% * [Must] be split on semantic grounds, due to the different scopes for the
+% * function name and the dummy parameters (if any)  [See] 3
+% *
+% * [FunctionStmt]:
+% *   [LblDef] [FunctionPrefix] [Name] [FunctionParList] [EOS] 
+% *
+
+define FunctionPrefix
+  'function 
+| [TypeSpec] 'function 
+end define
+
+define FunctionParList
+  '( [FunctionPars] ') 
+| [empty]
+end define
+
+define FunctionPars
+  [list FunctionPar] 
+end define
+
+define FunctionPar
+  [DummyArgName] 
+end define
+
+% 11 parsed as 13, distinguished semantically
+
+% 12
+
+% * [Must] be split on semantic grounds, due to the different scopes for the
+% * subroutine name and the dummy parameters (if any)  [See] 4
+% *
+% * [SubroutineStmt]:
+% *   [LblDef] 'subroutine [Name] [SubroutineParList] [EOS]
+% *
+
+define SubroutineParList
+  '( [SubroutinePars] ') 
+| [empty]
+end define
+
+define SubroutinePars
+  [list SubroutinePar] 
+end define
+
+define SubroutinePar
+  [DummyArgName] 
+| '* 
+end define
+
+% 13
+
+define EntryStmt
+  [LblDef] 'entry [EntryName] [SubroutineParList] 'result '( [Name] ') [EOS] 
+end define
+
+% 14
+
+define BlockDataStmt
+  [LblDef] 'blockdata [opt BlockDataName] [EOS] 
+end define
+
+% 15
+
+% R525
+define DimensionStmt
+  [LblDef] 'dimension [ArrayDeclaratorList] [EOS] 
+end define
+
+% 16
+
+define ArrayDeclaratorList
+  [list ArrayDeclarator+] 
+end define
+
+define ArrayDeclarator
+  [VariableName] '( [ArraySpec] ') 
+end define
+
+% R512
+define ArraySpec
+  [ExplicitShapeSpecList] 
+| [AssumedSizeSpec] 
+end define
+
+% R513
+define ExplicitShapeSpecList
+  [list ExplicitShapeSpec+] 
+end define
+
+define ExplicitShapeSpec
+  [LowerBound] ': [UpperBound] 
+| [UpperBound] 
+end define
+
+% R514
+define LowerBound
+  [Expr]
+end define
+
+% R515
+define UpperBound
+  [Expr]
+end define
+
+% R518
+define AssumedSizeSpec
+  '* 
+| [LowerBound] ': '* 
+| [ExplicitShapeSpecList] ', '* 
+| [ExplicitShapeSpecList] ', [LowerBound] ': '* 
+end define
+
+% 17
+
+% R545
+define EquivalenceStmt
+  [LblDef] 'equivalence [EquivalenceSetList] [EOS] 
+end define
+
+% R546
+define EquivalenceSetList
+  [list EquivalenceSet+] 
+end define
+
+define EquivalenceSet
+  '( [EquivalenceObject] ', [EquivalenceObjectList] ') 
+end define
+
+% 18
+
+% R547
+define EquivalenceObjectList
+  [list EquivalenceObject+] 
+end define
+
+define EquivalenceObject
+  [Variable]
+end define
+
+% 19
+
+% R548
+define CommonStmt
+  [LblDef] 'common [Comlist] [EOS] 
+end define
+
+define Comlist
+  [opt Comblock] [CommonBlockObject] 
+| [Comlist] ', [opt Comblock] [CommonBlockObject] 
+| [Comlist] [Comblock] [CommonBlockObject] 
+end define
+
+define Comblock
+  '/ [SPOFF] / [SPON]
+| '/ [CommonBlockName] '/
+end define
+
+define CommonBlockObject
+  [VariableName] 
+| [ArrayDeclarator] 
+end define
+
+% 20
+
+% R501
+define TypeDeclarationStmt
+  [LblDef] [TypeSpec] [EntityDeclList] [EOS] 
+end define
+
+% R502
+define TypeSpec
+  'integer 
+| 'real 
+| 'doubleprecision 
+| 'complex 
+| 'logical 
+| 'character 
+| 'character [LengthSelector] 
+end define
+
+% R504
+define EntityDeclList
+  [list EntityDecl+] 
+end define
+
+define EntityDecl
+  [ObjectName] 
+| [ObjectName] '( [ArraySpec] ') 
+| [ObjectName] '* [CharLength] 
+| [ObjectName] '( [ArraySpec] ') '* [CharLength] 
+end define
+
+% R507
+define LengthSelector
+  '* [CharLength] 
+end define
+
+% 21
+
+% R540
+define ImplicitStmt
+  [LblDef] 'implicit [ImplicitSpecList] [EOS] 
+end define
+
+% R541
+define ImplicitSpecList
+  [list ImplicitSpec+] 
+end define
+
+define ImplicitSpec
+  [TypeSpec] [ImplicitRanges]                  
+| [TypeSpec] '( [ImplicitRanges] ')          % observed, not in standard - JRC
+end define
+
+define ImplicitRanges
+  [list ImplicitRange]
+end define
+
+define ImplicitRange
+  [Ident] '- [Ident]
+end define
+
+% 22
+
+% R508
+define CharLength
+  '( [TypeParamValue] ') 
+| [Constant]  
+end define
+
+% R509
+define TypeParamValue
+  [Expr]  
+| '* 
+end define
+
+% 23
+
+% R538
+define ParameterStmt
+  [LblDef] 'parameter '( [NamedConstantDefList] ') [EOS] 
+end define
+
+% R539
+define NamedConstantDefList
+  [list NamedConstantDef+] 
+end define
+
+define NamedConstantDef
+  [NamedConstant] '= [Expr]  
+end define
+
+% R307
+define NamedConstant
+  [Ident] 
+end define
+
+define NamedConstantUse
+  [Ident] 
+end define
+
+% 24
+
+% R1207
+define ExternalStmt
+  [LblDef] 'external [ExternalNameList] [EOS] 
+end define
+
+define ExternalNameList
+  [list ExternalName+] 
+end define
+
+% 25
+
+% R1208
+define IntrinsicStmt
+  [LblDef] 'intrinsic [IntrinsicList] [EOS] 
+end define
+
+define IntrinsicList
+  [list IntrinsicProcedureName+] 
+end define
+
+% 26
+
+% R523
+define SaveStmt
+  [LblDef] 'save [EOS] 
+| [LblDef] 'save [SavedEntityList] [EOS] 
+end define
+
+% R524
+define SavedEntityList
+  [list SavedEntity+] 
+end define
+
+define SavedEntity
+  [VariableName] 
+| [SavedCommonBlock] 
+end define
+
+define SavedCommonBlock
+  '/ [CommonBlockName] '/
+end define
+
+% 27
+
+% R529
+define DataStmt
+  [LblDef] 'data [Datalist] [EOS] 
+end define
+
+define Datalist
+  [DataStmtSet] 
+| [opt Datalist] [opt ',] [DataStmtSet] 
+end define
+
+% R530
+define DataStmtSet
+  [DataStmtObjectList] '/ [DataStmtValueList] '/
+end define
+
+% R531
+define DataStmtObjectList
+  [list DataStmtObject+] 
+end define
+
+define DataStmtObject
+  [Variable] 
+| [DataImpliedDo] 
+end define
+
+% R532
+define DataStmtValueList
+  [list DataStmtValue+] 
+end define
+
+define DataStmtValue
+  [Constant] 
+| [Constant] '* [Constant] 
+| [NamedConstantUse] '* [Constant] 
+end define
+
+% 28
+
+% R535
+define DataImpliedDo
+  '( [DataIDoObjectList] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ') 
+| '( [DataIDoObjectList] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ', [Expr] ') 
+end define
+
+% R536
+define DataIDoObjectList
+  [list DataIDoObject+] 
+end define
+
+define DataIDoObject
+  [ArrayElement] 
+| [DataImpliedDo] 
+end define
+
+% 29
+
+define AssignmentStmt
+  [LblDef] [Name] [opt SFExprListRef] [opt SubstringRange] '= [Expr] [EOS] 
+end define
+
+define SFExprListRef
+  '( [SFExprList] [repeat CommaSectionSubscript] ') 
+end define
+
+% [SFExpr] can be [Expr] in a TXL grammar.
+% Such local restrictons get in the way when analyzing or transformaing,
+% and our purpose is to be a processor, not a syntax checker - JRC
+
+define SFExprList
+  [Expr] [opt ':] [opt Expr] 
+| ': [opt Expr] 
+end define
+
+define CommaSectionSubscript
+  ', [SectionSubscript]
+end define
+
+define AssignStmt
+  [LblDef] 'assign [LblRef] 'to [VariableName] [EOS] 
+end define
+
+% 30 see 31-33
+
+% 31
+define GotoStmt
+  [LblDef] [GoToKw] [LblRef] [EOS] 
+end define
+
+define GoToKw
+  'goto 
+end define
+
+% 32
+
+define ComputedGotoStmt
+  [LblDef] [GoToKw] '( [LblRefList] ') [opt ',] [Expr] [EOS]  
+end define
+
+define LblRefList
+  [list LblRef+] 
+end define
+
+define LblRef
+  [Label] 
+end define
+
+% 33
+
+% R839
+define AssignedGotoStmt
+  [LblDef] [GoToKw] [VariableName] [EOS] 
+| [LblDef] [GoToKw] [VariableName] '( [LblRefList] ') [EOS] 
+| [LblDef] [GoToKw] [VariableComma] '( [LblRefList] ') [EOS] 
+end define
+
+define VariableComma
+  [VariableName] ', 
+end define
+
+% 34
+
+% R840
+define ArithmeticIfStmt
+  [LblDef] 'if '( [Expr] ') [LblRef] ', [LblRef] ', [LblRef] [EOS] 
+end define
+
+% 35
+
+% R807
+define IfStmt
+  [LblDef] 'if '( [Expr] ') [ActionStmt] 
+end define
+
+% R802
+% Restructured to more directly reflect the structure of the construct - JRC 5sep09
+define IfConstruct
+  [IfThenStmt] 
+    [ConditionalBody]
+  [repeat ElseIfConstruct]
+  [opt ElseConstruct]
+  [EndIfStmt]
+end define
+
+define ElseIfConstruct
+  [ElseIfStmt] 
+    [ConditionalBody] 
+end define
+
+define ElseConstruct
+  [ElseStmt] 
+    [ConditionalBody] 
+end define
+
+define ConditionalBody
+  [repeat ExecutionPartConstruct] 
+end define
+
+% 36
+
+% R803
+define IfThenStmt
+  [LblDef] 'if '( [Expr] ') 'then [EOS] [IN_2] 
+end define
+
+% 37
+
+% R804
+define ElseIfStmt
+  [LblDef] [EX_2] 'elseif '( [Expr] ') 'then [EOS]  [IN_2]
+end define
+
+% 38
+
+% R805
+define ElseStmt
+  [LblDef] [EX_2] 'else [EOS] [IN_2] 
+end define
+
+% 39
+
+% R806
+define EndIfStmt
+  [LblDef] [EX_2] 'endif [EOS]
+end define
+
+% 40
+
+% R818
+define DoConstruct
+  [LabelDoStmt] 
+end define
+
+% R819
+% Original Eli grammar could not handle LabelDoStmts correctly, because of lack
+% of ability to match the labels.  In TXL we can parse this properly - JRC
+
+define LabelDoStmt
+  [LblDef] 'do [DoLblRef] [CommaLoopControl] [EOS] [IN_2]
+    [repeat ExecutionPartConstruct] [EX_2] 
+  [DoLblDef] [DoLabelStmt]  
+end define
+
+define CommaLoopControl
+  [opt ',] [LoopControl] 
+end define
+
+% Push the numeric label to the parse context stack to be matched later
+define DoLblRef
+  [not DoLblDef] [push Icon] 
+end define
+
+define DoLblDef
+  [TAB_2] [pop Icon] [TAB_9] 
+end define
+
+redefine ExecutionPartConstruct
+  ...
+| [LblDef] [DoubleDoStmt]
+end redefine
+
+% A do statement that shares the same ending label.
+% We check this using a lookahead test [see DoLblDef] to see if the label ref is 
+% the same as the ending label of the outer do statement.
+% At present this simple solution does not nest the parse to asscoiate the 
+% inner statements with the inner do, but we can do that if necessary - JRC
+
+define DoubleDoStmt
+  'do [see DoLblDef] [LblRef] [CommaLoopControl] [EOS] 
+end define
+
+% Only certain statements are allowed to be a do loop end label statement.
+% Since they are defined in the spec by inversion (what they can NOT be),
+% it's not really clear what they CAN be.  [ActionStmt] seems safe - JRC
+
+define DoLabelStmt
+  [ActionStmt]
+end define
+
+% R821
+define LoopControl
+  [VariableName] '= [Expr] ', [Expr] [opt CommaExpr] 
+end define
+
+% 41
+
+% R841
+define ContinueStmt
+  [LblDef] 'continue [EOS] 
+end define
+
+% 42
+
+% R842
+define StopStmt
+  [LblDef] 'stop [opt IconOrScon] [EOS] 
+end define
+
+define IconOrScon
+  [Icon] 
+| [Scon]
+end define
+
+% 43
+
+% R844
+define PauseStmt
+  [LblDef] 'pause [opt IconOrScon] [EOS] 
+end define
+
+% 44
+
+define WriteStmt
+  [LblDef] 'write '( [IoControlSpecList] ') [opt OutputItemList] [EOS] 
+end define
+
+% 45
+
+define ReadStmt
+  [LblDef] 'read [RdCtlSpec] [opt InputItemList] [EOS] 
+| [LblDef] 'read [RdFmtId] [opt CommaInputItemList] [EOS] 
+end define
+
+define CommaInputItemList
+  ', [InputItemList] 
+end define
+
+define RdCtlSpec
+  [RdUnitId] 
+| '( [RdIoCtlSpecList] ') 
+end define
+
+define RdUnitId
+  '( [UFExpr] ') 
+| '( '* ') 
+end define
+
+define RdIoCtlSpecList
+  [UnitIdentifier] ', [IoControlSpec] 
+| [UnitIdentifier] ', [FormatIdentifier] 
+| [IoControlSpec] 
+| [RdIoCtlSpecList] ', [IoControlSpec] 
+end define
+
+define RdFmtId
+  [LblRef] 
+| '* 
+| [COperand] 
+| [COperand] [ConcatOp] [CPrimary] 
+| [RdFmtIdExpr] [ConcatOp] [CPrimary] 
+end define
+
+define RdFmtIdExpr
+  '( [UFExpr] ') 
+end define
+
+% 46
+
+define PrintStmt
+  [LblDef] 'print [FormatIdentifier] ', [OutputItemList] [EOS] 
+| [LblDef] 'print [FormatIdentifier] [EOS] 
+end define
+
+% 47
+
+define IoControlSpecList
+  [UnitIdentifier] $', 
+| [UnitIdentifier] ', [FormatIdentifier] 
+| [UnitIdentifier] ', [IoControlSpec] 
+| [IoControlSpec] 
+| [IoControlSpecList] ', [IoControlSpec] 
+end define
+
+% R912
+define IoControlSpec
+  'fmt= [FormatIdentifier] 
+| 'unit= [UnitIdentifier] 
+| 'rec= [Expr] 
+| 'end= [LblRef] 
+| 'err= [LblRef] 
+| 'iostat= [ScalarVariable] 
+end define
+
+% 48
+
+% R914
+define InputItemList
+  [list InputItem+] 
+end define
+
+define InputItem
+  [NameDataRef] 
+| [InputImpliedDo] 
+end define
+
+% R915
+define OutputItemList
+  [Expr] 
+| [OutputItemList1] 
+end define
+
+define OutputItemList1
+  [Expr] ', [Expr] 
+| [Expr] ', [OutputImpliedDo] 
+| [OutputImpliedDo] 
+| [OutputItemList1] ', [Expr] 
+| [OutputItemList1] ', [OutputImpliedDo] 
+end define
+
+% 49
+
+% R916
+define InputImpliedDo
+  '( [InputItemList] ', [ImpliedDoVariable] '= [Expr] ', [Expr] [opt CommaExpr] ') 
+end define
+
+define CommaExpr
+  ', [Expr]
+end define
+
+define OutputImpliedDo
+  '( [Expr] ', [ImpliedDoVariable] '= [Expr] ', [Expr] [opt CommaExpr] ') 
+| '( [OutputItemList1] ', [ImpliedDoVariable] '= [Expr] ', [Expr] [opt CommaExpr] ') 
+end define
+
+% 50
+
+define OpenStmt
+  [LblDef] 'open '( [ConnectSpecList] ') [EOS] 
+end define
+
+% R905
+define ConnectSpecList
+  [opt UnitIdentifierComma] [list ConnectSpec] 
+end define
+
+define UnitIdentifierComma
+  [UnitIdentifier] ',
+end define
+
+define ConnectSpec
+  'unit= [UnitIdentifier] 
+| 'err= [LblRef] 
+| 'file= [CExpr] 
+| 'status= [CExpr] 
+| 'access= [CExpr] 
+| 'form= [CExpr] 
+| 'recl= [Expr] 
+| 'blank= [CExpr] 
+| 'iostat= [ScalarVariable] 
+end define
+
+% 51
+
+define CloseStmt
+  [LblDef] 'close '( [CloseSpecList] ') [EOS] 
+end define
+
+% R908
+define CloseSpecList
+  [opt UnitIdentifierComma] [list CloseSpec] 
+end define
+
+define CloseSpec
+  'unit= [UnitIdentifier] 
+| 'err= [LblRef] 
+| 'status= [CExpr] 
+| 'iostat= [ScalarVariable] 
+end define
+
+% 52
+
+% R923
+define InquireStmt
+  [LblDef] 'inquire '( [InquireSpecList] ') [EOS] 
+end define
+
+% R924
+define InquireSpecList
+  [opt UnitIdentifier] [list InquireSpec] 
+end define
+
+define InquireSpec
+  'unit= [UnitIdentifier] 
+| 'file= [CExpr] 
+| 'err= [LblRef] 
+| 'iostat= [ScalarVariable] 
+| 'exist= [ScalarVariable] 
+| 'opened= [ScalarVariable] 
+| 'number= [ScalarVariable] 
+| 'named= [ScalarVariable] 
+| 'name= [ScalarVariable] 
+| 'access= [ScalarVariable] 
+| 'sequential= [ScalarVariable] 
+| 'direct= [ScalarVariable] 
+| 'form= [ScalarVariable] 
+| 'formatted= [ScalarVariable] 
+| 'unformatted= [ScalarVariable] 
+| 'recl= [Expr] 
+| 'nextrec= [ScalarVariable] 
+| 'blank= [ScalarVariable] 
+end define
+
+% 53
+
+% R919
+define BackspaceStmt
+  [LblDef] 'backspace [UnitIdentifier] [EOS] 
+| [LblDef] 'backspace '( [PositionSpecList] ') [EOS] 
+end define
+
+% 54
+
+% R920
+define EndfileStmt
+  [LblDef] 'endfile [UnitIdentifier] [EOS] 
+| [LblDef] 'endfile '( [PositionSpecList] ') [EOS] 
+end define
+
+% 55
+
+% R921
+define RewindStmt
+  [LblDef] 'rewind [UnitIdentifier] [EOS] 
+| [LblDef] 'rewind '( [PositionSpecList] ') [EOS] 
+end define
+
+% R922
+define PositionSpecList
+  [opt UnitIdentifierComma] [list PositionSpec+] 
+end define
+
+define PositionSpec
+  'unit= [UnitIdentifier] 
+| 'err= [LblRef] 
+| 'iostat= [ScalarVariable] 
+end define
+
+% 56
+
+define UnitIdentifier
+  [UFExpr] 
+| '* 
+end define
+
+% 57
+
+define FormatIdentifier
+  [LblRef] 
+| [CExpr] 
+| '* 
+end define
+
+% 58-59
+
+define FormatStmt
+  [LblDef] 'format '( [opt FmtSpec] ') [EOS] 
+end define
+
+% 60
+
+define FmtSpec
+  [Formatedit] 
+| [Formatsep] 
+| [Formatsep] [Formatedit] 
+| [FmtSpec] [Formatsep] 
+| [FmtSpec] [Formatsep] [Formatedit] 
+| [FmtSpec] ', [Formatedit] 
+| [FmtSpec] ', [Formatsep] 
+| [FmtSpec] ', [Formatsep] [Formatedit] 
+end define
+
+define Formatedit
+  [EditElement] 
+| [Icon] [EditElement] 
+| [Xcon] 
+| [Pcon] 
+| [Pcon] [EditElement] 
+| [Pcon] [Icon] [EditElement] 
+end define
+
+define EditElement
+  [Fcon] 
+| [MislexedFcon]
+| [Scon] 
+| [Hcon] 
+| [Ident] 
+| '( [FmtSpec] ') 
+end define
+
+define MislexedFcon
+  % It's impossible to accurately lex Fortran wihtout context,
+  % so sometimes formats get lexed as numbers or ids - JRC
+  [RDcon] [SPOFF] [RDcon] [SPON]        % 2E15 .5
+| [Ident] [SPOFF] [RDcon] [SPON]        % E15 .5 
+end define
+
+define Formatsep
+  '/ | ':
+end define
+
+% 61 recognized by the lexical analyzer as [Icon]
+
+% 62 recognized by the lexical analyzer in the context of [Ident] or [Fcon]
+
+% 63 recognized by the lexical analyzer in the context of [Fcon]
+
+% 64 recognized by the lexical analyzer in the context of [Hcon] or [Xcon]
+
+% 65 recognized by the lexical analyzer in the context of [Ident]
+
+% 66-67 recognized by the lexical analyzer in the context of [Fcon]
+
+% 68 recognized by the lexical analyzer in the context of [Pcon]
+
+% 69 recognized by the lexical analyzer in the context of [Scon] or [Hcon]
+
+% 70
+
+% * [This] may turn out to be an assignment statement, but the form given here
+% * allows for name analysis in the case that it actually IS a statement
+% * function definition
+
+define StmtFunctionStmt
+  [LblDef] [Name] [StmtFunctionRange] 
+end define
+
+define StmtFunctionRange
+  '( [opt SFDummyArgNameList] ') '= [Expr] [EOS] 
+end define
+
+define SFDummyArgNameList
+  [list SFDummyArgName+] 
+end define
+
+% 71
+
+define CallStmt
+  [LblDef] 'call [SubroutineNameUse] [EOS] 
+| [LblDef] 'call [SubroutineNameUse] '( [SubroutineArgList] ') [EOS] 
+end define
+
+define SubroutineArgList
+  [list SubroutineArg] 
+end define
+
+define SubroutineArg
+  [Expr] 
+| [Hcon] 
+| '* [LblRef] 
+end define
+
+% 72
+
+define ReturnStmt
+  [LblDef] 'return [opt Expr] [EOS] 
+end define
+
+% 73
+
+define FunctionReference
+  [Name] '( ') 
+end define
+
+define NameDataRef
+  [Name] [repeat ComplexDataRefTail]
+end define
+
+define ComplexDataRefTail
+  [SectionSubscriptRef]
+end define
+
+define SectionSubscriptRef
+  '( [SectionSubscriptList] ') 
+end define
+
+define SectionSubscriptList
+  [list SectionSubscript+] 
+end define
+
+define SectionSubscript
+  [Expr] [opt SubscriptTripletTail] 
+| [SubscriptTripletTail] 
+end define
+
+% 74-75
+
+% R723
+define Expr
+  [Level5Expr] 
+end define
+
+% 76-81
+
+% R701
+define Primary
+  [UnsignedArithmeticConstant] 
+| [NameDataRef] 
+| [FunctionReference] 
+| '( [Expr] ') 
+end define
+
+% R703
+define Level1Expr
+  [Primary] 
+end define
+
+% R705
+define MultOperand
+  [Level1Expr] [opt PowerUpMultOperand]
+end define
+
+define PowerUpMultOperand
+  [PowerOp] [MultOperand] 
+end define
+
+% R706
+define AddOperand
+  [MultOperand] [repeat MultOpMultOperand]
+end define
+
+define MultOpMultOperand
+  [MultOp] [MultOperand] 
+end define
+
+% R707
+define Level2Expr
+  [opt Sign] [AddOperand] [repeat AddOpAddOperand] 
+end define
+
+define AddOpAddOperand
+  [AddOp] [AddOperand] 
+end define
+
+% R708
+define PowerOp
+  '** 
+end define
+
+% R709
+define MultOp
+  '* | '/
+end define
+
+% R710
+define AddOp
+  '+ | '- 
+end define
+
+define Sign
+  '+ | '- 
+end define
+
+define UFExpr
+  [UFTerm] 
+| [Sign] [UFTerm] 
+| [UFExpr] [AddOp] [UFTerm] 
+end define
+
+define UFTerm
+  [UFFactor] 
+| [UFTerm] [MultOp] [UFFactor] 
+| [UFTerm] [ConcatOp] [UFPrimary] 
+end define
+
+define UFFactor
+  [UFPrimary] 
+| [UFPrimary] [PowerOp] [UFFactor] 
+end define
+
+define UFPrimary
+  [Icon] 
+| [Scon] 
+| [NameDataRef] 
+| [FunctionReference] 
+| '( [UFExpr] ') 
+end define
+
+% 82,83
+
+define CExpr
+  [CPrimary] [repeat CPrimaryConcatOp] 
+end define
+
+define CPrimaryConcatOp
+  [CPrimary] [ConcatOp] 
+end define
+
+define CPrimary
+  [COperand] 
+| '( [CExpr] ') 
+end define
+
+define COperand
+  [Scon] 
+| [NameDataRef] 
+| [FunctionReference] 
+end define
+
+redefine Primary
+  ... 
+| [Scon] 
+end redefine
+
+% R711
+define Level3Expr
+  [Level2Expr] [repeat ConcatOpLevel2Expr] 
+end define
+
+define ConcatOpLevel2Expr
+  [ConcatOp] [Level2Expr]
+end define
+
+% R712
+define ConcatOp
+  '/ [SPOFF] / [SPON]
+end define
+
+% 84,85
+
+% R715
+define AndOperand
+  [opt NotOp] [Level4Expr] 
+end define
+
+% R716
+define OrOperand
+  [AndOperand] [repeat AndOpAndOperand] 
+end define
+
+define AndOpAndOperand
+  [AndOp] [AndOperand] 
+end define
+
+% R717
+define EquivOperand
+  [OrOperand] [repeat OrUpOrOperand] 
+end define
+
+define OrUpOrOperand
+  [OrOp] [OrOperand] 
+end define
+
+% R718
+define Level5Expr
+  [EquivOperand] [repeat EquivOpEquivOperand]
+end define
+
+define EquivOpEquivOperand
+  [EquivOp] [EquivOperand] 
+end define
+
+% R719
+define NotOp
+  [SP] '.not. [SP] 
+end define
+
+% R720
+define AndOp
+  [SP] '.and. [SP] 
+end define
+
+% R721
+define OrOp
+  [SP] '.or. [SP]
+end define
+
+% R722
+define EquivOp
+  [SP] '.eqv. [SP] 
+| [SP] '.neqv. [SP] 
+end define
+
+redefine Primary
+  ... 
+| [LogicalConstant] 
+end redefine
+
+% 86
+
+define Level4Expr
+  [Level3Expr] [repeat RelOpLevel3Expr] 
+end define
+
+define RelOpLevel3Expr
+  [RelOp] [Level3Expr] 
+end define
+
+% 87
+
+define RelOp
+  [SP] '.eq. [SP] 
+| [SP] '.ne. [SP] 
+| [SP] '.lt. [SP] 
+| [SP] '.le. [SP] 
+| [SP] '.gt. [SP] 
+| [SP] '.ge. [SP] 
+end define
+
+% 88
+
+define ArrayElement
+  [VariableName] '( [SectionSubscriptList] ') 
+end define
+
+% 89
+
+define SubstringRange
+  '( [opt Expr] [SubscriptTripletTail] ') 
+end define
+
+define SubscriptTripletTail
+  ': [opt Expr] 
+end define
+
+% 90-99
+
+define Name
+  [Ident] 
+end define
+
+% 100
+
+define Constant
+  [NamedConstantUse] 
+| [opt PlusMinus] [UnsignedArithmeticConstant] 
+| [Scon] 
+| [Hcon] 
+| [LogicalConstant] 
+end define
+
+define PlusMinus
+  '+ | '-
+end define
+
+% 101
+
+define UnsignedArithmeticConstant
+  [Icon] 
+| [RDcon] 
+| [ComplexConst] 
+end define
+
+% 102 recognized by the lexical analyzer as [Icon]
+
+% 103 parsed as 102, distinguished semantically
+
+% 104 recognized by the lexical analyzer in the context of 68, 105 or 106
+
+% 105 recognized by the lexical analyzer as [Rcon]
+
+% 106 recognized by the lexical analyzer as [Dcon]
+
+% 107
+
+define ComplexConst
+  '( [ComplexComponent] ', [ComplexComponent] ') 
+end define
+
+define ComplexComponent
+  [opt Sign] [Icon]
+| [RDcon]
+| [Name]
+end define
+
+% 108
+
+define LogicalConstant
+  [SP] '.true. [SP] 
+| [SP] '.false. [SP] 
+end define
+
+% 109 recognized by the lexical analyzer as [Scon]
+
+% 110
+
+define Label
+  [Icon]  
+end define
+
+% 111-116 are components of symbols recognized by the lexical analyzer
+
+% * Nonterminal symbols that are not defined in the standard
+% *
+
+define BlockDataName
+  [Ident] 
+end define
+
+define CommonBlockName
+  [Ident] 
+end define
+
+define DummyArgName
+  [Ident] 
+end define
+
+define EntryName
+  [Ident] 
+end define
+
+define ExternalName
+  [Ident] 
+end define
+
+define FunctionName
+  [Ident] 
+end define
+
+define ImpliedDoVariable
+  [Ident] 
+end define
+
+define IntrinsicProcedureName
+  [Ident] 
+end define
+
+define ObjectName
+  [Ident] 
+end define
+
+define ProgramName
+  [Ident] 
+end define
+
+define SFDummyArgName
+  [Ident] 
+end define
+
+define SFVarName
+  [Ident] 
+end define
+
+define SubroutineName
+  [Ident] 
+end define
+
+define SubroutineNameUse
+  [Ident] 
+end define
+
+define VariableName
+  [Ident] 
+end define
+
+define ScalarVariable
+  [VariableName] 
+| [ArrayElement] 
+end define
+
+define Variable
+  [VariableName] [opt SubscriptListRef] [opt SubstringRange] 
+end define
+
+define SubscriptListRef
+  '( [SubscriptList] ')
+end define
+
+define SubscriptList
+  [list Subscript+] 
+end define
+
+define Subscript
+  [Expr] 
+end define
+
+% Use a context lookahead guard to be sure this isn't the ending label of a LabelDoStmt 
+% we're currently in - JRC
+
+define LblDef
+  [empty] 
+| [not DoLblDef] [TAB_2] [Label] [TAB_7] 
+end define
+
+
+#ifdef F90
+
+% Productions Specific to FORTRAN 90
+
+% R201 see 1
+
+% R202 see 1
+redefine ProgramUnit
+  ...
+| [Module] 
+end redefine
+
+% R203 chain rule omitted
+
+% R204 see 2
+redefine SpecificationPartConstruct
+  ...
+| [UseStmt] 
+end redefine
+
+% R205 see 2
+
+% R206 see 2
+
+% R207 see 2
+redefine DeclarationConstruct
+  ...
+| [DerivedTypeDef] 
+| [InterfaceBlock] 
+end redefine
+
+% R208 see 2
+
+% R209 see 2
+  
+% R210
+define BodyPlusInternals
+  [Body] [ContainsStmt] [InternalSubprogram] 
+| [ContainsStmt] [InternalSubprogram] 
+| [BodyPlusInternals] [InternalSubprogram] 
+end define
+
+% R211
+define InternalSubprogram
+  [FunctionSubprogram] 
+| [SubroutineSubprogram] 
+end define
+
+% R212
+define ModuleSubprogramPartConstruct
+  [ContainsStmt] 
+| [ModuleSubprogram] 
+end define
+
+% R213
+define ModuleSubprogram
+  [FunctionSubprogram] 
+| [SubroutineSubprogram] 
+end define
+
+% R214 see 6
+redefine SpecificationStmt
+  ...
+| [AccessStmt] 
+| [AllocatableStmt] 
+| [IntentStmt] 
+| [NamelistStmt] 
+| [OptionalStmt] 
+| [PointerStmt] 
+| [TargetStmt] 
+end redefine
+
+% R215 see 7
+
+redefine ExecutableConstruct
+  ...
+| [CaseConstruct] 
+| [WhereConstruct] 
+end redefine
+
+% R216 see 7
+redefine ActionStmt
+  ...
+| [AllocateStmt] 
+| [CycleStmt] 
+| [DeallocateStmt] 
+| [ExitStmt] 
+| [NullifyStmt] 
+| [PointerAssignmentStmt] 
+| [WhereStmt]
+end redefine
+
+% R301-R304 are components of symbols recognized by the lexical analyzer
+
+% R305 chain rules deleted
+
+% R306 recognized by the lexical analyzer
+
+% R307 see 23
+
+% R308 chain rule deleted
+
+% R309 chain rule deleted
+
+% R310 recognized semantically
+
+% R311
+define DefinedOperator
+  [Dop] 
+| [PowerOp] 
+| [MultOp] 
+| [AddOp] 
+| [RelOp] 
+| [ConcatOp] 
+| [NotOp] 
+| [AndOp] 
+| [OrOp] 
+| [EquivOp] 
+end define
+
+% R401 recognized by the lexical analyzer in the context of R413
+
+% R402 recognized by the lexical analyzer in the context of R413, [Icon]
+
+% R404 see 101
+redefine UnsignedArithmeticConstant
+  ...
+| [Icon] '_ [KindParam] 
+end redefine
+
+% R405
+define KindParam
+  [Icon] 
+| [NamedConstantUse] 
+end define
+
+% R406 see 100
+
+% R407
+define BozLiteralConstant
+  [Bcon] 
+| [Ocon] 
+| [Zcon] 
+end define
+
+% R408 recognized by the lexical analyzer as [Bcon]
+
+% R409 recognized by the lexical analyzer as [Ocon]
+
+% R410 recognized by the lexical analyzer as [Zcon]
+
+% R411 component of a symbol recognized by the lexical analyzer
+
+% R412 see 100
+
+% R413 see 100
+redefine UnsignedArithmeticConstant
+  ...
+| [RDcon] '_ [KindParam] 
+end redefine
+
+% R414-R416 components of symbols recognized by the lexical analyzer
+
+% R417 see 107
+
+% R418 chain rule deleted
+
+% R419 chain rule deleted
+
+% R420 see 100
+redefine Constant
+  ...
+| [Icon] '_ [Scon] 
+| [NamedConstantUse] '_ [Scon] 
+end redefine
+
+% R421 see 108
+redefine LogicalConstant
+  ...
+| [SP] '.true. [SP] '_ [KindParam] 
+| [SP] '.false. [SP] '_ [KindParam] .
+end redefine
+
+% R422
+define DerivedTypeDef
+  [DerivedTypeStmt] [DerivedTypeBody] [EndTypeStmt] 
+end define
+
+define DerivedTypeBody
+  [DerivedTypeBodyConstruct] 
+| [DerivedTypeBody] [DerivedTypeBodyConstruct] 
+end define
+
+define DerivedTypeBodyConstruct
+  [PrivateSequenceStmt] 
+| [ComponentDefStmt] 
+end define
+
+% R423
+define PrivateSequenceStmt
+  [LblDef] 'private [EOS] 
+| [LblDef] 'sequence [EOS] 
+end define
+
+% R424
+define DerivedTypeStmt
+  [LblDef] 'type [TypeName] [EOS] 
+| [LblDef] 'type ':: [TypeName] [EOS] 
+| [LblDef] 'type ', [AccessSpec] ':: [TypeName] [EOS] 
+end define
+
+% R425
+define EndTypeStmt
+  [LblDef] 'endtype [TypeName] [EOS] 
+| [LblDef] 'endtype [EOS] 
+| [LblDef] 'end 'type [TypeName] [EOS] 
+| [LblDef] 'end 'type [EOS] 
+end define
+
+% R426
+define ComponentDefStmt
+  [LblDef] [TypeSpec] ', [ComponentAttrSpecList] ':: [ComponentDeclList] [EOS] 
+| [LblDef] [TypeSpec] ':: [ComponentDeclList] [EOS] 
+| [LblDef] [TypeSpec] [ComponentDeclList] [EOS] 
+end define
+
+% R427
+define ComponentAttrSpecList
+  [list ComponentAttrSpec+] 
+end define
+
+define ComponentAttrSpec
+  'pointer 
+| 'dimension '( [ComponentArraySpec] ') 
+end define
+
+% R428
+define ComponentArraySpec
+  [ExplicitShapeSpecList] 
+| [DeferredShapeSpecList] 
+end define
+
+% R429
+define ComponentDeclList
+  [list ComponentDecl+] 
+end define
+
+define ComponentDecl
+  [ComponentName] '( [ComponentArraySpec] ') '* [CharLength] 
+| [ComponentName] '( [ComponentArraySpec] ') 
+| [ComponentName] '* [CharLength] 
+| [ComponentName] 
+end define
+
+% R430
+define StructureConstructor
+  [TypeName] '( [ExprList] ') 
+end define
+
+define ExprList
+  [list Expr+] 
+end define
+
+% R431
+define ArrayConstructor
+  '(/ [AcValueList] '/)
+end define
+
+% R432
+define AcValueList
+  [Expr] 
+| [AcValueList1] 
+end define
+
+define AcValueList1
+  [Expr] ', [Expr] 
+| [Expr] ', [AcImpliedDo] 
+| [AcImpliedDo] 
+| [AcValueList1] ', [Expr] 
+| [AcValueList1] ', [AcImpliedDo] 
+end define
+
+% R433
+define AcImpliedDo
+  '( [Expr] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ') 
+| '( [Expr] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ', [Expr] ') 
+| '( [AcImpliedDo] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ') 
+| '( [AcImpliedDo] ', [ImpliedDoVariable] '= [Expr] ', [Expr] ', [Expr] ') 
+end define
+
+% R434 chain rule deleted
+
+% R435 chain rule deleted
+
+% R501 see 20
+redefine TypeDeclarationStmt
+  ...
+| [LblDef] [TypeSpec] [opt AttrSpecSeq] ':: [EntityDeclList] [EOS] 
+end redefine
+
+define AttrSpecSeq
+  ', [AttrSpec] 
+| [AttrSpecSeq] ', [AttrSpec] 
+end define
+
+% R502 see 20
+redefine TypeSpec
+  ...
+| 'integer [KindSelector] 
+| 'real [KindSelector] 
+| 'double 'precision 
+| 'complex [KindSelector] 
+| 'character [CharSelector] 
+| 'logical [KindSelector] 
+| 'type '( [TypeName] ') 
+end redefine
+
+% R503
+define AttrSpec
+  'parameter 
+| [AccessSpec] 
+| 'allocatable 
+| 'dimension '( [ArraySpec] ') 
+| 'external 
+| 'intent '( [IntentSpec] ') 
+| 'intrinsic 
+| 'optional 
+| 'pointer 
+| 'save 
+| 'target 
+end define
+
+% R504 see 20
+redefine EntityDecl
+  ...
+| [ObjectName] '= [Expr] 
+| [ObjectName] '( [ArraySpec] ') '= [Expr] 
+| [ObjectName] '* [CharLength] '= [Expr] 
+| [ObjectName] '* [CharLength] '( [ArraySpec] ') '= [Expr] 
+end redefine
+
+% R505
+define KindSelector
+  '( 'kind= [Expr] ') 
+| '( [Expr] ') 
+end define
+
+% R506 see 20
+define CharSelector
+  '( 'len= [TypeParamValue] ', 'kind= [Expr] ') 
+| '( 'len= [TypeParamValue] ', [Expr] ') 
+| '( 'len= [TypeParamValue] ') 
+| '( 'kind= [Expr] ') 
+| '( [Expr] ') 
+end define
+
+% R507 see 20
+redefine LengthSelector
+  ...
+| '( [TypeParamValue] ') 
+end redefine
+
+% R508 see 22
+
+% R509 see 22
+
+% R510
+define AccessSpec
+  'public 
+| 'private 
+end define
+
+% R511
+define IntentSpec
+  'in 
+| 'out 
+| 'inout 
+end define
+
+% R512 see 16
+redefine ArraySpec
+  ...
+| [AssumedShapeSpecList] 
+| [DeferredShapeSpecList] 
+end redefine
+
+define AssumedShapeSpecList
+  [LowerBound] ': 
+| [DeferredShapeSpecList] ', [LowerBound] ': 
+| [AssumedShapeSpecList] ', [AssumedShapeSpec] 
+end define
+
+% R513 see 16
+
+% R514 see 16
+
+% R515 see 16
+
+% R516
+define AssumedShapeSpec
+  [LowerBound] ': 
+| ': 
+end define
+
+% R517
+define DeferredShapeSpecList
+  [list DeferredShapeSpec+] 
+end define
+
+define DeferredShapeSpec
+  ': 
+end define
+
+% R518 see 16
+
+% R519
+define IntentStmt
+  [LblDef] 'intent '( [IntentSpec] ') [opt ColonColon] [IntentParList] [EOS] 
+end define
+
+define ColonColon
+  '::
+end define
+
+define IntentParList
+  [list IntentPar+] 
+end define
+
+define IntentPar
+  [DummyArgName] 
+end define
+
+% R520
+define OptionalStmt
+  [LblDef] 'optional [opt ColonColon] [OptionalParList] [EOS] 
+end define
+
+define OptionalParList
+  [list OptionalPar+] 
+end define
+
+define OptionalPar
+  [DummyArgName] 
+end define
+
+% R521
+define AccessStmt
+  [LblDef] [AccessSpec] [opt ColonColon] [AccessIdList] [EOS] 
+| [LblDef] [AccessSpec] [EOS] 
+end define
+
+% R522
+define AccessIdList
+  [list AccessId+] 
+end define
+
+define AccessId
+  [GenericName] 
+| [GenericSpec] 
+end define
+
+% R523 see 26
+redefine SaveStmt
+  ...
+| [LblDef] 'save ':: [SavedEntityList] [EOS] 
+end redefine
+
+% R524 see 26
+
+% R525 see 15
+redefine DimensionStmt
+  ...
+| [LblDef] 'dimension ':: [ArrayDeclaratorList] [EOS] 
+end redefine
+
+% R526
+define AllocatableStmt
+  [LblDef] 'allocatable [opt ColonColon] [ArrayAllocationList] [EOS] 
+end define
+
+define ArrayAllocationList
+  [list ArrayAllocation+] 
+end define
+
+define ArrayAllocation
+  [ArrayName] 
+| [ArrayName] '( [DeferredShapeSpecList] ') 
+end define
+
+% R527
+define PointerStmt
+  [LblDef] 'pointer [opt ColonColon] [PointerStmtObjectList] [EOS] 
+end define
+
+define PointerStmtObjectList
+  [list PointerStmtObject+] 
+end define
+
+define PointerStmtObject
+  [ObjectName] 
+| [ObjectName] '( [DeferredShapeSpecList] ') 
+end define
+
+% R528
+define TargetStmt
+  [LblDef] 'target [opt ColonColon] [TargetObjectList] [EOS] 
+end define
+
+define TargetObjectList
+  [list TargetObject+] 
+end define
+
+define TargetObject
+  [ObjectName] 
+| [ObjectName] '( [ArraySpec] ') 
+end define
+
+% R529 see 27
+
+% R530 see 27
+
+% R531 see 27
+
+% R532 see 27
+
+% R533 see 100
+redefine Constant
+  ...
+| [StructureConstructor] 
+| [BozLiteralConstant] 
+end redefine
+
+% R534 chain rule deleted
+
+% R535 see 28
+
+% R536 see 28
+redefine DataIDoObject
+  ...
+| [StructureComponent] 
+end redefine
+
+% R537 chain rule deleted
+
+% R538 see 23
+
+% R539 see 23
+
+% R540 see 21
+redefine ImplicitStmt
+  ...
+| [LblDef] 'implicit 'none [EOS] 
+end redefine
+
+% R541 see 21
+
+% R542 see 21
+
+% R543
+define NamelistStmt
+  [LblDef] 'namelist [NamelistGroups] [EOS] 
+end define
+
+define NamelistGroups
+  '/ [NamelistGroupName] '/ [NamelistGroupObject] 
+| [NamelistGroups] '/ [NamelistGroupName] '/ [NamelistGroupObject] 
+| [NamelistGroups] ', '/ [NamelistGroupName] '/ [NamelistGroupObject] 
+| [NamelistGroups] ', [NamelistGroupObject] 
+end define
+
+% R544
+define NamelistGroupObject
+  [VariableName] 
+end define
+
+% R545 see 17
+
+% R546 see 17
+
+% R547 see 18
+
+% R548 see 19
+
+% R549 see 19
+
+% R601 
+% * ?????????????????????? *
+redefine ComplexDataRefTail
+  ...
+| '% [Name] 
+end redefine
+
+% R603-R608 chain rules deleted
+
+% R609 see 89
+
+% R610 see 89
+
+% R611 see 89
+
+% R614
+define StructureComponent
+  [VariableName] [FieldSelector] 
+| [StructureComponent] [FieldSelector] 
+end define
+
+define FieldSelector
+  '( [SectionSubscriptList] ') '% [Name] 
+| '% [Name] 
+end define
+
+% R615
+redefine ArrayElement
+  ...
+| [StructureComponent] '( [SectionSubscriptList] ') 
+end redefine
+
+% R619
+redefine SubscriptTripletTail
+  ...
+| ': [Expr] ': [Expr] 
+| ':: [Expr] 
+end redefine
+
+% R622
+define AllocateStmt
+  [LblDef] 'allocate '( [AllocationList] ', 'stat= [Variable] ') [EOS] 
+| [LblDef] 'allocate '( [AllocationList] ') [EOS] 
+end define
+
+% R623 chain rule deleted
+
+% R624
+define AllocationList
+  [list Allocation+] 
+end define
+
+define Allocation
+  [AllocateObject] 
+| [AllocateObject] [AllocatedShape] 
+end define
+
+define AllocatedShape
+  '( [SectionSubscriptList] ') 
+end define
+
+% * [Need] to use [SectionSubscriptList] here to solve an [LALR](1) conflict with the
+% * [FieldSelector] in R625  ([Can]'t tell which we have until the character
+% * following the right paren, but we must reduce [WITHIN] the parens)
+
+% R625
+define AllocateObjectList
+  [list AllocateObject+] 
+end define
+
+define AllocateObject
+  [VariableName] 
+| [AllocateObject] [FieldSelector] 
+end define
+
+% R626
+
+% * [Omitted] to solve [LALR](1) conflict  see R624
+% *
+% * [AllocateShapeSpec]: [Expr] 
+% *      | [Expr] ': [Expr] 
+
+% R627 chain rule deleted
+
+% R628 chain rule deleted
+
+% R629
+define NullifyStmt
+  [LblDef] 'nullify '( [PointerObjectList] ') [EOS] 
+end define
+
+define PointerObjectList
+  [list PointerObject+] 
+end define
+
+% R630
+define PointerObject
+  [Name] 
+| [PointerField] 
+end define
+
+define PointerField
+  [Name] [opt SFExprListRef] '% [Name] 
+| [PointerField] [FieldSelector] 
+end define
+
+% R631
+define DeallocateStmt
+  [LblDef] 'deallocate '( [AllocateObjectList]', 'stat= [Variable] ') [EOS] 
+| [LblDef] 'deallocate '( [AllocateObjectList] ') [EOS] 
+end define
+
+% R701 see 74-85
+redefine Primary
+  ... 
+| [ArrayConstructor] 
+end redefine
+
+% R702 chain rule deleted
+
+% R703
+redefine Level1Expr
+  ...
+| [DefinedUnaryOp] [Primary] 
+end redefine
+
+% R704
+define DefinedUnaryOp
+  [Dop] 
+end define
+
+% R708 see 74-81
+
+% R709 see 74-81
+
+% R710 see 74-81
+
+% R712 see 82,83
+
+% R714 see 87
+redefine RelOp
+  ...
+| '== 
+| '/= 
+| '< 
+| '<= 
+| '> 
+| '>= 
+end redefine
+
+% R719 see 84,85
+
+% R720 see 84,85
+
+% R721 see 84,85
+
+% R722 see 84,85
+
+% R723
+redefine Expr
+  ...
+| [Expr] [DefinedBinaryOp] [Level5Expr] 
+end redefine
+
+% R724
+define DefinedBinaryOp
+  [Dop] 
+end define
+
+% R725-R734 chain rule deleted
+
+% R735 see 29
+redefine AssignmentStmt
+  ...
+| [LblDef] [Name] [opt SFExprListRef] '% [NameDataRef] '= [Expr] [EOS] 
+| [LblDef] [Name] '( [SFDummyArgNameList] ') '% [NameDataRef] '= [Expr] [EOS] 
+end redefine
+
+redefine SFExprList
+  ...
+| [opt Expr] ': [Expr] ': [Expr] 
+| [opt Expr] ':: [Expr] 
+end redefine
+
+% R736
+define PointerAssignmentStmt
+  [LblDef] [Name] '=> [Target] [EOS] 
+| [LblDef] [Name] [opt SFExprListRef] '% [NameDataRef] '=> [Target] [EOS] 
+end define
+
+% R737
+define Target
+  [Expr] 
+end define
+
+% R738
+define WhereStmt
+  [LblDef] 'where '( [MaskExpr] ') [AssignmentStmt] 
+end define
+
+% R739
+define WhereConstruct
+  [Where] [EndWhereStmt] 
+| [ElseWhere] [EndWhereStmt] 
+end define
+
+define Where
+  [WhereConstructStmt] 
+| [Where] [AssignmentStmt] 
+end define
+
+define ElseWhere
+  [Where] [ElsewhereStmt] 
+| [ElseWhere] [AssignmentStmt] 
+end define
+
+% R740
+define WhereConstructStmt
+  [LblDef] 'where '( [MaskExpr] ') [EOS] 
+end define
+
+% R741
+define MaskExpr
+  [Expr] 
+end define
+
+% R742
+define ElsewhereStmt
+  [LblDef] 'elsewhere [EOS] 
+end define
+
+% R743
+define EndWhereStmt
+  [LblDef] 'endwhere [EOS] 
+| [LblDef] 'end 'where [EOS] 
+end define
+
+% R801 see the note on R818
+
+% R802 see 35
+
+% R803 see 36
+
+% R804 see 37
+redefine ElseIfStmt
+  ...
+| [LblDef] [EX_2] 'else 'if '( [Expr] ') 'then [EOS] [IN_2] 
+end redefine
+
+% R805 see 38
+
+% R806 see 39
+redefine EndIfStmt
+  ...
+| [LblDef] [EX_2] 'end 'if [EOS] 
+end redefine
+
+% R807 see 35
+
+% R808
+define CaseConstruct
+  [LblDef] [Name] ': 'selectcase '( [Expr] ') [EOS] [SelectCaseRange] 
+| [LblDef] 'selectcase '( [Expr] ') [EOS] [SelectCaseRange] 
+| [LblDef] [Name] ': 'select 'case '( [Expr] ') [EOS] [SelectCaseRange] 
+| [LblDef] 'select 'case '( [Expr] ') [EOS] [SelectCaseRange] 
+end define
+
+define SelectCaseRange
+  [SelectCaseBody] [EndSelectStmt] 
+| [EndSelectStmt] 
+end define
+
+define SelectCaseBody
+  [CaseStmt] 
+| [SelectCaseBody] [CaseBodyConstruct] 
+end define
+
+define CaseBodyConstruct
+  [CaseStmt] 
+| [ExecutionPartConstruct] 
+end define
+
+% R810
+define CaseStmt
+  [LblDef] 'case [CaseSelector] [EOS] 
+| [LblDef] 'case [CaseSelector] [Name] [EOS] 
+end define
+
+% R811
+define EndSelectStmt
+  [LblDef] 'endselect [opt EndName] [EOS] 
+| [LblDef] 'end 'select [opt EndName] [EOS] 
+end define
+
+% R812 chain rules deleted
+
+% R813
+define CaseSelector
+  '( [CaseValueRangeList] ') 
+| 'default 
+end define
+
+define CaseValueRangeList
+  [list CaseValueRange+] 
+end define
+
+% R814
+define CaseValueRange
+  [Expr] 
+| [Expr] ': 
+| ': [Expr] 
+| [Expr] ': [Expr] 
+end define
+
+% R815 chain rules deleted
+
+% R816 see 40
+redefine DoConstruct
+  ...
+| [BlockDoConstruct] 
+end redefine
+
+% R817
+
+% * Block DO constructs cannot be recognized syntactically because there is
+% * no requirement that there be an end do statement
+% *
+% * [BlockDoConstruct]:
+% *    [DoStmt] [Block] [EndDoStmt] 
+% *  | [DoStmt] [Block] 
+
+% In TXL Block Do statements can be recognized and this has been restructured to do so - JRC 5sep09
+
+% R818
+define BlockDoConstruct
+  [LblDef] [opt NameColon] 'do [opt CommaLoopControl] [EOS] [IN_2] 
+    [repeat ExecutionPartConstruct] [EX_2]
+  [EndDoStmt]
+end define
+
+define NameColon
+  [Name] ':
+end define
+
+% R819 chain rule deleted
+
+% R820 chain rule deleted
+
+% R821 see 40
+redefine LoopControl
+  ...
+| 'while '( [Expr] ') 
+end redefine
+
+% R822 chain rule deleted
+
+% R823 chain rule deleted
+
+% R824 see note on R818
+
+% R825
+define EndDoStmt
+  [LblDef] 'enddo [opt EndName] [EOS] 
+| [LblDef] 'end 'do [opt EndName] [EOS] 
+end define
+
+% R826-R833 enforced semantically
+
+% R834
+define CycleStmt
+  [LblDef] 'cycle [opt EndName] [EOS] 
+end define
+
+% R835
+define ExitStmt
+  [LblDef] 'exit [opt EndName] [EOS] 
+end define
+
+% R836 see 31
+redefine GoToKw
+  ...
+| 'go 'to 
+end redefine
+
+% R837 see 32
+
+% R838 see 29
+
+% R839 see 33
+
+% R840 see 34
+
+% R841 see 41
+
+% R842 see 42
+
+% R843 see 42
+
+% R901 see 56
+
+% R902 chain rule deleted
+
+% R903 chain rule deleted
+
+% R904 see 50
+
+% R905 see 50
+redefine ConnectSpec
+  ...
+| 'position= [CExpr] 
+| 'action= [CExpr] 
+| 'delim= [CExpr] 
+| 'pad= [CExpr] 
+end redefine
+
+% R906 chain rule deleted
+
+% R907 see 51
+
+% R908 see 51
+
+% R909 see 45
+
+% R910 see 44
+
+% R911 see 46
+
+% R912 see 46
+redefine IoControlSpec
+  ...
+| 'nml= [NamelistGroupName] 
+| 'advance= [CExpr] 
+| 'size= [Variable] 
+| 'eor= [LblRef] 
+end redefine
+
+% R913 see 57
+
+% R920 see 54
+redefine EndfileStmt
+  ...
+| [LblDef] 'end 'file [UnitIdentifier] [EOS] 
+| [LblDef] 'end 'file '( [PositionSpecList] ') [EOS] 
+end redefine
+
+% R923 see 52
+redefine InquireStmt
+  ...
+| [LblDef] 'inquire '( 'iolength= [ScalarVariable] ') [OutputItemList] [EOS] 
+end redefine
+
+% R924 see 52
+redefine InquireSpec
+  ...
+| 'position= [ScalarVariable] 
+| 'action= [ScalarVariable] 
+| 'read= [ScalarVariable] 
+| 'write= [ScalarVariable] 
+| 'readwrite= [ScalarVariable] 
+| 'delim= [ScalarVariable] 
+| 'pad= [ScalarVariable] 
+end redefine
+
+% R1101 see 2
+redefine MainRange
+  ...
+| [BodyPlusInternals] [EndProgramStmt] 
+end redefine
+
+% R1102 see 8
+
+% R1103
+redefine EndProgramStmt
+  ...
+| [LblDef] 'endprogram [opt EndName] [EOS] 
+| [LblDef] 'end 'program [opt EndName] [EOS] 
+end redefine
+
+% R1104
+define Module
+  [ModuleStmt] [ModuleBody] [EndModuleStmt] 
+| [ModuleStmt] [EndModuleStmt] 
+end define
+
+define ModuleBody
+  [SpecificationPartConstruct] 
+| [ModuleSubprogramPartConstruct] 
+| [ModuleBody] [SpecificationPartConstruct] 
+| [ModuleBody] [ModuleSubprogramPartConstruct] 
+end define
+
+% R1105
+define ModuleStmt
+  [LblDef] 'module [ModuleName] [EOS] 
+end define
+
+% R1106
+define EndModuleStmt
+  [LblDef] 'endmodule [opt EndName] [EOS] 
+| [LblDef] 'end 'module [opt EndName] [EOS] 
+| [LblDef] 'end [EOS] 
+end define
+
+% R1107
+define UseStmt
+  [LblDef] 'use [Name] [EOS] 
+| [LblDef] 'use [Name] ', 'only ': [EOS] 
+| [LblDef] 'use [Name] ', [RenameList] [EOS] 
+| [LblDef] 'use [Name] ', 'only ': [OnlyList] [EOS] 
+end define
+
+define RenameList
+  [list Rename+] 
+end define
+
+define OnlyList
+  [list Only+] 
+end define
+
+% R1108
+define Rename
+  [Ident] '=> [UseName] 
+end define
+
+% R1109
+define Only
+  [GenericSpec] 
+| [Ident] '=> [UseName] 
+| [UseName] 
+end define
+
+% R1110 see 5
+
+% R1111 see 14
+redefine BlockDataStmt
+  ...
+| [LblDef] 'block 'data [opt BlockDataName] [EOS] 
+end redefine
+
+% R1112
+redefine EndBlockDataStmt
+  ...
+| [LblDef] 'endblockdata [opt EndName] [EOS] 
+| [LblDef] 'end 'blockdata [opt EndName] [EOS] 
+| [LblDef] 'endblock 'data [opt EndName] [EOS] 
+| [LblDef] 'end 'block 'data [opt EndName] [EOS] 
+end redefine
+
+% R1201
+define InterfaceBlock
+  [InterfaceStmt] [InterfaceBlockBody] [EndInterfaceStmt] 
+end define
+
+define InterfaceBlockBody
+  [InterfaceBodyPartConstruct] 
+| [InterfaceBlockBody] [InterfaceBodyPartConstruct] 
+end define
+
+define InterfaceBodyPartConstruct
+  [InterfaceBody] 
+| [ModuleProcedureStmt] 
+end define
+
+% R1202
+define InterfaceStmt
+  [LblDef] 'interface [GenericName] [EOS] 
+| [LblDef] 'interface [GenericSpec] [EOS] 
+| [LblDef] 'interface [EOS] 
+end define
+
+% R1203
+define EndInterfaceStmt
+  [LblDef] 'endinterface [EOS] 
+| [LblDef] 'end 'interface [EOS] 
+end define
+
+% R1204
+define InterfaceBody
+  [LblDef] [FunctionPrefix] [FunctionName] [FunctionInterfaceRange] 
+| [LblDef] 'subroutine [SubroutineName] [SubroutineInterfaceRange] 
+end define
+
+define FunctionInterfaceRange
+  [FunctionParList] [EOS] [opt SubprogramInterfaceBody] [EndFunctionStmt] 
+end define
+
+define SubroutineInterfaceRange
+  [SubroutineParList] [EOS] [opt SubprogramInterfaceBody] [EndSubroutineStmt] 
+end define
+
+define SubprogramInterfaceBody
+  [SpecificationPartConstruct] 
+| [SubprogramInterfaceBody] [SpecificationPartConstruct] 
+end define
+
+% R1205
+define ModuleProcedureStmt
+  [LblDef] 'module 'procedure [ProcedureNameList] [EOS] 
+end define
+
+define ProcedureNameList
+  [list ProcedureName+] 
+end define
+
+define ProcedureName
+  [Ident] 
+end define
+
+% R1206
+define GenericSpec
+  'operator '( [DefinedOperator] ') 
+| 'assignment '( '= ') 
+end define
+
+% R1207 see 24
+
+% R1208 see 25
+
+% R1209 see 73
+redefine FunctionReference
+  ...
+| [Name] '( [FunctionArgList] ') 
+end redefine
+
+% R1210 see 71
+
+% R1211
+define FunctionArgList
+  [FunctionArg] 
+| [FunctionArgList] ', [FunctionArg] 
+| [SectionSubscriptList] ', [FunctionArg] 
+end define
+
+define FunctionArg
+  [Name] '= [Expr] 
+end define
+
+redefine SubroutineArg
+  ...
+| [Name] '= [Expr] 
+| [Name] '= [Hcon] 
+| [Name] '= '* [LblRef] 
+end redefine
+
+% R1212 chain rule deleted
+
+% R1213 chain rule deleted
+
+% R1214 chain rule deleted
+
+% R1215 see 3
+redefine FunctionRange
+  ...
+| [FunctionParList] 'result '( [Name] ') [EOS] [BodyPlusInternals] [EndFunctionStmt] 
+| [FunctionParList] 'result '( [Name] ') [EOS] [Body] [EndFunctionStmt] 
+| [FunctionParList] 'result '( [Name] ') [EOS] [EndFunctionStmt] 
+| [FunctionParList] [EOS] [BodyPlusInternals] [EndFunctionStmt] 
+end redefine
+
+% R1216 see 10
+
+% R1217 see 10
+redefine FunctionPrefix
+  ...
+| 'recursive 'function 
+| 'recursive [TypeSpec] 'function 
+| [TypeSpec] 'recursive 'function 
+end redefine
+
+% R1218
+redefine EndFunctionStmt
+  ...
+| [LblDef] 'endfunction [opt EndName] [EOS] 
+| [LblDef] 'end 'function [opt EndName] [EOS] 
+end redefine
+
+% R1219 see 4
+redefine SubroutineSubprogram
+  ...
+| [LblDef] 'recursive 'subroutine [SubroutineName] [SubroutineRange] 
+end redefine
+
+redefine SubroutineRange
+  ...
+| [SubroutineParList] [EOS] [BodyPlusInternals] [EndSubroutineStmt] 
+end redefine
+
+% R1220 see 12
+
+% R1221 see 12
+
+% R1222
+redefine EndSubroutineStmt
+  ...
+| [LblDef] 'endsubroutine [opt EndName] [EOS] 
+| [LblDef] 'end 'subroutine [opt EndName] [EOS] 
+end redefine
+
+% R1223 see 13
+
+% R1224 see 72
+
+% R1225
+define ContainsStmt
+  [LblDef] 'contains [EOS]
+end define
+
+% R1226 see 70
+
+% * Nonterminal symbols that are not defined in the standard
+
+define ArrayName
+  [Ident] 
+end define
+
+define ComponentName
+  [Ident] 
+end define
+
+define GenericName
+  [Ident] 
+end define
+
+define ModuleName
+  [Ident] 
+end define
+
+define NamelistGroupName
+  [Ident] 
+end define
+
+define UseName
+  [Ident] 
+end define
+
+define TypeName
+  [Ident] 
+end define
+
+define EndName
+  [Ident] 
+end define
+
+#end if
