@@ -1,0 +1,123 @@
+% Simple but very general TXL 10.5 grammar for processing HTML
+% SomeDeveloper and Jim Cordy, Queen's University, Sept 2007
+
+% TXL 10.5 base grammar for processing HTML input files.
+% Tested on thousands of HTML source files from various websites.
+
+% This is not designed to be a syntax-checking grammar for HTML,
+% but rather a lightweight gramamr for conveniently supporting source
+% transofrmations of HTML.
+
+% While it's almost impossible to parse  arbitrarily malformed HTML,
+% this grammar does a good job on all well-formed files and most 
+% commonly broken ones.  Robust enough to parse almost every HTML file, 
+% and to accurately point out severe syntax errors in badly malformed ones.
+
+% Note this grammar uses the TXL cut operator [!] to limit backtracking in text,
+% and TXL 10.5 [push] and [pop] context-sensitive matching to match tag ids.
+
+#pragma -raw -case -id "$-" -w 32000 
+
+% Special tokens in HTML
+tokens
+    url       "http://[\a\d.-\?/=\#:]+"
+            | "ftp://[\a\d.-\?/=\#:]+"
+    fileref   "../[\a\d][\a\d./]*"
+            | "/[\a\d][\a\d.]*/[\a\d][\a\d./]*"
+    number  | "\d+(.\d+)?%"
+            | "$?\d+(.\d+)?"
+            | "\#[\d\a]+"
+            | "[+-]\d+"
+    x_id      "[Xx]-[\a\d-]+"
+    email     "[\a\d.]+@[\a\d.]+"
+    extchar   "&[\a\d]+;"
+    punctuation  "[.,!\?:;]"
+    charlit   ""
+end tokens
+
+define program 
+    [repeat element] 
+end define 
+
+define element 
+      [singleton_tag]          % for efficiency, must be first choice
+    | [tag]
+    | [text]
+    | [comment_tag]
+    | [tag_beg] 
+    | [not token] [tag_end] 
+end define 
+
+define tag 
+    < [push id] [attributes] >  [NL][IN] 
+        [tag_elements]          [EX]
+    </ [pop id] >               [NL]
+end define 
+
+define tag_elements
+    [repeat element] 
+end define
+
+define singleton_tag
+      < [singleton_id] [attributes] >  [opt singleton_tag_end]  [NL]
+    | < [id] [attributes] />                                    [NL] 
+end define 
+
+define singleton_tag_end
+    </ [singleton_id] >  
+end define 
+
+define singleton_id
+      'br | 'hr | '| img | 'meta | 'base | 'basefont 
+    | [x_id]    % various tools insert these
+    | 'dt       % Javadoc uses <dt> incorrectly
+end define
+
+define comment_tag
+    <! [repeat comment_text] > [NL] 
+end define
+
+define comment_text
+      [punctuation] [SP]
+    | [not '>] [token]
+end define
+
+define tag_beg 
+      < [id] [attributes] > [NL] 
+end define 
+
+define tag_end 
+      </ [id] > [NL]   
+end define 
+
+define attributes
+    [SPOFF] [repeat attribute] [SPON]
+end define
+
+define attribute 
+    [SP] [attribute_id] [opt equals_attribute_value]
+end define
+
+define attribute_id
+    [id] | [x_id]
+end define
+
+define equals_attribute_value
+    = [attribute_value]
+end define 
+
+define attribute_value
+    [stringlit] | [number] | [id] | [url] | [fileref] 
+end define
+
+define text
+    [repeat text_unit+] [NL] [!] 
+end define
+
+define text_unit
+       [punctuation] [SP]  % Symbols that should have a space after them in output
+    |  ') [SP] [see id]            
+    |  [SP] '(             % Symbols that should have a space before
+    |  [not '<] [token]    
+    |  '< [number]         % Allow for a common malformed text problem
+end define 
