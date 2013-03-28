@@ -1,0 +1,1422 @@
+// Grammar definition for the ABS language
+// $Id: ABS.parser 18658 2013-02-04 10:44:25Z rbubel $
+
+
+/** 
+ * Copyright (c) 2009-2011, The HATS Consortium. All rights reserved. 
+ * This file is licensed under the terms of the Modified BSD License.
+ */
+%header {:
+
+package abs.frontend.parser;
+import abs.frontend.ast.*;
+import java.io.File;
+import java.io.IOException;
+
+:};
+
+%embed {:
+	ArrayList<ParserError> errors = new ArrayList<ParserError>();
+    boolean raiseExceptions = false;
+    boolean allowIncompleteExpr = false;
+    File file;
+    String sourceCode; // only set if not read from file
+
+    public void allowIncompleteExpr(boolean b) {
+        allowIncompleteExpr = b;
+    }
+
+	public void setSourceCode(String sourceCode) {
+	   this.sourceCode = sourceCode;
+	}
+
+	public void setFile(File file) {
+	   this.file = file;
+	}
+
+	protected void addSyntaxError(String msg, Symbol token) {
+            SyntaxError e = new SyntaxError(msg, Symbol.getLine(token.getStart()), Symbol.getColumn(token.getStart()), token);
+            e.setFile(file);
+            e.setSourceCode(sourceCode);
+            errors.add(e);
+            if (raiseExceptions)
+                throw new ParseException(e);
+	}
+
+	class Events extends Parser.Events {
+		public void syntaxError(Symbol token) {
+		    addSyntaxError("Syntactic error: unexpected token " + Terminals.NAMES[token.getId()], token);
+		}
+
+		public void scannerError(Scanner.Exception e) {
+			LexicalError err = new LexicalError("Lexical error: " + e.getMessage(), e.line, e.column);
+			err.setFile(file);
+			err.setSourceCode(sourceCode);
+			errors.add(err);
+			if (raiseExceptions)
+				throw new ParseException(err);
+		}
+		public void unexpectedTokenRemoved(Symbol token) {
+			// do nothing
+		}
+
+		public void missingTokenInserted(Symbol token) {
+			// do nothing
+		}
+
+		public void misspelledTokenReplaced(Symbol token) {
+			// do nothing
+		}
+
+		public void errorPhraseRemoved(Symbol error) {
+			// do nothing
+		}
+
+
+	}
+
+	{ report = new Events(); } // Use error handler in parser
+
+
+	public void setRaiseExceptions(boolean raiseExceptions) {
+		this.raiseExceptions = raiseExceptions;
+	}
+
+	public ArrayList<ParserError> getErrors() {
+		return errors;
+	}
+	
+	public Object parse(Scanner source) throws IOException, Parser.Exception {
+		return new ASTPreProcessor().preprocess((CompilationUnit)super.parse(source));
+	}
+
+	public String getFileName() {
+		if (file != null)
+		    return file.getPath();
+		return "<unknown>";
+	}
+:};
+
+%goal goal;
+%goal delta_decl;
+
+CompilationUnit goal =
+    compilation_unit.cu		{: return cu ; :}
+  | error INVALID_CHARACTER? {: // adding dummy-token-type "INVALID_CHARACTER" for the lexer
+		CompilationUnit u = new CompilationUnit(getFileName(),new List(),new List(),new Opt(),new List(),new List(),new List());
+		u.setParserErrors(getErrors());
+		return u;
+	:}
+  ;
+
+CompilationUnit compilation_unit =
+	module_decl_list.m? delta_decl_list.d? product_line.pl? product_list.p? featuremodeldecl.fm {:
+		List fd = fm.getFeatureDecls();
+		List ed = fm.getFExts();
+		fm.setFeatureDeclList(new List());
+		fm.setFExtList(new List());
+        CompilationUnit u = new CompilationUnit(getFileName(),m,d,pl,p,fd,ed);
+		u.setParserErrors(getErrors());
+		return u;
+	:}
+  ;
+
+ModuleDecl module_decl =
+    module_name_decl.n export_list.el? import_list.il? decl_list.dl? main_block.b?
+    {: return new ModuleDecl(n.getName(),el,il,dl,b); :}
+  ;
+
+List module_decl_list =
+    module_decl.t			{: return new List().add(t); :}
+  | module_decl_list.l module_decl.t	{: return l.add(t); :}
+  ;
+
+
+Name module_name_decl =
+    MODULE module_name.n SEMICOLON {: return n; :}
+  ;
+
+Name module_name = type_name ;
+
+Name simple_type_name =
+  TYPE_IDENTIFIER.id {: 
+      Symbol curr_sym = _symbols[offset + 1]; // Trust me, there is no other way to get the original symbol (beaver replaces id by id.value and casts it to String).
+      Name n = new Name(id);
+      if (curr_sym instanceof ABSSymbol) {
+          n.setAbsolutePosition(((ABSSymbol)curr_sym).getAbsolutePosition());
+      }
+      return n; 
+  :};
+
+Name simple_name =
+    IDENTIFIER.id  {: return new Name(id); :}
+;
+
+Name name =
+	simple_name
+  | qualified_name
+;
+
+Name type_name =
+    simple_type_name
+  | qualified_type_name
+;
+
+Name any_name =
+    name
+  | type_name
+;
+
+
+Name qualified_name =
+    type_name.qn DOT IDENTIFIER.n {: return new Name(qn.getName() + "." + n); :}
+  ;
+
+Name qualified_type_name =
+    type_name.qn DOT TYPE_IDENTIFIER.n {: Name nn = new Name(qn.getName() + "." + n); nn.setAbsolutePosition(qn.getAbsolutePosition()); return nn; :}
+  ;
+
+Export export =
+  EXPORT any_name_list.l SEMICOLON {: return new NamedExport(l); :}
+  | EXPORT MULT SEMICOLON {: return new StarExport(); :}
+  | EXPORT MULT FROM module_name.m SEMICOLON {: return new StarExport(new Opt(m)); :}
+  | EXPORT any_name_list.l FROM module_name.m SEMICOLON {: return new FromExport(l,m.getName()); :}
+;
+
+Import import =
+    IMPORT MULT FROM module_name.m SEMICOLON {: return new StarImport(m.getName()); :}
+  | IMPORT any_name_list.l FROM module_name.m SEMICOLON {: return new FromImport(l,m.getName()); :}
+  | IMPORT any_name_list.l SEMICOLON {: return new NamedImport(l); :}
+;
+
+List export_list =
+	export.t			{: return new List().add(t); :}
+  | export_list.l export.t	{: return l.add(t); :}
+;
+
+List import_list =
+	import.t			{: return new List().add(t); :}
+  | import_list.l import.t	{: return l.add(t); :}
+;
+
+List any_name_list =
+    any_name.n {: return new List().add(n); :}
+  | any_name_list.l COMMA any_name.n {: return l.add(n); :}
+;
+
+List decl_list =
+	decl.t			{:
+		if (t == null)
+			return new List();
+		return new List().add(t);
+	:}
+  | decl_list.l decl.t	{:
+  		if (t == null)
+  			return l;
+  		return l.add(t);
+  :}
+  ;
+
+Decl decl =
+		datatype_decl
+	|	typesyn_decl
+	|	function_decl
+	|	interface_decl
+	|	class_decl
+	|	error
+	;
+
+// Same as other blocks, but a different class for code-generation purposes.
+MainBlock main_block =
+    annotation_list.al? LBRACE stmt_list.s? RBRACE     {: return new MainBlock(al, s); :}
+    ;
+
+InitBlock init_block =
+	block	{: return new InitBlock(block.getAnnotationsNoTransform(), block.getStmtsNoTransform()); :}
+	;
+
+VarDecl var_decl =
+    type_exp.t IDENTIFIER.i ASSIGN exp.e  {: return new VarDecl(i,t, new Opt(e)); :}
+    | type_exp.t IDENTIFIER.i  {: return new VarDecl(i,t, new Opt()); :}
+    ;
+
+DataTypeDecl datatype_decl =
+	annotation_list.al? DATA TYPE_IDENTIFIER.id datatypeparam_list_decl.p? ASSIGN data_constructor_list.l SEMICOLON
+	{: return new ParametricDataTypeDecl(id, l, al, p); :}
+   | annotation_list.al? DATA TYPE_IDENTIFIER.id datatypeparam_list_decl.p? SEMICOLON
+    {: return new ParametricDataTypeDecl(id, new List<DataConstructor>(), al, p); :}
+  ;
+
+TypeSynDecl typesyn_decl =
+	annotation_list.al? TYPE TYPE_IDENTIFIER.lhs ASSIGN datatypeuse.rhs SEMICOLON  {: return new TypeSynDecl(lhs, al, rhs); :}
+  ;
+
+
+FunctionDecl function_decl =
+    annotation_list.al? DEF datatypeuse.t IDENTIFIER.fn datatypeparam_list_decl.p LPAREN param_decl_list.l? RPAREN ASSIGN BUILTIN SEMICOLON 
+        {: return new ParametricFunctionDecl(fn, t, l, new BuiltinFunctionDef(), al, p); :}
+    | annotation_list.al? DEF datatypeuse.t IDENTIFIER.fn datatypeparam_list_decl.p LPAREN param_decl_list.l? RPAREN ASSIGN exp_function_def.ef SEMICOLON
+        {: return new ParametricFunctionDecl(fn, t, l, ef, al, p); :}
+    | annotation_list.al? DEF datatypeuse.t IDENTIFIER.fn LPAREN param_decl_list.l? RPAREN ASSIGN BUILTIN SEMICOLON
+        {: return new FunctionDecl(fn, al, t, l, new BuiltinFunctionDef()); :}
+    | annotation_list.al? DEF datatypeuse.t IDENTIFIER.fn LPAREN param_decl_list.l? RPAREN ASSIGN exp_function_def.ef SEMICOLON
+        {: return new FunctionDecl(fn, al, t, l, ef); :}
+    // error recovery:
+    | annotation_list.al? DEF datatypeuse.t IDENTIFIER.fn LPAREN param_decl_list.l? RPAREN ASSIGN error
+        {: return new FunctionDecl(fn, al, t, l, new ExpFunctionDef(new NullExp())); :}
+    ;
+	
+ExpFunctionDef exp_function_def =
+    data_exp.ef {: return new ExpFunctionDef(ef); :}
+    ;
+
+InterfaceDecl interface_decl =
+    annotation_list.al? INTERFACE TYPE_IDENTIFIER.id extends_interfaces.i? LBRACE methodsig_list.l? RBRACE
+    {: return new InterfaceDecl(id, al, i, l); :}
+    // error recovery :
+    | annotation_list.al? INTERFACE TYPE_IDENTIFIER.id extends_interfaces.i? error
+        {: return new InterfaceDecl(id, al, i, new List()); :}
+    | annotation_list.al? INTERFACE TYPE_IDENTIFIER.id error
+        {: return new InterfaceDecl(id, al, new List(), new List()); :}
+    | annotation_list.al? INTERFACE error
+        {: return new InterfaceDecl("<unknown>", al, new List(), new List()); :}
+    ;
+
+InterfaceDecl qualified_interface_decl =
+    annotation_list.al? INTERFACE type_name.id extends_interfaces.i? LBRACE methodsig_list.l? RBRACE
+    {: return new InterfaceDecl(id.getString(), al, i, l); :}
+    ;
+    
+ClassDecl class_decl =
+    annotation_list.annotations? CLASS TYPE_IDENTIFIER.id param_decls.params? implement_interfaces.i? LBRACE
+    field_decl_list.fields? 
+    init_block.init_block? 
+    method_list.methods? 
+    RBRACE
+    {: return new ClassDecl(id, annotations, params, i, init_block, fields, methods); :}
+    // error recovery:
+    | annotation_list.annotations? CLASS TYPE_IDENTIFIER.id param_decls.params? implement_interfaces.i? LBRACE
+    error
+    {: return new ClassDecl(id, annotations, params, i, new Opt(), new List(), new List()); :}
+    ;
+
+ClassDecl qualified_class_decl =
+    annotation_list.annotations? CLASS type_name.id param_decls.params? implement_interfaces.i? LBRACE 
+    field_decl_list.fields? 
+    init_block.init_block? 
+    method_list.methods? 
+    RBRACE
+    {: return new ClassDecl(id.getString(), annotations, params, i, init_block, fields, methods); :}
+    // error recovery:
+    | annotation_list.annotations? CLASS type_name.id param_decls.params? implement_interfaces.i? LBRACE
+    error
+    {: return new ClassDecl(id.getString(), annotations, params, i, new Opt(), new List(), new List()); :}
+    ;
+
+DeltaDecl delta_decl =
+    DELTA TYPE_IDENTIFIER.id delta_param_decls.params? SEMICOLON 
+    delta_access_list.uses? 
+    module_modifier_list.modifiers? 
+    {: return new DeltaDecl(id, params, uses, modifiers); :} ;
+
+List delta_decl_list =
+    delta_decl.t                       {: return new List().add(t); :}
+  | delta_decl_list.l delta_decl.t     {: return l.add(t); :}
+  ;
+
+List delta_access_list =
+    delta_access.t                     {: return new List().add(t); :}
+  | delta_access_list.l delta_access.t {: return l.add(t); :}  
+  ;
+
+Import delta_access =
+    USES module_name.m SEMICOLON       {: return new DeltaAccess(m.getName()); :}
+  ;
+
+List delta_param_decls =
+    LPAREN delta_param_decl_list.f? RPAREN     {: return f ; :}
+  ;
+
+List delta_param_decl_list =
+      delta_param_decl.i                               {: return new List().add(i); :}
+    | delta_param_decl_list.l COMMA delta_param_decl.i {: return l.add(i); :}
+  ;
+
+DeltaParamDecl delta_param_decl =
+    param_decl.p   {: return new DeltaFieldParam(p); :}
+  | TYPE_IDENTIFIER.id has_condition.c   {: return new DeltaClassParam(id,c); :}
+  ;
+
+HasCondition has_condition =
+    HASFIELD field_decl.f   {: return new HasField(f); :}
+  | HASMETHOD methodsig.ms  {: return new HasMethod(ms); :}
+  | HASINTERFACE type_name.n
+        {: InterfaceTypeUse res = new InterfaceTypeUse(n.getName()) ;
+           res.setAbsolutePosition(n.getAbsolutePosition());
+           return res; :}
+  ;
+
+
+List module_modifier_list =
+    module_modifier.m {: return new List().add(m); :}
+  | module_modifier_list.l module_modifier.m {: return l.add(m); :}
+  ;
+
+ModuleModifier module_modifier =
+    functional_modifier.m {: return m; :}
+    | oo_modifier.m {: return m; :}
+    ;
+
+FunctionalModifier functional_modifier =
+  ADDS function_decl.functiondecl {: return new AddFunctionModifier(functiondecl); :}
+  | ADDS datatype_decl.datatypedecl {: return new AddDataTypeModifier(datatypedecl); :}
+  | ADDS typesyn_decl.typesyndecl {: return new AddTypeSynModifier(typesyndecl); :}
+  | MODIFIES typesyn_decl.typesyndecl {: return new ModifyTypeSynModifier(typesyndecl); :}
+  | MODIFIES datatype_decl.datatypedecl {: return new ModifyDataTypeModifier(datatypedecl); :}
+  ;
+
+OOModifier oo_modifier =
+  ADDS qualified_class_decl.classdecl {: return new AddClassModifier(classdecl); :}
+  | REMOVES CLASS type_name.id SEMICOLON {: return new RemoveClassModifier(id.getString()); :}
+  | MODIFIES CLASS type_name.id implement_interfaces_add.ifadd? implement_interfaces_remove.ifremove? LBRACE modifier_fragment_list.fragments? RBRACE {: return new ModifyClassModifier(id.getString(), ifadd, ifremove, fragments); :}
+  | ADDS qualified_interface_decl.ifacedecl {: return new AddInterfaceModifier(ifacedecl); :}
+  | MODIFIES INTERFACE type_name.id LBRACE inf_modifier_fragment_list.fragments? RBRACE {: return new ModifyInterfaceModifier(id.getString(), fragments); :}
+  ;
+
+List inf_modifier_fragment_list =
+    inf_modifier_fragment.f {: return new List().add(f); :}
+  | inf_modifier_fragment_list.l inf_modifier_fragment.f {: return l.add(f); :}
+  ;
+  
+MethodSigModifier inf_modifier_fragment =
+  ADDS methodsig.ms SEMICOLON {: return new AddMethodSigModifier(ms); :}
+  | REMOVES methodsig.ms SEMICOLON {: return new RemoveMethodSigModifier(ms); :}
+  ;
+
+List modifier_fragment_list =
+    modifier_fragment.f {: return new List().add(f); :}
+  | modifier_fragment_list.l modifier_fragment.f {: return l.add(f); :}
+  ;
+
+Modifier modifier_fragment =
+    ADDS field_decl.f SEMICOLON     {: return new AddFieldModifier(f); :}
+  | REMOVES field_decl.f SEMICOLON  {: return new RemoveFieldModifier(f); :}
+  | ADDS method.m                   {: return new AddMethodModifier(m); :}
+  | MODIFIES method.m               {: return new ModifyMethodModifier(m); :}
+  | REMOVES methodsig.ms SEMICOLON  {: return new RemoveMethodModifier(ms); :}
+  ;
+
+List data_constructor_list =
+    data_constructor.i                                         {: return new List().add(i); :}
+    | data_constructor_list.l BAR data_constructor.i        {: return l.add(i); :}
+  ;
+
+DataConstructor data_constructor =
+	TYPE_IDENTIFIER.co  data_constructor_params.p? {: return new DataConstructor(co,p) ; :}
+	;
+
+List data_constructor_params =
+	LPAREN constructor_arg_list.l? RPAREN     {: return l; :}
+	;
+
+List constructor_arg_list =
+	  constructor_arg.a                          {: return new List().add(a); :}
+	| constructor_arg_list.l COMMA constructor_arg.a   {: return l.add(a); :}
+    ;
+	
+ConstructorArg constructor_arg =
+	   datatypeuse.u IDENTIFIER.id {:
+	   return new ConstructorArg(u, new Opt(new Name(id))); :}	
+	| datatypeuse.u {: 
+	   return new ConstructorArg(u, new Opt()); :}  
+    ;
+
+List implement_interfaces =
+    IMPLEMENTS ifname_list.i           {: return i; :}
+  ;
+
+List implement_interfaces_add =
+    ADDS ifname_list.i           {: return i; :}
+  ;
+
+List implement_interfaces_remove =
+    REMOVES ifname_list.i           {: return i; :}
+  ;
+
+List extends_interfaces =
+    EXTENDS ifname_list.i           {: return i; :}
+  ;
+
+
+List annotation_list =
+     annotation.a                          {: return new List().add(a); :}
+     | annotation_list.l annotation.a      {: return l.add(a); :}
+     ;
+
+Annotation annotation =
+    LBRACKET type_exp.type COLON data_exp.exp RBRACKET {: return new TypedAnnotation(exp,type); :}
+  | LBRACKET data_exp.exp RBRACKET {: return new Annotation(exp); :}
+    ;
+
+InterfaceTypeUse ifname =
+    type_name.n {: InterfaceTypeUse res = new InterfaceTypeUse(n.getName()) ; res.setAbsolutePosition(n.getAbsolutePosition()); return res; :}
+    ;
+
+DataTypeUse datatypeuse =
+      annotation_list.l? type_name.n LT datatypeuse_list.p GT {: 
+            ParametricDataTypeUse res = new ParametricDataTypeUse(n.getName(),l, p);
+            res.setAbsolutePosition(n.getAbsolutePosition()); return res; :}
+	| annotation_list.l? type_name.n {: 
+	       DataTypeUse res = new DataTypeUse(n.getName(),l);
+	       res.setAbsolutePosition(n.getAbsolutePosition()); return res; :}
+    ;
+
+TypeParameterDecl datatypeparam =
+    TYPE_IDENTIFIER.id {: return new TypeParameterDecl(id); :}
+    ;
+
+Access type_exp =
+	  type_name.n LT datatypeuse_list.p GT {: Access res = new ParametricDataTypeUse(n.getName(), new List(), p);
+	    res.setAbsolutePosition(n.getAbsolutePosition()); return res; :}
+	| type_name.n 		{: Access res = new DataTypeUse(n.getName(), new List());
+	    res.setAbsolutePosition(n.getAbsolutePosition()); return res; :}
+	;
+
+//fix class_var --> field
+List field_decl_list =
+	  field_decl.i  SEMICOLON						{: return new List().add(i); :}
+	| field_decl_list.l field_decl.i SEMICOLON		{: return l.add(i); :}
+	;
+
+FieldDecl field_decl =
+      annotation_list.an?      type_exp.t IDENTIFIER.i ASSIGN data_exp.e  {: return new FieldDecl(i,t, new Opt(e),an, false); /* Component */ :}
+    | annotation_list.an?      type_exp.t IDENTIFIER.i                    {: return new FieldDecl(i,t, new Opt(),an, false);  /* Component */ :}
+    | annotation_list.an? PORT type_exp.t IDENTIFIER.i ASSIGN data_exp.e  {: return new FieldDecl(i,t, new Opt(e),an, true);  /* Component */ :}
+    | annotation_list.an? PORT type_exp.t IDENTIFIER.i                    {: return new FieldDecl(i,t, new Opt(),an, true);   /* Component */ :}
+    ;
+
+
+List param_decls =
+	LPAREN param_decl_list.f? RPAREN     {: return f ; :}
+	;
+
+List param_decl_list =
+      param_decl.i                                    {: return new List().add(i); :}
+    | param_decl_list.l COMMA param_decl.i        {: return l.add(i); :}
+  ;
+
+ParamDecl param_decl =
+    annotation_list.an? type_exp.t IDENTIFIER.i  {: return new ParamDecl(i,t,an); :}
+    ;
+
+List method_list =
+     method.i                        {: return new List().add(i); :}
+     | method_list.l method.i        {: return l.add(i); :}
+   ;
+
+List methodsig_list =
+    methodsig.m SEMICOLON	        	{: return new List().add(m); :}
+  | methodsig_list.l methodsig.m SEMICOLON	{: return l.add(m); :}
+  ;
+
+List ifname_list =
+	  ifname.i                              {: return new List().add(i); :}
+    | ifname_list.l COMMA ifname.i        {: return l.add(i); :}
+	;
+
+
+List datatypeuse_list =
+      datatypeuse.i                              {: return new List().add(i); :}
+    | datatypeuse_list.l COMMA datatypeuse.i        {: return l.add(i); :}
+    ;
+
+
+List datatypeparam_list_decl =
+  LT datatypeparam_list.l GT {: return l; :}
+;
+
+List datatypeparam_list =
+     datatypeparam.p {: return new List().add(p); :}
+   | datatypeparam_list.l COMMA datatypeparam.p {: return l.add(p); :}
+   ;
+
+MethodImpl method =
+	           methodsig.ms block.b {: return new MethodImpl(ms, b, false);                                 /* Component */ :}
+	|          methodsig.ms error   {: return new MethodImpl(ms, new Block(new List(), new List()), false); /* Component */ :}
+	| CRITICAL methodsig.ms block.b {: return new MethodImpl(ms, b, true);                                  /* Component */ :}
+	| CRITICAL methodsig.ms error   {: return new MethodImpl(ms, new Block(new List(), new List()), true);  /* Component */ :}
+    ;
+
+MethodSig methodsig =
+	annotation_list.al? type_exp.returntype IDENTIFIER.id LPAREN  param_decl_list.params? RPAREN
+	{: return new MethodSig(id, al, returntype,params); :}
+    ;
+
+PureExp pure_exp =
+      pure_exp_no_if
+    | if_exp
+    | location_exp /* Component */
+    | father_exp   /* Component */
+;
+
+PureExp pure_exp_no_if =
+	  var_or_field_ref
+    | THIS                {: return new ThisExp() ; :}
+    | NULL                 {: return new NullExp() ; :}
+	| let_exp
+	| constructor_exp
+	| fnapp_exp
+    | fnapp_list_exp
+    | case_exp
+    ;
+
+GetLocExp location_exp =
+	LOC LPAREN pure_exp.param RPAREN                         {: return new GetLocExp(param);    /* Component */ :}
+	;
+GetFatherExp father_exp =
+	FATHER LPAREN pure_exp.param RPAREN                      {: return new GetFatherExp(param); /* Component */ :}
+	;
+
+VarOrFieldUse var_or_field_ref =
+	  THIS DOT IDENTIFIER.id   {: return new FieldUse(id) ; :}
+    | IDENTIFIER.n {: return new VarUse(n); :}
+ // for auto completion:
+    | THIS.callee DOT.d {: 
+        if (!allowIncompleteExpr) {
+           addSyntaxError("Missing method or field name", new ThisExp());
+        }
+        return new FieldUse("");
+      :}
+    | THIS.callee BANG.b IDENTIFIER.method? {:
+        if (!allowIncompleteExpr) {
+            addSyntaxError("Missing method arguments.",new ThisExp());
+        }
+        return new IncompleteAsyncAccess(new ThisExp());
+        :}
+	;
+
+FnApp fnapp_list_exp =
+    name.f list_literal_exp.l {: List<PureExp> llist = new List<PureExp>(); llist.add(l); {return new FnApp(f.getName(), llist) ; } :}
+    ;
+
+FnApp fnapp_exp =
+	name.f LPAREN data_exp_list.l? RPAREN {: return new FnApp(f.getName(), l) ; :}
+    ;
+
+DataConstructorExp constructor_exp =
+	  type_name.f LPAREN data_exp_list.l? RPAREN {: return new DataConstructorExp(f.getName(), l) ; :}
+	| type_name.f {: return new DataConstructorExp(f.getName(), new List()) ; :}
+    ;
+
+IfExp if_exp =
+    IF data_exp.e THEN data_exp.c ELSE data_exp.a {: return new IfExp(e,c,a) ; :}
+    ;
+
+CaseExp case_exp =
+	CASE data_exp.caseterm LBRACE case_branch_list.branches? RBRACE {: return new CaseExp(caseterm, branches) ; :}
+;
+
+//built_in or pure , since built_in_data -> int_exp -> mult_exp -> factor -> pure
+List data_exp_list =
+	  data_exp.i                            {: return new List().add(i); :}
+	| data_exp_list.l COMMA data_exp.i    {: return l.add(i); :}
+	| error {: return new List(); :}
+	;
+
+
+// The List literal.  Special syntax, but allows us to construct
+// arbitrary n-ary data structures (set, map, array ...) without resorting
+// to chains of constructors.
+DataConstructorExp list_literal_exp = LBRACKET data_exp_list.l? RBRACKET
+ {: {
+        DataConstructorExp result = new DataConstructorExp("Cons", new List<PureExp>());
+        DataConstructorExp current = result;
+        /* DO NOT use the iterator here -- it interferes with rewriting [stolz] */
+        if (l.getNumChildNoTransform() > 0) {
+	        PureExp last = (PureExp) l.getChildNoTransform(l.getNumChildNoTransform()-1);
+	        for (int i = 0; i < l.getNumChildNoTransform(); i++) {
+	            PureExp e = (PureExp) l.getChildNoTransform(i);
+	            DataConstructorExp next = new DataConstructorExp("Cons", new List<PureExp>());
+	            next.setPosition(e.getStartPos(), last.getEndPos());
+	            current.addParamNoTransform(e);            
+	            current.addParamNoTransform(next);
+	            current = next;
+	        }
+	    }
+        current.setConstructor("Nil");
+        return result ; }
+ :}
+ ;
+
+PureExp data_exp =
+	  or_exp
+	;
+
+PureExp or_exp =
+      and_exp
+	| or_exp.e1 OROR and_exp.e2 {: return new OrBoolExp(e1, e2); :}
+	;
+
+PureExp and_exp =
+	equality_exp
+	| and_exp.e1 ANDAND equality_exp.e2  {: return new AndBoolExp(e1, e2); :}
+	;
+
+
+PureExp equality_exp =
+	relational_exp
+	| equality_exp.e1 EQEQ relational_exp.e2  {: return new EqExp(e1, e2); :}
+	| equality_exp.e1 NOTEQ relational_exp.e2  {: return new NotEqExp(e1, e2); :}
+	;
+
+PureExp relational_exp =
+	add_exp
+	|relational_exp.e1 LT add_exp.e2     {: return new LTExp(e1, e2); :}
+	|relational_exp.e1 GT add_exp.e2     {: return new GTExp(e1, e2); :}
+	|relational_exp.e1 LTEQ add_exp.e2   {: return new LTEQExp(e1, e2); :}
+	|relational_exp.e1 GTEQ add_exp.e2   {: return new GTEQExp(e1, e2); :}
+	;
+
+PureExp add_exp =
+	mult_exp.e  {: return e; :}
+	| add_exp.e1 PLUS mult_exp.e2   {: return new AddAddExp(e1, e2); :}
+	| add_exp.e1 MINUS mult_exp.e2  {: return new SubAddExp(e1, e2); :}
+  ;
+
+PureExp mult_exp =
+	factor.f {: return f; :}
+	| mult_exp.e1 MULT factor.e2 {: return new MultMultExp(e1, e2); :}
+	| mult_exp.e1 DIV factor.e2 {: return new DivMultExp(e1, e2); :}
+	| mult_exp.e1 MOD factor.e2 {: return new ModMultExp(e1, e2); :}
+	;
+
+PureExp factor =
+ 	literal
+	| pure_exp
+//	| pair_exp
+	| MINUS factor.e           {: return new MinusExp(e); :}
+	| NEGATION factor.b            {: return new NegExp(b); :}
+	| LPAREN or_exp.e RPAREN {: return e; :}
+	;
+
+LiteralExp literal =
+	  int_literal.i              {: return i ; :}
+	| string_literal.s                 {: return s ; :}
+	;
+
+// Literals
+
+StringLiteral string_literal = STRINGLITERAL.s {: return new StringLiteral(s); :} ;
+
+StringLiteral sql_string_literal = SQLSTRINGLITERAL.s {: return new StringLiteral(s); :} ;
+
+IntLiteral int_literal = INTLITERAL.i {: return new IntLiteral(i); :} ;
+
+LetExp let_exp =
+	LET LPAREN param_decl.var RPAREN ASSIGN data_exp.val IN data_exp.exp {: return new LetExp(var,val,exp) ; :}
+	;
+
+List case_branch_list =
+      case_branch.b                       {: return new List().add(b); :}
+    | case_branch_list.l case_branch.b    {: return l.add(b); :}
+	;
+
+CaseBranch case_branch =
+	  pattern.lhs RARROW data_exp.rhs SEMICOLON {: return new CaseBranch(lhs, rhs); :}
+	;
+
+Pattern pattern =
+ 	  IDENTIFIER.v  {: return new PatternVarUse(v) ; :}
+	| constructor_pattern
+	| literal.l  	{: return new LiteralPattern(l) ; :}
+//  | LPAREN pattern.left COMMA pattern.right RPAREN  {: return new PatternPair(left,right) ; :}
+	| USCORE {: return new UnderscorePattern() ; :}
+	;
+
+Pattern constructor_pattern =
+	type_name.co pattern_params.p? {: return new ConstructorPattern(co.getName(),p) ; :}
+	;
+
+List pattern_params =
+	LPAREN pattern_list.l? RPAREN     {: return l; :}
+	;
+
+List pattern_list =
+    pattern.i                              {: return new List().add(i); :}
+    | pattern_list.l COMMA pattern.i        {: return l.add(i); :}
+	;
+
+Cog cog = annotation_list.annotations? COG {: return new Cog(annotations); :} ;
+
+Exp exp =
+	  eff_exp.e   {: return e; :}
+	| data_exp.e  {: return e; :}
+	;
+
+PureExp pure_exp_prefix = 
+     pure_exp_no_if
+   | LPAREN if_exp.e RPAREN {: return e; :}
+
+;
+
+Exp eff_exp =
+    pure_exp_prefix.p DOT GET    {: return new GetExp(p) ; :}
+    | new_exp
+    | SQL LPAREN sql_exp.e RPAREN {: return e; :}
+    | async_call
+    | await_async_call
+    | sync_call
+    | original_call
+    | newloc_exp  /* Component */
+    | incomplete_exp
+	;
+
+NewExp new_exp =
+	NEW cog.c? type_name.i LPAREN data_exp_list.l? RPAREN {: return new NewExp(i.getName(),l,c) ; :}
+	;
+
+NewLocExp newloc_exp =
+	NEW LOC                                                 {: return new NewLocExp(); /* Component */ :}
+	;
+
+SqlExp sql_exp =
+	SELECT sql_attrs_def.a FROM sql_relation_ref.r opt_sql_condition.c
+	       sql_grouping_attributes.g sql_ordering_attributes.o
+		{: return new SqlSelectExp(false, a, r, c, g, o); :}
+    | SELECT DISTINCT sql_attrs_def.a FROM sql_relation_ref.r opt_sql_condition.c
+           sql_grouping_attributes.g sql_ordering_attributes.o
+        {: return new SqlSelectExp(true, a, r, c, g, o); :}
+	| INSERT INTO sql_relation_ref.r LPAREN sql_attr_ref_list.a RPAREN VALUES LPAREN sql_tuple_constant_list.v RPAREN
+	    {: return new SqlInsertExp(r, a, v); :}
+	| UPDATE sql_relation_ref.r SET sql_attr_assignment_list.a opt_sql_condition.c
+	    {: return new SqlUpdateExp(r, a, c); :}
+	;
+
+SqlAttrsDef sql_attrs_def =
+    MULT                    {: return new SqlAllAttrsDef(); :}
+    | sql_attr_def_list.l   {: return new SqlExplicitAttrsDef(l); :}
+    ;
+
+List sql_attr_def_list =
+    sql_attr_def.a                             {: return new List().add(a); :}
+    | sql_attr_def_list.l COMMA sql_attr_def.a {: return l.add(a); :}
+    ;
+
+SqlAttrDef sql_attr_def =
+    factor.f                                     {: return new SqlProjectionAttrDef(f); :}
+    | sql_aggregate_function.fun AS data_exp.e   {: return new SqlCalcAttrDef(e, fun); :}
+    ;
+
+List sql_attr_ref_list =
+    sql_attr_ref.a                             {: return new List().add(a); :}
+    | sql_attr_ref_list.l COMMA sql_attr_ref.a {: return l.add(a); :}
+    ;
+
+PureExp sql_attr_ref =
+    data_exp
+    ;
+
+SqlAttrAssignment sql_attr_assignment =
+    data_exp.e EQ sql_tuple_scalar_function.f {: return new SqlAttrAssignment(e, f); :}
+    ;
+
+List sql_attr_assignment_list =
+    sql_attr_assignment.a                                    {: return new List().add(a); :}
+    | sql_attr_assignment_list.l COMMA sql_attr_assignment.a {: return l.add(a); :}
+    ;
+
+SqlRelationRef sql_relation_ref =
+	sql_atomic_relation_ref
+    | sql_relation_ref.r1 JOIN sql_atomic_relation_ref.r2
+           {: return new SqlJoinRelationRef("Join", r1, r2); :}
+    | sql_relation_ref.r1 LEFT JOIN sql_atomic_relation_ref.r2
+           {: return new SqlJoinRelationRef("LeftJoin", r1, r2); :}
+    | sql_relation_ref.r1 RIGHT JOIN sql_atomic_relation_ref.r2
+           {: return new SqlJoinRelationRef("LeftJoin", r2, r1); :}
+    ;
+
+SqlRelationRef sql_atomic_relation_ref =
+	string_literal.r {: return new SqlDbRelationRef(r.getContent()); :}
+	| var_or_field_ref.r {: return new SqlVarOrFieldRelationRef(r); :}
+	;
+
+Opt opt_sql_condition =
+    WHERE sql_or_condition.c {: return new Opt(c); :}
+    |                        {: return new Opt(); :}
+    ;
+
+SqlCondition sql_or_condition =
+	sql_and_condition
+	| sql_or_condition.c1 OR.op sql_and_condition.c2
+		{: return new SqlCompoundCondition(c1, op, c2); :}
+	;
+
+SqlCondition sql_and_condition =
+	sql_condition
+	| sql_and_condition.c1 AND.op sql_condition.c2
+		{: return new SqlCompoundCondition(c1, op, c2); :}
+	;
+
+SqlCondition sql_condition =
+    LPAREN sql_or_condition.c RPAREN {: return c; :}
+	| sql_tuple_scalar_function.f1 sql_comparison_relation.r sql_tuple_scalar_function.f2
+		{: return new SqlComparisonCondition(f1, r, f2); :}
+	| string_literal.a IS NULL {: return new SqlIsNullCondition(a); :}
+	| NOT sql_condition.c {: return new SqlNegatedCondition(c); :}
+	;
+
+SqlTupleScalarFunction sql_tuple_scalar_function =
+    sql_tuple_scalar_function_concat;
+
+SqlTupleScalarFunction sql_tuple_scalar_function_concat =
+    sql_tuple_scalar_function_sum
+    | sql_tuple_scalar_function_concat.f1 CONCAT sql_tuple_scalar_function_sum.f2
+            {: return new SqlTupleBinaryFunction("ValueConcatenation", f1, f2); :}
+    ;
+
+SqlTupleScalarFunction sql_tuple_scalar_function_sum =
+    sql_tuple_scalar_function_product
+    | sql_tuple_scalar_function_sum.f1 PLUS sql_tuple_scalar_function_product.f2
+            {: return new SqlTupleBinaryFunction("ValueSum", f1, f2); :}
+    | sql_tuple_scalar_function_sum.f1 MINUS sql_tuple_scalar_function_product.f2
+            {: return new SqlTupleBinaryFunction("ValueDifference", f1, f2); :}
+    | sql_tuple_scalar_function_sum.f1 MINUS LPAREN sql_tuple_scalar_function_sum.f2 RPAREN
+            {: return new SqlTupleBinaryFunction("ValueDifference", f1, f2); :}
+    ;
+
+SqlTupleScalarFunction sql_tuple_scalar_function_product =
+    sql_tuple_scalar_function_quotient
+    | sql_tuple_scalar_function_product.f1 MULT sql_tuple_scalar_function_quotient.f2
+            {: return new SqlTupleBinaryFunction("ValueProduct", f1, f2); :}
+    | sql_tuple_scalar_function_product.f1 MULT LPAREN sql_tuple_scalar_function_sum.f2 RPAREN
+            {: return new SqlTupleBinaryFunction("ValueProduct", f1, f2); :}
+    ;
+
+SqlTupleScalarFunction sql_tuple_scalar_function_quotient =
+    atomic_sql_tuple_scalar_function
+    | sql_tuple_scalar_function_quotient.f1 DIV atomic_sql_tuple_scalar_function.f2
+            {: return new SqlTupleBinaryFunction("ValueQuotient", f1, f2); :}
+    | sql_tuple_scalar_function_quotient.f1 DIV LPAREN sql_tuple_scalar_function_sum.f2 RPAREN
+            {: return new SqlTupleBinaryFunction("ValueQuotient", f1, f2); :}
+    ;
+
+SqlTupleScalarFunction atomic_sql_tuple_scalar_function =
+    string_literal.a {: return new SqlTupleAttributeValue(a.getContent()); :}
+    | sql_tuple_constant
+    | sql_tuple_case_function
+    ;
+
+SqlTupleConstant sql_tuple_constant =
+	sql_string_literal.s {: return new SqlTupleStringConstant(s.getContent()); :}
+	| int_literal.i {: return new SqlTupleIntConstant(Integer.parseInt(i.getContent())); :}
+    | MINUS int_literal.i {: return new SqlTupleIntConstant(-Integer.parseInt(i.getContent())); :}
+	| TRUE {: return new SqlTupleBoolConstant(true); :}
+	| FALSE {: return new SqlTupleBoolConstant(false); :}
+	| var_or_field_ref.r {: return new SqlTupleVarOrFieldConstant(r); :}
+	;
+
+List sql_tuple_constant_list =
+    sql_tuple_constant.c                                   {: return new List().add(c); :}
+    | sql_tuple_constant_list.l COMMA sql_tuple_constant.c {: return l.add(c); :}
+    ;
+
+SqlTupleCaseFunction sql_tuple_case_function =
+    CASE sql_tuple_case_branches.b ELSE sql_tuple_scalar_function.f END
+        {: return new SqlTupleCaseFunction(b, f); :}
+    ;
+
+List sql_tuple_case_branches =
+    sql_tuple_case_branch.b {: return new List().add(b); :}
+    | sql_tuple_case_branches.l sql_tuple_case_branch.b {: return l.add(b); :}
+    ;
+
+SqlTupleCaseBranch sql_tuple_case_branch =
+    WHEN sql_or_condition.c THEN sql_tuple_scalar_function.f
+        {: return new SqlTupleCaseBranch(c, f); :}
+    ;
+
+SqlComparisonRelation sql_comparison_relation =
+	EQ      {: return new SqlComparisonRelation("CR_EQ"); :}
+	| LT    {: return new SqlComparisonRelation("CR_LT"); :}
+	| GT    {: return new SqlComparisonRelation("CR_GT"); :}
+	| LTEQ  {: return new SqlComparisonRelation("CR_LEQ"); :}
+	| GTEQ  {: return new SqlComparisonRelation("CR_GEQ"); :}
+	| NOTEQ {: return new SqlComparisonRelation("CR_NEQ"); :}
+	;
+
+SqlAggregateFunction sql_aggregate_function =
+    COUNT LPAREN MULT RPAREN      {: return new SqlAggregateFunction("count", new Opt()); :}
+    | sql_tuple_scalar_function.f {: return new SqlAggregateFunction("unique", new Opt(f)); :}
+    | IDENTIFIER.i LPAREN sql_tuple_scalar_function.f RPAREN
+            {: return new SqlAggregateFunction(i, new Opt(f)); :}
+    ;
+
+List sql_grouping_attributes =
+    GROUP BY sql_attr_ref_list.a {: return a; :}
+    |                            {: return new List(); :}
+    ;
+
+List sql_ordering_attributes =
+    ORDER BY sql_ordering_attribute_list.l {: return l; :}
+    |                                      {: return new List(); :}
+    ;
+
+List sql_ordering_attribute_list =
+    sql_ordering_attribute.a    {: return new List().add(a); :}
+    | sql_ordering_attribute_list.l COMMA sql_ordering_attribute.a
+        {: return l.add(a); :}
+    ;
+
+SqlOrderingAttribute sql_ordering_attribute =
+    data_exp.e ASC     {: return new SqlOrderingAttribute(e, true); :}
+    | data_exp.e DESC  {: return new SqlOrderingAttribute(e, false); :}
+    | data_exp.e       {: return new SqlOrderingAttribute(e, true); :}
+    ;
+
+AsyncCall async_call =
+	THIS.callee BANG IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new AsyncCall(new ThisExp(), method,params) ; :}
+	| pure_exp_prefix.callee BANG IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new AsyncCall(callee,method,params) ; :}
+	;
+
+AwaitAsyncCall await_async_call =
+	AWAIT THIS.callee BANG IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new AwaitAsyncCall(new ThisExp(), method,params) ; :}
+	| AWAIT pure_exp_prefix.callee BANG IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new AwaitAsyncCall(callee,method,params) ; :}
+	;
+
+
+SyncCall sync_call =
+	THIS.callee DOT IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new SyncCall(new ThisExp(),method,params) ; :}
+	| pure_exp_prefix.callee DOT IDENTIFIER.method LPAREN data_exp_list.params? RPAREN {: return new SyncCall(callee,method,params) ; :}
+	;
+
+OriginalCall original_call =
+        ORIGINAL LPAREN data_exp_list.params? RPAREN {: return new OriginalCall(params); :}
+        | delta_id.delta DOTORIGINAL LPAREN data_exp_list.params? RPAREN {: return new TargetedOriginalCall(delta, params); :}
+        | CORE DOTORIGINAL LPAREN data_exp_list.params? RPAREN {: return new TargetedOriginalCall(new DeltaID("core"), params); :}
+        ;
+
+DeltaID delta_id =
+	TYPE_IDENTIFIER.delta {: return new DeltaID(delta); :}
+;
+        
+// Needed to support auto-completion in the Eclipse IDE
+IncompleteExp incomplete_exp =
+      pure_exp_prefix.callee DOT.d IDENTIFIER.method? {:
+        if (!allowIncompleteExpr) {
+           addSyntaxError("Missing method call.",callee);
+        }
+        return new IncompleteSyncAccess(callee);
+      :}
+    | pure_exp_prefix.callee BANG.b IDENTIFIER.method? {:
+        if (!allowIncompleteExpr) {
+            addSyntaxError("Missing method call.",callee);
+        }
+        return new IncompleteAsyncAccess(callee);
+        :}
+    | NEW cog.c? {: return new IncompleteNewExp(c) ; :}
+
+;
+
+
+Stmt stmt =
+      annotation_list.al? compound_stmt.s {:
+        s.setAnnotationList(al); return s;
+      :}
+    | annotation_list.al? stmt_without_annotations.s SEMICOLON {:
+        s.setAnnotationList(al); return s;
+      :}
+    | annotation_list.al? stmt_without_annotations.s error.e {:
+        if (!allowIncompleteExpr) {
+            addSyntaxError("Missing semicolon",s);
+        }
+        s.setAnnotationList(al);
+        return new IncompleteStmt(new List(), s);
+      :}
+;
+
+Stmt stmt_without_annotations =
+       var_or_field_ref.r ASSIGN exp.e        {: return new AssignStmt(new List(),r,e) ; :}
+	|  AWAIT guard  {: return new AwaitStmt(new List(), guard) ; :}
+	|  SKIP         {: return new SkipStmt(new List()) ; :}
+	|  MOVECOGTO data_exp  {: return new MoveCogToStmt(new List(), data_exp) ; :}
+	|  SUSPEND      {: return new SuspendStmt(new List()) ; :}
+    |  DURATION LPAREN data_exp.min COMMA data_exp.max RPAREN {: return new DurationStmt(new List(), min, max) ; :}
+    |  RETURN exp.e        {: return new ReturnStmt(new List(),e) ; :}
+	|  var_decl.vd  {: return new VarDeclStmt(new List(),vd) ; :}
+    |  ASSERT data_exp.e  {: return new AssertStmt(new List(), e) ; :}
+	|  eff_exp.e    {: return new ExpressionStmt(new List(), e) ; :}
+	| REBIND exp.obj COLON IDENTIFIER.field ASSIGN exp.e  {: return new RebindStmt(new List(), obj,field,e);                /* Component */ :} 
+	| REBIND IDENTIFIER.field ASSIGN exp.e                {: return new RebindStmt(new List(), new VarUse("this"),field,e); /* Component */ :} 
+	| SUBLOC pure_exp.sub IN pure_exp.father              {: return new MoveStmt(new List(), sub,father);                   /* Component */ :}
+	;
+
+Stmt compound_stmt =
+       if_then_else_stmt
+    |  while_stmt
+    |  block_without_annotations
+;
+
+Block block =
+    annotation_list.al? block_without_annotations.b {:
+        b.setAnnotationList(al);
+        return b;
+    :}
+;
+
+Block block_without_annotations =
+    LBRACE stmt_list.s?  RBRACE {: return new Block(new List(), s) ; :}
+    ;
+
+IfStmt if_then_else_stmt =
+	IF LPAREN data_exp.e1 RPAREN stmt.s1 ELSE stmt.s2 {: return new IfStmt(new List(),e1,s1,new Opt(s2)) ; :}
+	| IF LPAREN data_exp.e1 RPAREN stmt.s1 {: return new IfStmt(new List(),e1,s1,new Opt()); :}
+	;
+
+WhileStmt while_stmt =
+	WHILE LPAREN data_exp.e1 RPAREN stmt.s1  {: return new WhileStmt(new List(),e1,s1) ; :}
+	;
+
+List stmt_list =
+    stmt.i                              {: return new List().add(i); :}
+    | stmt_list.l stmt.i        {: return l.add(i); :}
+	;
+
+
+Guard guard =
+      var_or_field_ref.r QMARK        {: return new ClaimGuard(r) ; :}
+    | DURATION LPAREN data_exp.min COMMA data_exp.max RPAREN {: return new DurationGuard(min, max) ; :} 
+    | data_exp.e    {: return new ExpGuard(e) ; :}
+    | guard.g1 GUARDAND guard.g2 {: return new AndGuard(g1,g2) ; :}
+    | BAR exp.e BAR {: return new ObjectGuard(e); /* Component */ :}
+    ;
+
+
+
+ProductLine product_line =
+    PRODUCTLINE TYPE_IDENTIFIER.id SEMICOLON
+    optfeature_list.o
+    corefeature_list.c
+    deltaclause_list.d
+    {: return new ProductLine(id, o, c, d); :}
+    ;
+
+List optfeature_list = {: return new List(); :}
+    | OPTFEATURES feature_list.l SEMICOLON {: return l; :}
+    ;
+
+List corefeature_list = {: return new List(); :}
+    | COREFEATURES feature_list.l SEMICOLON {: return l; :}
+    ;
+
+List feature_list = feature.f {: return new List().add(f); :}
+    | feature_list.l COMMA feature.f {: return l.add(f); :}
+    ;
+
+Feature feature = TYPE_IDENTIFIER.id attr_assignments.attrs? {: return new Feature(id, attrs); :}
+                | TYPE_IDENTIFIER.id PRIME attr_assignments.attrs? {: return new Feature("$"+id, attrs); :} ;
+                // allow writing feat' to refer to the intermediate feature "$feat"
+
+//List attr_decls = LBRACE param_decl_list.f? RBRACE {: return f; :};
+
+List attr_assignments = LBRACE attr_assignment_list.l RBRACE {: return l; :};
+List attr_assignment_list  = attr_assignment.a {: return new List().add(a); :}
+    | attr_assignment_list.l COMMA attr_assignment.a {: return l.add(a); :}
+    ;
+
+AttrAssignment attr_assignment = 
+    IDENTIFIER.n ASSIGN INTLITERAL.i  {: return new AttrAssignment(n, new IntVal(Integer.parseInt((String)i))); :}
+    | IDENTIFIER.n ASSIGN TYPE_IDENTIFIER.c {: // hack...
+        if (c.equals("True")) return new AttrAssignment(n, new BoolVal(true));
+        else return new AttrAssignment(n, new BoolVal(false)); :}
+    ;
+
+List deltaclause_list = {: return new List(); :}
+    | deltaclause_list.l delta_clause.dc
+      SEMICOLON {: return l.add(dc); :};
+
+DeltaClause delta_clause = 
+	DELTA deltaspec.d after_condition.a? from_condition.f? when_condition.w?
+			{: return new DeltaClause(d, a, f, w); :}
+;
+      
+/*| deltaclause_list.l DELTA deltaspec.d when_condition.w?
+      SEMICOLON {: return l.add(new DeltaClause(d, new List(), w)); :};
+    | deltaclause_list.l DELTA deltaspec.d after_condition.a when_condition.w?
+      SEMICOLON {: return l.add(new DeltaClause(d, a, w)); :};
+*/
+
+List after_condition = AFTER delta_list.l {: return l; :} ;
+
+DeltaID delta = TYPE_IDENTIFIER.id {: return new DeltaID(id); :} ;
+
+List delta_list = delta.id {: return new List().add(id); :}
+    | delta_list.l COMMA delta.id {: return l.add(id); :}
+    ;
+
+// FCL
+// A delta specification is a name + an optional list of feature attributes or "has" parameters
+// FIXME: support "hasMethod"/"hasAttribute" parameters
+Deltaspec deltaspec = TYPE_IDENTIFIER.id deltaparams.params? {: return new Deltaspec(id, params); :} ;
+
+List deltaparams = LPAREN deltaparam_list.l RPAREN {: return l; :};
+
+List deltaparam_list = deltaparam.p {: return new List().add(p); :}
+    | deltaparam_list.l COMMA deltaparam.p {: return l.add(p); :}
+    ;
+
+// TODO: accept feature, attributes, or constants (DataExp).
+// CID | FID.aid | CONSTANT
+Deltaparam deltaparam =
+      TYPE_IDENTIFIER.fid DOT IDENTIFIER.aid {: return new FIDAID(fid, aid); :}
+    | INTLITERAL.i {: return new Const(new IntVal(Integer.parseInt((String)i))); :}
+    | TYPE_IDENTIFIER.c {: // hack...
+        if (c.equals("True")) return new Const(new BoolVal(true));
+        else if (c.equals("False")) return new Const(new BoolVal(false));
+	else return new FID(c); :}
+    ;
+
+// Application conditions
+AppCond from_condition = FROM appcond.ac {: return ac; :};
+AppCond when_condition = 
+    WHEN appcond.ac {: return ac; :}
+    | TO appcond.ac {: return ac; :}
+    ;
+AppCond appcond = or_appcond;
+
+AppCond or_appcond = and_appcond
+    | or_appcond.ac1 OROR and_appcond.ac2 {: return new AppCondOr(ac1, ac2); :}
+    ;
+    
+AppCond and_appcond = factor_appcond
+    | and_appcond.ac1 ANDAND factor_appcond.ac2 {: return new AppCondAnd(ac1, ac2); :}
+    ;
+
+AppCond factor_appcond = feature.f {: return new AppCondFeature(f.getName()); :}
+    | NEGATION factor_appcond.ac {: return new AppCondNot(ac); :}
+    | LPAREN appcond.ac RPAREN {: return ac; :}
+    ; 
+
+// PSL - Product selection language
+
+List product_list = product.p {: return new List().add(p); :}
+    | product_list.l product.p {: return l.add(p); :}
+    ;
+
+
+Product product = PRODUCT TYPE_IDENTIFIER.id LPAREN feature_list.l? RPAREN SEMICOLON {: return new Product(id, l, new List()); :} 
+    | PRODUCT TYPE_IDENTIFIER.id LPAREN feature_list.l? RPAREN LBRACE adaptation_list.al RBRACE {: return new Product(id, l, al); :}
+    ;
+
+List adaptation_list = adaptation.ad {: return new List().add(ad); :}
+    | adaptation_list.l adaptation.ad {: return l.add(ad); :}
+    ;
+
+ProductAdaptation adaptation = TYPE_IDENTIFIER.product BY TYPE_IDENTIFIER.update SEMICOLON 
+    {: return new ProductAdaptation(product, update); :}
+    ;
+
+// TODO define what a state update actually is
+//stateupdate = UPDATE TYPE_IDENTIFIER.id SEMICOLON {: return new StateUpdate(id); :};
+
+
+/////////////////////////////////////////
+// mTVL language: roots and extensions //
+/////////////////////////////////////////
+
+FeatureModelDecl featuremodeldecl =
+	{: return new FeatureModelDecl(new List(), new List()); :}
+  | featuremodeldecl.l ROOT feature_decl.f {: l.addFeatureDecl(f); return l; :}
+  | featuremodeldecl.l EXTENSION fextension.ext {: l.addFExt(ext); return l; :}
+  ;	
+
+// deprecated
+//List fextension_list =
+//    {: return new List(); :}
+//  | fextension_list.l EXTENSION fextension.ext {: return l.add(ext); :}
+//  ;
+
+FExt fextension = TYPE_IDENTIFIER.f LBRACE group.g? attribute_constraint_list.acl RBRACE
+             {: return new FExt(f, g, acl); :} ;
+
+// deprecated
+//List rootfeature_list =
+//    {: return new List(); :}
+//  | rootfeature_list.l ROOT feature_decl.f {: return l.add(f); :}
+//  ;
+
+FeatureDecl feature_decl =
+    TYPE_IDENTIFIER.f
+        {: return new FeatureDecl(f,new Opt(),new AttrConstraints(new List(),new List())); :}
+  | TYPE_IDENTIFIER.f LBRACE group.g? attribute_constraint_list.acl RBRACE
+        {: return new FeatureDecl(f, g,acl); :}
+  ;
+
+Group group = GROUP cardinality.c LBRACE fnode_list.fs RBRACE
+        {: return new Group (c,fs); :} ;
+
+List fnode_list =
+    fnode.f                    {: return new List().add(f); :}
+  | fnode_list.l COMMA fnode.f {: return l.add(f); :}
+  |                            {: return new List(); :}
+  ;
+
+FNode fnode
+  = feature_decl.f     {: return new MandFeat(f); :} 
+  | OPT feature_decl.f {: return new OptFeat(f); :}
+  ;
+
+Cardinality cardinality
+  = ONEOF  {: return new CRange(1,1); :}
+  | ALLOF  {: return new AllOf(); :}
+  | LBRACKET INTLITERAL.i UNTIL MULT RBRACKET
+           {: return new Minim(Integer.parseInt(i)); :}
+  | LBRACKET INTLITERAL.i1 UNTIL INTLITERAL.i2 RBRACKET
+           {: return new CRange(Integer.parseInt(i1)
+                               ,Integer.parseInt(i2)); :}
+  ;
+
+BoundaryInt boundary_int
+  = MULT          {: return new Limit(); :}
+  | INTLITERAL.i  {: return new BoundaryVal(Integer.parseInt(i)); :}
+  | MINUS INTLITERAL.i
+                  {: return new BoundaryVal((-1)*Integer.parseInt(i)); :}
+  ;
+
+List int_list
+  = INTLITERAL.i {: return new List().add(new BoundaryVal(Integer.parseInt(i))); :}
+  |	int_list.il COMMA INTLITERAL.i {: return il.add(new BoundaryVal(Integer.parseInt(i))); :}
+  | MINUS INTLITERAL.i {: return new List().add(new BoundaryVal((-1)*Integer.parseInt(i))); :}
+  |	int_list.il COMMA MINUS INTLITERAL.i {: return il.add(new BoundaryVal((-1)*Integer.parseInt(i))); :}
+  ;
+
+
+
+// need to merge attributes and constraints, to distinguish between the cases when first
+// TYPE_IDENTIFIER is a type (attribute) and a feature (constraint)  
+AttrConstraints attribute_constraint_list
+  =   {: return new AttrConstraints(new List(),new List()); :}
+  /* Attributes */
+  | attribute_constraint_list.acl 
+    TYPE_IDENTIFIER.t IDENTIFIER.id IN LBRACE int_list.il RBRACE SEMICOLON
+	{: Symbol curr_sym = _symbols[offset + 1];
+	  if (!(t.equals("Int"))) {
+	   addSyntaxError("Unknown attribute type '"+t+"'",curr_sym); // TEST THIS
+	  }
+	  List al = acl.getAttributes().add(new Attribute(id, new IntListType(il)));
+	  List cl = acl.getConstrs();
+	  return new AttrConstraints(al,cl);
+	  //return new Attribute(id,new IntType(b1,b2));      
+   :}
+  | attribute_constraint_list.acl 
+    TYPE_IDENTIFIER.t IDENTIFIER.id IN LBRACKET boundary_int.b1 UNTIL boundary_int.b2 RBRACKET SEMICOLON
+      {: Symbol curr_sym = _symbols[offset + 1];
+         if (!(t.equals("Int"))) {
+           addSyntaxError("Unknown attribute type '"+t+"'",curr_sym); // TEST THIS
+         }
+         List al = acl.getAttributes().add(new Attribute(id,new IntType(b1,b2)));
+         List cl = acl.getConstrs();
+         return new AttrConstraints(al,cl);
+         //return new Attribute(id,new IntType(b1,b2));      
+       :}
+  | attribute_constraint_list.acl 
+    TYPE_IDENTIFIER.t LBRACKET boundary_int.b1 UNTIL boundary_int.b2 RBRACKET IDENTIFIER.id SEMICOLON
+      {: Symbol curr_sym = _symbols[offset + 1];
+         if (!(t.equals("Int"))) {
+           addSyntaxError("Unknown attribute type '"+t+"'",curr_sym); // TEST THIS
+         }
+         List al = acl.getAttributes().add(new Attribute(id,new IntType(b1,b2)));
+         List cl = acl.getConstrs();
+         return new AttrConstraints(al,cl);
+         //return new Attribute(id,new IntType(b1,b2));
+      :}
+  | attribute_constraint_list.acl 
+    TYPE_IDENTIFIER.t IDENTIFIER.id SEMICOLON
+      {: Symbol curr_sym = _symbols[offset + 1];
+         List al = acl.getAttributes();
+         List cl = acl.getConstrs();
+         if (t.equals("Int")) {
+            al = al.add(new Attribute(id,new IntType(new Limit(), new Limit())));
+            //return new Attribute(id,new IntType(new Limit(), new Limit()));
+         }
+         else if (t.equals("Bool")) {
+            al = al.add(new Attribute(id, new BoolType()));
+            //return new Attribute(id, new BoolType());
+         }
+         else {
+            addSyntaxError("Unknown attribute type '"+t+"'",curr_sym); // TEST THIS
+            //return new Attribute(id,new BoolType());
+         }
+         return new AttrConstraints(al,cl);
+       :}
+  /* Constraints */     
+  | attribute_constraint_list.acl IFIN  COLON mexp.e SEMICOLON 
+      {: return new AttrConstraints(acl.getAttributes(),acl.getConstrs().add(new IfIn(e))); :}
+  | attribute_constraint_list.acl IFOUT COLON mexp.e SEMICOLON
+      {: return new AttrConstraints(acl.getAttributes(),acl.getConstrs().add(new IfOut (e))); :}
+  | attribute_constraint_list.acl EXCLUDE COLON featvar.f SEMICOLON
+      {: return new AttrConstraints(acl.getAttributes(),acl.getConstrs().add(new Exclude(f))); :}
+  | attribute_constraint_list.acl REQUIRE COLON featvar.f SEMICOLON
+      {: return new AttrConstraints(acl.getAttributes(),acl.getConstrs().add(new Require(f))); :}
+  | attribute_constraint_list.acl mexp.e SEMICOLON 
+      {: return new AttrConstraints(acl.getAttributes(),acl.getConstrs().add(new IfIn(e))); :}
+  ;
+
+
+
+FeatVar featvar = TYPE_IDENTIFIER.f {: return new FeatVar(f); :} ;
+
+MExp mexp
+  = mand_exp
+  | mexp.e1 OROR mand_exp.e2 {: return new MOrBoolExp(e1,e2); :};
+
+MExp mand_exp
+  = mimpl_exp
+  | mand_exp.e1 ANDAND mimpl_exp.e2 {: return new MAndBoolExp(e1,e2); :};
+
+MExp mimpl_exp
+  = meq_exp
+  | mimpl_exp.e1 IMPLIES meq_exp.e2{: return new MImpliesExp(e1,e2); :}
+  | mimpl_exp.e1 EQUIV   meq_exp.e2{: return new MEquivExp(e1,e2); :};
+
+MExp meq_exp
+  = mrel_exp
+  | meq_exp.e1 EQEQ  mrel_exp.e2 {: return new MEqExp(e1,e2); :}
+  | meq_exp.e1 NOTEQ mrel_exp.e2 {: return new MNotEqExp(e1,e2); :};
+
+MExp mrel_exp
+  = madd_exp
+  | mrel_exp.e1 LT     madd_exp.e2 {: return new MLTExp(e1,e2); :}
+  | mrel_exp.e1 GT     madd_exp.e2 {: return new MGTExp(e1,e2); :}
+  | mrel_exp.e1 LTEQ   madd_exp.e2 {: return new MLTEQExp(e1,e2); :}
+  | mrel_exp.e1 GTEQ   madd_exp.e2 {: return new MGTEQExp(e1,e2); :};
+
+MExp madd_exp
+  = mmult_exp.e {: return e; :}
+  | madd_exp.e1 PLUS   mmult_exp.e2 {: return new MAddAddExp(e1,e2); :}
+  | madd_exp.e1 MINUS  mmult_exp.e2 {: return new MSubAddExp(e1,e2); :};
+
+MExp mmult_exp
+  = mfactor_exp.e {: return e; :}
+  | mmult_exp.e1 MULT   mfactor_exp.e2 {: return new MMultMultExp(e1,e2); :}
+  | mmult_exp.e1 DIV    mfactor_exp.e2 {: return new MDivMultExp(e1,e2); :}
+  | mmult_exp.e1 MOD    mfactor_exp.e2 {: return new MModMultExp(e1,e2); :};
+
+MExp mfactor_exp
+  = mlit_exp
+  | NEGATION mfactor_exp.e  {: return new MNegExp(e); :}
+  | MINUS    mfactor_exp.e  {: return new MMinusExp(e); :}
+  | LPAREN mexp.e  RPAREN   {: return e; :};
+
+MExp mlit_exp
+  = INTLITERAL.i        {: return new MValue(new IntVal(Integer.parseInt(i))); :}
+  | IDENTIFIER.id       {: return new AttVar(id); :}
+  | TYPE_IDENTIFIER.f DOT IDENTIFIER.a      {: return new FAVar(f,a); :}
+  | TYPE_IDENTIFIER.id  {: if      (id.equals("True"))  return new MValue(new BoolVal(true));
+                           else if (id.equals("False")) return new MValue(new BoolVal(false));
+                           else                         return new FeatVar(id); :}
+  ;
+  
+
+// Local Variables:
+// tab-width: 4
+// End:
