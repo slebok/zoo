@@ -1,0 +1,102 @@
+% Overrides to preserve comments in Java
+% Jim Cordy, March 2001 (Rev Feb 2003)
+
+#pragma -comment
+
+% Can have comments as statements 
+redefine statement
+	...
+|	[comment_NL]
+end redefine
+
+% Can have comments as declarations
+redefine class_body_declaration
+	... 
+|	[comment_NL]
+end redefine
+
+redefine package_declaration
+	[repeat comment_NL] ...
+end redefine
+
+redefine import_declaration
+	...
+|	[comment_NL] 
+end redefine
+
+redefine type_declaration
+	...
+|	[comment_NL] 
+end redefine
+
+% Can have comments before initializers ...
+redefine variable_initializer
+	[repeat comment_NL] ...
+end redefine
+
+% ... or after initializers ...
+redefine variable_initializer
+	... [repeat comment_NL]
+end redefine
+
+% ... or before =initializers 
+redefine equals_variable_initializer
+	[repeat comment_NL] ...
+end redefine
+
+% Can have comments before formal parameters ...
+redefine formal_parameter
+	[repeat comment_NL] ...
+end redefine
+
+% ... or after formal parameters ...
+redefine formal_parameter
+	...  [repeat comment_NL]
+end redefine
+
+% ... or after a parameter list 
+redefine constructor_declarator
+	... [repeat comment_NL]
+end redefine
+
+redefine method_declarator
+	... [repeat comment_NL]
+end redefine
+
+% Can have comments before arguments ...
+redefine argument
+	[repeat comment_NL] ...
+end redefine
+
+% ... or after arguments ...
+redefine argument
+	...  [repeat comment_NL]
+end redefine
+
+% ... or after an argument list 
+redefine method_argument
+	... [repeat comment_NL]
+end redefine
+
+% Can have comments after an if condition
+redefine if_statement
+    'if '( [expression] ')	[repeat comment_NL]
+		[statement]
+	[opt else_clause]   [NL]
+end redefine
+
+% Can have comments on a block
+redefine block
+	[repeat comment_NL] ...
+end redefine
+
+% Can have comments before an expression
+redefine expression
+	[repeat comment_NL] ...
+end redefine
+
+% Need newlines after comments
+define comment_NL
+	[comment] [NL]
+end define
+

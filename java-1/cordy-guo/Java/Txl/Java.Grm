@@ -1,0 +1,712 @@
+% TXL Java 1.1 Basis Grammar
+% Copyright 2001 TXL Software Research Inc. and James R. Cordy
+
+% Adapted from the Java Language Specification, 2nd edition
+
+% Modified by Xinping Guo May 28, 2002
+%  -- Defined a new nonterminal type called "declared_name".
+%  -- "class_name", "interface_name", "variable_name" and "method_name" are "declared_name".
+%  -- Changed "reference" to "variable_name" in "catch_clause".
+%  -- In "constructor_declarator", changed "type_name" to "class_name".
+%  -- In "implements_clause", changed "class_name+" to "qualified_name+".
+%  -- Defined a new nonterminal type called "method_or_constructor_declaration".
+%  -- In "member_declaration", removed "field_declaration" and changed  
+%         "method_declaration" to "method_or_constructor_declaration".
+%  -- In "class_body_declaration", removed "constructor_declaration" and
+%         added "field_declaration".
+
+% Modified by Xinping Guo June 12, 2002
+%  The changes made expansion of dot notation much easier.
+%  -- Redefined "primary". Removed "primary_component" and "dot_primary_component"
+%  -- Redefined "subprimary".
+%  -- Removed "field_access", "method_invocation" and "constructor_invocation".
+%  -- Redefined "reference".
+%  -- Defined "component".
+%  -- Defined "method_argument".
+
+% Modified by Xinping Guo July 17, 2002
+%  -- Added [repeat component] after "( [expression] ') in defintion of primary.
+
+% Modified by Xinping Guo July 23, 2002
+%  -- Added 'strictfp in defintion of modifier.
+
+
+% Lexical conventions of Java 
+
+#pragma -width 128
+
+tokens
+    number    "\d+[LlFfDd]?"                                     % Java ints
+              + "[(\d+(.\d*))(.\d+)]([eE][+-]?\d+)?[LlFfDd]?"    % Java float constants
+              + "0[Xx][\dABCDEFabcdef]+[LlFfDd]?"                % Java hex constants
+end tokens
+
+comments
+    //
+    /*  */
+end comments
+
+compounds
+    !=  '%=  &&  &=  *=  ++  +=   --  -=  /=  ^=  |=  ||
+    <<  <<=  <=  ==  >=  >>  >>=  >>>  >>>=  
+end compounds
+
+
+% Removed this and super - XG June 19, 2002
+keys
+    'abstract 'boolean 'break 'byte 'case 'cast 'catch 'char 'class 'const 'continue
+    'default 'do 'double 'else 'extends 'false 'final 'finally 'float 'for 'future
+    'goto 'if 'implements 'import 'inner 'instanceof 'int 'interface 'long 
+    'native 'new 'null 'package 'private 'protected 'public 'return
+    'short 'static  'switch 'synchronized 
+     'throw 'throws 'transient 'true 'try 'void 'volatile 'while
+end keys
+
+
+% Syntax of Java 1.1 
+
+define program
+    [package_declaration]
+end define
+
+
+% Declarations
+
+define package_declaration
+    [opt package_header]
+    [repeat import_declaration] 
+    [repeat type_declaration]
+end define
+
+define package_header
+    'package [package_name] '; [NL][NL]
+end define
+
+define package_name
+    [qualified_name]
+end define
+
+define import_declaration
+    'import [imported_name] '; [NL][NL]
+end define
+
+define imported_name
+    [package_or_type_name] [opt dot_star]
+end define
+
+define package_or_type_name
+    [qualified_name]
+end define
+
+define dot_star
+    '. '*
+end define
+
+define declared_name
+   [reference]
+end define
+
+% Class and interface declarations
+
+define type_declaration
+        [class_declaration]      [NL][NL]
+    |   [interface_declaration]  [NL][NL]
+end define
+
+define class_declaration
+    [class_header] [class_body]
+end define
+
+define class_header
+    [repeat modifier] 'class [class_name] [opt extends_clause] [opt implements_clause]
+end define
+
+define class_body
+    [class_or_interface_body]
+end define
+
+define interface_declaration
+    [interface_header] [interface_body]
+end define
+
+define interface_header
+    [repeat modifier] 'interface [interface_name] [opt extends_clause] [opt implements_clause]
+end define
+
+define interface_body
+    [class_or_interface_body]
+end define
+
+define modifier
+        'abstract
+    |   'final
+    |   'public
+    |   'protected
+    |   'private
+    |   'static
+    |   'transient
+    |   'volatile
+    |   'native
+    |   'synchronized
+    |   'strictfp		% Added strictfp XG July 23, 2002
+end define
+
+define extends_clause
+    'extends [list type_name+]
+end define
+
+define implements_clause
+    'implements [list qualified_name+]
+end define
+
+define class_name
+    [declared_name]
+end define
+
+define interface_name
+    [declared_name]
+end define
+
+define class_or_interface_body
+    '{                                    [NL][IN]
+       [repeat class_body_declaration]    [EX]
+    '} [opt ';]                           [NL][NL]
+end define
+
+define class_body_declaration
+        [empty_declaration]
+    |   [member_declaration]
+    |   [instance_initializer]
+    |   [static_initializer]
+    |   [field_declaration] 
+end define
+
+define empty_declaration
+    '; [NL]
+end define
+
+define member_declaration
+       [method_or_constructor_declaration]
+    |  [type_declaration]     % [class_declaration] or [interface_declaration]
+end define
+
+define method_or_constructor_declaration
+        [method_declaration]
+    |   [constructor_declaration]
+end define
+
+define instance_initializer
+    [NL] [block]             [NL][NL]
+end define
+
+define static_initializer
+    [NL] 'static [block]     [NL][NL]
+end define
+
+define constructor_declaration
+    [NL] [repeat modifier] [constructor_declarator] [opt throws] [constructor_body] [NL][NL]
+end define
+
+define constructor_declarator
+    [class_name] '( [list formal_parameter] ')
+end define
+
+define constructor_body
+    [block] [NL]
+end define
+
+
+% Field declarations 
+
+define field_declaration
+    [variable_declaration]
+end define
+
+define variable_declaration
+    [repeat modifier] [type_specifier] [variable_declarators] '; [NL]
+end define
+
+define variable_declarators
+    [list variable_declarator+]
+end define
+
+define variable_declarator
+    [variable_name] [opt equals_variable_initializer]
+end define
+
+define variable_name
+    [declared_name][repeat dimension]
+end define
+
+define equals_variable_initializer
+    '= [variable_initializer]
+end define
+
+define variable_initializer
+        [expression]
+    |   [array_initializer]
+end define
+
+define array_initializer
+    '{ [list variable_initializer] [opt ',] '}
+end define
+
+
+% Method declarations 
+
+define method_declaration
+    [NL] [repeat modifier] [type_specifier] [method_declarator] [opt throws] [method_body]
+end define
+
+define method_declarator
+    [method_name] '( [list formal_parameter] ') [repeat dimension]    
+end define
+
+define method_name
+    [declared_name]
+end define
+
+define formal_parameter
+    [opt 'final] [type_specifier] [formal_parameter_name]
+end define
+
+define formal_parameter_name
+    [variable_name]
+end define
+
+define throws
+    'throws [list qualified_name+]
+end define
+
+define method_body
+        [block]        [NL][NL]
+    |   ';             [NL][NL]
+end define
+
+
+% Type specifiers
+
+define type_specifier
+        [type_name] 
+    |    [array_type_specifier] 
+end define
+
+define array_type_specifier
+    [type_name] [repeat dimension+]
+end define
+
+define type_name
+        [primitive_type]
+    |   [qualified_name]
+end define
+
+define primitive_type
+        'boolean
+    |   'char
+    |   'byte
+    |   'short
+    |   'int
+    |   'long
+    |   'float
+    |   'double
+    |   'void
+end define
+
+
+% Statements
+
+define block
+    '{                                        [NL][IN] 
+        [repeat declaration_or_statement]     [EX]
+    '}
+end define
+
+define declaration_or_statement
+        [local_variable_declaration] 
+    |   [class_declaration]
+    |   [statement]
+end define
+
+define local_variable_declaration
+    [variable_declaration]
+end define
+
+define statement
+        [label_statement]        
+    |   [empty_statement]
+    |   [expression_statement]
+    |   [if_statement]
+    |   [switch_statement]
+    |   [while_statement]
+    |   [do_statement]
+    |   [for_statement]
+    |   [break_statement]
+    |   [continue_statement]
+    |   [return_statement]
+    |   [throw_statement]
+    |   [synchronized_statement]
+    |   [try_statement]
+    |   [block]
+end define
+
+define empty_statement
+    ';                     [NL]
+end define
+
+define label_statement
+    [label_name] ':        [NL]
+end define
+
+define label_name
+    [reference]
+end define
+
+define expression_statement
+    [expression] ';        [NL]
+end define
+
+define if_statement
+    'if '( [expression] ')     
+        [statement]
+    [opt else_clause]      [NL]
+end define
+
+define else_clause
+    'else
+        [statement]
+end define
+
+define switch_statement
+    'switch '( [expression] ') [switch_block]  [NL]
+end define
+
+define switch_block
+    '{                                         [IN][NL]
+        [repeat switch_alternative]            [EX]
+    '} 
+end define
+
+define switch_alternative
+    [switch_label]                             [IN][NL]
+        [repeat declaration_or_statement]      [EX]
+end define
+
+define switch_label
+        'case [constant_expression] ':  
+    |   'default ':
+end define
+
+define while_statement
+    'while '( [expression] ') 
+        [statement]                            [NL]                         
+end define
+
+define do_statement
+    'do
+        [statement]
+    'while '( [expression] ') ';               [NL]
+end define
+
+define for_statement
+    'for '( [for_init] [for_expression] [for_update] ')
+        [statement]                            [NL]
+end define
+
+define for_init
+        [list expression] ';    
+    |   [local_variable_declaration]
+end define
+
+define for_expression
+    [opt expression] ';    
+end define
+
+define for_update
+    [list expression]
+end define
+
+define break_statement
+    'break [opt label_name] ';       [NL]
+end define
+
+define continue_statement
+    'continue [opt label_name] ';    [NL]
+end define
+
+define return_statement
+    'return [opt expression] ';      [NL]
+end define
+
+define throw_statement
+    'throw [expression] ';           [NL]
+end define
+
+define synchronized_statement
+    'synchronized '( [expression] ')
+        [statement]                  [NL]
+end define
+
+define try_statement
+    'try [block] [repeat catch_clause] [opt finally_clause]    [NL]
+end define
+
+define catch_clause
+%    'catch '( [type_specifier] [reference] ') [block] 
+    'catch '( [type_specifier] [variable_name] ') [block]  % July 15
+end define
+
+define finally_clause
+    'finally [block] 
+end define
+
+
+% Expressions
+
+define constant_expression
+    [expression]    % which is a constant
+end define
+
+define expression
+    [assignment_expression]
+end define
+
+define assignment_expression
+        [conditional_expression]
+    |   [unary_expression] [assignment_operator] [assignment_expression]    
+end define
+
+define assignment_operator
+        '=
+    |   '*=
+    |   '/=
+    |   '%=
+    |   '+=
+    |   '-=
+    |   '<<=
+    |   '>>=
+    |   '>>>=
+    |   '&=
+    |   '^=
+    |   '|=
+end define
+
+define conditional_expression
+    [conditional_or_expression] [opt conditional_choice]
+end define
+
+define conditional_choice
+    '? [expression] ': [conditional_expression]
+end define
+
+define conditional_or_expression
+    [conditional_and_expression] [repeat or_conditional_and_expression]
+end define
+
+define or_conditional_and_expression
+    '|| [conditional_and_expression]
+end define
+
+define conditional_and_expression
+    [inclusive_or_expression] [repeat and_inclusive_or_expression]
+end define
+
+define and_inclusive_or_expression
+    '&& [inclusive_or_expression]
+end define
+
+define inclusive_or_expression
+    [exclusive_or_expression] [repeat or_exclusive_or_expression]
+end define
+
+define or_exclusive_or_expression
+    '| [exclusive_or_expression]
+end define
+
+define exclusive_or_expression
+    [and_expression] [repeat or_and_expression]
+end define
+
+define or_and_expression
+    '^ [and_expression]
+end define
+
+define and_expression
+    [equality_expression] [repeat and_equality_expression]
+end define
+
+define and_equality_expression
+    '& [equality_expression]
+end define
+
+define equality_expression
+    [relational_expression] [repeat equality_op_relational_expression]
+end define
+
+define equality_op_relational_expression
+    [equality_op] [relational_expression]
+end define
+
+define equality_op
+    '== | '!=
+end define
+
+define relational_expression
+    [shift_expression] [repeat relational_op_shift_expression]
+end define
+
+define relational_op_shift_expression
+        [relational_op] [shift_expression]
+    |   'instanceof [type_specifier]
+end define
+
+define relational_op
+    '<  | '> | '<= | '>=
+end define
+
+define shift_expression
+    [additive_expression] [repeat shift_additive_expression]
+end define
+
+define shift_additive_expression
+    [shift_op] [additive_expression]
+end define
+
+define shift_op
+    '<< | '>> | '>>> 
+end define
+
+define additive_expression
+    [multiplicative_expression] [repeat add_op_multiplicative_expression]
+end define
+
+define add_op_multiplicative_expression
+    [add_op] [multiplicative_expression]
+end define
+
+define add_op
+    '+ | '- 
+end define
+
+define multiplicative_expression
+    [unary_expression] [repeat mult_op_unary_expression]
+end define
+
+define mult_op_unary_expression
+    [mult_op] [unary_expression]
+end define
+
+define mult_op
+    '* | '/ | '% 
+end define
+
+define unary_expression
+        [pre_inc_dec] [unary_expression]
+    |   [unary_op] [unary_expression]
+    |   [postfix_expression]
+    |   [cast_expression]
+end define
+
+define pre_inc_dec
+    '++ | '--
+end define
+
+define unary_op
+    '+ | '- | '~ | '!
+end define
+
+define cast_expression
+    '( [type_specifier] ') [unary_expression]
+end define
+
+define postfix_expression
+    [primary] [repeat post_inc_dec]
+end define
+
+define post_inc_dec
+    '++ | '--
+end define
+
+define subscript
+    '[ [expression] ']        
+end define
+
+define primary
+        [literal]
+    |   [reference]
+    |   '( [expression] ') [repeat component]
+    |   [class_instance_creation_expression]
+    |   [array_creation_expression]
+end define
+
+define literal
+        [numeric_literal]
+    |   [character_literal]
+    |   [string_literal]
+    |   [boolean_literal]
+    |   [null_literal]
+end define
+
+define numeric_literal
+    [number]
+end define
+
+define character_literal
+    [charlit]
+end define
+
+define string_literal
+    [stringlit]
+end define
+
+define boolean_literal
+        'true
+    |   'false
+end define
+
+define null_literal
+    'null
+end define
+
+define class_instance_creation_expression
+    'new [class_or_interface_name] '( [list argument] ') [opt class_body]
+end define
+
+define class_or_interface_name
+    [qualified_name]
+end define
+
+define array_creation_expression
+    'new [array_type_specifier] [opt array_initializer]
+end define
+
+define dimension
+    '[ [opt expression] ']
+end define
+
+define argument
+    [expression]
+end define
+
+define qualified_name
+    [reference]
+end define
+
+define reference
+    [id] [repeat component]
+end define
+
+define component
+     [dot_id]
+   | [method_argument]
+   | [subscript] 
+end define
+
+define method_argument
+   '( [list argument] ')   
+end define
+
+define dot_id
+    '. [id]
+end define
+
+% --- END ---
