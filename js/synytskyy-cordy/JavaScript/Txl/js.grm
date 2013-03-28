@@ -1,0 +1,562 @@
+% TXL Javascript Grammar
+% Version 2.5, March 2012
+% Original by Mykyta Synytskyy, July 2002
+
+% Copyright 2002-2012 Mykyta Synytskyy and James R. Cordy
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+%    Redistributions of source code must retain the above copyright notice, 
+%    this list of conditions and the following disclaimer.
+%    Redistributions in binary form must reproduce the above copyright notice,
+%    this list of conditions and the following disclaimer in the documentation
+%    and/or other materials provided with the distribution.
+%
+%    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+%    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+%    AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+%    AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+%    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%    POSSIBILITY OF SUCH DAMAGE.
+
+% Modification Log:
+% v2.5 B. Sayed, U. Victoria, March 2012
+% - added <<, >> and >>> to compound tokens
+% - changed [number] to include trailing decimal (5. and 5.e05) forms 
+
+% v2.4 J.R. Cordy, June 2011
+% - added handling of BOM headers
+% - added for each
+% - added constant declarations
+% - added class as primary
+% - refined token pattern for js_regexp
+
+% v2.3 J.R. Cordy, March 2011
+% - continued tuning for Widd's examples
+% - refined token pattern for js_regexp
+
+% v2.2 T.R. Dean, Feb 2011
+% - added instanceof
+% - removed int from keywords.
+
+% v2.1, J.R. Cordy, January 2011
+%    Added a number of observed non-standard forms, notably === and !==
+%    Added containment operator "in"
+%    Corrected handling of regexps
+
+% v2.0, J.R. Cordy, November 2010
+%    Updated and validated to conform to ECMAscript standard ECMA-262, 5th Edition, Dec 2009
+%    Changed to expression precedence grammar
+%    Aadded $ to identifiers
+%    Added object literals
+%    Added array literals
+
+% v1.0, M. Synytskyy, July 2002
+%    Initial revision for use in MSc research
+
+
+% Uncomment this line to parse and preserve comments in output source (BETA)
+% #define COMMENTS
+
+
+% JavaScript Lexical Conventions
+
+% JavaScript may have wide lines, allows $ and _ in identifiers, uses backslash escapes in strings
+#pragma -width 1024 -idchars '$_' -esc '\\'
+
+% Comments are /* */ and // to end of line
+comments
+    //
+    /* */
+end comments
+
+% If we are parsing and preserving comments, tell TXL
+#ifdef COMMENTS
+#pragma -comment
+#endif
+
+% Special JavaScript tokens - regular expressions, and hex numbers
+tokens
+    % this is very fragile - in reality Javascript regexps are context-dependent - JRC
+    js_regexp     "/[(\\/)(\\^)(\\)(^/)#[/\n]]*/[(gi)(ig)gi]?m?g?\:[.,;}\)\]( \))        \n]"  
+                | "/[(\\/)(\\^)(\\\\)(^/)#[/\n]]*/[(gi)(ig)gi]?m?g?\:[.,;}\)\]	\n]"  
+    js_hex_number "0[xX][0123456789abcdefABCDEF]+"
+    number        "\d+(.\d*)?([eE][+-]?\d+)?" 
+                | ".\d+([eE][+-]?\d+)?"
+    js_xml          "<document>"
+    js_endxml          "</document>"
+end tokens
+
+% handling of BOM headers
+include "bom.grm"        % don't ever edit that file!
+
+% Compound symbols of JavaScript
+compounds
+    % can't make /= a compound since it conflicts with js_regexp
+    == += -= *= ++ -- '%= != && || <= >=
+    <<= >>= >>>= &= ^= |= === !== << >> >>>
+end compounds
+
+% Keywords of JavaScript
+keys
+    abstract boolean break byte case catch 
+    % char 
+    class 
+    % const 
+    continue default do double else extends final finally 
+    float for 'function goto if implements 'import in instanceof 
+    % int
+    interface long native new package private protected public
+    return short static switch synchronized throw throws transient 
+    try var void while with
+end keys
+
+
+% JavaScript Programs
+
+define program
+    [js_program]
+end define
+
+define js_program
+    [repeat js_declaration_or_statement]
+end define
+
+define js_subscope
+    [repeat js_declaration_or_statement]
+end define
+
+define js_declaration_or_statement
+      [js_declaration] [NL]
+    | [opt js_label] [js_statement]   [NL]
+#ifdef COMMENTS
+    | [comment]        [NL]   
+#endif
+end define
+
+define js_label
+   [id] :
+end define
+
+
+% JavaScript Declarations
+
+% In the ECMA specification, semicolons are required - in practice they may not be
+define js_declaration
+      [js_variable_declaration] [opt ;]
+    | [js_constant_declaration] [opt ;]
+    | [js_function_declaration] [opt ;]
+end define
+
+define js_variable_declaration
+    'var [list js_variable_description] 
+end define
+
+define js_variable_description
+    [id] [opt js_variable_initialization]
+end define
+
+define js_variable_initialization
+    '= [js_assignment_expn]
+end define
+
+define js_constant_declaration
+    'const [list js_constant_description] 
+end define
+
+define js_constant_description
+    [id] [js_variable_initialization]
+end define
+
+define js_function_declaration
+    [NL]
+    'function [id] ( [list js_formal_parameter] )        [NL]
+    '{ [NL] [IN]
+        [js_subscope] [EX]
+    '}
+    [NL]
+end define
+
+define js_function_expn
+    'function [opt id] '( [list js_formal_parameter] ')  [NL]
+    '{ [NL] [IN]
+        [js_subscope] [EX]
+    '}
+end define
+
+define js_formal_parameter
+    [id]
+end define
+
+
+% JavaScript Expressions
+
+define js_expn 
+    [list js_assignment_expn+]
+end define
+
+define js_assignment_expn
+    [js_conditional_expn] [repeat assign_js_conditional_expn]
+end define
+
+define assign_js_conditional_expn
+    [js_assignment_op] [js_conditional_expn]
+end define
+
+define js_assignment_op
+    = | '*= | '/ [SPOFF] '= [SPON] | '%= | '+= | '-= | '<<= | '>>= | '>>>= | '&= | '^= | '|=
+end define
+
+define js_conditional_expn
+      [js_logical_or_expn] [opt js_conditional_clause]
+end define
+
+define js_conditional_clause
+    '? [js_assignment_expn] ': [js_assignment_expn]
+end define
+
+define js_logical_or_expn
+    [js_logical_and_expn] [repeat js_logical_or_logical_and_expn]
+end define
+
+define js_logical_or_logical_and_expn
+    '|| [js_logical_and_expn]
+end define
+
+define js_logical_and_expn
+    [js_bitwise_or_expn] [repeat js_logical_and_bitwise_or_expn]
+end define
+
+define js_logical_and_bitwise_or_expn
+    '&& [js_bitwise_or_expn]
+end define
+
+define js_bitwise_or_expn
+    [js_bitwise_xor_expn] [repeat js_bitwise_or_bitwise_xor_expn]
+end define
+
+define js_bitwise_or_bitwise_xor_expn
+    '| [js_bitwise_xor_expn]
+end define
+
+define js_bitwise_xor_expn
+    [js_bitwise_and_expn] [repeat js_bitwise_xor_bitwise_and_expn]
+end define
+
+define js_bitwise_xor_bitwise_and_expn
+    '^ [js_bitwise_and_expn]
+end define
+
+define js_bitwise_and_expn
+    [js_equality_expn] [repeat js_bitwise_and_equality_expn]
+end define
+
+define js_bitwise_and_equality_expn
+    '& [js_equality_expn]
+end define
+
+define js_equality_expn
+    [js_relational_expn] [repeat js_equality_op_relational_expn]
+end define
+
+define js_equality_op_relational_expn
+    [js_equality_op] [js_relational_expn]
+end define
+
+%T.D. according to http://timwhitlock.info/blog/2009/02/26/jparser-grammar/
+% instanceof is a relational operator
+
+define js_equality_op
+    '== | '!= | '=== | '!== | 'in | 'instanceof
+end define
+
+define js_relational_expn
+    [js_shift_expn] [repeat js_relational_op_shift_expn]
+end define
+
+define js_relational_op_shift_expn
+    [js_relational_op] [js_shift_expn]
+end define
+
+define js_relational_op
+    '< | '> | '<= | '>= 
+end define
+
+define js_shift_expn
+    [js_additive_expn] [repeat js_shift_op_additive_expn]
+end define
+
+define js_shift_op_additive_expn
+    [js_shift_op] [js_additive_expn]
+end define
+
+define js_shift_op
+    '<< | '>> | '>>>
+end define
+
+define js_additive_expn
+    [js_multiplicative_expn] [repeat js_additive_op_multiplicative_expn]
+end define
+
+define js_additive_op_multiplicative_expn
+    [js_additive_op] [js_multiplicative_expn]
+end define
+
+define js_additive_op
+    '+ | '-
+end define
+
+define js_multiplicative_expn
+    [js_unary_expn] [repeat js_multiplicative_op_unary_expn]
+end define
+
+define js_multiplicative_op_unary_expn
+    [js_multiplicative_op] [js_unary_expn]
+end define
+
+define js_multiplicative_op
+    '* | '/ | '%
+end define
+
+define js_unary_expn
+    [repeat js_unary_op] [js_postfix_expn]
+end define
+
+define js_unary_op
+    'delete | 'void | 'typeof | '++ | '-- | '+ | '- | '~ | '!
+end define
+
+define js_postfix_expn
+    [js_lefthand_side_expn] [opt js_postfix_op]
+end define
+
+define js_postfix_op
+    '++ | '--
+end define
+
+define js_lefthand_side_expn
+    [opt 'new] [js_member_expn]
+end define
+
+define js_member_expn
+      [js_primary_expn] [repeat js_selector]
+end define
+
+define js_selector
+      [js_arguments]
+    | [js_subscripts]
+    | [js_field_selector]
+end define
+
+define js_arguments
+    '( [list js_assignment_expn] ')
+end define
+
+define js_subscripts
+    '[ [js_expn] ']
+end define
+
+define js_field_selector
+    '. [id]
+end define
+
+define js_primary_expn 
+      'this
+    | 'class
+    | [id]
+    | [js_literal]
+    | [js_array_literal]
+    | [js_object_literal]
+    | [js_function_expn]
+    | '( [js_expn] ')
+end define
+
+define js_literal
+      'null
+    | 'true | 'false
+    | [js_numeric_literal]
+    | [js_string_literal]
+    | [js_regular_expn_literal]
+end define
+
+define js_numeric_literal
+      [number]
+    | [js_hex_number]
+end define
+
+define js_string_literal
+      [stringlit]
+    | [charlit]
+end define
+
+define js_regular_expn_literal
+    [js_regexp]
+end define
+
+define js_array_literal
+    '[ [list js_array_element] ']
+end define
+
+define js_array_element
+    [opt js_assignment_expn]
+end define
+
+define js_object_literal
+    '{ [list js_property_assignment] [opt ',] '}
+end define
+
+define js_property_assignment
+        [js_property_name] ': [js_expn]
+    |   'get [js_property_name] ( ) '{ [js_subscope] '}
+    |   'set [js_property_name] ( [js_property_set_parameter] ) '{ [js_subscope] '}
+end define
+
+define js_property_name
+        [id]
+    |   [js_string_literal]
+    |   [number]
+end define
+
+define js_property_set_parameter
+    [id]
+end define
+
+
+% JavaScript Statements
+
+% In the ECMA standard, semicolons are required - in practice they may not be
+define js_statement
+      [js_compound_statement] [opt ;]
+    | [js_expression_statement] [opt ;]
+    | [js_if_statement] [opt ;]
+    | [js_for_statement] [opt ;]
+    | [js_while_statement] [opt ;]
+    | [js_break_statement] [opt ;]
+    | [js_continue_statement] [opt ;]
+    | [js_return_statement] [opt ;]
+    | [js_with_statement] [opt ;]
+    | [js_switch_statement] [opt ;]
+    | [js_do_statement] [opt ;]
+    | [js_try_catch_statement] [opt ;]
+    | [js_throw_statement] [opt ;]
+    | [js_debugger_statement] [opt ;]
+    | [js_empty_statement]
+end define
+
+define js_empty_statement
+    ';
+end define
+
+define js_compound_statement
+    '{                            [NL] [IN]
+        [js_subscope]             [EX]
+     '}    
+end define
+
+define js_expression_statement
+    [not '{] [not 'function] [js_expn] 
+end define
+
+define js_if_statement
+    'if ( [js_expn] )             
+        [js_declaration_or_statement]           
+    [opt js_else_clause]
+end define
+
+define js_else_clause
+    'else                    
+        [js_declaration_or_statement]
+end define
+
+define js_for_statement
+    'for ( [list js_declaration_or_statement_no_nl] ; [opt js_expn] ; [opt js_expn] )     
+         [js_statement]    
+  |
+    'for ['each ?] ( [js_declaration_or_statement_no_nl] 'in [js_expn] )     
+         [js_statement]    
+end define
+
+define js_declaration_or_statement_no_nl
+    % exactly the same thing as a normal js_declaration_or_statement, but
+    % without the unparsing [NL] things, which break up the for loops.
+    [js_declaration] 
+  | [js_statement] 
+end define
+
+define js_while_statement
+    'while ( [js_expn] )
+        [js_statement]
+end define
+
+define js_break_statement
+    'break [opt id]
+end define
+
+define js_continue_statement
+    'continue [opt id]
+end define
+
+define js_return_statement
+    'return [opt js_expn] 
+end define
+
+define js_with_statement
+    'with '( [js_expn] ')
+        [js_statement]
+end define
+
+define js_switch_statement
+    'switch '( [js_expn] ') 
+    { [NL]
+        [repeat js_case_clause]
+    }
+end define
+
+define js_case_clause
+    [js_case_clause_value]      [NL][IN] 
+        [js_subscope]           [EX]
+end define
+
+define js_case_clause_value
+    'case [js_expn] ':
+  | 'default ':
+end define
+
+define js_do_statement
+    'do                          
+        [js_statement]
+    'while ( [js_expn]  )  
+end define
+
+define js_try_catch_statement
+    'try
+        [js_compound_statement]
+    [opt js_catch_clause]
+    [opt js_finally_clause]    
+end define
+
+define js_catch_clause
+    [NL] 'catch ( [id] )
+        [js_compound_statement]
+end define
+
+define js_finally_clause
+    [NL] 'finally
+        [js_compound_statement]
+end define
+
+define js_throw_statement
+    'throw [js_expn] 
+end define
+
+define js_debugger_statement
+    'debugger 
+end define
+
+% End of Grammar
+
