@@ -1,0 +1,657 @@
+%
+% Modula-3 Grammar for TXL-3
+% Copyright (C) 1997  Michel Dagenais (dagenais@vlsi.polymtl.ca)
+%
+% Adapted to TXL 10 by Jim Cordy, March 2001.
+%
+% This library is free software; you can redistribute it and/or
+% modify it under the terms of the GNU Library General Public
+% License as published by the Free Software Foundation; either
+% version 2 of the License, or (at your option) any later version.
+%
+% This library is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+% Library General Public License for more details.
+%
+% You should have received a copy of the GNU Library General Public
+% License along with this library; if not, write to the Free
+% Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+%
+% For more information on this program, contact Michel Dagenais at
+% dagenais@vlsi.polymtl.ca or Electrical Eng. Dept., Ecole Polytechnique
+% P.O. Box 6079, Station A, Montreal, Quebec, Canada, H3C 3A7.
+%
+
+%
+% This grammar was tested on libm3 and ui, which together comprise
+% almost 500 modules and interfaces.
+%
+% It has the following known limitations:
+%
+% - Pragmas are treated as comments
+%
+% - The Modula-3 syntax allows for ExtendedChar in TextLiteral and CharLiteral
+%   but these were not entered in the corresponding TXL stringlit and charlit
+%   token statements.
+%
+
+tokens
+  Number "[(\d+)(\d+_[\dabcdefABCDEF][\dabcdefABCDEF]*)(\d+.\d+(([EeDdXx]([+-]?)\d+)?))]"
+end tokens
+
+compounds
+  .. := <: <= => >=
+end compounds
+
+comments
+  (* *)
+  <* *>
+end comments
+
+keys
+  AND ANY ARRAY AS BEGIN BITS BRANDED BY CASE CONST DIV DO ELSE ELSIF END
+  EVAL EXCEPT EXCEPTION EXIT EXPORTS FINALLY FOR FROM GENERIC IF IMPORT IN 
+  INTERFACE LOCK LOOP METHODS MOD MODULE NOT OBJECT OF OR OVERRIDES 
+  PROCEDURE RAISE RAISES READONLY RECORD REF REPEAT RETURN REVEAL ROOT 
+  SET THEN TO TRY TYPE TYPECASE UNSAFE UNTIL UNTRACED VALUE VAR WHILE WITH
+end keys
+
+%define ReservedTypes
+%  ADDRESS BOOLEAN CARDINAL CHAR EXTENDED INTEGER LONGREAL MUTEX REAL REFANY 
+%  TEXT 
+%end define
+
+%define ReservedExpr
+%  ABS ADR ADRSIZE BITSIZE BYTESIZE CEILING DEC DISPOSE FALSE FIRST FLOAT 
+%  FLOOR INC ISTYPE LAST LOOPHOLE MAX MIN MOD NARROW NEW NIL NULL NUMBER ORD 
+%  ROUND SUBARRAY TRUE TRUNC TYPECODE VAL
+%end define
+
+define program
+  [Interface] | [Module] | [GInterface] | [GModule] | [IInterface] | [IModule]
+end define
+
+define Interface
+  [opt 'UNSAFE] 'INTERFACE [id] '; [NL] [NL]
+  [repeat Import] [repeat Decl] [NL] 'END [id] '. [NL]
+end define
+
+define IInterface
+  [opt 'UNSAFE] 'INTERFACE [id] '= [id] [GenActls] 'END [id] '. [NL]
+end define
+
+define Module
+  [opt 'UNSAFE] 'MODULE [id] [opt Exports] '; [NL] [NL]
+  [repeat Import] [Block] [id] '. [NL]
+end define
+
+define IModule
+  [opt 'UNSAFE] 'MODULE [id] [opt Exports] '= [id] [GenActls] 'END [id] 
+  '. [NL]
+end define
+
+define GInterface
+  'GENERIC 'INTERFACE [id] [GenFmls] '; [repeat Import] [repeat Decl] 
+  [NL] 'END [id] '. [NL]
+end define
+
+define GModule
+  'GENERIC 'MODULE [id] [GenFmls] '; [NL] [NL] 
+  [repeat Import] [Block] [id] '. [NL]
+end define
+
+define Exports
+  'EXPORTS [IdList]
+end define
+
+define Import
+   [AsImport] | [FromImport] [NL] [NL]
+end define
+
+define AsImport
+   'IMPORT [ImportItem] [repeat ComaImportItem] '; [NL] [NL]
+end define
+
+define ComaImportItem
+  ', [ImportItem]
+end define
+
+define FromImport
+   'FROM [id] 'IMPORT [IdList] '; [NL] [NL]
+end define
+
+define Block
+   [repeat Decl] 'BEGIN [Stmts] 'END 
+end define
+
+define Decl
+  [ProcedureHead] [opt EqualBlock] '; [NL] [NL]
+  | 'VAR [IN] [NL] [repeat VariableDecl] [EX]
+  | 'TYPE [IN] [NL] [repeat TypeDecl] [EX] [NL]
+  | 'CONST [IN] [NL] [repeat ConstDecl] [EX] [NL]
+  | 'EXCEPTION [IN] [NL] [repeat ExceptionDecl] [EX] [NL]
+  | 'REVEAL [IN] [NL] [repeat RevealDecl] [EX] [NL]
+end define
+
+define EqualBlock
+  '= [IN] [NL] [Block] [id] [EX]
+end define
+
+define GenFmls
+  '( [opt IdList] ') 
+end define
+
+define GenActls
+  '( [opt IdList] ') 
+end define
+
+define ImportItem
+   [id] [opt AsId] 
+end define
+
+define AsId
+  'AS [id]
+end define
+
+define ConstDecl
+  [id] [opt ColonType] '= [ConstExpr] '; [NL]
+end define
+
+define ColonType
+  ': [Type]
+end define
+
+define TypeDecl
+   [id] '= [Type] '; [NL] | 
+   [id] '<: [Type] '; [NL]
+end define
+
+define RevealDecl
+  [QualId] '= [Type] '; [NL] | 
+  [QualId] '<: [Type] '; [NL]
+end define
+
+define ExceptionDecl
+   [id] [opt ParenthesizedType] '; [NL]
+end define
+
+define ParenthesizedType
+  '( [Type] ')
+end define
+
+define VariableDecl
+   [IdList] [opt ColonType] [opt EqualExpr] '; [NL]
+end define
+
+define EqualExpr
+  ':= [Expr]
+end define
+
+define ProcedureHead
+   'PROCEDURE [id] [Signature] 
+end define
+
+define Signature
+  '( [opt Formals] ') [opt ColonType] [opt Raises] 
+end define
+
+define Raises
+  'RAISES [RaisesList]
+end define
+
+define Formals
+   [Formal] [repeat SemicolonFormal] [opt ';] 
+end define
+
+define SemicolonFormal
+  '; [Formal]
+end define
+
+define Formal
+   [opt Mode] [IdList] [opt ColonType] [opt EqualConstExpr] 
+end define
+
+define EqualConstExpr
+  ':= [ConstExpr]
+end define
+
+define Mode
+   'VALUE | 'VAR | 'READONLY 
+end define
+
+define RaisesList
+   '{ [list QualId] '} | 'ANY 
+end define
+
+% Statement productions
+
+define Stmts
+  [IN] [NL] [opt OptStmts] [EX]
+end define
+
+define OptStmts
+  [Stmt] [repeat SemiColonStmt] [opt ';] [NL]
+end define
+
+define SemiColonStmt
+  '; [NL] [Stmt]
+end define
+
+define Stmt
+  [IfStmt]
+  | [ForStmt]
+  | [ReturnStmt]
+  | [WhileStmt]
+  | [AssignStmt]
+  | [CallStmt]
+  | [Block]
+  | [CaseStmt]
+  | [ExitStmt]
+  | [EvalStmt]
+  | [LockStmt]
+  | [LoopStmt]
+  | [RaiseStmt]
+  | [RepeatStmt]
+  | [TypecaseStmt]
+  | [TryStmt]
+  | [WithStmt]
+end define
+
+define AssignStmt
+  [Expr] ':= [Expr]
+end define
+
+define CallStmt
+  [Expr] '( [list Actual] ')
+end define
+
+define CaseStmt
+  'CASE [Expr] 'OF [NL] [opt Case] [repeat VerticalCase] [opt ElseStmts] 'END
+end define
+
+define VerticalCase
+  '| [Case]
+end define
+
+define ElseStmts
+  'ELSE [Stmts]
+end define
+
+define ExitStmt
+  'EXIT
+end define
+
+define EvalStmt
+  'EVAL [Expr]
+end define
+
+define ForStmt
+  'FOR [id] ':= [Expr] 'TO [Expr] [opt ByExpr] 'DO [Stmts] 'END
+end define
+
+define ByExpr
+  'BY [Expr]
+end define
+
+define IfStmt
+  'IF [Expr] 'THEN [Stmts] [repeat Elsif] [opt ElseStmts] 'END
+end define
+
+define Elsif
+  'ELSIF [Expr] 'THEN [Stmts]
+end define
+
+define LockStmt
+  'LOCK [Expr] 'DO [Stmts] 'END
+end define
+
+define LoopStmt
+  'LOOP [Stmts] 'END
+end define
+
+define RaiseStmt
+  'RAISE [QualId] [opt ParenthesizedExpr]
+end define
+
+define ParenthesizedExpr
+  '( [Expr] ')
+end define
+
+define RepeatStmt
+  'REPEAT [Stmts] 'UNTIL [Expr]
+end define
+
+define ReturnStmt
+  'RETURN [opt Expr]
+end define
+
+define TypecaseStmt
+  'TYPECASE [Expr] 'OF [NL] [opt TCase] 
+      [repeat VerticalTCase] [opt ElseStmts] 'END
+end define
+
+define VerticalTCase
+  '| [TCase]
+end define
+
+define TryStmt
+  'TRY [Stmts] [ExceptOrFinally] 'END
+end define
+
+define ExceptOrFinally
+  'EXCEPT [NL] [opt Handler] [repeat VerticalHandler] [opt ElseStmts] |
+  'FINALLY [Stmts]
+end define
+
+define VerticalHandler
+  '| [Handler]
+end define
+
+define WhileStmt
+  'WHILE [Expr] 'DO [Stmts] 'END
+end define
+
+define WithStmt
+  'WITH [list Binding+] 'DO [Stmts] 'END
+end define
+
+define Case
+  [list Labels] '=> [Stmts] 
+end define
+
+define Labels
+   [ConstExpr] [opt DotDotConstExpr]
+end define
+
+define DotDotConstExpr
+  '.. [ConstExpr]
+end define
+
+define Handler
+   [list QualId] [opt ParenthesizedId] '=> [Stmts] 
+end define
+
+define ParenthesizedId
+  '( [id] ')
+end define
+
+define TCase
+   [list Type] [opt ParenthesizedId] '=> [Stmts] 
+end define
+
+define Binding
+   [id] '= [Expr] 
+end define
+
+define Actual
+   [Type] 
+   | [Expr] 
+   | [id] ':= [Expr] 
+end define
+
+% Type productions
+
+define Type
+  [TypeName]
+  | [ArrayType]
+  | [EnumerationType]
+  | [RecordType]
+  | [ObjectType]
+  | [ProcedureType]
+  | [RefType]
+  | [SetType]
+  | [SubrangeType]
+  | [PackedType]
+  | '( [Type] ')
+end define
+
+define ArrayType
+  'ARRAY [list Type] 'OF [Type]
+end define
+
+define PackedType
+  'BITS [ConstExpr] 'FOR [Type]
+end define
+
+define EnumerationType
+  '{ [opt IdList] '}
+end define
+
+define ObjectType
+  [opt ObjectOrTypeName] [opt Brand] 'OBJECT [IN] [NL] [Fields] 
+      [opt TheMethods] [opt TheOverrides] 'END [EX]
+end define
+
+define ObjectOrTypeName
+  [TypeName] | [ObjectType]
+end define
+
+define TheMethods
+  'METHODS [NL] [Methods]
+end define
+
+define TheOverrides
+  'OVERRIDES [NL] [Overrides]
+end define
+
+define ProcedureType
+  'PROCEDURE [Signature]
+end define
+
+define RecordType
+  'RECORD [IN] [NL] [Fields] 'END [EX]
+end define
+
+define RefType
+  [opt 'UNTRACED] [opt Brand] 'REF [Type]
+end define
+
+define SetType
+  'SET 'OF [Type]
+end define
+
+define SubrangeType
+  '[ [ConstExpr] '.. [ConstExpr] ']
+end define
+
+define Brand
+  'BRANDED [opt ConstExpr] 
+end define
+
+define Fields
+   [opt FieldList]
+end define
+
+define FieldList
+  [IN] [Field] [repeat SemiColonField] [opt ';] [EX] [NL]
+end define
+
+define SemiColonField
+  '; [NL] [Field]
+end define
+
+define Field
+   [IdList] [opt ColonType] [opt EqualConstExpr]
+end define
+
+define Methods
+   [opt MethodList]
+end define
+
+define MethodList
+  [IN] [Method] [repeat SemiColonMethod] [opt ';] [EX] [NL]
+end define
+
+define SemiColonMethod
+  '; [NL] [Method]
+end define
+
+define Method
+   [id] [Signature] [opt EqualConstExpr] 
+end define
+
+define Overrides
+   [opt OverrideList]
+end define
+
+define OverrideList
+  [IN] [Override] [repeat SemiColonOverride] [opt ';] [EX] [NL]
+end define
+
+define SemiColonOverride
+  '; [NL] [Override]
+end define
+
+define Override
+   [id] ':= [ConstExpr] 
+end define
+
+% Expression productions
+
+define ConstExpr
+  [Expr] 
+end define
+
+define Expr
+  [E1] [repeat OrE1]
+end define
+
+define OrE1
+  'OR [E1]
+end define
+
+define E1
+  [E2] [repeat AndE2]
+end define
+
+define AndE2
+  'AND [E2]
+end define
+
+define E2
+  [repeat'NOT] [E3]
+end define
+
+define E3
+   [E4] [repeat RelOpE4]
+end define
+
+define RelOpE4
+  [RelOp] [E4] 
+end define
+
+define E4
+   [E5] [repeat AddOpE5]
+end define
+
+define AddOpE5
+  [AddOp] [E5]
+end define
+
+define E5
+   [E6] [repeat MulOpE6]
+end define
+
+define MulOpE6
+  [MulOp] [E6] 
+end define
+
+define E6
+   [repeat SignOp] [E7]
+end define
+
+define E7
+  [E8] [repeat Selector] 
+end define
+
+define E8
+  [id] 
+  | [Number] 
+  | [charlit] 
+  | [stringlit] 
+  | '( [Expr] ')
+  | [Constructor]
+end define
+
+define SignOp
+  '+ | '-
+end define
+
+define RelOp
+   '= | '# | '< | '<= | '> | '>= | 'IN 
+end define
+
+define AddOp
+   '+ | '- | '& 
+end define
+
+define MulOp
+   '* | '/ | 'DIV | 'MOD 
+end define
+
+define Selector
+  '. [id]
+  | '[ [Expr] [repeat ComaExpr] ']
+  | '( [list Actual] ')
+  | '^ 
+end define
+
+define ComaExpr
+  ', [Expr]
+end define
+
+define Constructor
+  [Type] '{ [AnyCons] '}
+end define
+
+define AnyCons
+  [SetCons] | [RecordCons] | [ArrayCons]
+end define
+
+define SetCons
+  [list SetElt]
+end define
+
+define SetElt
+   [Expr] [opt DotDotExpr]
+end define
+
+define DotDotExpr
+  '.. [Expr] 
+end define
+
+define RecordCons
+   [list RecordElt]
+end define
+
+define RecordElt
+   [Expr] [opt EqualExpr] 
+end define
+
+define ArrayCons
+  [list Expr] [opt ComaDotDot]
+end define
+
+define ComaDotDot
+  ', '..
+end define
+
+% Miscellaneous productions
+
+define IdList
+   [list id]
+end define
+
+define QualId
+   [id] [opt DotId]
+end define
+
+define DotId
+  '. [id] 
+end define
+
+define TypeName
+   [QualId] | 'ROOT | 'UNTRACED 'ROOT 
+end define
+
