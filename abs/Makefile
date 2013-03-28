@@ -1,3 +1,6 @@
+extract:
+	rscs2bgf ABS.rsc grammar.bgf
+
 again:
 	# cat ABS.parser | sed 's/[A-Za-z]* \([a-z_]*\) =$/\1 =/' > abs.prepared.0
 	cp abs.prepared.0 abs.prepared.1

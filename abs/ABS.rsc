@@ -1,4 +1,4 @@
-@contributor{BGF2Rascal automated exporter - SLPS - http://github com/grammarware/slps/wiki/BGF2Rascal}
+@contributor{BGF2Rascal automated exporter - SLPS - http://github.com/grammarware/slps/wiki/BGF2Rascal}
 @contributor{Vadim Zaytsev - vadim@grammarware.net - CWI}
 @contributor{Stijn de Gouw - CWI, Leiden University}
 module lang::ABS
