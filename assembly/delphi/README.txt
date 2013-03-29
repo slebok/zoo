@@ -7,7 +7,7 @@ TXL Grammar for Borland Delphi 2006
 
 Jorge L. Cangas, December 2007
 
-You can include this in your TXL prpogramm if you use assembler in your delphi code.
+You can include this in your TXL program if you use assembler in your delphi code.
 Grammar is claimed to be extracted from Delphi documentation.
 
 For other information, consult the 'pascal/delphi' directory in topics/grammars.

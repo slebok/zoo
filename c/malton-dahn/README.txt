@@ -1,5 +1,6 @@
 http://www.txl.ca/nresources.html:
  ↳  http://www.txl.ca/examples/Grammars/C/README.txt
+   ↳  http://www.txl.ca/examples/Grammars/C/C.tar.gz
 
 Improved TXL Basis Grammar for C with GNU Extensions
 
@@ -11,7 +12,7 @@ Description:
     Can handle Gnu gcc extensions (or not).
     Can preserve comments (or not).
 
-Author:
+Authors:
     A. Malton
     C. Dahn
 

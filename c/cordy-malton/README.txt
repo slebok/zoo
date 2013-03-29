@@ -1,6 +1,7 @@
 http://www.txl.ca/nresources.html:
  ↳  http://www.txl.ca/examples/Grammars/C/README.txt
-   ↳  C.Grm
+   ↳  http://www.txl.ca/examples/Grammars/C/C.tar.gz
+     ↳  C.Grm
 
 TXL Base Grammar for ANSI and K+R C
 
@@ -20,5 +21,5 @@ but excluding:
 
 C and C++ style comments are accepted but not parsed.
 
-For other information, consult the malton-dahn sibling directory.
+For other information, consult the 'malton-dahn' sibling directory.
 Grammar extracted and added to the Grammar Zoo on 21 March 2013 by Vadim Zaytsev.

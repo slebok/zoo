@@ -1,6 +1,6 @@
 http://www.txl.ca/nresources.html:
  ↳  http://www.txl.ca/examples/Grammars/Ada/README.txt
-   ↳  https://github.com/bu2/ada-2005-txl-grammar/tree/master/txl
+   ↳  http://github.com/bu2/ada-2005-txl-grammar/tree/master/txl
 
 TXL Basis Grammar for Ada 2005
 Version 1.5, July 2010
