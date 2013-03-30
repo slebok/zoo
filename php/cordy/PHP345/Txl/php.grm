@@ -1,0 +1,892 @@
+% TXL Grammar for PHP 3,4,5
+% J.R. Cordy, Queen's University, June 2007 
+% Version 1.0, July 2011
+
+% After the SDF grammar for PHP by Eric Bouwers and Martin Bravenboer 
+% in PhpFront:  http://www.program-transformation.org/PHP/PhpFront
+
+% Copyright 2007,2011 by Eric Bouwers, Martin Bravenboer and James R. Cordy.
+
+% This grammar is provided free of charge for the use of individuals, companies
+% institutions on an as-is basis, in the hope that it may be useful, but without
+% any warranty, including without any implied warranty as to its merchantability
+% or suitability for any particular purpose.  In no event shall the copyright holders
+% or authors he held liable for any damage, however caused or arising in any way
+% out of the use of this grammar.
+
+% This is an analysis grammar for PHP versions 3,4 and 5 derived from the 
+% source above. It has been tested on several thousand examples from open source 
+% PHP applications including the entire Moodle source, but may still fail on
+% severely malformed examples.
+
+% Known limitations and bugs:
+%
+% 1. This grammar is known to fail on examples where HTML is interspersed in
+%    the middle of PHP statements.  This would be difficult to fix.
+%    Recommended workaround: edit to move split to statement boundary.
+%
+% 2. This grammar is intended primarily for analysis tasks and has not yet been 
+%    tuned for high fidelity transformations.  In particular it does not yet offer 
+%    the option of preserving comments and formatting.
+%
+% 3. PHP has the strange property that keywords are case insensitive but variable 
+%    names are not.  This grammar approximates this by ignoring case, which may 
+%    cause problems when transforming variables.  If the strict PHP rule is required, 
+%    use phpkw.txl as a preprocessor and then use this grammar with -nocase.
+
+% Maintenance Log:
+%
+% v1.0 J.R. Cordy, T.R. Dean, Queen's University, July 2011
+% - Corrected, unified and simplified ObjectCVar / ObjectFunctionCall subgrammar
+% - Guarded HTML fall-through to avoid misparses of PHP code 
+% - Added keywords as object property names.
+%
+% v0.5 J.R. Cordy, Queen's Unviersity, Feb 2009
+% - Reorganized to simplify grammar and remove redundant forms.
+% - Eliminated redefnes.
+%
+% v0.4 J.R. Cordy, Queen's Unviersity, Feb 2009
+% - Replaced entire Expr subgrammar with precedence grammar for PHP operator precedences.
+%
+% v0.3 J.R. Cordy, Queen's Unviersity, Feb 2009
+% - Updated to handle general <<< encapsed HTML using [push/pop id]  
+%
+% v0.2 M. Alalfi, Queen's Unviersity, Sept 2008
+% - Added . and .= operators, rationalized handling of $ variable names
+
+
+% Don't wrap output lines
+#pragma -width 32000
+
+% Ignore case - not quite right for variables
+#pragma -case
+
+% Lexical structure
+comments
+    /* */
+    '#
+end comments
+
+tokens
+    % Cannot use "comments" for this, since it may end at either end-of-line 
+    % or end-of-php - JRC July 11
+    comment     ... | "//#[\n(?>)]*"
+end tokens
+
+keys
+    'abstract 'and 'array 'as 'break 'case 'catch 'class 'continue
+    'declare 'default 'do
+    'echo 'else 'elseif 'enddeclare 'endfor 
+    'endforeach 'endif 'endswitch 'endwhile 'eval 'exit 'extends
+    'for 'foreach 'function 'global
+    'if 'include 'include_once 
+    'list 'new 'null 'or 'print 
+    'require 'require_once 'return
+    'static 'switch 'try 'unset
+    'var 'while 'xor
+    % PHP 4 only
+    'cfunction 'old_function
+    % Reserved, not really keywords
+    % '__CLASS__ '__FILE__ '__FUNCTION__ '__LINE__
+end keys
+
+
+% PHP Document structure
+
+define program
+        [Document]
+end define
+
+define Document
+        [PHPOpenTag?] [PHPSection] [PHPCloseTagDocumentSection?]
+    |   [HTMLSection] [PHPOpenTagPHPSection?] [PHPCloseTagDocumentSection?]
+end define
+
+define PHPCloseTagDocumentSection 
+        [PHPCloseTag] [HTMLSection] [PHPCloseTagDocumentSection?]
+end define
+
+define PHPOpenTagPHPSection
+        [PHPOpenTag] [PHPSection]
+end define
+
+define PHPSection
+        [TopStatement*] 
+end define
+
+compounds
+        <?php <? <% <?= 
+        ?> %>
+end compounds
+
+define PHPOpenTag
+        '<?php [NL] | '<? [NL] | '<% [NL] | '<?= [NL]  
+end define
+
+define PHPCloseTag
+        '?> [NL] | '%> [NL] 
+end define
+
+define HTMLSection
+        [InlineHTML] 
+end define
+
+define InlineHTML
+        [InlineHTMLtoken*]
+end define
+
+define InlineHTMLtoken
+        [not PHPOpenTag] [tag_token_or_key] 
+end define
+
+define tag_token_or_key
+        [tag] | '; [NL] | [not tag] [token] | [key]
+end define
+
+comments
+        <! >
+end comments
+
+define tag
+        '< [SPOFF] [bigtag_id] [repeat tag_attribute]'> [SPON] [IN] [NL] 
+    |   [EX] [FL] '< [SPOFF] '/ [bigtag_id] '> [SPON] [FL] 
+    |   '< [SPOFF] [opt '!] [id_or_key] [repeat tag_attribute]'> [SPON] [NL]
+    |   '< [SPOFF] '/ [id_or_key] '> [SPON] [NL]
+    |   '< [SPOFF] [id_or_key] [repeat tag_attribute]'/> [SPON] [NL]
+end define
+
+define bigtag_id
+        'html | 'body | 'head | 'form | 'table | 'tr | 'td | 'script | 'select | 'label | 'div
+end define
+
+define tag_attribute
+        [SP] [opt xml_colon] [id_or_key] '= [token]
+end define
+
+define xml_colon
+        'xml:
+end define
+
+define id_or_key
+        [id] [opt '-] [opt id] | [key]
+end define
+
+
+% Top level declarations and statements
+
+define TopStatement
+        [FunctionDecl] 
+    |   [ClassDecl]
+    |   [Statement]
+    |   [InterfaceDecl]
+end define
+
+define FunctionDecl
+        'function [opt '&] [id] '( [Param,] ')         [NL]
+        [Block]
+end define
+
+define ClassDecl
+        [ClassType] [id]         [NL]
+        [ExtendsClause?] 
+        [ImplementsClause?]         
+        '{                       [NL][IN]
+            [ClassMember*]       [EX]
+        '}                       [NL]
+end define
+
+define ClassType
+        'class
+    |   'abstract 'class
+    |   'final 'class
+end define
+
+define ExtendsClause
+        'extends [id]            [NL]
+end define
+
+define ImplementsClause
+        'implements [Name,+]     [NL]
+end define
+
+define Name
+        [id]
+end define
+
+define ClassMember
+        [VarModifiers?] [FunctionDecl] 
+    |   [VarModifiers?] 'abstract [VarModifiers?] 'function [opt '&] [id] '( [Param,] ') ';  [NL]
+    |   'var [InstanceVariable,+] ';             [NL]
+    |   'const [id] '= [StaticScalar] ';         [NL]
+    |   [VarModifiers] [InstanceVariable,+] ';   [NL]
+end define
+
+define InterfaceDecl
+        'interface [id]                 [NL]
+        [InterfaceExtendsClause?] 
+        '{                              [NL][IN]
+            [InterfaceMember*]          [EX][NL]
+        '}
+end define
+
+define InterfaceExtendsClause
+        'extends [Name,+]
+end define
+
+define InterfaceMember
+        [VarModifiers?] 'function [opt '&] [id] '( [Param,] ') '; [NL]
+end define
+
+define InstanceVariable
+        [TVariable] [opt EqualsStaticScalar]
+end define
+
+define TVariable
+        [SimpleVariableName]
+end define
+
+define EqualsStaticScalar
+        '= [StaticScalar]
+end define
+
+define VarModifiers
+        [VarModifier+]
+end define
+
+define VarModifier
+        'public | 'protected | 'private | 'static | 'final
+end define
+
+define Param
+        [opt TypeHint] [opt '&] [TVariable] [opt EqualsStaticScalar]
+    |   'const [TVariable]
+end define
+
+define TypeHint
+        [id]
+end define
+
+% Statements
+
+define Statement
+        [ExprStatement]
+    |   [BlockStatement]
+    |   [IfStatement]
+    |   [WhileStatement]
+    |   [DoStatement]
+    |   [ForStatement]
+    |   [SwitchStatement]
+    |   [ControlStatement]
+    |   [GlobalStaticStatement]
+    |   [UnsetStatement]
+    |   [EchoStatement]
+    |   [PrintStatement]
+    |   [InlineHTMLStatement]
+    |   [ForEachStatement]
+    |   [NullStatement]
+    |   [DeclareStatement]
+    |   [TryStatement]
+    |   [ThrowStatement]
+end define
+
+define ExprStatement
+        [Expr] [opt ';]            [NL]
+end define
+
+define BlockStatement
+        [Block]
+end define
+
+define Block
+        '{                         [NL][IN]
+            [TopStatement*]        [EX]
+        '}                         [NL]
+end define
+
+define IfStatement
+        'if '( [Expr] ')           [NL]
+            [Statement] 
+        [ElseIfStatement*] 
+        [ElseStatement?]
+    |   
+        'if '( [Expr] ') ':       [NL][IN]
+            [TopStatement*]       [EX]
+        [AltElseifStatement*] 
+        [AltElseStatement?] 
+        'endif ';                 [NL]
+end define
+
+define ElseIfStatement
+        'elseif '( [Expr] ')      [NL]
+            [Statement]
+end define
+
+define ElseStatement
+        'else                     [NL]
+            [Statement]
+end define
+
+define AltElseifStatement
+        'elseif '( [Expr] ') ':   [NL][IN]
+            [TopStatement*]       [EX]
+end define
+
+define AltElseStatement
+        'else ':                  [NL][IN]
+            [TopStatement*]       [EX]
+end define
+
+define WhileStatement
+        'while '( [Expr] ')       [NL]
+            [Statement]
+    |   
+        'while '( [Expr] ') ':    [NL][IN]
+            [TopStatement*]       [EX]
+        'endwhile ';              [NL]
+end define
+
+define DoStatement
+        'do                       [NL]
+            [Statement] 
+        'while '( [Expr] ') ';    [NL]
+end define
+
+define ForStatement
+        'for '( [Expr,] '; [Expr,] '; [Expr,] ')     [NL]
+            [Statement]
+    |   'for '( [Expr,] '; [Expr,] '; [Expr,] ') ':  [NL][IN]
+            [Statement*]                             [EX]
+        'endfor ';                                   [NL]
+end define
+
+define SwitchStatement
+        'switch '( [Expr] ')      [NL]
+            '{ [opt ';]           [NL][IN]
+            [Case*]               [EX]
+        '}                        [NL]
+    |   
+        'switch '( [Expr] ') ': [opt ';]     [NL][IN]
+            [Case*]                          [EX]
+        'endswitch ';                        [NL]
+end define
+
+define Case
+        'case [Expr] [CaseSeparator]         [NL][IN]
+            [TopStatement*]                  [EX]
+    |   'default [CaseSeparator]             [NL][IN]
+            [TopStatement*]                  [EX]
+end define
+
+define CaseSeparator
+        '; | ':
+end define
+
+define ControlStatement
+        'break [Expr?] ';         [NL]
+    |   'continue [Expr?] ';      [NL]
+    |   'return [Expr?] ';        [NL]
+end define
+
+define GlobalStaticStatement
+        'global [CVar,+] ';               [NL]
+    |   'static [StaticVariable,+] ';     [NL]
+end define
+
+define StaticVariable
+        [TVariable] [opt EqualsStaticScalar]
+end define
+
+define UnsetStatement
+        'unset '( [ObjectCVar,+] ') ';    [NL]
+end define
+
+define EchoStatement
+        'echo [Expr,+] [opt ';]           [NL]
+end define
+
+define PrintStatement
+        'print [Expr,+] [opt ';]          [NL]
+end define
+
+define InlineHTMLStatement
+            [PHPCloseTag] [InlineHTML] [PHPOpenTag]
+end define
+
+define ForEachStatement
+        'foreach '( [Expr] 'as [ForEachPattern] ')     [NL]
+            [Statement]
+    |   'foreach '( [Expr] 'as [ForEachPattern] ') ':  [NL][IN]
+            [Statement*]                               [EX]
+        'endforeach ';                                 [NL]
+end define
+
+define ForEachPattern
+        [ForEachKey?] [ForEachVar] 
+end define
+
+compounds
+        =>
+end compounds
+
+define ForEachKey
+        [ForEachVar] '=>
+end define
+
+define ForEachVar
+        [CVar]
+    |   '& [CVar]
+end define
+
+define NullStatement
+        ';  [NL]
+end define
+
+define DeclareStatement
+        'declare '( [Directive*] ')  [NL]
+            [Statement]
+end define
+
+define Directive
+        [id]
+end define
+
+define TryStatement
+        'try                         [NL]
+            [Block]
+            [Catch*]
+end define
+
+define Catch
+        'catch '( [id] [TVariable] ')    [NL]
+            [Block]
+end define
+
+define ThrowStatement
+        'throw [Expr] ';             [NL]
+end define
+
+
+% Expressions
+
+define Expr
+        [LogicalOrExpr]
+end define
+
+define LogicalOrExpr
+        [LogicalXorExpr] [repeat OrLogicalXorExpr]
+end define
+
+define OrLogicalXorExpr
+        'or [LogicalXorExpr]
+end define
+
+define LogicalXorExpr
+        [LogicalAndExpr] [repeat LogicalXorLogicalAndExpr]
+end define
+
+define LogicalXorLogicalAndExpr
+        'xor [LogicalAndExpr]
+end define
+
+define LogicalAndExpr
+        [AssignmentExpr] [repeat LogicalAndAssignmentExpr]
+end define
+
+define LogicalAndAssignmentExpr
+        'and [AssignmentExpr]
+end define
+
+define AssignmentExpr
+        [TernaryExpr] [repeat AssignOpAssignmentExpr]
+end define
+
+define AssignOpAssignmentExpr
+        [AssignOp] [AssignmentExpr]
+end define
+
+compounds
+        .= +=  -=  *=  /=  .=  '%= '&=  '|=  '^=  '<<=  '>>= 
+end compounds
+
+define AssignOp
+        '.= | '= | '+= | '-= | '*= | '/= |  '%= | '&= | '|= | '^= | '<<= | '>>= 
+    |    '=&         % intentionally NOT a compound - JRC
+end define
+
+define TernaryExpr
+        [ConditionalOrExpr] [repeat IfConditionalOrExpr]
+end define
+
+define IfConditionalOrExpr
+        '? [Expr] ': [Expr]
+end define
+
+define ConditionalOrExpr
+        [ConditionalAndExpr] [repeat ConditionalOrConditionalAndExpr]
+end define
+
+compounds
+        || && 
+end compounds
+
+define ConditionalOrConditionalAndExpr
+        '|| [ConditionalAndExpr]
+end define
+
+define ConditionalAndExpr
+        [BitOrExpr] [repeat ConditionalAndBitOrExpr]
+end define
+
+define ConditionalAndBitOrExpr
+        '&& [BitOrExpr]
+end define
+
+define BitOrExpr
+        [BitXorExpr] [repeat BitOrBitXorExpr]
+end define
+
+define BitOrBitXorExpr
+       '| [BitXorExpr]
+end define
+
+define BitXorExpr
+        [BitAndExpr] [repeat BitXorBitAndExpr]
+end define
+
+define BitXorBitAndExpr
+        '^ [BitAndExpr]
+end define
+
+define BitAndExpr
+        [EqualityExpr] [repeat BitAndEqualityExpr]
+end define
+
+define BitAndEqualityExpr
+        '& [EqualityExpr]
+end define
+
+define EqualityExpr
+        [InequalityExpr] [repeat EqualityOpInequalityExpr]
+end define
+
+define EqualityOpInequalityExpr
+        [EqualityOp] [InequalityExpr]
+end define
+
+compounds
+        === !== == != 
+end compounds
+
+define EqualityOp
+        '== | '!= | '=== | '!== 
+end define
+
+define InequalityExpr
+        [ShiftExpr] [repeat InequalityOpShiftExpr]
+end define
+
+define InequalityOpShiftExpr
+        [InequalityOp] [ShiftExpr]
+end define
+
+compounds
+        <> <= >=
+end compounds
+
+define InequalityOp
+        '<> | '< | '<= | '> | '>=
+end define
+
+define ShiftExpr
+        [CatExpr] [repeat ShiftOpCatExpr]
+end define
+
+define ShiftOpCatExpr
+        [ShiftOp] [CatExpr]
+end define
+
+compounds
+        << >> 
+end compounds
+
+define ShiftOp
+         '<< | '>>
+end define
+
+define CatExpr        
+        [AddExpr] [repeat CatAddExpr]
+end define
+
+define CatAddExpr
+        '. [AddExpr]
+end define
+
+define AddExpr
+        [MultExpr] [repeat AddOpMultExpr]
+end define
+
+define AddOpMultExpr
+        [AddOp] [MultExpr]
+end define
+
+define AddOp
+        '+ | '- 
+end define
+
+define MultExpr
+        [NotExpr] [repeat MultOpNotExpr]
+end define
+
+define MultOpNotExpr
+        [MultOp] [NotExpr]
+end define
+
+define MultOp
+        '* | '/ | '% 
+end define
+
+define NotExpr
+        [repeat '!] [InstanceExpr]
+end define
+
+define InstanceExpr
+        [UnaryExpr] [opt InstanceOfUnaryExpr]
+end define
+
+define InstanceOfUnaryExpr
+        'instanceof [UnaryExpr]
+end define
+
+define UnaryExpr
+        [repeat UnaryOp] [IncDecExpr]
+end define
+
+define UnaryOp
+        '~ | '- | '@ | '( [CastType] ') 
+    |    '@ '!        % precedence error, but observed in Moodle
+end define
+
+define CastType
+        'int | 'integer | 'bool | 'boolean | 'real | 'double
+    |   'float | 'string | 'array | 'object | 'unset
+end define
+
+compounds
+        ++ --
+end compounds
+
+define IncDecExpr
+        [repeat IncDec] [Primary] [repeat IncDec]
+end define
+
+define IncDec
+        '++ | '--
+end define
+
+define Primary
+        [VariableOrFunctionCall]
+    |   [ScalarConstant]
+    |   [Array]
+    |   [List]
+    |   [InternalFunction]
+    |   '( [Expr] ')
+end define
+
+define ScalarConstant
+        [opt PlusMinus] [NumericConstant]
+    |   [StringConstant]
+    |   [MagicConstant]
+    |   [BooleanConstant]
+    |   'null
+end define
+
+define PlusMinus
+        '+ | '-
+end define
+
+tokens
+        number        ... | ".\d+" | "\d+.\d*"
+        Hexa        "0[Xx][01234567989abcdefABCDEF]+"
+        Octa        "0[0123456789]+"
+end tokens
+
+define NumericConstant
+        [number]
+    |   [Hexa]
+    |   [Octa]
+end define
+
+#pragma -esc "\" 
+
+tokens
+        %% charlit         "'[(\\\\)(\\')#']*'"
+        %% Hack to correct broken use of charlits in moodle
+        charlit         "'[(\\\\)(\\')#['(END;)]]*'"
+                    |   "'END;'"
+        %% stringlit      "\"[(\\\\)(\\\")#\"]*\""
+        %% Hack to correct broken but apparently legel string in moodle
+        stringlit       "\"[(\\\\)(\\\")(#[\"( //\]\]>)])]*\""
+end tokens
+
+compounds
+        <<<
+end compounds
+
+define StringConstant
+        [stringlit] 
+    |   [charlit]
+    |   [CommandString]
+    |   '<<< [push id] [IN][NL] [repeat EncapsedInlineHTML] [pop id] [EX] 
+end define
+
+tokens 
+        CommandString        "`#`*`"
+end tokens
+
+define EncapsedInlineHTML
+        [not popid] [tag_token_or_key] 
+end define
+
+define popid
+        [pop id]
+end define
+
+define token_or_key
+        [token] | [key]
+end define
+
+tokens
+         MagicConstant        "__\A*__"
+end tokens
+
+define BooleanConstant
+        'true | 'false
+end define
+
+define StaticScalar
+        [Primary]
+end define
+
+define Array
+        'array '( [IN] [ArrayPair,] [opt ',] [EX] ')
+end define
+
+define ArrayPair
+        [NL] [opt ArrayKey] [ArrayValue]
+end define
+
+define ArrayKey
+        [Expr] '=>
+end define
+
+define ArrayValue
+        [Expr]
+    |   '& [ObjectCVar]
+end define
+
+define VariableOrFunctionCall
+        [ObjectCVar]
+end define
+
+define ObjectCVar
+        % Includes ObjectFunctionCall, otherwise inefficiency reigns - JRC July 2011
+        [opt ClassNameColonColon] [CVar] [opt CallParams] [ArrowObjectProperty*]
+end define
+
+compounds
+        ::
+end compounds
+
+define ClassNameColonColon
+        [ClassName] '::
+end define
+
+define CallParam
+        [opt '&] [Expr]
+end define
+
+define CallParams
+        '( [CallParam,] ')
+end define
+
+define ClassName
+        [id]
+end define
+
+compounds
+        ->
+end compounds
+
+define ArrowObjectProperty
+        '-> [ObjectProperty] [opt CallParams]
+end define
+
+define ObjectProperty
+        [VariableName] 
+    |   [IdOrKey]        % T.D. July 2011
+    |   [ObjectProperty] [VariableExtension]
+    |   [ObjectCVar] 
+end define
+
+define CVar
+        [ReferenceVariable]
+end define
+
+define ReferenceVariable
+        [CompoundVariable] [VariableExtension*]
+end define
+
+define VariableExtension
+        '[ [Expr?] ']
+    |   '{ [Expr] '}
+end define
+
+define CompoundVariable
+        [VariableName] 
+end define
+
+define VariableName
+        [SimpleVariableName]
+    |   '$ [VariableName]
+    |   '{ [SimpleVariableName] '}
+    |   '{ [Expr] '}
+end define
+
+define SimpleVariableName
+        [id]
+    |   '$ [SPOFF] [IdOrKey] [SPON]
+end define
+
+define IdOrKey
+        [id] | [key]
+end define
+
+define List
+        'list '( [ListElem,] ')
+end define
+
+define ListElem
+        [List]
+    |   [ObjectCVar]
+    |   [empty]
+end define
+
+define InternalFunction
+        'new [Primary]
+    |   'clone [Primary]
+    |   'isset '( [ObjectCVar,+] ')
+    |   'empty '( [ObjectCVar] ')
+    |   'intval '( [ObjectCVar] ')
+    |   'eval  '( [Expr] ')
+    |   'exit  [opt exit_value]   % T.D. June 15
+    |   'include [Expr]
+    |   'include_once [Expr]
+    |   'require [Expr]
+    |   'require_once [Expr]
+end define
+
+% T.D. June 15
+define exit_value
+        '( [opt Expr] ')
+end define
+
