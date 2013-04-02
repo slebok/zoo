@@ -1,0 +1,935 @@
+% Visual Basic 6.0 Grammar
+% J.R. Cordy, April 2006
+% Version 1.3, Sept 2010
+
+% Reference: http://www.int.gu.edu.au/courses/3008int/m03/FYI/Command_Syntax.htm
+% Thanks to the HCI teaching team at Griffith University.
+
+% This is an approximate grammar for Visual Basic 6.0, drawn from the reference
+% above, old MS web pages and updated to handle many undocumented features 
+% by experience with parsing a number of open and closed source applications.  
+
+% Known limitations and bugs:
+%
+% 1. This grammar processes VB is line-based but otherwise free-format in order to
+%    be convenient for transformation.  However it is not quite true that VB
+%    is free-format, for example:
+%        .picEdit.PaintPicture .picHidden1.Picture, 0, 0, , , Val(stCmd4), Val(stCmd5)
+%    which this grammar will mistake for:
+%        .picEdit.PaintPicture.picHidden1.Picture , 0, 0, , , Val (stCmd4), Val (stCmd5)
+%    This case is rare, but short of parsing all spacing, I don't know how to solve it.
+%
+% 2. As with all real languages, many features and forms are implemented but not 
+%    properly documented.  I've added these to the grammar as I've run across them,
+%    but it's not always clear what the feature's syntax is in general so these
+%    are approximations.
+% 
+% 3. Comments [vbcomment] are handled and preserved, but not always well formatted
+%    in output.  This needs tuning in future.
+%
+% 4. Continuations are handled by treating the continuation symbol (_) and newline as
+%    ignored comments.  Thus they are not preserved in output, but rather removed
+%    to yield (valid) long lines instead.  If a real VB comment has a continuation, 
+%    this strategy fails.
+% 
+% 5. There seems to be no definitive list of which words are keywords and which
+%    reserved words, or whether there is any meaningful distinction in VB.
+%    The keyword list below has been honed by experience.
+%
+% 6. Preprocessor statements only handle #if so far.
+
+% Maintenance Log:
+%
+% v1.3  Added [datelit] handling for #2/1/1950# and #10:24:00 PM# - JRC 24.9.10
+%
+% v1.2  Corrected problems with identifiers and file numbers - JRC 4.8.10
+%
+% v1.1  Corrected problems found by Andrew Malton - JRC 2.12.2008
+%    - corrected [expn] grammar to avoid right hand ambiguities
+%    - simplified and corrected [select_case_statement] grammar to avoid ambiguities
+%    - corrected handling of statement terminators (newline and :)
+%
+% v1.0  Initial revision
+
+
+% VB is a newline-sensitive, case-insensitive language
+#pragma -newline -case -width 600
+
+
+% Lexical forms of VB
+tokens
+        charlit          ""                        % VB has no character literals, only strings
+        stringlit        "\"[(\"\")#\"]*\""
+        vbcomment        "'#n*"
+                     |   "rem #n*"
+        hexnumber        "0[xX][abcdefABCDEF\d]+"
+                     |   "&[hH][abcdefABCDEF\d]+&?"
+        octnumber        "0[oO]\d+"
+                     |   "&[oO]\d+&?"
+	datelit          "\##\#*\#"                % handles both #2/1/1950# and #10:24:00 PM#
+        returncode       "\d+&"
+        id           |   "[_\a]\i*[%&@!\#$]"
+        comment          "_\n"                     % treat continuations as (ignored) comments
+	preproc		 "\#if" 
+		     |	 "\#elseif"
+		     |	 "\#else"
+		     |	 "\#end"
+end tokens
+
+compounds
+        <> <= >= :=
+end compounds
+
+% There is some ambiguity in VB between what is a "reserved word" and what is a "keyword".
+% In this list, any VB special words that act like identifiers have been purposely left out.
+
+keys
+        access alias and as attribute 
+        beep begin binary byval
+        call case chdir chdrive 
+        close const 
+        declare defdbl defint deflng defsng defstr defvar 
+        dim do 
+        else elseif 'end erase exit 
+        for function
+        get gosub goto
+        if imp input is 
+        kill
+        let line load lock loop lset 
+        mkdir mod 
+        name new next not 
+        on open option or 
+        print private property put
+        randomize read redim rem reset resume return rmdir rset 
+        savepicture seek select set setattr static stop sub 
+        then time to type 
+        unload unlock until 
+        version
+        wend while width with write
+        xor
+end keys
+
+
+% We accept both VB class files (.cls) and program files (.bas)
+
+define program
+        [opt class_file_header]
+        [repeat declaration_or_statement]
+end define
+
+
+% Class files begin with a header, but otherwise are the same as program files
+
+define class_file_header
+        'version [number] 'class [repeat eol+]
+	[class_begin_block]
+end define
+
+define class_begin_block
+        'begin [opt reference]         [IN]
+            [repeat class_begin_item]  [EX]
+        'end 
+end define
+
+define class_begin_item
+	  [assignment_statement]
+	| [class_begin_block]
+	| [eol]
+end define
+
+
+% We simplify the grammar by allowing mixed declarations and statements everywhere
+
+define declaration_or_statement
+          [declaration] [eol]
+        | [statement] [eol]
+        | [eol]
+end define
+
+define single_declaration_or_statement
+          [declaration] [repeat colon_declaration_or_statement] 
+        | [statement] [repeat colon_declaration_or_statement] 
+end define
+
+define  colon_declaration_or_statement
+          ': [opt declaration_or_statement]
+end define
+
+
+% Declarations, which usually are spoken of as statements in VB
+
+define declaration
+          [variable_declaration]
+        | [implements_declaration]
+        | [subprogram_declaration]
+        | [constant_declaration]
+        | [class_declaration]
+        | [declare_subprogram_declaration]
+        | [defletter_declaration]
+        | [enum_declaration]
+        | [type_declaration]
+end define
+
+define implements_declaration
+        'implements [id] 
+end define
+
+define enum_declaration
+        [opt access_modifier] 'enum [id] [eol]  [IN]
+            [repeat enum_member_definition]     [EX]
+        'end 'enum 
+end define
+
+define enum_member_definition
+          [id] '= [expn] [eol]
+        | [eol]
+end define
+
+define type_declaration
+        [opt access_modifier] 'type [id] [eol]  [IN]
+            [repeat type_member_definition]     [EX]
+        'end 'type 
+end define
+
+define type_member_definition
+          [id] [opt parens] [opt as_type] [eol]
+        | [eol]
+end define
+
+define defletter_declaration
+        [def_keyword] [list letterrange+]
+end define
+
+define letterrange
+        [id] [SPOFF] '- [id] [SPON]
+end define
+
+define def_keyword
+          'defbool | 'defbyte | 'defcur | 'defdate | 'defdbl | 'defdec
+        | 'defint | 'deflng | 'defobj | 'defsng | 'defstr | 'defvar
+end define
+
+define variable_declaration
+        [variable_declaration_keyword] [list variable_description+] 
+end define
+
+define variable_declaration_keyword
+        'dim | 'redim | [access_modifier]
+end define
+
+define access_modifier
+        'public | 'private | 'friend | 'static
+end define
+
+define variable_description
+          [array_description]
+        | [single_var_description]
+end define
+
+define single_var_description
+        [id] [opt initial_value] [opt as_type]
+end define
+
+define  initial_value
+        = [expn]
+end define
+
+define array_description
+        [opt 'withevents] [opt 'preserve] [id] '( [list subscript_expn] ') [opt as_type]
+end define
+
+define subscript_expn
+        [expn] [opt to_expn]
+end define
+
+define constant_declaration
+        [opt access_modifier] 'const [constant_description] 
+end define
+
+define constant_description
+        [id] [opt as_type] [initial_value]
+end define
+
+
+% Subprogram declarations
+
+define declare_subprogram_declaration
+        [opt access_modifier] 'declare [sub_or_function] [id] [lib_description] [opt alias_description]
+                [opt subprogram_argument_description] [opt as_type] 
+end define
+
+define subprogram_declaration
+         [opt access_modifier] [opt 'static] [sub_or_function] [id] [opt lib_description]
+                [opt subprogram_argument_description] [opt as_type] [eol]  [IN]
+            [sub_scope]                                                    [EX]
+        'end [sub_or_function] 
+end define
+
+define lib_description
+        'lib [stringlit]
+end define
+
+define alias_description
+        'alias [stringlit]
+end define
+
+define sub_scope
+        [repeat declaration_or_statement]
+end define
+
+define sub_or_function
+         'sub | 'function
+end define
+
+define subprogram_argument_description
+        '(  [list subprogram_argument] ')
+end define
+
+define subprogram_argument
+        [opt 'optional] [opt byref_or_byval] [opt id] [opt parens] [opt as_type] [opt equals_expn]
+end define
+
+define as_type
+        'as [opt 'new] [reference] [opt star_size]
+end define
+
+define star_size
+        '* [expn]
+end define
+
+define byref_or_byval
+        'byref | 'byval
+end define
+
+define class_declaration
+        'class [id] [eol]    [IN]
+                [sub_scope]  [EX]
+        'end 'class 
+end define
+
+
+% Expressions - massively simplified non-precedence grammar
+
+define expn
+        [primary] [repeat operator_primary]
+end define
+
+define operator_primary
+        [op] [primary] 
+end define
+
+define op
+          ^ | * | / | \ | 'mod | + | - | & | = | <> | <= | >= | := | >
+        | < | !  | 'is | 'not | 'and | 'or | 'xor | 'eqv | 'imp | 'like
+end define
+
+define primary
+          [reference]
+        | [stringlit]
+        | [number]
+        | [hexnumber]
+        | [octnumber]
+	| [datelit]
+        | [returncode]
+        | [filenumber]
+        | [prefix_op] [primary]
+        | ( [list expn] )
+end define
+
+define prefix_op
+        +  | -  | 'not | 'typeof | 'addressof
+end define
+
+define reference
+           [opt '.] [opt '!] [id] [repeat component_selector]
+         | '. [key] [repeat component_selector]
+end define
+
+define filenumber
+          '# [primary]
+end define
+
+define component_selector
+          '. [id]
+        | '. [key]
+        | [subscript]
+end define
+
+define subscript
+         ( [list optional_subscript] )
+end define
+
+define optional_subscript
+          [expn] [opt to_expn]
+        | [SP] [empty]
+end define
+
+
+% Statements
+
+define statement
+          [label_statement]
+        | [assignment_statement]
+        | [app_activate_statement]
+        | [attribute_statement]
+        | [beep_statement]
+        | [call_statement]
+        | [chdir_statement]
+        | [chdrive_statement]
+        | [close_statement]
+        | [date_statement]
+        | [deletesetting_statement]
+        | [do_statement]
+        | [end_statement]
+        | [erase_statement]
+        | [error_statement]
+        | [event_statement]
+        | [exit_statement]
+        | [filecopy_statement]
+        | [for_each_statement]
+        | [for_next_statement]
+        | [get_statement]
+        | [gosub_statement]
+        | [return_statement]
+        | [goto_statement]
+        | [if_statement]
+        | [input_statement]
+        | [kill_statement]
+        | [line_input_statement]
+        | [load_statement]
+        | [lock_statement]
+        | [lset_statement]
+        | [mid_statement]
+        | [mkdir_statement]
+        | [name_statement]
+        | [on_error_statement]
+        | [open_statement]
+        | [option_statement]
+        | [preprocessor_if_statement]
+        | [print_statement]
+        | [property_statement]
+        | [put_statement]
+        | [randomize_statement]
+        | [reset_statement]
+        | [resume_statement]
+        | [rmdir_statement]
+        | [rset_statement]
+        | [savepicture_statement]
+        | [savesetting_statement]
+        | [select_case_statement]
+        | [set_statement]
+        | [stop_statement]
+        | [time_statement]
+        | [unload_statement]
+        | [unlock_statement]
+        | [while_statement]
+        | [with_statement]
+        | [width_statement]
+        | [write_statement]
+end define
+
+define assignment_statement
+        [opt 'let] [reference] = [expn] 
+end define
+
+define app_activate_statement
+        'appactivate [expn] [opt comma_expn] 
+end define
+
+define comma_expn
+          , [expn]
+end define
+
+define beep_statement
+        'beep 
+end define
+
+define chdir_statement
+        'chdir [filepath] 
+end define
+
+define mkdir_statement
+        'mkdir [filepath] 
+end define
+
+define rmdir_statement
+        'rmdir [filepath] 
+end define
+
+define mid_statement
+        'mid [reference] = [stringlit]
+end define
+
+define name_statement
+        'name [filepath] 'as [filepath] 
+end define
+
+define filepath
+          [opt drive] [id] [repeat slash_id]
+        | [stringlit]
+end define
+
+define slash_id
+        '\ [id] | '/ [id]
+end define
+
+define chdrive_statement
+        'chdrive [drive] 
+end define
+
+define drive
+        [id] ':
+end define
+
+define open_statement
+        'open [filepath] 'for [mode] [opt access_spec] [opt lock] 'as [filenumber] [opt length_spec] 
+end define
+
+define mode
+        'append | 'binary | 'input | 'output | 'random
+end define
+
+define access_spec
+        'access [access_mode]
+end define
+
+define access_mode
+        'read | 'write | 'read 'write
+end define
+
+define lock
+        'shared | 'lock 'read | 'lock 'write | 'lock 'read 'write
+end define
+
+define length_spec
+        'len = [expn]
+end define
+
+define close_statement
+        'close [list filenumber] 
+end define
+
+define seek_statement
+        'seek [filenumber] ', [expn] 
+end define
+
+define unlock_statement
+        'unlock [filenumber] [opt comma_recordrange] 
+end define
+
+define get_statement
+        'get [filenumber] [opt comma_recordnumber] ', [reference] 
+end define
+
+define comma_recordnumber
+        ', [expn]
+end define
+
+define input_statement
+        'input [filenumber], [list reference] 
+end define
+
+define line_input_statement
+        'line 'input [filenumber], [reference] 
+end define
+
+define width_statement
+        'width [filenumber] ', [expn] 
+end define
+
+define write_statement
+        'write [filenumber] ', [list print_item] 
+end define
+
+define print_statement
+        'print [filenumber] ', [list print_item] 
+end define
+
+define print_item
+          [opt spc_tab] [expn] [opt charpos]
+        | [spc_tab]
+end define
+
+define spc_tab
+          'spc ( [opt expn] )
+        | 'tab ( [opt expn] )
+end define
+
+define charpos
+        [expn] | ';
+end define
+
+define put_statement
+        'put [filenumber] [opt comma_expn] ', [reference] 
+end define
+
+define kill_statement
+        'kill [filepath] 
+end define
+
+define lock_statement
+        'lock [filenumber] [opt comma_recordrange] 
+end define
+
+define comma_recordrange
+        ', [number] [opt to_number]
+end define
+
+define to_number
+        'to [number]
+end define
+
+define load_statement
+        'load [expn] 
+end define
+
+define lset_statement
+        'lset [reference] = [expn] 
+end define
+
+define rset_statement
+        'rset [reference] = [expn] 
+end define
+
+define date_statement
+        'date '= [expn] 
+end define
+
+define time_statement
+        'time '= [expn] 
+end define
+
+define deletesetting_statement
+        'deletesetting [list expn+] 
+end define
+
+define end_statement
+        'end  % of execution
+end define
+
+define erase_statement
+        'erase [list id] 
+end define
+
+define error_statement
+        'error [expn] 
+end define
+
+define event_statement
+        [opt 'public] 'event [id] [opt event_argument_list]   
+end define
+
+define event_argument_list
+        '( [list event_argument+] ')
+end define
+
+define event_argument
+        [opt byref_or_byval] [id] [opt parens] [opt as_type]
+end define
+
+define parens
+        '( ')
+end define
+
+define filecopy_statement
+        'filecopy [filepath] ', [filepath] 
+end define
+
+define gosub_statement
+        [opt on_expn] 'gosub [expn] 
+end define
+
+define return_statement
+        'return 
+end define
+
+define goto_statement
+        [opt on_expn] 'goto [expn] 
+end define
+
+define on_expn
+        'on [expn]
+end define
+
+define option_statement
+          'option 'base [number] 
+        | 'option 'compare [compare_mode] 
+        | 'option 'explicit 
+        | 'option 'private 'module 
+end define
+
+define compare_mode
+        'binary | 'text | 'database
+end define
+
+define attribute_statement
+        'attribute [list attribute_definition+] 
+end define
+
+define attribute_definition
+        [reference] = [list expn+]
+end define
+
+define if_statement
+          [full_if_statement]
+        | [short_if_statement]
+end define
+
+define full_if_statement
+        'if [expn] 'then [eol]  [IN]
+            [sub_scope]         [EX]
+        [repeat elsif_clause]
+        [opt else_clause]
+        'end 'if 
+end define
+
+define elsif_clause
+        'elseif [expn] 'then [eol]  [IN]
+            [sub_scope]             [EX]
+end define
+
+define else_clause
+        'else [eol]      [IN]
+            [sub_scope]  [EX]
+end define
+
+define short_if_statement
+    'if [expn] 'then  [single_declaration_or_statement] [opt short_else_clause] 
+end define
+
+define short_else_clause
+    'else [single_declaration_or_statement]
+end define
+
+define select_case_statement
+        'select 'case [expn] [eol]        [IN]
+            [repeat case_alternative]
+            [opt last_case_alternative]   [EX]
+        'end 'select 
+end define
+
+define eol
+        [opt tab_vbcomment] [newline]
+    |   ':
+end define
+
+define tab_vbcomment
+        [TAB] [vbcomment]
+end define
+
+define case_alternative
+        [repeat eol]
+        'case [opt is_operator] [list case_expn+] [eol]  [IN]
+            [sub_scope]                                  [EX]
+end define
+
+define is_operator
+        'is [opt op]
+end define
+
+define case_expn
+        [expn] [opt to_expn]
+end define
+
+define to_expn
+        'to [expn]
+end define
+
+define last_case_alternative
+        [repeat eol]
+        'case 'else [eol]  [IN]
+            [sub_scope]    [EX]
+end define
+
+define for_next_statement
+          [full_for_next_statement]
+        | [short_for_next_statement]
+end define
+
+define short_for_next_statement
+        'for [id] '= [expn] [to_or_downto] [expn] [opt step_clause] 
+                [repeat colon_declaration_or_statement] ': 'next [opt id] 
+end define
+
+define full_for_next_statement
+        'for [id] '= [expn] [to_or_downto] [expn] [opt step_clause] [eol]  [IN]
+            [sub_scope]                                                                  [EX]
+        'next [opt id] 
+end define
+
+define to_or_downto
+        'to | 'downto
+end define
+
+define step_clause
+        'step [expn]
+end define
+
+define for_each_statement
+          [full_for_each_statement]
+        | [short_for_each_statement]
+end define
+
+define short_for_each_statement
+        'for 'each [id] in [expn] [eol]         
+                [repeat colon_declaration_or_statement] ': 'next [opt id] 
+end define
+
+define full_for_each_statement
+        'for 'each [id] in [expn] [eol]  [IN]
+            [sub_scope]                  [EX]
+        'next [opt id] 
+end define
+
+define do_statement
+        'do [opt while_or_until_clause] [eol]  [IN]
+            [sub_scope]                        [EX]
+        'loop [opt while_or_until_clause] 
+end define
+
+define while_or_until_clause
+          [while_clause]
+        | [until_clause]
+end define
+
+define while_clause
+        'while [expn]
+end define
+
+define until_clause
+         'until [expn]
+end define
+
+define while_statement
+        'while [expn] [eol]  [IN]
+            [sub_scope]      [EX]
+        'wend 
+end define
+
+define call_statement
+         [not assignment_statement] 	% there is a nasty ambiguity about this
+	 [opt 'call] [reference] [opt subroutine_bracketless_params]
+end define
+
+define subroutine_bracketless_params
+        [expn] [list optional_expn]
+end define
+
+define optional_expn
+          [expn]
+        | [empty] [SP]
+end define
+
+define set_statement
+        'set [reference] = [set_object_expn] 
+end define
+
+define set_object_expn
+          [opt 'new] [expn] 
+        | 'nothing
+end define
+
+define setattr_statement
+        'setattr [filepath] , [expn] 
+end define
+
+define exit_statement
+        'exit [exit_what_indicator] 
+end define
+
+define exit_what_indicator
+          'do
+        | 'for
+        | 'function
+        | 'property
+        | 'sub
+end define
+
+define on_error_statement
+        'on [opt 'local] 'error [on_error_action] 
+end define
+
+define on_error_action
+          'resume 'next
+        | 'goto [expn]
+end define
+
+define with_statement
+        'with [reference] [eol]  [IN]
+            [sub_scope]          [EX]
+        'end 'with 
+end define
+
+define property_statement
+        [opt access_modifier] [opt 'static]
+        'property [get_let_set] [id] [opt property_argument_list] [opt as_type] [eol]  [IN]
+            [sub_scope]                                                                [EX]
+        'end 'property 
+end define
+
+define get_let_set
+        'get | 'let | 'set
+end define
+
+define property_argument_list
+        '( [list property_argument] ')
+end define
+
+define property_argument
+        [opt 'optional] [opt byref_or_byval] [opt 'paramarray] [id] [opt parens] [opt as_type] [opt equals_expn]
+end define
+
+define equals_expn
+        '= [expn]
+end define
+
+define randomize_statement
+        'randomize [opt number] 
+end define
+
+define reset_statement
+        'reset 
+end define
+
+define resume_statement
+          'resume 'next 
+        | 'resume [opt number] 
+end define
+
+define savepicture_statement
+        'savepicture [expn] ', [expn] 
+end define
+
+define savesetting_statement
+        'savesetting [list expn] 
+end define
+
+define stop_statement
+        'stop 
+end define
+
+define unload_statement
+        'unload [expn] 
+end define
+
+define label_statement
+        [EX] [id] ': [IN]
+end define
+
+define preprocessor_if_statement
+        '#if [expn] 'then [eol]  [IN]
+            [sub_scope]                                  [EX]
+        [repeat preprocessor_elsif_clause]
+        [opt preprocessor_else_clause]
+        '#end 'if 
+end define
+
+define preprocessor_elsif_clause
+        '#elseif [expn] 'then [eol]  [IN]
+            [sub_scope]                                      [EX]
+end define
+
+define preprocessor_else_clause
+        '#else [eol]  [IN]
+            [sub_scope]                       [EX]
+end define
