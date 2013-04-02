@@ -1,0 +1,758 @@
+% TXL Python grammar
+% Mykhaylo Sorochan and Jim Cordy, November 2008
+
+% Copyright 2008 Mykhaylo Sorochan and James R. Cordy, 
+% after the standard Python 2.5 reference grammar, 
+% Copyright 1990-2008 Python Software Foundation
+
+% Redistribution and use in source and binary forms, with or without
+% modification, are permitted provided that the following conditions are met:
+%
+%    Redistributions of source code must retain the above copyright notice, 
+%    this list of conditions and the following disclaimer.
+%    Redistributions in binary form must reproduce the above copyright notice,
+%    this list of conditions and the following disclaimer in the documentation
+%    and/or other materials provided with the distribution.
+%
+%    THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+%    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+%    AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+%    AUTHORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+%    OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+%    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+%    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+%    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+%    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+%    POSSIBILITY OF SUCH DAMAGE.
+
+% Modification Log:
+
+% v1.4, Jim Cordy, 7 July 2010.
+%    Updated to add a number of observed cases.
+%
+% v1.3, Jim Cordy, 13 November 2008.
+%    Validated against a library of 1,500 random Python programs including the
+%    entire Python demo set.
+%
+% v1.2, Jim Cordy and Mykhaylo Sorochan, 12 November 2008.
+%    Fixed the [literal] definition and all token patterns to correspond to the Python 2.5 standard.
+%    Corrected [return_stmt] and [comp_op].
+%    Changed to standard INDENT / DEDENT tokens raher than C-style brackets to avoid confusion
+%    with Python { } compound structures.
+%
+% v1.1, Jim Cordy, November 2008.
+%    Tuned and reprogrammed for TXL. Added newline sensitivity.
+%    Added use of bracketing preprocessor pyindent.txl to handle Python INDENT/DEDENT rules.
+%
+% v1.0, Mykhaylo Sorochan, October 2008.
+%    Initial revision.
+
+% This grammar expects that Python INDENTs and DEDENTs have been made explicit using
+% C-style { and } bracketing as output by pyindent.txl.  It parses and removes { }
+% as INDENT/DEDENT symbols.
+
+% Comment out this line to process without preserving comments
+#define COMMENTS
+
+% Python is always newline-sensitive and can have long tokens
+#pragma -newline -w 32000
+
+#ifdef COMMENTS
+    % Comment out this line to throw away comments
+    #pragma -comment
+#endif
+
+% Python tokens
+tokens 
+    % Python string forms - shortstrings are already captured by [stringlit] and [charlit]
+    % All may be preceded by a stringprefix, see [stringliteral] below
+    longstringlit        "\"\"\"#[(\"\"\")]*\"\"\""
+    longcharlit          "'''#[(''')]*'''"
+
+    % Python number forms - decimal integers and floating point forms are already captured by [number]
+    hexinteger   "0[Xx][\dABCDEFabcdef]+" 
+    octinteger   "0[01234567]+" 
+    pointfloat   "\d*.\d+([Ee][+-]?\d+)?"        % other forms covered by [floatnumber]
+                 | "\d+.\d*([Ee][+-]?\d+)?"
+end tokens 
+
+% Python keywords
+keys 
+    and       del       from      'not       while 
+    elif      global    or
+    'assert    else      if        pass      yield 
+    break     except    'import    'print 
+    class     exec      in        raise 
+    continue  finally   is        return 
+    def       for       lambda    try       @ 
+    % Not keywords in Python 2.5, but may be in future
+    % as        with
+end keys 
+
+% Compound operators
+compounds 
+    == += -= *= /= '%= &= |=  ^= <<= >>= **= //= ** >> 
+end compounds 
+
+% Python comments are # to end-of-line
+comments 
+    '# 
+    '\
+end comments
+
+% The standard Python grammar, optimized for TXL
+define program 
+    [file_input] 
+end define 
+
+define file_input 
+    [repeat stmt_or_newline] 
+end define 
+
+define stmt_or_newline
+        [stmt] 
+    |   [endofline]
+end define
+
+define decorator 
+    '@ [dotted_name] [opt decorator_arglist] [endofline] [repeat endofline]
+end define
+
+% The [SPOFF] '( [SPON] suppresses TXL default output spacing before (
+define decorator_arglist
+    [SPOFF] '( [SPON] [IN] [opt arglist] [repeat endofline] ') [EX] 
+end define 
+
+define decorators 
+    [repeat decorator+] 
+end define 
+
+define decorated 
+        [decorators] [classdef] 
+    |   [decorators] [funcdef] 
+end define 
+
+define funcdef 
+    'def [id] [parameters] ': [suite] 
+end define 
+
+define parameters 
+    [SPOFF] '( [SPON] [opt varargslist] [repeat endofline] ') 
+end define 
+
+define varargslist 
+        [repeat fpdef_test_comma] [repeat endofline] '* [id] 
+    |   [repeat fpdef_test_comma] [repeat endofline] '* [id] [opt endofline] ', [repeat endofline] '** [id] 
+    |   [repeat fpdef_test_comma] [repeat endofline] '** [id] 
+    |   [list fpdef_test+] [opt ',] 
+end define 
+
+define fpdef_test 
+    [repeat endofline] [fpdef] [opt is_test] [opt endofline]
+end define 
+
+define fpdef_test_comma 
+    [fpdef_test] ', 
+end define 
+
+define is_test 
+    '= [repeat endofline] [test] 
+end define 
+
+define fpdef 
+        [id] [opt endofline] 
+    |   [SPOFF] '( [SPON] [fplist] [repeat endofline] ') [opt endofline]
+end define 
+
+define fplist 
+    [list fpdef+] [opt ',] 
+end define 
+
+define stmt 
+        [simple_stmt] [endofline] 
+    |   [compound_stmt] 
+end define 
+
+define simple_stmt 
+        [small_stmt] [repeat semicolon_small_stmt] [opt ';] 
+    |   [comment]
+end define 
+
+define semicolon_small_stmt 
+    '; [small_stmt] 
+end define 
+
+define small_stmt 
+        [expr_stmt] 
+    |   [print_stmt]  
+    |   [del_stmt] 
+    |   [pass_stmt] 
+    |   [flow_stmt] 
+    |   [import_stmt] 
+    |   [global_stmt] 
+    |   [exec_stmt] 
+    |   [assert_stmt] 
+end define 
+
+define expr_stmt 
+        [testlist] [repeat is_expr] 
+    |   [testlist] [augassign] [assign_value] 
+end define
+
+define is_expr 
+        '= [repeat endofline] [assign_value] 
+end define 
+
+define augassign 
+    '+= | '-= | '*= | '/= | '%= | '&= | '|= 
+    | '^= | '<<= | '>>= | '**= | '//= 
+end define 
+
+define assign_value
+        [yield_expr] 
+    |   [testlist] 
+end define 
+
+% For normal assignments, additional restrictions enforced by the interpreter 
+define print_stmt 
+        'print [opt '>>] [list test] [opt ',] 
+end define 
+
+define del_stmt 
+    'del [exprlist] 
+end define 
+
+define pass_stmt 
+    'pass 
+end define 
+
+define flow_stmt 
+        [break_stmt] 
+    |   [continue_stmt] 
+    |   [return_stmt] 
+    |   [raise_stmt] 
+    |   [yield_stmt] 
+end define 
+
+define break_stmt 
+    'break 
+end define 
+
+define continue_stmt 
+    'continue 
+end define 
+
+define return_stmt 
+    'return [opt testlist] 
+end define 
+
+define yield_stmt 
+    [yield_expr] 
+end define 
+
+define raise_stmt 
+    'raise [opt test_list]
+end define
+
+define test_list
+    [test] [opt comma_test] [opt comma_test] 
+end define
+
+define comma_test
+    [opt endofline] ', [test] 
+end define 
+
+define import_stmt 
+        [import_name] 
+    |   [import_from] 
+end define 
+
+define import_name 
+    'import [dotted_as_names] 
+end define 
+
+define import_from 
+    'from [repeat '.] [opt dotted_name] [repeat endofline] 'import [import_items] 
+end define
+
+define import_items
+        '* 
+    |   [repeat endofline] [SPOFF] '( [SPON] [import_as_names] [repeat endofline] ') 
+    |   [repeat endofline] [import_as_names] 
+end define 
+
+define import_as_name 
+        [repeat endofline] [id] [opt as_name] 
+end define
+
+define as_name
+       'as [id] 
+end define 
+
+define dotted_as_name 
+    [dotted_name] [opt as_id]
+end define
+
+define as_id
+    'as [id] 
+end define 
+
+define import_as_names 
+    [list import_as_name+] [opt ',] 
+end define 
+
+define dotted_as_names 
+    [list dotted_as_name+] 
+end define 
+
+define dotted_name 
+    [id] [opt dot_dotted_name] 
+end define
+
+define dot_dotted_name
+    [repeat endofline] '. [repeat endofline] [dotted_name] 
+end define 
+
+define global_stmt 
+    'global [list id+] 
+end define 
+
+define exec_stmt 
+    'exec [expr] [opt in_test] [opt comma_test]
+end define
+
+define in_test
+    'in [test]
+end define
+
+define assert_stmt 
+    'assert [test] [opt comma_test] 
+end define 
+
+define compound_stmt 
+        [if_stmt] 
+    |   [while_stmt] 
+    |   [for_stmt] 
+    |   [try_stmt] 
+    |   [with_stmt] 
+    |   [funcdef] 
+    |   [classdef] 
+    |   [decorated] 
+end define 
+
+define if_stmt 
+    'if [test] ': 
+        [suite] 
+    [repeat elif_clause] 
+    [opt else_clause] 
+end define 
+
+define elif_clause 
+    'elif [test] ': 
+        [suite] 
+end define 
+
+define else_clause 
+    'else ': 
+        [suite] 
+end define 
+
+define while_stmt 
+    'while [test] ': 
+        [suite] 
+    [opt else_clause] 
+end define 
+
+define for_stmt 
+    'for [exprlist] 'in [testlist] ': 
+        [suite] 
+    [opt else_clause] 
+end define 
+
+define try_stmt 
+    'try ': 
+            [suite] 
+    [repeat except_clause_suite] 
+    [opt else_clause] 
+    [opt finally_clause] 
+end define 
+
+define finally_clause 
+    'finally ': 
+        [suite] 
+end define 
+
+define except_clause_suite 
+    [except_clause] ': 
+        [suite] 
+end define 
+
+define with_stmt 
+    'with [test] [opt with_var] ': 
+        [suite] 
+end define 
+
+define with_var 
+    'as [expr] 
+end define 
+
+% NB compile.c makes sure that the default except clause is last 
+define except_clause 
+    'except [opt except_test]
+end define
+
+define except_test
+    [test] [opt as_or_comma_test]
+end define
+
+define as_or_comma_test
+        'as [test] 
+    |   ', [test] 
+end define 
+
+define suite 
+        [indent] [endofline] 
+            [repeat stmt_or_newline+] 
+        [dedent] 
+    |   [simple_stmt] [endofline]
+end define 
+
+% Every end of line may have an optional trailing comment
+define endofline
+    [opt comment] [newline] 
+end define
+
+% Assumes that the input program doesn't have identifiers named INDENT or DEDENT
+keys
+    INDENT DEDENT
+end keys
+
+define indent
+    % By using [attr], the INDENT does not appear in output
+    [attr 'INDENT] [IN]
+end define
+
+define dedent
+    % By using [attr], the DEDENT does not appear in output
+    [attr 'DEDENT] [EX]
+end define
+
+% Backward compatibility cruft to support: 
+% [ x for x in lambda: True, lambda: False if x() ] 
+% even while also allowing: 
+% lambda x: 5 if x else 2 
+% (But not a mix of the two) 
+
+define testplist_safe 
+    [list old_test+] [opt ',]
+end define
+
+define old_test 
+        [or_test] 
+    |   [old_lambdef] 
+end define 
+
+define old_lambdef 
+    'lambda [opt varargslist] ': 
+        [old_test] 
+end define 
+
+define test 
+        [repeat endofline] [or_test] [opt if_test] [opt endofline]
+    |   [repeat endofline] [lambdef] [opt endofline]
+end define 
+
+define if_test
+    [repeat endofline] 'if [or_test] 'else [test] 
+end define
+
+define or_test 
+    [and_test] [opt orop_or_test]
+end define
+
+define orop_or_test
+    [repeat endofline] 'or [repeat endofline] [or_test] 
+end define 
+
+define and_test 
+    [not_test] [opt andop_and_test]
+end define
+
+define andop_and_test
+    [repeat endofline] 'and [repeat endofline] [and_test] 
+end define 
+
+define not_test 
+    [repeat 'not] [repeat endofline] [comparison] 
+end define 
+
+define comparison 
+    [expr] [opt comp_op_comparison]
+end define
+
+define comp_op_comparison
+    [repeat endofline] [comp_op] [repeat endofline] [comparison] 
+end define 
+
+define comp_op 
+    '< | '> | '== | '>= | '<= | '<> | '!= | 'in | 'not 'in | 'is | 'is 'not
+end define 
+
+define expr 
+    [xor_expr] [opt orop_expr]
+end define
+
+define orop_expr
+    [repeat endofline] '| [repeat endofline] [expr] 
+end define 
+
+define xor_expr 
+    [and_expr] [opt xorop_expr] 
+end define
+
+define xorop_expr
+    [repeat endofline] '^ [repeat endofline] [xor_expr] 
+end define 
+
+define and_expr 
+    [shift_expr] [opt andop_and_expr]
+end define
+
+define andop_and_expr
+    [repeat endofline] '& [repeat endofline] [and_expr] 
+end define 
+
+define shift_expr 
+    [arith_expr] [repeat shiftop_shift_expr]
+end define
+
+define shiftop_shift_expr
+        [opt endofline] [shift_op] [opt endofline] [shift_expr] 
+end define
+
+define shift_op
+        '<< | '>>
+end define 
+
+define arith_expr 
+    [term] [repeat op_arith_expr]
+end define
+
+define op_arith_expr
+        [repeat endofline] [arith_op] [repeat endofline] [arith_expr] 
+end define 
+
+define arith_op
+        '+ | '-
+end define 
+
+define term 
+    [factor] [repeat op_term]
+end define
+
+define op_term
+        [repeat endofline] [term_op]  [repeat endofline] [term]
+end define
+
+define term_op
+        '* | '/ | '% | '// 
+end define 
+
+define factor 
+    [repeat unary_op] [power] 
+end define
+
+define unary_op
+    '+ | '- | '~ 
+end define 
+
+define power 
+    [atom] [repeat trailer] [opt exp_factor]
+end define
+
+define exp_factor
+    '** [factor] 
+end define 
+
+define atom 
+        [id] 
+    |   [literal] 
+    |   '( [IN] [repeat endofline] [opt yield_expr] [repeat endofline] ') [EX] 
+    |   '( [IN] [repeat endofline] [testplist_gexp] [repeat endofline] ') [EX] 
+    |   '[ [IN] [repeat endofline] [opt listmaker] '] [EX]
+    |   '{ [IN] [repeat endofline] [opt dictmaker] [repeat endofline] '} [EX] 
+    |   '` [testlist1] '` 
+end define 
+
+define listmaker 
+        [repeat endofline] [test] [repeat endofline] [plist_for] [repeat endofline] 
+    |   [repeat endofline] [list test] [opt ',] [repeat endofline] 
+end define 
+
+define testplist_gexp 
+       [list test+] [opt endofline] [opt ',] 
+    |  [test] [opt endofline] [gen_for] 
+end define 
+
+define lambdef 
+    'lambda [opt varargslist] ': 
+        [test] 
+end define 
+
+define trailer 
+        [SPOFF] '( [SPON] [IN] [arglist] [repeat endofline] ') [EX] 
+    |   '[ [IN] [subscriptlist] '] [EX] 
+    |   [repeat endofline] '. [repeat endofline] [id] 
+end define 
+
+define subscriptlist 
+    [list subscript+] [',] [repeat endofline] 
+end define 
+
+define subscript 
+        [repeat endofline] '. '. '.  [opt endofline]
+    |   [repeat endofline] [test]  [opt endofline]
+    |   [repeat endofline] [opt test] ': [opt test] [opt sliceop]  [opt endofline]
+end define 
+
+define sliceop 
+    ': [opt test] 
+end define 
+
+define exprlist 
+    [list expr+] [repeat endofline] [opt ',] 
+end define 
+
+define testlist 
+    [list test+] [repeat endofline] [opt ',] 
+end define 
+
+define dictmaker 
+    [list dict_entry] [repeat endofline] [opt ',] [repeat endofline] 
+end define 
+
+define dict_entry 
+    [repeat endofline] 
+    [test] ': 
+    [repeat endofline] % jrc
+    [test] 
+end define 
+
+define classdef 
+        'class [opt id] ': [suite] 
+    |   'class [opt id] [SPOFF] '( [SPON] [opt testlist] [repeat endofline] ') ': [suite] 
+end define 
+
+define arglist 
+    [opt star_test] [list argument] [opt comma_opt_star_test]
+end define
+
+define star_test
+        [repeat endofline] '* [test]
+    |   [repeat endofline] '** [test]
+end define
+
+define comma_opt_star_test
+        ', [opt star_test] [opt comma_opt_star_test]
+end define
+
+define argument 
+        [repeat endofline] [test] [opt argument_value] [repeat endofline]
+end define
+
+define argument_value
+        [repeat endofline] [opt gen_for] 
+    |   '= [repeat endofline] [test]  
+end define 
+
+define plist_iter 
+        [repeat endofline] [plist_for] 
+    |   [repeat endofline] [plist_if] 
+end define 
+
+define plist_for 
+    'for [repeat endofline] [exprlist] 'in [testplist_safe] [opt plist_iter] 
+end define 
+
+define plist_if 
+    'if [old_test] [opt plist_iter] 
+end define 
+
+define gen_iter 
+        [repeat endofline] [gen_for] 
+    |   [repeat endofline] [gen_if] 
+end define 
+
+define gen_for 
+    'for [exprlist] 'in [or_test] [opt gen_iter] 
+end define 
+
+define gen_if 
+    'if [old_test] [opt gen_iter] 
+end define 
+
+define testlist1 
+    [list test] 
+end define 
+
+% not used in grammar, but may appear in "node" passed from Parser to Compiler 
+define encoding_decl 
+    [id] 
+end define 
+
+define yield_expr 
+    'yield [testlist] 
+end define 
+
+% Python literals
+define literal
+        [stringliteral] [repeat more_stringliteral]
+    |   [integerliteral]
+    |   [floatliteral]        
+end define
+
+define more_stringliteral
+    [repeat endofline] [stringliteral]
+end define
+
+define stringliteral 
+        [stringprefix] [SPOFF] [string] [SPON]
+    |   [string] 
+end define
+
+define stringprefix 
+    'r |  'u |  'ur |  'R |  'U |  'UR |  'Ur |  'uR | 'b
+end define 
+
+define string
+        [stringlit] 
+    |   [charlit] 
+    |   [longstringlit] 
+    |   [longcharlit] 
+end define 
+
+define integerliteral
+    [integer] [opt long] [opt imag]
+end define
+
+define integer
+        [integernumber] 
+    |   [hexinteger]
+    |   [octinteger]
+end define 
+
+define long
+        [SPOFF] 'l [SPON]
+    |   [SPOFF] 'L [SPON]
+end define
+
+define floatliteral
+        [number] [opt imag]
+    |   [pointfloat] [opt imag]        
+end define
+
+define imag
+        [SPOFF] 'j [SPON]
+    |   [SPOFF] 'J [SPON]
+end define
+
