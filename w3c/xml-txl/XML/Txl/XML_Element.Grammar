@@ -1,0 +1,83 @@
+% TXL Grammar for XML 1.0 Elements
+% Hongyu Zhang
+% Source Transformation Project
+% Queen's University, June 2001
+
+% The numbers enclosed in square brackets in comments refer to the definition
+% number in "Extensible Markup Language (XML)1.0 (Second Edition)"
+
+#pragma -char -idchar "-" -comment -width 2048 -nomultiline
+
+tokens
+    charref     "&#[\d]+;"                      %[66]
+             |  "&#x[\d\abcdefABCDEF]+;"
+    regexp      "\[^#\]*\]"
+end tokens
+
+define element                                  %[39]
+        [empty_elem_tag] [spaces]
+    |   [tag_content] [spaces]
+end define
+
+define tag_content
+    [stag]              [IN] 
+        [content]       [EX] 
+    [etag]                                  
+end define
+
+define empty_elem_tag                           %[44]
+    '< [name] [spaces] [repeat attribute] '/>        
+end define
+
+define attribute                                %[41]
+    [spaces] [name] '= [attvalue] [spaces]
+end define
+
+define stag                                     %[40]
+    '< [name] [spaces] [repeat attribute] '>
+end define
+
+define content                                  %[43]
+    [spaces] [repeat chardata] 
+    [spaces] [repeat sub1_content] [spaces]   
+end define
+
+define sub1_content
+    [spaces] [sub2_content]  
+    [spaces] [repeat chardata] [spaces]       
+end define
+
+define sub2_content
+        [element]
+    |   [reference]
+    |   [cdsect]
+    |   [pi]
+    |   [comment]
+    |   [regexp]
+end define
+
+define chardata                                 %[14] 
+    [not cdend] [not '<] [not '&] [token]
+end define
+
+define etag                                     %[42]
+    '</ [name] [spaces] '>
+end define
+
+define cdata                                    %[14]
+        [not cdend ] [token]
+    |   [comment]
+end define
+
+define cdend
+    ']']'>
+end define
+
+define reference                                %[67][68]
+        '& [name] ';
+    |   [charref]
+end define
+
+define cdsect                                   %[18][19][21]
+    '<! '[CDATA'[ [repeat cdata] [cdend]
+end define

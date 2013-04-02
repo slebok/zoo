@@ -1,0 +1,29 @@
+% Well-formedness Checking Rule for XML 1.0 Document Elements
+% Jim Cordy, CISC, Queen's University, June 2001
+
+rule checkWellFormed
+    % For every tree ...
+    replace $ [tag_content]
+        Tag [stag] Contents [content] EndTag [etag]
+
+    % ... get the tag and end tag of the tree ...
+    deconstruct * [name] Tag
+        TagId [name]
+    deconstruct * [name] EndTag
+        EndTagId [name]
+
+    % ... and check that they are the same.
+    deconstruct not EndTagId
+        TagId
+
+    % If not, report the error.
+    construct _ [id]
+        _ [message "ERROR: Malformed tree:"]
+    construct _ [stag]
+        Tag [putp "    %"]
+    construct _ [etag]
+        EndTag [putp "    %"]
+
+    by
+        Tag Contents EndTag
+end rule

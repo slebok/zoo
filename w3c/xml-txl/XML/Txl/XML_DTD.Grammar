@@ -1,0 +1,319 @@
+% TXL Grammar for XML 1.0 DTD's
+% Hongyu Zhang
+% Source Transformation Project
+% Queen's University, June 2001
+
+% The numbers enclosed in square brackets in comments refer to the definition
+% number in "Extensible Markup Language (XML)1.0 (Second Edition)"
+
+#pragma -char -idchars "-" -comment -width 2048
+
+tokens
+    name       "[\a_:][\a\d.-_:]*"              %[5]
+    dname      "[\a\d.-_:]+"                    %[7]
+    xml        "[x|X][m|M][l|L]"                %[17]
+end tokens
+
+comments                                        %[15]
+    <!--  -->
+    <?xml  ?>
+end comments
+
+define prolog                                   %[22]
+    [dtd_body]
+end define
+
+define dtd_body
+    [repeat misc] [opt doctypedecl]
+end define
+
+define misc                                     %[27]
+        [comment]
+    |   [pi]
+    |   [space]
+    |   [newline]
+end define
+
+define doctypedecl                              %[28]
+    '<!DOCTYPE [spaces] [name] [spaces] [opt sp_external_id] [spaces] [opt declbody] [spaces] '> [spaces]    
+end define
+
+define declbody
+    '[ 
+        [repeat decl]
+    ']
+end define
+
+define literal                                  %[11][12][13]
+        [charlit]
+    |   [stringlit]
+end define
+
+define pi                                       %[16]
+    '<? [pitarget] [opt sub1_pi] '?>
+end define
+
+define pitarget
+    [not xml] [name]
+end define
+
+define sub1_pi
+    [spaces] [not sub2_pi] [token]
+end define
+
+define sub2_pi
+    [token] '?> [token]
+end define
+
+define sp_external_id
+    [spaces] [external_id]
+end define
+
+define external_id                              %[75]
+        [exid_sys]
+    |   [exid_pub]
+end define
+
+define exid_sys
+    'SYSTEM [spaces] [literal]
+end define
+
+define exid_pub
+    'PUBLIC [spaces] [literal] [spaces] [literal]
+end define
+
+define decl
+        [markupdecl]
+    |   '% [name] ';                            %[28a][69]
+    |   [spaces]
+end define
+
+define markupdecl                               %[29]
+        [elementdecl]
+    |   [attlistdecl]
+    |   [entitydecl]
+    |   [notationdecl]
+    |   [pi]
+    |   [comment]
+end define
+
+% element declaration
+
+define elementdecl                              %[45]
+    '<!ELEMENT [spaces] [name] [spaces] [contentspec] [spaces] '> [spaces]
+end define
+
+define contentspec                              %[46]
+        'EMPTY
+    |   'ANY
+    |   [mixed]
+    |   [children]
+end define
+
+define children                                 %[47]
+    [children_body] [opt repetition]
+end define
+
+define repetition
+        '?
+    |   '*
+    |   '+
+end define
+
+define children_body
+        [choice]
+    |   [seq]
+end define
+
+define choice                                   %[49]
+    '( [spaces] [cp] [choice_item] [repeat choice_item] [spaces] ')
+end define
+
+define choice_item
+    [spaces] '| [spaces] [cp]
+end define
+
+define cp                                       %[48]
+    [cp_body] [opt repetition]
+end define
+
+define cp_body
+        [name]
+    |   [choice]
+    |   [seq]
+end define
+
+define seq                                      %[50]
+    '( [spaces] [cp] [repeat more_cps] [spaces] ')
+end define
+
+define more_cps
+    [spaces] ', [spaces] [cp]
+end define
+
+define mixed                                    %[51]
+        [pcdata_or_name]
+    |   [pcdata]
+end define
+
+define pcdata_or_name
+    '( [spaces] '#PCDATA [repeat more_names] [spaces] ')*
+end define
+
+define more_names
+    [spaces] '| [spaces] [name]
+end define
+
+define pcdata
+    '( [spaces] '#PCDATA [spaces] ')
+end define
+
+% Attribute-List declarations
+
+define attlistdecl                              %[52]
+    '<!ATTLIST [spaces] [name]
+        [repeat attdef] [spaces] 
+    '> [spaces]                     
+end define
+
+define attdef                                   %[53]
+    [spaces] [name] [spaces] [atttype] [spaces] [defaultdecl]
+end define
+
+define atttype                                  %[54]
+        [stringtype]
+    |   [tokenizedtype]
+    |   [enumeratedtype]
+end define
+
+define stringtype                               %[55]
+    'CDATA
+end define
+
+define tokenizedtype                            %[56]
+        'ID
+    |   'IDREF
+    |   'IDREFS
+    |   'ENTITY
+    |   'ENTITIES
+    |   'NMTOKEN
+    |   'NMTOKENS
+end define
+
+define enumeratedtype                           %[57]
+        [notationtype]
+    |   [enumeration]
+end define
+
+define notationtype                             %[58]
+    'NOTATION [spaces] '( [spaces] [name] [repeat more_names] [spaces] ')
+end define
+
+define enumeration                              %[59]
+    '( [spaces] [nmtoken] [repeat more_nmtokens] [spaces] ')
+end define
+
+define nmtoken
+        [name]
+    |   [dname]
+end define
+
+define more_nmtokens
+    [spaces] '| [spaces] [nmtoken]
+end define
+
+define defaultdecl                              %[60]
+        '#REQUIRED
+    |   '#IMPLIED
+    |   [opt fixed] [attvalue]
+end define
+
+define fixed
+    '#FIXED [spaces]
+end define
+
+define attvalue                                 %[10][67][66][68]
+        [stringlit]
+    |   [charlit]
+    |   [longstringlit]
+    |   [longcharlit]
+end define
+
+define longstringlit
+    '"
+    [repeat not_dquote]
+    '"
+end define
+
+define not_dquote
+    [not '"] [token]
+end define
+
+define longcharlit
+    ''
+    [repeat not_quote]
+    ''
+end define
+
+define not_quote
+    [not ''] [token]
+end define
+
+%Entity declaration
+
+define entitydecl                               %[70]
+        [gedecl]
+    |   [pedecl]
+end define
+
+define gedecl                                   %[71]
+    '<!ENTITY [spaces] [name] [spaces] [entitydef] [spaces] '> [spaces]
+end define
+
+define pedecl                                   %[72]
+    '<!ENTITY [spaces] '% [spaces] [name] [spaces] [pedef] [spaces] '> [spaces]
+end define
+
+define entitydef                                %[73]
+        [entityvalue]
+    |   [external_id] [opt ndatadecl]
+end define
+
+define pedef                                    %[74]
+        [entityvalue]
+    |   [external_id]
+end define
+
+define ndatadecl                                %[76]
+    [spaces] 'NDATA [spaces] [name]
+end define
+
+define entityvalue                              %[9]
+        [charlit]
+    |   [stringlit]
+    |   [longstringlit]
+    |   [longcharlit]
+end define
+
+% Notation Declarations
+
+define notationdecl                             %[82]
+    '<!NOTATION [spaces] [name] [spaces] [exid_or_pubid] [spaces] '> [spaces]
+end define
+
+define exid_or_pubid
+        [external_id]
+    |   'PUBLIC [spaces] [literal]              %[83]
+end define
+
+define spaces
+    [repeat space_or_newline]
+end define
+
+define space_or_newline
+        [space] 
+    |   [newline]
+end define
+
+
+
