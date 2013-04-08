@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SVG">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" upperBound="-1" eType="/0/SvgFile" eOpposite="/0/SvgFile/elements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" upperBound="-1" eType="/0/Use" eOpposite="/0/Use/use"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" ordered="false" upperBound="-1" eType="/0/Attribute" eOpposite="/0/Attribute/attOwner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="position" ordered="false" eType="/0/Coordinates" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="size" ordered="false" eType="/0/Dimension" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="root" ordered="false" eType="/0/Svg" eOpposite="/0/Svg/children"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fill" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewBox" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" eType="/0/GroupingElement" eOpposite="/0/GroupingElement/groupContent"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="drawsMarker" ordered="false" eType="/0/Marker" eOpposite="/0/Marker/drawing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StructuralElement" abstract="true" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Image" eSuperTypes="/0/StructuralElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referee" ordered="false" upperBound="-1" eType="/0/ReferencedFile" eOpposite="/0/ReferencedFile/referer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Svg" eSuperTypes="/0/StructuralElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner_SVG" ordered="false" upperBound="-1" eType="/0/SvgFile" eOpposite="/0/SvgFile/tag"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1" eType="/0/Element" containment="true" eOpposite="/0/Element/root"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseProfile" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GroupingElement" abstract="true" eSuperTypes="/0/StructuralElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="groupContent" upperBound="-1" eType="/0/Element" containment="true" eOpposite="/0/Element/group"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="G" eSuperTypes="/0/GroupingElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Defs" eSuperTypes="/0/GroupingElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Symbol" eSuperTypes="/0/GroupingElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Use" eSuperTypes="/0/StructuralElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" upperBound="-1" eType="/0/Element" eOpposite="/0/Element/target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GraphicalElement" abstract="true" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="stroke" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Shape" abstract="true" eSuperTypes="/0/GraphicalElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TextElement" abstract="true" eSuperTypes="/0/GraphicalElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="rotate" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="textLength" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fontSize" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rect" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="rx" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ry" ordered="false" unique="false" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Circle" eSuperTypes="/0/Shape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Ellipse" eSuperTypes="/0/Shape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Line" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="between" ordered="false" lowerBound="2" upperBound="2" eType="/0/Point"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerEnd" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerStart" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Polyline" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="waypoints" upperBound="-1" eType="/0/Point" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="strokeDashArray" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerEnd" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerStart" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Polygon" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="waypoints" upperBound="-1" eType="/0/Point"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerEnd" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerStart" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Path" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pathLength" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="d" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerEnd" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerStart" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Point" eSuperTypes="/0/Shape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Marker" eSuperTypes="/0/Shape">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerUnits" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refX" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refY" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerWidth" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="markerHeight" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="orient" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="drawing" ordered="false" upperBound="-1" eType="/0/Element" containment="true" eOpposite="/0/Element/drawsMarker"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Text" eSuperTypes="/0/TextElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lengthAdjust" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tspan" eSuperTypes="/0/TextElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tref" eSuperTypes="/0/TextElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="xlinkHref" ordered="false" lowerBound="1" eType="/0/TextElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attOwner" ordered="false" upperBound="-1" eType="/0/Element" eOpposite="/0/Element/attribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transform" abstract="true" eSuperTypes="/0/Attribute"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Scale" eSuperTypes="/0/Transform">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sx" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sy" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Translate" eSuperTypes="/0/Transform">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tx" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ty" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rotate" eSuperTypes="/0/Transform">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="angle" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="cx" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="cy" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Visibility" eSuperTypes="/0/Attribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visible" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FontWeight" eSuperTypes="/0/Attribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bold" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FontStyle" eSuperTypes="/0/Attribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="italic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Dimension">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Coordinates" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RelativeCoord" eSuperTypes="/0/Coordinates"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AbsoluteCoord" eSuperTypes="/0/Coordinates"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferencedFile" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referer" ordered="false" upperBound="-1" eType="/0/Image" eOpposite="/0/Image/referee"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SvgFile" eSuperTypes="/0/ReferencedFile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tag" ordered="false" lowerBound="1" eType="/0/Svg" eOpposite="/0/Svg/owner_SVG"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/Element" eOpposite="/0/Element/owner"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

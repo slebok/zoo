@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="FlatSignalFlow">
+    <eClassifiers xsi:type="ecore:EClass" name="RootFolder">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootContainer" ordered="false" upperBound="-1" eType="/0/RootContainer" containment="true" eOpposite="/0/RootContainer/rootFolder"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RootContainer">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootFolder" ordered="false" lowerBound="1" eType="/0/RootFolder" eOpposite="/0/RootFolder/rootContainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actor" ordered="false" upperBound="-1" eType="/0/Actor" containment="true" eOpposite="/0/Actor/rootContainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inputSignal" ordered="false" upperBound="-1" eType="/0/InputSignal" containment="true" eOpposite="/0/InputSignal/rootContainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outputSignal" ordered="false" upperBound="-1" eType="/0/OutputSignal" containment="true" eOpposite="/0/OutputSignal/rootContainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="queue" ordered="false" upperBound="-1" eType="/0/Queue" containment="true" eOpposite="/0/Queue/rootContainer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Actor">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="memory" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="script" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="WCET" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootContainer" ordered="false" lowerBound="1" eType="/0/RootContainer" eOpposite="/0/RootContainer/actor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transmitter" ordered="false" upperBound="-1" eType="/0/Transmitter" containment="true" eOpposite="/0/Transmitter/actor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="receiver" ordered="false" upperBound="-1" eType="/0/Receiver" containment="true" eOpposite="/0/Receiver/actor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transmitter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actor" ordered="false" lowerBound="1" eType="/0/Actor" eOpposite="/0/Actor/transmitter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationQueueTransmitter" ordered="false" lowerBound="1" eType="/0/AssociationQueueTransmitter" eOpposite="/0/AssociationQueueTransmitter/srctransmitter"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Receiver">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actor" ordered="false" lowerBound="1" eType="/0/Actor" eOpposite="/0/Actor/receiver"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationReceiverQueue" ordered="false" lowerBound="1" eType="/0/AssociationReceiverQueue" eOpposite="/0/AssociationReceiverQueue/dstreceiver"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InputSignal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootContainer" ordered="false" lowerBound="1" eType="/0/RootContainer" eOpposite="/0/RootContainer/inputSignal"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationReceiverQueue" ordered="false" lowerBound="1" eType="/0/AssociationReceiverQueue" eOpposite="/0/AssociationReceiverQueue/inputSignal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OutputSignal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootContainer" ordered="false" lowerBound="1" eType="/0/RootContainer" eOpposite="/0/RootContainer/outputSignal"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationQueueTransmitter" ordered="false" lowerBound="1" eType="/0/AssociationQueueTransmitter" eOpposite="/0/AssociationQueueTransmitter/outputSignal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Queue">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootContainer" ordered="false" lowerBound="1" eType="/0/RootContainer" eOpposite="/0/RootContainer/queue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationReceiverQueue" ordered="false" lowerBound="1" eType="/0/AssociationReceiverQueue" eOpposite="/0/AssociationReceiverQueue/srcqueue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationQueueTransmitter" ordered="false" lowerBound="1" eType="/0/AssociationQueueTransmitter" eOpposite="/0/AssociationQueueTransmitter/dstqueue"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationReceiverQueue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="srcqueue" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Queue" eOpposite="/0/Queue/associationReceiverQueue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dstreceiver" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Receiver" eOpposite="/0/Receiver/associationReceiverQueue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inputSignal" ordered="false" lowerBound="1" eType="/0/InputSignal" eOpposite="/0/InputSignal/associationReceiverQueue"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationQueueTransmitter">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dstqueue" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Queue" eOpposite="/0/Queue/associationQueueTransmitter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="srctransmitter" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Transmitter" eOpposite="/0/Transmitter/associationQueueTransmitter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outputSignal" ordered="false" lowerBound="1" eType="/0/OutputSignal" eOpposite="/0/OutputSignal/associationQueueTransmitter"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

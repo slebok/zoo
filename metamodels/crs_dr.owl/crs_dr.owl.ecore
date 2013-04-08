@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="crsdr">
+    <eClassifiers xsi:type="ecore:EClass" name="Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Meta-Reviewer" eSuperTypes="/0/Reviewer"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewer" eSuperTypes="/0/ConferenceMember /0/User /0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="invites_co-reviewers" ordered="false" eType="/0/Reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="invited_by" ordered="false" eType="/0/Reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_review_reference_or_expertise" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedByAdministrator" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adjustBid" ordered="false" eType="/0/Bid" eOpposite="/0/Bid/adjustedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readPaper" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasBeenAssigned" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writeReview" ordered="false" eType="/0/Review"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignExternalReviewer" ordered="false" eType="/0/ExternalReviewer" eOpposite="/0/ExternalReviewer/assignedByReviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Person" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inverse_of_add" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="execute" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="get" ordered="false" eType="/0/Inforamtion"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" eType="/0/Document" eOpposite="/0/Document/used_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="register" ordered="false" eType="/0/Account" eOpposite="/0/Account/registred_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modify" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="take_part_in" ordered="false" eType="/0/Event"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="remove" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="add" ordered="false" eType="/0/Person"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="send" ordered="false" eType="/0/Activity" eOpposite="/0/Activity/sent_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="added_by" ordered="false" eType="/0/Person"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributes" ordered="false" eType="/0/Conference_document" eOpposite="/0/Conference_document/has_authors"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_an_email" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_the_first_name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_gender" ordered="false" unique="false" eType="/0/EEnum"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_the_last_name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="employedBy" ordered="false" eType="/0/Organization"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasHomePage" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasSurname" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasFax" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasFirstName" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasPhone" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasEmail" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasConflictOfInterest" ordered="false" eType="/0/Document"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Preference"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommittee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasProgramCommitteeMember" ordered="false" eType="/0/ProgramCommitteeMember" eOpposite="/0/ProgramCommitteeMember/memberOfProgramCommittee"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bid">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adjustedBy" ordered="false" eType="/0/Reviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference" eSuperTypes="/0/Thing /0/Event /0/Working_event">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasConferenceMember" ordered="false" eType="/0/ConferenceMember" eOpposite="/0/ConferenceMember/memberOfConference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="paperAssignmentFinalizedBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviewCriteriaEnteredBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="paperAssignmentToolsRunBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="virtualMeetingEnabledBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hardcopyMailingManifestsPrintedBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="detailsEnteredBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviewerBiddingStartedBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="reviewsPerPaper" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoURL" ordered="false" unique="false" eType="/0/anyURI"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="acceptsHardcopySubmissions" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="siteURL" ordered="false" unique="false" eType="/0/anyURI"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConferenceChair" eSuperTypes="/0/ConferenceMember /0/Chairman"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConferenceMember" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="memberOfConference" ordered="false" eType="/0/Conference"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociatedChair" eSuperTypes="/0/ConferenceMember /0/Chairman"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommitteeMember" eSuperTypes="/0/Person /0/ConferenceMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="memberOfProgramCommittee" ordered="false" eType="/0/ProgramCommittee" eOpposite="/0/ProgramCommittee/hasProgramCommitteeMember"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxPapers" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addedBy" ordered="false" eType="/0/Administrator"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuthorNotReviewer" eSuperTypes="/0/Author"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SubjectArea"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExternalReviewer" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedByReviewer" ordered="false" lowerBound="1" eType="/0/Reviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Chairman" eSuperTypes="/0/Person /0/ConferenceMember"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommitteeChair" eSuperTypes="/0/ProgramCommitteeMember /0/Chairman">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="endReview" ordered="false" eType="/0/Review"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Acceptance" eSuperTypes="/0/Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rejection" eSuperTypes="/0/Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="/0/Conference_document /0/Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" ordered="false" eType="/0/Reviewed_contribution" eOpposite="/0/Reviewed_contribution/has_a_review"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writtenBy" ordered="false" eType="/0/Reviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Paper" eSuperTypes="/0/Regular_contribution /0/Document /0/Contribution">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasCo-author" ordered="false" eType="/0/Co-author" eOpposite="/0/Co-author/co-writePaper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasBid" ordered="false" eType="/0/Bid"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasDecision" ordered="false" eType="/0/Decision"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedTo" ordered="false" eType="/0/Reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasSubjectArea" ordered="false" eType="/0/SubjectArea"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readByReviewer" ordered="false" lowerBound="1" eType="/0/Reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="paperID" ordered="false" unique="false" eType="/0/unsignedLong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasAuthor" ordered="false" eType="/0/Author"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="acceptedBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rejectedBy" ordered="false" eType="/0/Administrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readByMeta-Reviewer" ordered="false" eType="/0/Meta-Reviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Author" eSuperTypes="/0/ConferenceMember /0/User /0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writes" ordered="false" eType="/0/Contribution" eOpposite="/0/Contribution/writtenBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="submitPaper" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writePaper" ordered="false" eType="/0/Paper"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Co-author" eSuperTypes="/0/Author">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="co-writePaper" ordered="false" eType="/0/Paper"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PaperAbstract" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PaperFullVersion" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Administrator" eSuperTypes="/0/User /0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="approve" ordered="false" eType="/0/Event"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assign" ordered="false" eType="/0/Role" eOpposite="/0/Role/assigned_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="finalizePaperAssignment" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="runPaperAssignmentTools" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enableVirtualMeeting" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startReviewerBidding" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignReviewer" ordered="false" eType="/0/Reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rejectPaper" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterConferenceDetails" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="printHardcopyMailingManifests" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="setMaxPapers" ordered="false" eType="/0/ProgramCommitteeMember"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterReviewCriteria" ordered="false" eType="/0/Conference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="acceptPaper" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addProgramCommitteeMember" ordered="false" eType="/0/ProgramCommitteeMember" eOpposite="/0/ProgramCommitteeMember/addedBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Meta-Review" eSuperTypes="/0/Review"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="unsignedLong"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="anyURI"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Workshop" eSuperTypes="/0/Working_event /0/Conference_part /0/Event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conists_of" ordered="false" eType="/0/Event_Tracks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="confirmed_by" ordered="false" eType="/0/Approval_Email" eOpposite="/0/Approval_Email/confirm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defined_by" ordered="false" eType="/0/Event_Setup" eOpposite="/0/Event_Setup/define"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="approved_by" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/approve"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="starts_on" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ends_on" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Account">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="registred_by" ordered="false" eType="/0/Person" eOpposite="/0/Person/register"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Inforamtion"/>
+    <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="recieve" ordered="false" eType="/0/Document" eOpposite="/0/Document/recieved_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="create" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="submit" ordered="false" eType="/0/Document" eOpposite="/0/Document/submited__by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assigned_by" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/assign"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Help_Request" eSuperTypes="/0/Request"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Symposium" eSuperTypes="/0/Event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Abstract" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="recieved_by" ordered="false" eType="/0/User" eOpposite="/0/User/recieve"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="used_by" ordered="false" eType="/0/Person" eOpposite="/0/Person/use"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="submited__by" ordered="false" eType="/0/User" eOpposite="/0/User/submit"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Invited_Paper" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Admin_Role" eSuperTypes="/0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Paper_Typologies" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event_Setup">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="define" ordered="false" eType="/0/Event"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Event_URL" eSuperTypes="/0/URL">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concerned" ordered="false" eType="/0/Event"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="URL" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Notification_Email" eSuperTypes="/0/Email"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Email" eSuperTypes="/0/Document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Short_Paper" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Author_Role" eSuperTypes="/0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Preview" eSuperTypes="/0/Review_Form"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review_Form" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Committe_Role" eSuperTypes="/0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Group_Email" eSuperTypes="/0/Email"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Submission_Template" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review_Form_Setup" eSuperTypes="/0/Review_Form"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Misc" eSuperTypes="/0/Help_Request"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event_Creation" eSuperTypes="/0/Activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Approval_Email" eSuperTypes="/0/Email">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="confirm" ordered="false" eType="/0/Event"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rejection_Email" eSuperTypes="/0/Email"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Submission" eSuperTypes="/0/Document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="/0/Document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Feature_Request" eSuperTypes="/0/Help_Request"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event_Tracks" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Request" eSuperTypes="/0/Activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_result" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sent_by" ordered="false" eType="/0/Person" eOpposite="/0/Person/send"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Head_Role" eSuperTypes="/0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Detail" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Corresponding_Author" eSuperTypes="/0/Author"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewer_Role" eSuperTypes="/0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event_Approval" eSuperTypes="/0/Activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Registration" eSuperTypes="/0/Activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Full_Paper" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Research_Topic" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Description"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Assistance" eSuperTypes="/0/Help_Request"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Email_Template" eSuperTypes="/0/Event_Setup"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_participant" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Active_conference_participant" eSuperTypes="/0/Conference_contributor /0/Conference_participant">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="gives_presentations" ordered="false" eType="/0/Presentation" eOpposite="/0/Presentation/is_given_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Passive_conference_participant" eSuperTypes="/0/Conference_participant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review_expertise" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_submitted_contribution" ordered="false" eType="/0/Submitted_contribution" eOpposite="/0/Submitted_contribution/has_a_review_expertise"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_an_expertise" ordered="false" unique="false" eType="/0/EEnum"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Submitted_contribution" eSuperTypes="/0/Written_contribution">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_review_expertise" ordered="false" eType="/0/Review_expertise" eOpposite="/0/Review_expertise/has_a_submitted_contribution"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Regular_author" eSuperTypes="/0/Conference_contributor"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_contributor" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Contribution_1th-author" eSuperTypes="/0/Regular_author"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Contribution_co-author" eSuperTypes="/0/Regular_author"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_contribution" eSuperTypes="/0/Conference_document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_submitted_at" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_contributions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Co-chair" eSuperTypes="/0/Committee_member">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_committe_co-chair_of" ordered="false" eType="/0/Committee" eOpposite="/0/Committee/has_a_committee_co-chair"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Committee" eSuperTypes="/0/User">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_members" ordered="false" eType="/0/Committee_member" eOpposite="/0/Committee_member/was_a_member_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_committee_of" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_a_commtitee"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_committee_co-chair" ordered="false" eType="/0/Co-chair" eOpposite="/0/Co-chair/was_a_committe_co-chair_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_committee_chair" ordered="false" eType="/0/Chair" eOpposite="/0/Chair/was_a_committee_chair_of"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Committee_member" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_member_of" ordered="false" eType="/0/Committee" eOpposite="/0/Committee/has_members"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Abstract" eSuperTypes="/0/Extended_abstract">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_the_1th_part_of" ordered="false" upperBound="-1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Extended_abstract" eSuperTypes="/0/Regular_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Important_dates">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_an_abstract_submission_date" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_a_full_paper_submission_date" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_an_ending_date" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_a_date_of_acceptance_announcement" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_a_date_of_camera_ready_paper_submission" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_a_starting_date" ordered="false" eType="/0/date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="belong_to_a_conference_volume" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_important_dates"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Invited_speaker" eSuperTypes="/0/Conference_contributor"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_proceedings">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_an_ISBN" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_publisher" ordered="false" eType="/0/Publisher" eOpposite="/0/Publisher/issues"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_a_volume" ordered="false" unique="false" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Information_for_participants" eSuperTypes="/0/Conference_document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_authors" ordered="false" eType="/0/Person" eOpposite="/0/Person/contributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_date_of_issue" ordered="false" eType="/0/date" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Regular_contribution" eSuperTypes="/0/Written_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Poster" eSuperTypes="/0/Conference_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Written_contribution" eSuperTypes="/0/Conference_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_applicant" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Camera_ready_contribution" eSuperTypes="/0/Accepted_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Accepted_contribution" eSuperTypes="/0/Reviewed_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Program_committee" eSuperTypes="/0/Committee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_program_committee_of" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_a_program_committee"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Organizing_committee" eSuperTypes="/0/Committee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_an_organizing_committee_of" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_an_organizing_committee"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Steering_committee" eSuperTypes="/0/Committee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_steering_committee_of" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_a_steering_committee"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_volume" eSuperTypes="/0/Conference">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_parts" ordered="false" eType="/0/Conference_part" eOpposite="/0/Conference_part/is_part_of_conference_volumes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_workshops" ordered="false" eType="/0/Workshop"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_tracks" ordered="false" eType="/0/Track"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_tutorials" ordered="false" eType="/0/Tutorial"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_commtitee" ordered="false" eType="/0/Committee" eOpposite="/0/Committee/was_a_committee_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_steering_committee" ordered="false" eType="/0/Steering_committee" eOpposite="/0/Steering_committee/was_a_steering_committee_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_an_organizing_committee" ordered="false" eType="/0/Organizing_committee" eOpposite="/0/Organizing_committee/was_an_organizing_committee_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_important_dates" ordered="false" eType="/0/Important_dates" eOpposite="/0/Important_dates/belong_to_a_conference_volume"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_contributions" ordered="false" eType="/0/Conference_contribution" eOpposite="/0/Conference_contribution/is_submitted_at"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_a_location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_program_committee" ordered="false" eType="/0/Program_committee" eOpposite="/0/Program_committee/was_a_program_committee_of"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Call_for_paper" eSuperTypes="/0/Conference_document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_announcement" eSuperTypes="/0/Conference_document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Invited_talk" eSuperTypes="/0/Presentation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_part">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_track-workshop-tutorial_topic" ordered="false" eType="/0/Topic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_part_of_conference_volumes" ordered="false" eType="/0/Conference_volume" eOpposite="/0/Conference_volume/has_parts"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_track-workshop-tutorial_chair" ordered="false" eType="/0/Track-workshop_chair" eOpposite="/0/Track-workshop_chair/was_a_track-workshop_chair_of"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Presentation" eSuperTypes="/0/Conference_contribution">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_given_by" ordered="false" eType="/0/Active_conference_participant" eOpposite="/0/Active_conference_participant/gives_presentations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Chair" eSuperTypes="/0/Committee_member">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_committee_chair_of" ordered="false" eType="/0/Committee" eOpposite="/0/Committee/has_a_committee_chair"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Track" eSuperTypes="/0/Conference_part"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rejected_contribution" eSuperTypes="/0/Reviewed_contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewed_contribution" eSuperTypes="/0/Submitted_contribution">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_review" ordered="false" eType="/0/Review" eOpposite="/0/Review/reviews"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Topic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="belongs_to_a_review_reference" ordered="false" eType="/0/Review_preference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_a_topis_of_conference_parts" ordered="false" eType="/0/Conference_part" eOpposite="/0/Conference_part/has_a_track-workshop-tutorial_topic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Late_paid_applicant" eSuperTypes="/0/Paid_applicant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Paid_applicant" eSuperTypes="/0/Registeered_applicant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Early_paid_applicant" eSuperTypes="/0/Paid_applicant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Organizer" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Call_for_participation" eSuperTypes="/0/Conference_document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Publisher">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="issues" ordered="false" eType="/0/Conference_proceedings" eOpposite="/0/Conference_proceedings/has_a_publisher"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Registeered_applicant" eSuperTypes="/0/Conference_applicant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Track-workshop_chair" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="was_a_track-workshop_chair_of" ordered="false" eType="/0/Conference_part" eOpposite="/0/Conference_part/has_a_track-workshop-tutorial_chair"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_www" eSuperTypes="/0/Conference_document">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_a_URL" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference_fees"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review_preference" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_a_topic_or_a_submission_contribution" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_a_degree" ordered="false" unique="false" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="EEnum">
+      <eLiterals name="high" value="1"/>
+      <eLiterals name="medium" value="2"/>
+      <eLiterals name="low" value="3"/>
+      <eLiterals name="very high" value="4"/>
+      <eLiterals name="male" value="5"/>
+      <eLiterals name="female" value="6"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Accepted_Paper" eSuperTypes="/0/paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="paper" eSuperTypes="/0/article">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="full_paper_size" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_author" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rejected_Paper" eSuperTypes="/0/paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Undecided_Paper" eSuperTypes="/0/paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Manual_Paper_Assignment" eSuperTypes="/0/paper_assignment">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="manually_assign_paper" ordered="false" upperBound="-1" eType="/0/Program_Committee_member"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Program_Committee_member" eSuperTypes="/0/human"/>
+    <eClassifiers xsi:type="ecore:EClass" name="paper_assignment" eSuperTypes="/0/activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assign_paper" ordered="false" eType="/0/Program_Committee_member"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="intensity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="start_date_of_camera-ready_submission" eSuperTypes="/0/camera-ready_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="camera-ready_submission_date" eSuperTypes="/0/date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="date_of_notification" eSuperTypes="/0/date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="date" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="article" eSuperTypes="/0/document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="article_written_by" ordered="false" eType="/0/author" eOpposite="/0/author/writes_article"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_reviewer" ordered="false" eType="/0/reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_abstract" ordered="false" eType="/0/abstract" eOpposite="/0/abstract/part_of_article"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="goes_through" ordered="false" eType="/0/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_sent_to" ordered="false" eType="/0/human"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_created_in" ordered="false" eType="/0/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="structure_created_by" ordered="false" eType="/0/human"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_author" ordered="false" eType="/0/human" eOpposite="/0/human/is_author_of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="gives_classification" ordered="false" eType="/0/classification"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Contact_Person" eSuperTypes="/0/human"/>
+    <eClassifiers xsi:type="ecore:EClass" name="conference" eSuperTypes="/0/Thing /0/event">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_program" ordered="false" eType="/0/program"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_in_phase" ordered="false" eType="/0/phase_of_conference"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="bidding_of_reviewer" eSuperTypes="/0/activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_followed_by" ordered="false" eType="/0/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_monitored_by" ordered="false" eType="/0/human"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_intensity" ordered="false" eType="/0/intensity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_result" ordered="false" eType="/0/article"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" eType="/0/human" eOpposite="/0/human/performs_activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_supervised_by" ordered="false" eType="/0/human" eOpposite="/0/human/supervises"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="conference_setup" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sets_member" ordered="false" eType="/0/human"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_made_by" ordered="false" eType="/0/human"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="includes_topic" ordered="false" eType="/0/topic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sets_date" ordered="false" eType="/0/date"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sets_URL" ordered="false" eType="/0/URL"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="human">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_author_of" ordered="false" eType="/0/article" eOpposite="/0/article/has_author"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performs_activity" ordered="false" eType="/0/activity" eOpposite="/0/activity/is_performed_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_employed_in" ordered="false" eType="/0/institute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_topic_of_interest" ordered="false" eType="/0/topic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supervises" ordered="false" eType="/0/activity" eOpposite="/0/activity/is_supervised_by"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="e-mail" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="last_name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="first_name" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="managing_of_conference_process" eSuperTypes="/0/activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Program_Committee_Chair" eSuperTypes="/0/human"/>
+    <eClassifiers xsi:type="ecore:EClass" name="reviewing_proces" eSuperTypes="/0/activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="end_date_of_camera-ready_submission" eSuperTypes="/0/camera-ready_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="abstract_submission_date" eSuperTypes="/0/date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="group_email" eSuperTypes="/0/article"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Senior_Reviewer_URL" eSuperTypes="/0/URL"/>
+    <eClassifiers xsi:type="ecore:EClass" name="notification" eSuperTypes="/0/activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_result" ordered="false" lowerBound="1" eType="/0/article"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="notification_email" eSuperTypes="/0/article"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Chair_URL" eSuperTypes="/0/URL"/>
+    <eClassifiers xsi:type="ecore:EClass" name="abstract_of_paper" eSuperTypes="/0/article"/>
+    <eClassifiers xsi:type="ecore:EClass" name="submission_process" eSuperTypes="/0/activity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="topic"/>
+    <eClassifiers xsi:type="ecore:EClass" name="lower_tier_reviewing_process" eSuperTypes="/0/reviewing_proces"/>
+    <eClassifiers xsi:type="ecore:EClass" name="start_date_of_conference" eSuperTypes="/0/date_of_conference"/>
+    <eClassifiers xsi:type="ecore:EClass" name="date_of_conference" eSuperTypes="/0/date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Senior_Program_Committee_member" eSuperTypes="/0/Program_Committee_member">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supervises" upperBound="4" eType="/0/activity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="end_date_of_abstract_submission" eSuperTypes="/0/abstract_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="phase_of_conference"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Regular_Program_Committee_member" eSuperTypes="/0/Program_Committee_member"/>
+    <eClassifiers xsi:type="ecore:EClass" name="start_date_of_full_paper_submission" eSuperTypes="/0/full_paper_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="full_paper_submission_date" eSuperTypes="/0/date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="start_date_of_abstract_submission" eSuperTypes="/0/abstract_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="end_date_of_conference" eSuperTypes="/0/date_of_conference"/>
+    <eClassifiers xsi:type="ecore:EClass" name="review_form" eSuperTypes="/0/article">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_created_in" ordered="false" lowerBound="1" eType="/0/activity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Automatic_Paper_Assignment" eSuperTypes="/0/paper_assignment">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="automatically_assign_paper" ordered="false" upperBound="-1" eType="/0/Program_Committee_member"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="institute"/>
+    <eClassifiers xsi:type="ecore:EClass" name="classification"/>
+    <eClassifiers xsi:type="ecore:EClass" name="summary_of_reviews" eSuperTypes="/0/article">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_created_in" ordered="false" lowerBound="1" eType="/0/activity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="upper_tier_reviewing_process" eSuperTypes="/0/reviewing_proces">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_performed_by" ordered="false" lowerBound="1" eType="/0/human"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="end_date_of_full_paper_submission" eSuperTypes="/0/full_paper_submission_date"/>
+    <eClassifiers xsi:type="ecore:EClass" name="acceptance_notification_email" eSuperTypes="/0/notification_email"/>
+    <eClassifiers xsi:type="ecore:EClass" name="rejection_notification_email" eSuperTypes="/0/notification_email"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Contact_Person_URL" eSuperTypes="/0/URL"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Regular_Reviewer_URL" eSuperTypes="/0/URL"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Trip" eSuperTypes="/0/Social_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Banquet" eSuperTypes="/0/Social_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reception" eSuperTypes="/0/Social_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Social_event" eSuperTypes="/0/Event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Contribution" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writtenBy" ordered="false" eType="/0/Author" eOpposite="/0/Author/writes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dealsWith" ordered="false" eType="/0/Topic"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="remark" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="abstract" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactEmail" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasKeyword" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasTitle" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="City"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Organization"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Country"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Company" eSuperTypes="/0/Organization"/>
+    <eClassifiers xsi:type="ecore:EClass" name="University" eSuperTypes="/0/Organization"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Scholar" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="studyAt" ordered="false" eType="/0/University"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Poster" eSuperTypes="/0/Contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Short_paper" eSuperTypes="/0/Contribution"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewing_results_event" eSuperTypes="/0/Administrative_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Administrative_event" eSuperTypes="/0/Event">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="follows" ordered="false" eType="/0/Administrative_event"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parallel_with" ordered="false" eType="/0/Administrative_event"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewing_event" eSuperTypes="/0/Administrative_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Registration_of_participants_event" eSuperTypes="/0/Administrative_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Submission_event" eSuperTypes="/0/Administrative_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Camera_Ready_event" eSuperTypes="/0/Administrative_event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Tutorial" eSuperTypes="/0/Working_event /0/Conference_part"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Working_event" eSuperTypes="/0/Event">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasTopic" ordered="false" eType="/0/Topic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasAdministrativeEvent" ordered="false" eType="/0/Administrative_event"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Member" eSuperTypes="/0/Participant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Participant" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="earlyRegistration" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Member_PC" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expertOn" ordered="false" eType="/0/Topic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviewes" ordered="false" eType="/0/Contribution"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Chair_PC" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Student" eSuperTypes="/0/Participant"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Science_Worker" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Assistant" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Volunteer" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Regular" eSuperTypes="/0/Participant"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="positiveInteger"/>
+    <eClassifiers xsi:type="ecore:EClass" name="author" eSuperTypes="/0/person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writes_article" ordered="false" eType="/0/article" eOpposite="/0/article/article_written_by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assigns_article_to_conference" ordered="false" eType="/0/article"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="pc_meeting" eSuperTypes="/0/event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="event">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_startdate" ordered="false" unique="false" eType="/0/dateTime"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="has_enddate" ordered="false" unique="false" eType="/0/dateTime"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="session" eSuperTypes="/0/event"/>
+    <eClassifiers xsi:type="ecore:EClass" name="chair" eSuperTypes="/0/person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assigns_reviewers_to_article" ordered="false" eType="/0/reviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="creates_program" ordered="false" eType="/0/program" eOpposite="/0/program/program_created_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="abstract" eSuperTypes="/0/document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="part_of_article" ordered="false" eType="/0/article" eOpposite="/0/article/has_abstract"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="review" eSuperTypes="/0/document /0/article">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="gives_classification" ordered="false" lowerBound="1" eType="/0/classification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="is_created_in" ordered="false" lowerBound="1" eType="/0/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="review_written_by" ordered="false" eType="/0/reviewer" eOpposite="/0/reviewer/writes_review"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="participant" eSuperTypes="/0/person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="submits_to_conference" ordered="false" eType="/0/conference"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="program">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="program_created_by" ordered="false" eType="/0/chair" eOpposite="/0/chair/creates_program"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has_session" ordered="false" eType="/0/session"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="reviewer" eSuperTypes="/0/person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writes_review" ordered="false" eType="/0/review" eOpposite="/0/review/review_written_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="dateTime"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

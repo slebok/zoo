@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ODPIV">
+    <eClassifiers xsi:type="ecore:EClass" name="InvariantSchema">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_AT" ordered="false" upperBound="-1" eType="/0/ActionTemplate" eOpposite="/0/ActionTemplate/AT_constrainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_ATy" ordered="false" upperBound="-1" eType="/0/ActionType" eOpposite="/0/ActionType/ATy_constrainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_SC" ordered="false" upperBound="-1" eType="/0/StateChange" eOpposite="/0/StateChange/SC_constrainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_S" ordered="false" upperBound="-1" eType="/0/State" eOpposite="/0/State/S_constrainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_IOT" ordered="false" upperBound="-1" eType="/0/InformationObjectTemplate" eOpposite="/0/InformationObjectTemplate/IOT_constrainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_IOTy" ordered="false" upperBound="-1" eType="/0/InformationObjectType" eOpposite="/0/InformationObjectType/IOTy_constrainer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationObjectTemplate">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IOT_IO" ordered="false" upperBound="-1" eType="/0/InformationObject" eOpposite="/0/InformationObject/IO_IOT"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IOT_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_IOT"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationObjectType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IOTy_IO" ordered="false" upperBound="-1" eType="/0/InformationObject" eOpposite="/0/InformationObject/IO_IOTy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IOTy_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_IOTy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="describer" ordered="false" upperBound="-1" eType="/0/StaticSchema" eOpposite="/0/StaticSchema/SS_IO"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IO_IOT" ordered="false" upperBound="-1" eType="/0/InformationObjectTemplate" eOpposite="/0/InformationObjectTemplate/IOT_IO"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IO_IOTy" ordered="false" upperBound="-1" eType="/0/InformationObjectType" eOpposite="/0/InformationObjectType/IOTy_IO"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IO_A" ordered="false" upperBound="-1" eType="/0/Action" eOpposite="/0/Action/participant"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="IO_S" ordered="false" lowerBound="1" eType="/0/State" eOpposite="/0/State/S_IO"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="change" ordered="false" lowerBound="1" eType="/0/StateChange" eOpposite="/0/StateChange/startState"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="causeSC" ordered="false" lowerBound="1" eType="/0/StateChange" eOpposite="/0/StateChange/endState"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="S_IO" ordered="false" lowerBound="1" eType="/0/InformationObject" containment="true" eOpposite="/0/InformationObject/IO_S"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="S_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_S"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateChange">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startState" ordered="false" lowerBound="1" eType="/0/State" eOpposite="/0/State/change"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="endState" ordered="false" lowerBound="1" eType="/0/State" eOpposite="/0/State/causeSC"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specifier" ordered="false" lowerBound="1" upperBound="-1" eType="/0/DynamicSchema" eOpposite="/0/DynamicSchema/dsStateChange"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cause" ordered="false" upperBound="-1" eType="/0/Action" eOpposite="/0/Action/effect"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="SC_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_SC"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DynamicSchema">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dsStateChange" ordered="false" upperBound="-1" eType="/0/StateChange" eOpposite="/0/StateChange/specifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StaticSchema">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="locationTime" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="SS_IO" ordered="false" lowerBound="1" upperBound="-1" eType="/0/InformationObject" eOpposite="/0/InformationObject/describer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="effect" ordered="false" upperBound="-1" eType="/0/StateChange" eOpposite="/0/StateChange/cause"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="A_AT" ordered="false" upperBound="-1" eType="/0/ActionTemplate" eOpposite="/0/ActionTemplate/AT_A"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="participant" ordered="false" upperBound="-1" eType="/0/InformationObject" eOpposite="/0/InformationObject/IO_A"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="A_ATy" ordered="false" upperBound="-1" eType="/0/ActionType" eOpposite="/0/ActionType/ATy_A"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ActionType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ATy_A" ordered="false" upperBound="-1" eType="/0/Action" eOpposite="/0/Action/A_ATy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ATy_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_ATy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ActionTemplate">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="AT_A" ordered="false" upperBound="-1" eType="/0/Action" eOpposite="/0/Action/A_AT"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="AT_constrainer" ordered="false" upperBound="-1" eType="/0/InvariantSchema" eOpposite="/0/InvariantSchema/constrainer_AT"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

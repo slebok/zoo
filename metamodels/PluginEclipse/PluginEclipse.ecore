@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PluginEclipse">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" unique="false" upperBound="-1" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" unique="false" upperBound="-1" eType="/2/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Resolution">
+      <eLiterals name="Mandatory" value="1"/>
+      <eLiterals name="Optional" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Visibility">
+      <eLiterals name="Private" value="1"/>
+      <eLiterals name="Reexport" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Eclipse" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bundles" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Bundle" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="packages" ordered="false" upperBound="-1" eType="/0/Package" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bundle" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="symbolicName" ordered="false" unique="false" lowerBound="1" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleton" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="manifestVersion" ordered="false" unique="false" lowerBound="1" eType="/2/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="require" ordered="false" upperBound="-1" eType="/0/RequiredBundle" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="version" ordered="false" lowerBound="1" eType="/0/Version" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="export" ordered="false" upperBound="-1" eType="/0/ExportedPackage" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="import" ordered="false" upperBound="-1" eType="/0/ImportedPackage" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="packages" ordered="false" upperBound="-1" eType="/0/Package" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RequireBundleAttribute" abstract="true" eSuperTypes="/0/LocatedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AttResolution" eSuperTypes="/0/RequireBundleAttribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/Resolution"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttVisibility" eSuperTypes="/0/RequireBundleAttribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/Visibility"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Range" eSuperTypes="/0/RequireBundleAttribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLeftInclusive" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRightInclusive" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lowerBound" ordered="false" lowerBound="1" eType="/0/Version" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="upperBound" ordered="false" lowerBound="1" eType="/0/Version" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Version" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="major" ordered="false" unique="false" lowerBound="1" eType="/2/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minor" ordered="false" unique="false" lowerBound="1" eType="/2/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="micro" ordered="false" unique="false" lowerBound="1" eType="/2/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="qualification" ordered="false" unique="false" lowerBound="1" eType="/2/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RequiredBundle" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="requireBundleAttribute" ordered="false" upperBound="-1" eType="/0/RequireBundleAttribute" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bundle" ordered="false" lowerBound="1" eType="/0/Bundle"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ImportedPackage" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolution" ordered="false" unique="false" lowerBound="1" eType="/0/Resolution"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false" lowerBound="1" eType="/0/Package" eOpposite="/0/Package/importedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="range" ordered="false" eType="/0/Range" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExportedPackage" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false" lowerBound="1" eType="/0/Package" eOpposite="/0/Package/exportedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="version" ordered="false" lowerBound="1" eType="/0/Version" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="xFriends" ordered="false" lowerBound="1" eType="/1/Xfriends" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fqn" ordered="false" unique="false" lowerBound="1" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="importedBy" ordered="false" upperBound="-1" eType="/0/ImportedPackage" eOpposite="/0/ImportedPackage/package"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="exportedBy" ordered="false" eType="/0/ExportedPackage" eOpposite="/0/ExportedPackage/package"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PluginsEclipse">
+    <eClassifiers xsi:type="ecore:EClass" name="Xfriends" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bundles" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Bundle"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Xinternal" eSuperTypes="/0/ExportedPackage">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

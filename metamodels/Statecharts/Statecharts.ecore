@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Statecharts">
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" ordered="false" upperBound="-1" eType="/1/Transition" containment="true" eOpposite="/1/Transition/transSM_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="top" ordered="false" upperBound="-1" eType="/1/State" containment="true" eOpposite="/1/State/state_container"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="/1/StateVertex">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="state_container" ordered="false" lowerBound="1" eType="/1/StateMachine" eOpposite="/1/StateMachine/top"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="internalTransitions" ordered="false" upperBound="-1" eType="/1/Transition" containment="true" eOpposite="/1/Transition/transS_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="deferrableEvents" ordered="false" upperBound="-1" eType="/1/Event" eOpposite="/1/Event/targets"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="/1/State">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subVertexes" ordered="false" upperBound="-1" eType="/1/StateVertex" containment="true" eOpposite="/1/StateVertex/sv_container"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isConcurrent" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transSM_container" ordered="false" eType="/1/StateMachine" eOpposite="/1/StateMachine/transitions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transS_container" ordered="false" eType="/1/State" eOpposite="/1/State/internalTransitions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="trigger" ordered="false" eType="/1/Event" containment="true" eOpposite="/1/Event/evt_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="guard" ordered="false" eType="/1/Guard" containment="true" eOpposite="/1/Guard/gua_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/StateVertex" eOpposite="/1/StateVertex/outgoing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/StateVertex" eOpposite="/1/StateVertex/incoming"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateVertex">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sv_container" ordered="false" eType="/1/CompositeState" eOpposite="/1/CompositeState/subVertexes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Guard">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="gua_container" ordered="false" lowerBound="1" eType="/1/Transition" eOpposite="/1/Transition/guard"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/1/BooleanExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Event">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="evt_container" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/trigger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targets" ordered="false" upperBound="-1" eType="/1/State" eOpposite="/1/State/deferrableEvents"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Perceptory">
+    <eClassifiers xsi:type="ecore:EClass" name="RelationSchip">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="affectCharacteristic" ordered="false" upperBound="-1" eType="/1/Characteristic" containment="true" eOpposite="/1/Characteristic/relationSchip"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" eType="/1/Constraint" eOpposite="/1/Constraint/relationSchip"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steriotype" ordered="false" upperBound="-1" eType="/1/Steriotype" eOpposite="/1/Steriotype/relationSchip"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="packages" ordered="false" upperBound="-1" eType="/1/Package" eOpposite="/1/Package/relationSchip"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associatePackages" ordered="false" lowerBound="2" upperBound="2" eType="/1/Package" eOpposite="/1/Package/connectedRelationSchip"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConstrainedRelationSchip"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Aggregation" eSuperTypes="/1/Association"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Composition" eSuperTypes="/1/Association"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Association" eSuperTypes="/1/RelationSchip"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Generalisation" eSuperTypes="/1/RelationSchip"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Dependency" eSuperTypes="/1/RelationSchip"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationEnd"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Package">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steriotype" ordered="false" eType="/1/Steriotype" eOpposite="/1/Steriotype/thePackage"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="children" ordered="false" upperBound="-1" eType="/1/Package" containment="true" eOpposite="/1/Package/parent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" lowerBound="1" eType="/1/Package" eOpposite="/1/Package/children"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" upperBound="-1" eType="/1/Class" containment="true" eOpposite="/1/Class/packages"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relationSchip" ordered="false" upperBound="-1" eType="/1/RelationSchip" containment="true" eOpposite="/1/RelationSchip/packages"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="connectedRelationSchip" ordered="false" upperBound="-1" eType="/1/RelationSchip" eOpposite="/1/RelationSchip/associatePackages"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Steriotype">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptiveAttribute" ordered="false" upperBound="-1" eType="/1/DescriptiveAttribute" eOpposite="/1/DescriptiveAttribute/steriotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" upperBound="-1" eType="/1/Operation" eOpposite="/1/Operation/steriotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relationSchip" ordered="false" upperBound="-1" eType="/1/RelationSchip" eOpposite="/1/RelationSchip/steriotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theClass" ordered="false" upperBound="-1" eType="/1/Class" eOpposite="/1/Class/steriotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thePackage" ordered="false" upperBound="-1" eType="/1/Package" eOpposite="/1/Package/steriotype"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characteristic" ordered="false" upperBound="-1" eType="/1/Characteristic" containment="true" eOpposite="/1/Characteristic/theClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="details" ordered="false" eType="/1/MetaData" containment="true" eOpposite="/1/MetaData/theClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" lowerBound="1" eType="/1/Operation" eOpposite="/1/Operation/affectFeature"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="myOperations" ordered="false" upperBound="-1" eType="/1/Operation" containment="true" eOpposite="/1/Operation/behaviour"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" upperBound="-1" eType="/1/Constraint" eOpposite="/1/Constraint/theClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steriotype" ordered="false" eType="/1/Steriotype" eOpposite="/1/Steriotype/theClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="packages" ordered="false" upperBound="-1" eType="/1/Package" eOpposite="/1/Package/classes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="caracteristic" ordered="false" lowerBound="1" eType="/1/Characteristic" eOpposite="/1/Characteristic/constraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theClass" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/constraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relationSchip" ordered="false" upperBound="-1" eType="/1/RelationSchip" eOpposite="/1/RelationSchip/constraint"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="detail" ordered="false" eType="/1/MetaData" containment="true" eOpposite="/1/MetaData/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inCharacteristic" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Characteristic" containment="true" eOpposite="/1/Characteristic/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="affectFeature" ordered="false" upperBound="-1" eType="/1/Class" containment="true" eOpposite="/1/Class/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steriotype" ordered="false" eType="/1/Steriotype" eOpposite="/1/Steriotype/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="behaviour" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/myOperations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Characteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="details" ordered="false" eType="/1/MetaData" containment="true" eOpposite="/1/MetaData/characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rule" ordered="false" eType="/1/BusnissRule" containment="true" eOpposite="/1/BusnissRule/characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" lowerBound="1" eType="/1/Operation" eOpposite="/1/Operation/inCharacteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theClass" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relationSchip" ordered="false" lowerBound="1" eType="/1/RelationSchip" eOpposite="/1/RelationSchip/affectCharacteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" eType="/1/Constraint" eOpposite="/1/Constraint/caracteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusnissRule">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characteristic" ordered="false" lowerBound="1" eType="/1/Characteristic" eOpposite="/1/Characteristic/rule"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MetaData">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" eType="/1/Source" containment="true" eOpposite="/1/Source/metaData"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characteristic" ordered="false" lowerBound="1" eType="/1/Characteristic" eOpposite="/1/Characteristic/details"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" lowerBound="1" eType="/1/Operation" eOpposite="/1/Operation/detail"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theClass" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/details"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Source">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="metaData" ordered="false" lowerBound="1" eType="/1/MetaData" eOpposite="/1/MetaData/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Domain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptiveAttribute" ordered="false" lowerBound="1" upperBound="-1" eType="/1/DescriptiveAttribute" eOpposite="/1/DescriptiveAttribute/domain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DescriptiveAttribute" eSuperTypes="/1/Characteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tempsDef" ordered="false" eType="/1/Temporality" containment="true" eOpposite="/1/Temporality/descriptiveAttributet"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specialDef" ordered="false" eType="/1/Geometry" containment="true" eOpposite="/1/Geometry/descriptiveAttributeg"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steriotype" ordered="false" eType="/1/Steriotype" eOpposite="/1/Steriotype/descriptiveAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="domain" ordered="false" eType="/1/Domain" eOpposite="/1/Domain/descriptiveAttribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Geometry" eSuperTypes="/1/PerceptorySteriotype /1/Characteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tempsDef" ordered="false" eType="/1/Temporality" eOpposite="/1/Temporality/geometry"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptiveAttributeg" ordered="false" lowerBound="1" eType="/1/DescriptiveAttribute" eOpposite="/1/DescriptiveAttribute/specialDef"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Temporality" eSuperTypes="/1/PerceptorySteriotype /1/Characteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="geometry" ordered="false" eType="/1/Geometry" eOpposite="/1/Geometry/tempsDef"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptiveAttributet" ordered="false" lowerBound="1" eType="/1/DescriptiveAttribute" eOpposite="/1/DescriptiveAttribute/tempsDef"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VisualInfo" eSuperTypes="/1/PerceptorySteriotype /1/Characteristic"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Value">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enumeratedDomain" ordered="false" lowerBound="1" eType="/1/EnumeratedDomain" eOpposite="/1/EnumeratedDomain/value"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RangeDomain" eSuperTypes="/1/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EnumeratedDomain" eSuperTypes="/1/Domain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Value" containment="true" eOpposite="/1/Value/enumeratedDomain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PerceptorySteriotype" eSuperTypes="/1/Steriotype"/>
+  </ecore:EPackage>
+</xmi:XMI>

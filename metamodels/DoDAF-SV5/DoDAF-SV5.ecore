@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="DoDAF">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DoDAFModel" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" upperBound="-1" eType="/0/Document" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sftm" ordered="false" upperBound="-1" eType="/0/SystemFunctionTraceabilityMatrix" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sd" ordered="false" upperBound="-1" eType="/0/SystemDocument" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="am" ordered="false" upperBound="-1" eType="/0/AM" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="system" ordered="false" upperBound="-1" eType="/0/System" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" upperBound="-1" eType="/0/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capability" ordered="false" upperBound="-1" eType="/0/Capability" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capabilityDocument" ordered="false" upperBound="-1" eType="/0/CapabilityDocument" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="systemCapability" ordered="false" upperBound="-1" eType="/0/SystemCapability" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cites" ordered="false" upperBound="-1" eType="/0/CapabilityDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="describes" ordered="false" upperBound="-1" eType="/0/SystemDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="records" ordered="false" upperBound="-1" eType="/0/ArchitectureDocument" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isThePrimaryReferenceFor" ordered="false" upperBound="-1" eType="/0/PA" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemFunctionTraceabilityMatrix" eSuperTypes="/0/Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isDefinedBy" ordered="false" upperBound="-1" eType="/0/SystemFunctionTraceabilityElement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemFunctionTraceabilityElement" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="systemFunction" ordered="false" eType="/0/SystemFunction" eOpposite="/0/SystemFunction/isCitedFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operationalActivity" ordered="false" eType="/0/Task" eOpposite="/0/Task/isCitedFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="systemProcessActivity" ordered="false" eType="/0/SystemPA" eOpposite="/0/SystemPA/mayBeCitedFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="system" ordered="false" eType="/0/System"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capability" ordered="false" eType="/0/Capability"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="supportStatusCode" ordered="false" unique="false" lowerBound="1" eType="/0/SupportStatusCode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemDocument" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureDocument" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PA" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isParentFor" ordered="false" upperBound="-1" eType="/0/PA" eOpposite="/0/PA/isChildFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isChildFor" ordered="false" upperBound="-1" eType="/0/PA" eOpposite="/0/PA/isParentFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="correspondsTo" ordered="false" upperBound="-1" eType="/0/PATask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isIncludedIn" ordered="false" upperBound="-1" eType="/0/AMPA"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isAssignedTo" ordered="false" upperBound="-1" eType="/0/SystemPA"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSupportedBy" ordered="false" upperBound="-1" eType="/0/SoftwareApplicationProcedurePA" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheConsumerFor" ordered="false" upperBound="-1" eType="/0/PAExchangeRequirement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheProducerFor" ordered="false" upperBound="-1" eType="/0/PAExchangeRequirement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemFunction" eSuperTypes="/0/PA">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedFor" ordered="false" upperBound="-1" eType="/0/SystemFunctionTraceabilityElement" eOpposite="/0/SystemFunctionTraceabilityElement/systemFunction"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemPA" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedFor" ordered="false" upperBound="-1" eType="/0/SystemFunctionTraceabilityElement" eOpposite="/0/SystemFunctionTraceabilityElement/systemProcessActivity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="provides" ordered="false" upperBound="-1" eType="/0/SystemCapability" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enables" ordered="false" upperBound="-1" eType="/0/SystemOperationalCapabilityTask" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SoftwareApplicationProcedurePA" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AM" eSuperTypes="/0/InformationAsset">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedBy" ordered="false" upperBound="-1" eType="/0/PATask" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="includes" ordered="false" upperBound="-1" eType="/0/AMPA" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationAsset" abstract="true" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AMPA" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isOrdinateOf" ordered="false" upperBound="-1" eType="/0/AMPA" eOpposite="/0/AMPA/isSubordinateOf"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSubordinateOf" ordered="false" upperBound="-1" eType="/0/AMPA" eOpposite="/0/AMPA/isOrdinateOf"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="System" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isDesignedToProvide" ordered="false" upperBound="-1" eType="/0/SystemPA" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isDescribedBy" ordered="false" upperBound="-1" eType="/0/SystemDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performs" ordered="false" upperBound="-1" eType="/0/SystemCapability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isUsedToAccomplish" ordered="false" upperBound="-1" eType="/0/SystemOperationalCapabilityTask"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="levelIdentifier" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="references" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="cost" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="correspondsTo" ordered="false" upperBound="-1" eType="/0/PATask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSupportedBy" ordered="false" upperBound="-1" eType="/0/ArchitectureTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheSourceOfNeedFor" ordered="false" upperBound="-1" eType="/0/InformationExchangeRequirement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheDestinationOfNeedFor" ordered="false" upperBound="-1" eType="/0/InformationExchangeRequirement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedFor" ordered="false" upperBound="-1" eType="/0/SystemFunctionTraceabilityElement" eOpposite="/0/SystemFunctionTraceabilityElement/operationalActivity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureTask" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OperationalCapabilityTask" eSuperTypes="/0/Task">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isAccomplishedA" ordered="false" lowerBound="1" eType="/0/SystemOperationalCapabilityTask"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemOperationalCapabilityTask" eSuperTypes="/0/Task"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PATask" eSuperTypes="/0/Task"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Capability" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isPerformedBy" ordered="false" upperBound="-1" eType="/0/SystemCapability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isOrdinateFor" ordered="false" upperBound="-1" eType="/0/Capability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSubordinateOf" ordered="false" upperBound="-1" eType="/0/Capability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isPerformedByNC" ordered="false" upperBound="-1" eType="/0/NetworkCapability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isPerformedByNLC" ordered="false" upperBound="-1" eType="/0/NodeLinkCapability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isPerformedBySC" ordered="false" upperBound="-1" eType="/0/SystemCapability"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedInCD" ordered="false" upperBound="-1" eType="/0/CapabilityDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isUsedInMICN" ordered="false" upperBound="-1" eType="/0/MaterielItemCapabilityNorm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isUsedInOTCN" ordered="false" upperBound="-1" eType="/0/OrganizationTypeCapabilityNorm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isAttainedFor" ordered="false" upperBound="-1" eType="/0/RequiredInformationTechnologyCapability"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CapabilityDocument" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedIn" ordered="false" upperBound="-1" eType="/0/Capability"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemCapability" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedIn" ordered="false" upperBound="-1" eType="/0/Capability"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NetworkCapability" eSuperTypes="/0/Capability"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NodeLinkCapability" eSuperTypes="/0/Capability"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MaterielItemCapabilityNorm" eSuperTypes="/0/Capability"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganizationTypeCapabilityNorm" eSuperTypes="/0/Capability"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RequiredInformationTechnologyCapability" eSuperTypes="/0/Capability"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationTechnologyRequirement" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specifies" ordered="false" upperBound="-1" eType="/0/RequiredInformationTechnologyCapability"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationExchangeRequirement" eSuperTypes="/0/InformationTechnologyRequirement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PAExchangeRequirement" eSuperTypes="/0/InformationTechnologyRequirement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedIn" ordered="false" upperBound="-1" eType="/0/InformationExchangeRequirement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="SupportStatusCode">
+      <eLiterals name="red" value="1"/>
+      <eLiterals name="yellow" value="2"/>
+      <eLiterals name="green" value="3"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

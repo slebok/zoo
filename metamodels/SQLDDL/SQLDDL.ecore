@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="SQLDDL">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true" eSuperTypes="/1/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Database" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tables" upperBound="-1" eType="/1/Table" containment="true" eOpposite="/1/Table/database"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="database" ordered="false" lowerBound="1" eType="/1/Database" eOpposite="/1/Database/tables"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedBy" ordered="false" upperBound="-1" eType="/1/ForeignKey" eOpposite="/1/ForeignKey/referencedTable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1" eType="/1/TableElement" containment="true" eOpposite="/1/TableElement/table"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1" eType="/1/Parameter" containment="true" eOpposite="/1/Parameter/table"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TableElement" abstract="true" eSuperTypes="/1/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/1/TableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedBy" ordered="false" upperBound="-1" eType="/1/ForeignKey" eOpposite="/1/ForeignKey/referencedColumns"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/Type" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="canBeNull" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="default" ordered="false" eType="/1/Value" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="keys" ordered="false" upperBound="-1" eType="/1/Key" eOpposite="/1/Key/columns"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Key" abstract="true" eSuperTypes="/1/TableElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnique" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="columns" lowerBound="1" upperBound="-1" eType="/1/Column" eOpposite="/1/Column/keys"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleKey" eSuperTypes="/1/Key"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PrimaryKey" eSuperTypes="/1/Key"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ForeignKey" eSuperTypes="/1/Key">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedTable" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/referencedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedColumns" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Column" eOpposite="/1/Column/referencedBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" ordered="false" unique="false" upperBound="2" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnsigned" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" eType="/1/Value" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Value" abstract="true" eSuperTypes="/1/LocatedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IntegerVal" eSuperTypes="/1/Value">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NullVal" eSuperTypes="/1/Value"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StringVal" eSuperTypes="/1/Value">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

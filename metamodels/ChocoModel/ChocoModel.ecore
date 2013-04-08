@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ChocoModel">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" unique="false" upperBound="-1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="OpConstraint">
+      <eLiterals name="eq" value="1"/>
+      <eLiterals name="and2" value="2"/>
+      <eLiterals name="or2" value="3"/>
+      <eLiterals name="gt" value="4"/>
+      <eLiterals name="ge" value="5"/>
+      <eLiterals name="lt" value="6"/>
+      <eLiterals name="le" value="7"/>
+      <eLiterals name="plus" value="8"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="import" ordered="false" upperBound="-1" eType="/0/Import" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="problem" ordered="false" lowerBound="1" eType="/0/ChocoProblem" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Import" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fqn" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ChocoProblem" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/Element" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Expression" abstract="true" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConstraintDef" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" ordered="false" unique="false" lowerBound="1" eType="/0/OpConstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="left" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="right" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntVar" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="domain" ordered="false" lowerBound="1" eType="/0/Domain" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Domain" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lower" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="upper" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntConstant" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SymbolicTerm" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="term" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntValue" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntExp" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" ordered="false" unique="false" lowerBound="1" eType="/0/OpConstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="left" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="right" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Constraint" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" ordered="false" unique="false" lowerBound="1" eType="/0/OpConstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="left" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="right" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PostConstraint" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="op" ordered="false" unique="false" lowerBound="1" eType="/0/OpConstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" lowerBound="1" eType="/0/ConstraintDef"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

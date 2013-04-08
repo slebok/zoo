@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PASSI">
+    <eSubpackages name="Solution Domain">
+      <eClassifiers xsi:type="ecore:EClass" name="FIPA-Platform Agent">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="fipa_platform_Task" ordered="false" upperBound="-1" eType="/0/Solution Domain/FIPA-platform Task" containment="true" eOpposite="/0/Solution Domain/FIPA-platform Task/fipa_platform_Agent"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="agent" ordered="false" lowerBound="1" eType="/0/Agency Domain/Agent" eOpposite="/0/Agency Domain/Agent/fipa_platform_AgentA"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="FIPA-platform Task">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="fipa_platform_Agent" ordered="false" lowerBound="1" eType="/0/Solution Domain/FIPA-Platform Agent" eOpposite="/0/Solution Domain/FIPA-Platform Agent/fipa_platform_Task"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/0/Agency Domain/Task" eOpposite="/0/Agency Domain/Task/fipa_platform_TaskT"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Service"/>
+    </eSubpackages>
+    <eSubpackages name="Agency Domain">
+      <eClassifiers xsi:type="ecore:EClass" name="Agent">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Knowledge" ordered="false" lowerBound="1" eType="/0/Problem Domain/Ontology"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="fipa_platform_AgentA" ordered="false" lowerBound="1" eType="/0/Solution Domain/FIPA-Platform Agent" eOpposite="/0/Solution Domain/FIPA-Platform Agent/agent"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" eType="/0/Agency Domain/Role" containment="true" eOpposite="/0/Agency Domain/Role/agentR"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" upperBound="-1" eType="/0/Problem Domain/Ressource"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="non_functionnal_Requirement" ordered="false" upperBound="-1" eType="/0/Problem Domain/Non functionnal Requirement"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="requirement" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Problem Domain/Requirement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Role">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="agentR" ordered="false" lowerBound="1" eType="/0/Agency Domain/Agent" eOpposite="/0/Agency Domain/Agent/role"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="service" ordered="false" upperBound="-1" eType="/0/Solution Domain/Service"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Agency Domain/Task"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Problem Domain/Scenario"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="communication" ordered="false" upperBound="-1" eType="/0/Agency Domain/Communication"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Task">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="fipa_platform_TaskT" ordered="false" lowerBound="1" eType="/0/Solution Domain/FIPA-platform Task" eOpposite="/0/Solution Domain/FIPA-platform Task/task"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Communication">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Exchanged Knowledge" ordered="false" lowerBound="1" eType="/0/Problem Domain/Ontology"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="message" ordered="false" lowerBound="1" eType="/0/Agency Domain/Message" containment="true" eOpposite="/0/Agency Domain/Message/communication"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aip" ordered="false" lowerBound="1" eType="/0/Agency Domain/AIP"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Message">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="communication" ordered="false" lowerBound="1" eType="/0/Agency Domain/Communication" eOpposite="/0/Agency Domain/Communication/message"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="Comm_Act" ordered="false" lowerBound="1" eType="/0/Agency Domain/Performative"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="AIP">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="performative" ordered="false" lowerBound="1" eType="/0/Agency Domain/Performative" containment="true" eOpposite="/0/Agency Domain/Performative/aip"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Performative">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="aip" ordered="false" lowerBound="1" eType="/0/Agency Domain/AIP" eOpposite="/0/Agency Domain/AIP/performative"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="Problem Domain">
+      <eClassifiers xsi:type="ecore:EClass" name="Ressource">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="Name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Non functionnal Requirement"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Requirement"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Scenario"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Ontology"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Concept" eSuperTypes="/0/Problem Domain/Ontology"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Action" eSuperTypes="/0/Problem Domain/Ontology"/>
+      <eClassifiers xsi:type="ecore:EClass" name="Predicate" eSuperTypes="/0/Problem Domain/Ontology"/>
+    </eSubpackages>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

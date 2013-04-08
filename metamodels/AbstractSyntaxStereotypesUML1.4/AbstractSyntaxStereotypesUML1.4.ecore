@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="AbstractSynthax">
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTag" ordered="false" upperBound="-1" eType="/1/TaggedValue" eOpposite="/1/TaggedValue/referenceValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" ordered="false" upperBound="-1" eType="/1/Stereotype" eOpposite="/1/Stereotype/extendedElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" upperBound="-1" eType="/1/Constraint" eOpposite="/1/Constraint/constrainedElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taggedValue" ordered="false" upperBound="-1" eType="/1/TaggedValue" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainedElement" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/constraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainedStereotype" ordered="false" eType="/1/Stereotype" eOpposite="/1/Stereotype/stereotypeConstraint"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TaggedValue">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataValue" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceValue" ordered="false" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/referenceTag"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/TagDefinition" eOpposite="/1/TagDefinition/typedValue"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TagDefinition" eSuperTypes="/1/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tagType" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="multiplicity" ordered="false" lowerBound="1" eType="/1/Multiplicity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typedValue" ordered="false" upperBound="-1" eType="/1/TaggedValue" eOpposite="/1/TaggedValue/type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/1/Stereotype" eOpposite="/1/Stereotype/definedTag"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Multiplicity">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GeneralizableElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Stereotype" eSuperTypes="/1/GeneralizableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="icon" ordered="false" lowerBound="1" eType="/1/Geometry"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseClass" ordered="false" upperBound="-1" eType="/1/Name"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definedTag" ordered="false" upperBound="-1" eType="/1/TagDefinition" containment="true" eOpposite="/1/TagDefinition/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stereotypeConstraint" ordered="false" upperBound="-1" eType="/1/Constraint" containment="true" eOpposite="/1/Constraint/constrainedStereotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extendedElement" ordered="false" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/stereotype"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Geometry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Name">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

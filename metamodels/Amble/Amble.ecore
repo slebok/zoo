@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Amble">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Program" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processes" ordered="false" upperBound="-1" eType="/1/Process" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="networks" ordered="false" upperBound="-1" eType="/1/Network" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Process" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minId" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxId" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="instancesNb" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="states" ordered="false" upperBound="-1" eType="/1/State" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" ordered="false" upperBound="-1" eType="/1/Transition" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="initial" ordered="false" eType="/1/Action" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variables" ordered="false" upperBound="-1" eType="/1/Variable" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="connectedTo" ordered="false" upperBound="-1" eType="/1/Network"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInitial" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="guard" ordered="false" eType="/1/Guard" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="action" ordered="false" eType="/1/Action" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/outgoing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/incoming"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Trans" eSuperTypes="/1/Transition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="waitFor" ordered="false" lowerBound="1" eType="/1/Message"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Strans" eSuperTypes="/1/Transition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Transall" eSuperTypes="/1/Transition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="waitFor" ordered="false" lowerBound="1" eType="/1/Message"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Action" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Network" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="channels" ordered="false" upperBound="-1" eType="/1/Channel" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Channel" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="messages" ordered="false" upperBound="-1" eType="/1/Message" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/Process"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/Process"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Message" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="initValue" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

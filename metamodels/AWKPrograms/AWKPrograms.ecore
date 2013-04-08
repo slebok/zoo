@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="AWKPrograms">
+    <eClassifiers xsi:type="ecore:EClass" name="AWKProgram">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="input" ordered="false" lowerBound="1" eType="/1/File"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="output" ordered="false" lowerBound="1" eType="/1/File"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="script" ordered="false" lowerBound="1" eType="/1/Script"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="File">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="records" upperBound="-1" eType="/1/Record" containment="true" eOpposite="/1/Record/r_file"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Record">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="r_file" ordered="false" lowerBound="1" eType="/1/File" eOpposite="/1/File/records"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fields" upperBound="-1" eType="/1/Field" containment="true" eOpposite="/1/Field/f_record"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Field">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="f_record" ordered="false" lowerBound="1" eType="/1/Record" eOpposite="/1/Record/fields"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Script">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rules" upperBound="-1" eType="/1/Rule" containment="true" eOpposite="/1/Rule/r_script"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rule">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="r_script" ordered="false" lowerBound="1" eType="/1/Script" eOpposite="/1/Script/rules"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pattern" ordered="false" lowerBound="1" eType="/1/Pattern"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="action" ordered="false" lowerBound="1" eType="/1/Action"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Pattern">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="regularExpression" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instructions" upperBound="-1" eType="/1/Instruction" containment="true" eOpposite="/1/Instruction/i_action"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Instruction">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="i_action" ordered="false" lowerBound="1" eType="/1/Action" eOpposite="/1/Action/instructions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InitialRule" eSuperTypes="/1/Rule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FinalRule" eSuperTypes="/1/Rule"/>
+  </ecore:EPackage>
+</xmi:XMI>

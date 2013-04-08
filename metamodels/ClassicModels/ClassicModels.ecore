@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ClassicModels">
+    <eClassifiers xsi:type="ecore:EClass" name="AddressInfo" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="phone" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="addressLine1" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="addressLine2" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="city" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="postalCode" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="country" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassicModels">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="offices" ordered="false" upperBound="-1" eType="/0/Office" containment="true" eOpposite="/0/Office/officeOwner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="productLines" ordered="false" upperBound="-1" eType="/0/ProductLine" containment="true" eOpposite="/0/ProductLine/productLineOwner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="customers" ordered="false" upperBound="-1" eType="/0/Customer" containment="true" eOpposite="/0/Customer/customerOwner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProductLine">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="productLineOwner" ordered="false" lowerBound="1" eType="/0/ClassicModels" eOpposite="/0/ClassicModels/productLines"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="products" ordered="false" upperBound="-1" eType="/0/Product" containment="true" eOpposite="/0/Product/productLine"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="textDescription" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="htmlDescription" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Product">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="productLine" ordered="false" lowerBound="1" eType="/0/ProductLine" eOpposite="/0/ProductLine/products"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scale" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="vendor" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantityInStock" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="buyPrice" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="MSRP" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Office" eSuperTypes="/0/AddressInfo">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="officeOwner" ordered="false" lowerBound="1" eType="/0/ClassicModels" eOpposite="/0/ClassicModels/offices"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="employees" ordered="false" upperBound="-1" eType="/0/Employee" containment="true" eOpposite="/0/Employee/office"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="territory" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Employee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="office" ordered="false" lowerBound="1" eType="/0/Office" eOpposite="/0/Office/employees"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="employeeCustomers" ordered="false" upperBound="-1" eType="/0/Customer" eOpposite="/0/Customer/salesRepEmployee"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="extension" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reportsTo" ordered="false" lowerBound="1" eType="/0/Employee"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="jobTitle" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Customer" eSuperTypes="/0/AddressInfo">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="customerOwner" ordered="false" lowerBound="1" eType="/0/ClassicModels" eOpposite="/0/ClassicModels/customers"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="orders" upperBound="-1" eType="/0/Order" containment="true" eOpposite="/0/Order/customer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="payments" upperBound="-1" eType="/0/Payment" containment="true" eOpposite="/0/Payment/customer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="salesRepEmployee" ordered="false" lowerBound="1" eType="/0/Employee" eOpposite="/0/Employee/employeeCustomers"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactLastName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="contactFirstName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="creditLimit" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Payment">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="customer" ordered="false" lowerBound="1" eType="/0/Customer" eOpposite="/0/Customer/payments"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="checkNumber" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Order">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="customer" ordered="false" lowerBound="1" eType="/0/Customer" eOpposite="/0/Customer/orders"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="orderDetails" upperBound="-1" eType="/0/OrderDetail" containment="true" eOpposite="/0/OrderDetail/order"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="requiredDate" ordered="false" lowerBound="1" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="shippedDate" ordered="false" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="comments" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OrderDetail">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="order" ordered="false" lowerBound="1" eType="/0/Order" eOpposite="/0/Order/orderDetails"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="product" ordered="false" lowerBound="1" eType="/0/Product"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantityOrdered" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="priceEach" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

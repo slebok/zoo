@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="BibTeX">
+    <eClassifiers xsi:type="ecore:EClass" name="BibTeXFile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entries" ordered="false" upperBound="-1" eType="/0/BibTeXEntry" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Author">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BibTeXEntry" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuthoredEntry" abstract="true" eSuperTypes="/0/BibTeXEntry">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Author" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DatedEntry" abstract="true" eSuperTypes="/0/BibTeXEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TitledEntry" abstract="true" eSuperTypes="/0/BibTeXEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BookTitledEntry" abstract="true" eSuperTypes="/0/BibTeXEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="booktitle" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Article" eSuperTypes="/0/AuthoredEntry /0/DatedEntry /0/TitledEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="journal" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TechReport" eSuperTypes="/0/AuthoredEntry /0/DatedEntry /0/TitledEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Unpublished" eSuperTypes="/0/AuthoredEntry /0/TitledEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Manual" eSuperTypes="/0/TitledEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Proceedings" eSuperTypes="/0/DatedEntry /0/TitledEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InProceedings" eSuperTypes="/0/Proceedings /0/AuthoredEntry /0/BookTitledEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Booklet" eSuperTypes="/0/DatedEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Book" eSuperTypes="/0/AuthoredEntry /0/DatedEntry /0/TitledEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="publisher" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InCollection" eSuperTypes="/0/Book /0/BookTitledEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InBook" eSuperTypes="/0/Book">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="chapter" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Misc" eSuperTypes="/0/BibTeXEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ThesisEntry" abstract="true" eSuperTypes="/0/AuthoredEntry /0/DatedEntry /0/TitledEntry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="school" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PhDThesis" eSuperTypes="/0/ThesisEntry"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MasterThesis" eSuperTypes="/0/ThesisEntry"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

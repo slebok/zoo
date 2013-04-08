@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="SecureUML">
+    <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="/1/Subject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subjectGroup" ordered="false" upperBound="-1" eType="/1/Subject" containment="true" eOpposite="/1/Subject/group"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="/1/Subject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Subject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" lowerBound="1" eType="/1/Group" eOpposite="/1/Group/subjectGroup"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" upperBound="-1" eType="/1/Role" eOpposite="/1/Role/subjectAssignment"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleHierarchy" ordered="false" upperBound="-1" eType="/1/Role" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subjectAssignment" ordered="false" upperBound="-1" eType="/1/Subject" eOpposite="/1/Subject/role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="permissionAssignment" ordered="false" upperBound="-1" eType="/1/Permission" eOpposite="/1/Permission/role"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Permission">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" upperBound="-1" eType="/1/Role" eOpposite="/1/Role/permissionAssignment"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraintAssignment" ordered="false" eType="/1/AuthorizationConstraint" eOpposite="/1/AuthorizationConstraint/permission"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actionAssignment" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Action" eOpposite="/1/Action/permission"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuthorizationConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="permission" ordered="false" upperBound="-1" eType="/1/Permission" eOpposite="/1/Permission/constraintAssignment"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicAction" eSuperTypes="/1/Action"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeAction" eSuperTypes="/1/Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subordinatedAction" ordered="false" upperBound="-1" eType="/1/Action" containment="true" eOpposite="/1/Action/actionHyerarchy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="permission" ordered="false" upperBound="-1" eType="/1/Permission" eOpposite="/1/Permission/actionAssignment"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" lowerBound="1" eType="/1/Resource" eOpposite="/1/Resource/resourceAction"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actionHyerarchy" ordered="false" upperBound="-1" eType="/1/CompositeAction" eOpposite="/1/CompositeAction/subordinatedAction"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Resource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resourceAction" ordered="false" upperBound="-1" eType="/1/Action" containment="true" eOpposite="/1/Action/resource"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

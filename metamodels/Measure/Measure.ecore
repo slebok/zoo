@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="Measure">
+    <eClassifiers xsi:type="ecore:EEnum" name="ModelKind">
+      <eLiterals name="KM3" value="1"/>
+      <eLiterals name="UML2" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RootMeasureSet">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelType" ordered="false" unique="false" lowerBound="1" eType="/0/ModelKind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categories" lowerBound="1" upperBound="-1" eType="/0/Category" containment="true" eOpposite="/0/Category/root"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="measureSets" upperBound="-1" eType="/0/MeasureSet" containment="true" eOpposite="/0/MeasureSet/root"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Category">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="desc" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="metrics" lowerBound="1" upperBound="-1" eType="/0/Metric" containment="true" eOpposite="/0/Metric/category"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="root" ordered="false" lowerBound="1" eType="/0/RootMeasureSet" eOpposite="/0/RootMeasureSet/categories"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Metric">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="desc" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preferredValue" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="category" ordered="false" lowerBound="1" eType="/0/Category" eOpposite="/0/Category/metrics"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="ElementKind">
+      <eLiterals name="metamodel" value="1"/>
+      <eLiterals name="model" value="2"/>
+      <eLiterals name="package" value="3"/>
+      <eLiterals name="interface" value="4"/>
+      <eLiterals name="class" value="5"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MeasureSet">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementType" ordered="false" unique="false" lowerBound="1" eType="/0/ElementKind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="measures" upperBound="-1" eType="/0/Measure" containment="true" eOpposite="/0/Measure/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="root" ordered="false" eType="/0/RootMeasureSet" eOpposite="/0/RootMeasureSet/measureSets"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subsets" upperBound="-1" eType="/0/MeasureSet" containment="true" eOpposite="/0/MeasureSet/parent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" eType="/0/MeasureSet" eOpposite="/0/MeasureSet/subsets"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Measure" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="metric" ordered="false" lowerBound="1" eType="/0/Metric"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/MeasureSet" eOpposite="/0/MeasureSet/measures"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntegerMeasure" eSuperTypes="/0/Measure">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DoubleMeasure" eSuperTypes="/0/Measure">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PercentageMeasure" eSuperTypes="/0/Measure">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

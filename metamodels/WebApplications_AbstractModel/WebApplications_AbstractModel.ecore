@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="WebApplication">
+    <eClassifiers xsi:type="ecore:EClass" name="HyperLink">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="server" ordered="false" upperBound="-1" eType="/1/Server/ServerPage" eOpposite="/1/Server/ServerPage/link"/>
+    </eClassifiers>
+    <eSubpackages name="Client">
+      <eClassifiers xsi:type="ecore:EClass" name="ClientPage">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="hyperlink" ordered="false" lowerBound="1" eType="/1/HyperLink"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ClientPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="consistsOf" ordered="false" lowerBound="1" eType="/1/Client/ClientPage" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LogicInterface" eSuperTypes="/1/Client/ClientPageModule"/>
+      <eClassifiers xsi:type="ecore:EClass" name="DesignElement" eSuperTypes="/1/Client/ClientPageModule"/>
+    </eSubpackages>
+    <eSubpackages name="Server">
+      <eClassifiers xsi:type="ecore:EClass" name="ServerPage">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="useBusinessLogic" ordered="false" lowerBound="1" eType="/1/Server/BusinessLogic"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="useDesignTemplate" ordered="false" lowerBound="1" eType="/1/Server/DesignTemplate"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="generates" ordered="false" upperBound="-1" eType="/1/Client/ClientPage"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/1/HyperLink" eOpposite="/1/HyperLink/server"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="BusinessLogic"/>
+      <eClassifiers xsi:type="ecore:EClass" name="DesignTemplate"/>
+    </eSubpackages>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="TaskUsiXML">
+    <eClassifiers xsi:type="ecore:EClass" name="Task">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="frequency" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="importance" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="structurationLevel" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="complexityLevel" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="criticity" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="centrality" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="terminationValue" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskItem" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="decompositionTasks" upperBound="-1" eType="/0/Task" containment="true" eOpposite="/0/Task/decomposedTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="decomposedTask" ordered="false" eType="/0/Task" eOpposite="/0/Task/decompositionTasks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="leftOperator" ordered="false" eType="/0/BinaryOperator" eOpposite="/0/BinaryOperator/rightTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rightOperator" ordered="false" eType="/0/BinaryOperator" eOpposite="/0/BinaryOperator/leftTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="decoration" ordered="false" eType="/0/UnaryOperator" eOpposite="/0/UnaryOperator/decoratedTask"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Operator" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryOperator" eSuperTypes="/0/Operator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/BinaryType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="leftTask" ordered="false" lowerBound="1" eType="/0/Task" eOpposite="/0/Task/rightOperator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rightTask" ordered="false" lowerBound="1" eType="/0/Task" eOpposite="/0/Task/leftOperator"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UnaryOperator" eSuperTypes="/0/Operator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="UnaryType" ordered="false" unique="false" lowerBound="1" eType="/0/UnaryType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="decoratedTask" ordered="false" lowerBound="1" eType="/0/Task" eOpposite="/0/Task/decoration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FiniteInteration" eSuperTypes="/0/UnaryOperator">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="interation" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="BinaryType">
+      <eLiterals name="Enabling" value="1"/>
+      <eLiterals name="Disabling" value="2"/>
+      <eLiterals name="SuspendResume" value="3"/>
+      <eLiterals name="OrderIndependence" value="4"/>
+      <eLiterals name="IndependentConcurrency" value="5"/>
+      <eLiterals name="ConcurencyWithInformationPassing" value="6"/>
+      <eLiterals name="UnderterministicChoice" value="7"/>
+      <eLiterals name="EnablingWithInformationPassing" value="8"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="UnaryType">
+      <eLiterals name="Optional" value="1"/>
+      <eLiterals name="Iteration" value="2"/>
+      <eLiterals name="finitIteration" value="3"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

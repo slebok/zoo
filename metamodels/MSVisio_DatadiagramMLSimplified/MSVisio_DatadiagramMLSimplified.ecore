@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="DatadiagramMLSimplified">
+    <eClassifiers xsi:type="ecore:EClass" name="CellType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="formula" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="err" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VisioDocument">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="docMasters" ordered="false" eType="/0/MastersCollection" containment="true" eOpposite="/0/MastersCollection/ms_visioDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="docPages" ordered="false" eType="/0/PagesCollection" containment="true" eOpposite="/0/PagesCollection/ps_visioDocument"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PageSheet" eSuperTypes="/0/Shape /0/UniqueIdElt /0/MasterElt /0/PageElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="nameU" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IdentifiedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ID" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UniqueIdElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="UniqueID" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Shape">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ss_shapes" ordered="false" lowerBound="1" eType="/0/ShapesCollection" eOpposite="/0/ShapesCollection/shapes"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lineStyle" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fillStyle" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="textStyle" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="shapeElts" upperBound="-1" eType="/0/ShapeElt" containment="true" eOpposite="/0/ShapeElt/sse_shapeSheet"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ShapeElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sse_shapeSheet" ordered="false" lowerBound="1" eType="/0/Shape" eOpposite="/0/Shape/shapeElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IXElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="iX" ordered="false" unique="false" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DelElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="del" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Geom" eSuperTypes="/0/ShapeElt /0/IXElt /0/DelElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="noFill" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="noLine" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="noShow" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="noSnap" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="linesTo" upperBound="-1" eType="/0/LineTo" containment="true" eOpposite="/0/LineTo/lt_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="movesTo" upperBound="-1" eType="/0/MoveTo" containment="true" eOpposite="/0/MoveTo/mt_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arcsTo" upperBound="-1" eType="/0/ArcTo" containment="true" eOpposite="/0/ArcTo/ac_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="splineKnots" upperBound="-1" eType="/0/SplineKnot" containment="true" eOpposite="/0/SplineKnot/sk_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="polylinesTo" upperBound="-1" eType="/0/PolylineTo" containment="true" eOpposite="/0/PolylineTo/pt_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="infiniteLines" upperBound="-1" eType="/0/InfiniteLine" containment="true" eOpposite="/0/InfiniteLine/il_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ellipses" upperBound="-1" eType="/0/Ellipse" containment="true" eOpposite="/0/Ellipse/e_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ellipticalArcsTo" upperBound="-1" eType="/0/EllipticalArcTo" containment="true" eOpposite="/0/EllipticalArcTo/eat_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="splineStarts" upperBound="-1" eType="/0/SplineStart" containment="true" eOpposite="/0/SplineStart/ss_geom"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nurbsTo" upperBound="-1" eType="/0/NURBSTo" containment="true" eOpposite="/0/NURBSTo/nt_geom"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XYElt" abstract="true" eSuperTypes="/0/IXElt /0/DelElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="x" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="y" ordered="false" eType="/0/CellType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LineTo" eSuperTypes="/0/XYElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lt_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/linesTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MoveTo" eSuperTypes="/0/XYElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mt_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/movesTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XYAElt" abstract="true" eSuperTypes="/0/XYElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="a" ordered="false" eType="/0/CellType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArcTo" eSuperTypes="/0/XYAElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ac_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/arcsTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SplineKnot" eSuperTypes="/0/XYAElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sk_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/splineKnots"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PolylineTo" eSuperTypes="/0/XYAElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pt_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/polylinesTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XYABElt" abstract="true" eSuperTypes="/0/XYAElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="b" ordered="false" eType="/0/CellType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InfiniteLine" eSuperTypes="/0/XYABElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="il_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/infiniteLines"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XYABCDElt" abstract="true" eSuperTypes="/0/XYABElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c" ordered="false" eType="/0/CellType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="d" ordered="false" eType="/0/CellType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Ellipse" eSuperTypes="/0/XYABCDElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="e_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/ellipses"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EllipticalArcTo" eSuperTypes="/0/XYABCDElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eat_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/ellipticalArcsTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SplineStart" eSuperTypes="/0/XYABCDElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ss_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/splineStarts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XYABCDEElt" abstract="true" eSuperTypes="/0/XYABCDElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="e" ordered="false" eType="/0/CellType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NURBSTo" eSuperTypes="/0/XYABCDEElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nt_geom" ordered="false" lowerBound="1" eType="/0/Geom" eOpposite="/0/Geom/nurbsTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Text" eSuperTypes="/0/ShapeElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="textElts" upperBound="-1" eType="/0/TextElt" containment="true" eOpposite="/0/TextElt/te_text"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TextElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="te_text" ordered="false" lowerBound="1" eType="/0/Text" eOpposite="/0/Text/textElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StringElt" eSuperTypes="/0/TextElt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MastersCollection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ms_visioDocument" ordered="false" lowerBound="1" eType="/0/VisioDocument" eOpposite="/0/VisioDocument/docMasters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="masters" upperBound="-1" eType="/0/Master" containment="true" eOpposite="/0/Master/m_masters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="masterShortCuts" upperBound="-1" eType="/0/MasterShortCut" containment="true" eOpposite="/0/MasterShortCut/m_masterShortCuts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MasterShortCut" eSuperTypes="/0/IdentifiedElt /0/NamedElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="m_masterShortCuts" ordered="false" lowerBound="1" eType="/0/MastersCollection" eOpposite="/0/MastersCollection/masterShortCuts"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="iconSize" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="patternFlags" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="prompt" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortcutURL" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortcutHelp" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignName" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="icons" upperBound="-1" eType="/0/Icon" containment="true" eOpposite="/0/Icon/i_masterShortCut"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Icon" eSuperTypes="/0/MasterElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="i_masterShortCut" ordered="false" lowerBound="1" eType="/0/MasterShortCut" eOpposite="/0/MasterShortCut/icons"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Master" eSuperTypes="/0/IdentifiedElt /0/UniqueIdElt /0/NamedElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="m_masters" ordered="false" lowerBound="1" eType="/0/MastersCollection" eOpposite="/0/MastersCollection/masters"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseID" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="matchByName" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="iconSize" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="patternFlags" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="prompt" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hidden" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="iconUpdate" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="alignName" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="masterElts" upperBound="-1" eType="/0/MasterElt" containment="true" eOpposite="/0/MasterElt/me_master"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ShapesCollection" eSuperTypes="/0/MasterElt /0/PageElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="shapes" upperBound="-1" eType="/0/Shape" containment="true" eOpposite="/0/Shape/ss_shapes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConnectsCollection" eSuperTypes="/0/MasterElt /0/PageElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="connections" upperBound="-1" eType="/0/Connect" containment="true" eOpposite="/0/Connect/c_connects"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Connect">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c_connects" ordered="false" lowerBound="1" eType="/0/ConnectsCollection" eOpposite="/0/ConnectsCollection/connections"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fromSheet" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="toSheet" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fromCell" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="toCell" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fromPart" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="toPart" ordered="false" unique="false" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MasterElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="me_master" ordered="false" lowerBound="1" eType="/0/Master" eOpposite="/0/Master/masterElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PagesCollection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ps_visioDocument" ordered="false" lowerBound="1" eType="/0/VisioDocument" eOpposite="/0/VisioDocument/docPages"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pages" upperBound="-1" eType="/0/Page" containment="true" eOpposite="/0/Page/p_pages"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Page" eSuperTypes="/0/IdentifiedElt /0/NamedElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="p_pages" ordered="false" lowerBound="1" eType="/0/PagesCollection" eOpposite="/0/PagesCollection/pages"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="background" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="backPage" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewScale" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewCenterX" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ViewCenterY" ordered="false" unique="false" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="reviewerID" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="associatedPage" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pageElts" upperBound="-1" eType="/0/PageElt" containment="true" eOpposite="/0/PageElt/pe_page"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PageElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pe_page" ordered="false" lowerBound="1" eType="/0/Page" eOpposite="/0/Page/pageElts"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

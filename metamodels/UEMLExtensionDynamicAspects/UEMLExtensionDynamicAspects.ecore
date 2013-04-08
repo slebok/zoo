@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="UEML">
+  <eClassifiers xsi:type="ecore:EClass" name="UEMLObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="has" ordered="false" eType="//Geometry" eOpposite="//Geometry/object"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" ordered="false" eType="//UEMLModel" eOpposite="//UEMLModel/contains"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UEMLModel" eSuperTypes="//UEMLObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contains" ordered="false" upperBound="-1" eType="//UEMLObject" containment="true" eOpposite="//UEMLObject/model"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Geometry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="object" ordered="false" lowerBound="1" eType="//UEMLObject" eOpposite="//UEMLObject/has"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="//UEMLObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="//UEMLObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associationConnector" ordered="false" lowerBound="1" eType="//AssociationConnector" eOpposite="//AssociationConnector/classAssociation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="//UEMLObject //FlowObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceRole" ordered="false" upperBound="-1" eType="//ResourceRole" eOpposite="//ResourceRole/in"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" eType="//Process" eOpposite="//Process/child"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasOutput" ordered="false" lowerBound="1" upperBound="-1" eType="//OutputPort" containment="true" eOpposite="//OutputPort/activity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasInput" ordered="false" lowerBound="1" upperBound="-1" eType="//InputPort" containment="true" eOpposite="//InputPort/activity"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Object" eSuperTypes="//UEMLObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ioFlow" ordered="false" eType="//IOFlow" eOpposite="//IOFlow/carries"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InformationObject" eSuperTypes="//Object">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="controlFlow" ordered="false" eType="//ControlFlow" eOpposite="//ControlFlow/carries"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resource" eSuperTypes="//Object">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="carries" ordered="false" eType="//ResourceFlow" eOpposite="//ResourceFlow/resourceCarries"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plays" ordered="false" upperBound="-1" eType="//ResourceRole" eOpposite="//ResourceRole/resourcePlays"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MaterialResource" eSuperTypes="//Resource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HumanResource" eSuperTypes="//Resource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceFlow" eSuperTypes="//Flow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceCarries" ordered="false" upperBound="-1" eType="//Resource" eOpposite="//Resource/carries"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IOFlow" eSuperTypes="//Flow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="carries" ordered="false" upperBound="-1" eType="//Object" eOpposite="//Object/ioFlow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ControlFlow" eSuperTypes="//Flow">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="carries" ordered="false" upperBound="-1" eType="//InformationObject" eOpposite="//InformationObject/controlFlow"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TriggerFlow" eSuperTypes="//ControlFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintFlow" eSuperTypes="//ControlFlow"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceRole" eSuperTypes="//Port">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourcePlays" ordered="false" upperBound="-1" eType="//Resource" eOpposite="//Resource/plays"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleQualifier" ordered="false" eType="//RoleType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="in" ordered="false" lowerBound="1" eType="//Activity" eOpposite="//Activity/resourceRole"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RoleType"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Anchor" eSuperTypes="//Port"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutputPort" eSuperTypes="//Anchor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" eType="//Activity" eOpposite="//Activity/hasOutput"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputPort" eSuperTypes="//Anchor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" eType="//Activity" eOpposite="//Activity/hasInput"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConnectionOperator" eSuperTypes="//Anchor //FlowObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationConnector">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="origin" ordered="false" upperBound="-1" eType="//FlowObject" eOpposite="//FlowObject/target"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" upperBound="-1" eType="//FlowObject" eOpposite="//FlowObject/origin"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classAssociation" ordered="false" lowerBound="1" eType="//Flow" eOpposite="//Flow/associationConnector"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="//Activity"/>
+  <eClassifiers xsi:type="ecore:EClass" name="FlowObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="//AssociationConnector" eOpposite="//AssociationConnector/origin"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="origin" ordered="false" lowerBound="1" eType="//AssociationConnector" eOpposite="//AssociationConnector/target"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="//FlowObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Process">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="child" ordered="false" upperBound="-1" eType="//Activity" containment="true" eOpposite="//Activity/parent"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="AntScripts">
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DescribableElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CommentableElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="/0/NamedElement /0/DescribableElement /0/CommentableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1" eType="/0/Property" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targets" upperBound="-1" eType="/0/Target" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defaultTarget" ordered="false" eType="/0/Target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Property">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refid" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="resource" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="environment" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classpath" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classpathref" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Target" eSuperTypes="/0/NamedElement /0/DescribableElement /0/CommentableElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="if" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="unless" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tasks" upperBound="-1" eType="/0/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="depends" upperBound="-1" eType="/0/Target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TaskElement" abstract="true" eSuperTypes="/0/NamedElement /0/CommentableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1" eType="/0/Attribute" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1" eType="/0/TaskElement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/0/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="/0/TaskElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TaskParameter" eSuperTypes="/0/TaskElement"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

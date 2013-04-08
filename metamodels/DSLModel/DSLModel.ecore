@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="DSLModel">
+  <eClassifiers xsi:type="ecore:EClass" name="Model">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="domainModel" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="//ModelElement" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelElement" eSuperTypes="//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentLink" ordered="false" lowerBound="1" eType="//EmbeddingLink" eOpposite="//EmbeddingLink/elements"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" ordered="false" upperBound="-1" eType="//Property" containment="true" eOpposite="//Property/owner"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="embeddinglinks" ordered="false" upperBound="-1" eType="//EmbeddingLink" containment="true" eOpposite="//EmbeddingLink/owner"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referencelinks" ordered="false" upperBound="-1" eType="//ReferenceLink" containment="true" eOpposite="//ReferenceLink/owner"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelElementLink" eSuperTypes="//ModelElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="links" ordered="false" upperBound="-1" eType="//ReferenceLink" eOpposite="//ReferenceLink/modelElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmbeddingLink" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="//ModelElement" eOpposite="//ModelElement/embeddinglinks"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="//ModelElement" containment="true" eOpposite="//ModelElement/parentLink"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceLink" eSuperTypes="//Element">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="//ModelElement" eOpposite="//ModelElement/referencelinks"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modelElement" ordered="false" lowerBound="1" eType="//ModelElementLink" eOpposite="//ModelElementLink/links"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" ordered="false" lowerBound="2" upperBound="2" eType="//Role" containment="true" eOpposite="//Role/owner"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="//ModelElement" eOpposite="//ModelElement/properties"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" lowerBound="1" eType="//Value" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" ordered="false" lowerBound="1" eType="//ModelElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="//ReferenceLink" eOpposite="//ReferenceLink/roles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Value" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="IntegerValue" eSuperTypes="//Value">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Integer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DoubleValue" eSuperTypes="//Value">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Double"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BooleanValue" eSuperTypes="//Value">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StringValue" eSuperTypes="//Value">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+  </eClassifiers>
+  <eSubpackages name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </eSubpackages>
+</ecore:EPackage>

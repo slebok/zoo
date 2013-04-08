@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="OCLOperations">
+    <eClassifiers xsi:type="ecore:EClass" name="OperationExp" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PropertyOperation" eSuperTypes="/0/OperationExp">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMarkedPre" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/OclExpression" containment="true" eOpposite="/0/OclExpression/propertyOperations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OclOperation" eSuperTypes="/0/OperationExp">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" ordered="false" lowerBound="1" eType="/0/OclExpression" containment="true" eOpposite="/0/OclExpression/oclOperations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConstExp" eSuperTypes="/0/OperationExp"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IntegerConstExp" eSuperTypes="/0/ConstExp">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StringConstExp" eSuperTypes="/0/ConstExp">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RealConstExp" eSuperTypes="/0/ConstExp">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeExp" eSuperTypes="/0/PropertyOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attr" ordered="false" lowerBound="1" eType="/0/Attribute" containment="true" eOpposite="/0/Attribute/attrExp"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attrExp" ordered="false" upperBound="-1" eType="/0/AttributeExp" eOpposite="/0/AttributeExp/attr"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NaviguationExp" eSuperTypes="/0/PropertyOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assEnd" ordered="false" lowerBound="1" eType="/0/AssocationEnd" containment="true" eOpposite="/0/AssocationEnd/navExp"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="qualifierValues" ordered="false" lowerBound="1" eType="/0/OclExpression" containment="true" eOpposite="/0/OclExpression/naviguationExps"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssocationEnd">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="navExp" ordered="false" upperBound="-1" eType="/0/NaviguationExp" eOpposite="/0/NaviguationExp/assEnd"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassifierOperation" eSuperTypes="/0/PropertyOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="op" ordered="false" lowerBound="1" eType="/0/Operation" containment="true" eOpposite="/0/Operation/classOp"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" ordered="false" lowerBound="1" eType="/0/OclExpression" containment="true" eOpposite="/0/OclExpression/classifierOperations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classOp" ordered="false" upperBound="-1" eType="/0/ClassifierOperation" eOpposite="/0/ClassifierOperation/op"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OclExpression" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="propertyOperations" ordered="false" upperBound="-1" eType="/0/PropertyOperation" eOpposite="/0/PropertyOperation/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="naviguationExps" ordered="false" upperBound="-1" eType="/0/NaviguationExp" eOpposite="/0/NaviguationExp/qualifierValues"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classifierOperations" upperBound="-1" eType="/0/ClassifierOperation" eOpposite="/0/ClassifierOperation/arguments"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="oclOperations" upperBound="-1" eType="/0/OclOperation" eOpposite="/0/OclOperation/arguments"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

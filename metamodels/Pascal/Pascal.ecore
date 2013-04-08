@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="Pascal">
+    <eClassifiers xsi:type="ecore:EClass" name="Program">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variables" ordered="false" upperBound="-1" eType="/0/Variable" containment="true" eOpposite="/0/Variable/program"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="types" ordered="false" upperBound="-1" eType="/0/Type" containment="true" eOpposite="/0/Type/program"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="procedures" ordered="false" upperBound="-1" eType="/0/Procedure" containment="true" eOpposite="/0/Procedure/program"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Variable">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="program" ordered="false" lowerBound="1" eType="/0/Program" eOpposite="/0/Program/variables"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" ordered="false" lowerBound="1" eType="/0/Procedure" eOpposite="/0/Procedure/variables"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/Type" eOpposite="/0/Type/variables"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="program" ordered="false" lowerBound="1" eType="/0/Program" eOpposite="/0/Program/types"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variables" ordered="false" upperBound="-1" eType="/0/Variable" eOpposite="/0/Variable/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="/0/Variable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="procedure_parameter" ordered="false" lowerBound="1" eType="/0/Procedure" eOpposite="/0/Procedure/parameters"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Instruction">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" ordered="false" lowerBound="1" eType="/0/Block" eOpposite="/0/Block/instructions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Calculation" eSuperTypes="/0/Instruction"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Control" eSuperTypes="/0/Instruction"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Assignment" eSuperTypes="/0/Instruction"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Block" eSuperTypes="/0/Instruction">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instructions" upperBound="-1" eType="/0/Instruction" containment="true" eOpposite="/0/Instruction/block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="procedure" ordered="false" lowerBound="1" eType="/0/Procedure" eOpposite="/0/Procedure/block_procedure"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="loop" ordered="false" lowerBound="1" eType="/0/Loop" eOpposite="/0/Loop/block_loop"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conditional" ordered="false" lowerBound="1" eType="/0/Conditional" eOpposite="/0/Conditional/blocks"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conditional" eSuperTypes="/0/Control">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" lowerBound="1" upperBound="2" eType="/0/Block" containment="true" eOpposite="/0/Block/conditional"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Loop" eSuperTypes="/0/Control">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block_loop" ordered="false" lowerBound="1" eType="/0/Block" containment="true" eOpposite="/0/Block/loop"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Procedure" eSuperTypes="/0/Control">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="program" ordered="false" lowerBound="1" eType="/0/Program" eOpposite="/0/Program/procedures"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variables" ordered="false" upperBound="-1" eType="/0/Variable" containment="true" eOpposite="/0/Variable/procedure"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/Parameter" containment="true" eOpposite="/0/Parameter/procedure_parameter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block_procedure" ordered="false" lowerBound="1" eType="/0/Block" containment="true" eOpposite="/0/Block/procedure"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="/0/Procedure">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" ordered="false" lowerBound="1" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="For" eSuperTypes="/0/Loop"/>
+    <eClassifiers xsi:type="ecore:EClass" name="While" eSuperTypes="/0/Loop"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Repeat" eSuperTypes="/0/Loop"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

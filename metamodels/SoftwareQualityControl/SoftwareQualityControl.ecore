@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SoftwareQualityControl">
+    <eClassifiers xsi:type="ecore:EClass" name="DateType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlsSequence">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="controls" upperBound="-1" eType="/0/Control" containment="true" eOpposite="/0/Control/c_controlsSequence"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Control">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c_controlsSequence" ordered="false" lowerBound="1" eType="/0/ControlsSequence" eOpposite="/0/ControlsSequence/controls"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="responsible" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="component" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="developmentPhase" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scope" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/DateType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="controlledElt" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="eltRef" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="eltAuthor" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="formRef" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/ControlType" containment="true" eOpposite="/0/ControlType/ct_control"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ct_control" ordered="false" lowerBound="1" eType="/0/Control" eOpposite="/0/Control/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BugTracking" eSuperTypes="/0/ControlType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bugs" upperBound="-1" eType="/0/Bug" containment="true" eOpposite="/0/Bug/b_bugTracking"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bug">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="b_bugTracking" ordered="false" lowerBound="1" eType="/0/BugTracking" eOpposite="/0/BugTracking/bugs"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="componentVersion" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" ordered="false" unique="false" lowerBound="1" eType="/0/BugStatusType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="originator" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="responsible" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAnswers" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="openDate" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="closeDate" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="BugStatusType">
+      <eLiterals name="bst_open" value="1"/>
+      <eLiterals name="bst_closed" value="2"/>
+      <eLiterals name="bst_skipped" value="3"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="RelationalDBContent">
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DataBase" eSuperTypes="/0/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="SGBDname" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tables" ordered="false" upperBound="-1" eType="/0/Table" containment="true" eOpposite="/0/Table/database"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/0/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="database" ordered="false" lowerBound="1" eType="/0/DataBase" eOpposite="/0/DataBase/tables"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tuples" upperBound="-1" eType="/0/Tuple" containment="true" eOpposite="/0/Tuple/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tuple">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Table" eOpposite="/0/Table/tuples"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1" eType="/0/TupleElement" containment="true" eOpposite="/0/TupleElement/tuple"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TupleElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tuple" ordered="false" lowerBound="1" eType="/0/Tuple" eOpposite="/0/Tuple/elements"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="CPR">
+    <eClassifiers xsi:type="ecore:EClass" name="Plan">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sub_plans" ordered="false" upperBound="-1" eType="/1/Plan" containment="true" eOpposite="/1/Plan/super_plan"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="super_plan" ordered="false" lowerBound="1" eType="/1/Plan" eOpposite="/1/Plan/sub_plans"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="objectives" ordered="false" upperBound="-1" eType="/1/Objective" containment="true" eOpposite="/1/Objective/objective_plan"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actions" upperBound="-1" eType="/1/Action" containment="true" eOpposite="/1/Action/action_plan"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Objective">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="objective_plan" ordered="false" lowerBound="1" eType="/1/Plan" eOpposite="/1/Plan/objectives"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="criterias" ordered="false" upperBound="-1" eType="/1/EvaluationCriteria" containment="true" eOpposite="/1/EvaluationCriteria/criteria_objective"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EvaluationCriteria">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="criteria_objective" ordered="false" lowerBound="1" eType="/1/Objective" eOpposite="/1/Objective/criterias"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="action_plan" ordered="false" lowerBound="1" eType="/1/Plan" eOpposite="/1/Plan/actions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sub_actions" upperBound="-1" eType="/1/Action" containment="true" eOpposite="/1/Action/super_action"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="super_action" ordered="false" lowerBound="1" eType="/1/Action" eOpposite="/1/Action/sub_actions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actor" ordered="false" lowerBound="1" eType="/1/Actor" containment="true" eOpposite="/1/Actor/actor_action"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resources" ordered="false" upperBound="-1" eType="/1/Resource" containment="true" eOpposite="/1/Resource/resource_action"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="timeSpecs" ordered="false" upperBound="-1" eType="/1/TimeSpec" containment="true" eOpposite="/1/TimeSpec/timeSpec_action"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Actor">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actor_action" ordered="false" lowerBound="1" eType="/1/Action" eOpposite="/1/Action/actor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sub_actors" ordered="false" upperBound="-1" eType="/1/Actor" containment="true" eOpposite="/1/Actor/super_actor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="super_actor" ordered="false" lowerBound="1" eType="/1/Actor" eOpposite="/1/Actor/sub_actors"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Resource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resource_action" ordered="false" lowerBound="1" eType="/1/Action" eOpposite="/1/Action/resources"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TimeSpec">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="timeSpec_action" ordered="false" lowerBound="1" eType="/1/Action" eOpposite="/1/Action/timeSpecs"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

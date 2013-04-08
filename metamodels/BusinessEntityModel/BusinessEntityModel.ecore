@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="BusinessEntityModel">
+    <eClassifiers xsi:type="ecore:EClass" name="DataType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Action"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Class"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessEntityPropertySet" abstract="true" eSuperTypes="/0/DataType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessRole" abstract="true" eSuperTypes="/0/Action">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characterisedby" ordered="false" lowerBound="1" eType="/0/BusinessEntityPropertySet"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typ" ordered="false" lowerBound="1" eType="/0/Class"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" upperBound="-1" eType="/0/Task" eOpposite="/0/Task/associatedWith"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fille" ordered="false" lowerBound="1" upperBound="-1" eType="/0/BusinessEntity" eOpposite="/0/BusinessEntity/placehold"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associatedWith" ordered="false" lowerBound="1" upperBound="-1" eType="/0/BusinessRole" eOpposite="/0/BusinessRole/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="needs" ordered="false" upperBound="-1" eType="/0/ArtifactRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArtifactRole" eSuperTypes="/0/BusinessRole"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PerformerRole" eSuperTypes="/0/BusinessRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="perform" ordered="false" lowerBound="1" eType="/0/Task"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganisationalUnit" eSuperTypes="/0/BusinessRole"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessEntity" eSuperTypes="/0/Class">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="placehold" ordered="false" lowerBound="1" upperBound="-1" eType="/0/BusinessRole" eOpposite="/0/BusinessRole/fille"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

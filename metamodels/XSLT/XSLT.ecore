@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="XSLT">
+    <eClassifiers xsi:type="ecore:EClass" name="Node" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentNode" ordered="false" eType="/1/ElementNode" eOpposite="/1/ElementNode/nodes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementNode" eSuperTypes="/1/Node">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" upperBound="-1" eType="/1/Node" containment="true" eOpposite="/1/Node/parentNode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeNode" eSuperTypes="/1/Node"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RootNode" eSuperTypes="/1/ElementNode">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" lowerBound="1" eType="/1/Document" containment="true" eOpposite="/1/Document/document"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TextNode" eSuperTypes="/1/ElementNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XSLTNode" abstract="true" eSuperTypes="/1/ElementNode"/>
+    <eClassifiers xsi:type="ecore:EClass" name="XSLTRootNode" eSuperTypes="/1/RootNode"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Document">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="documentName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" lowerBound="1" eType="/1/RootNode" containment="true" eOpposite="/1/RootNode/document"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ApplyTemplates" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="select" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="If" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="test" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Template" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="match" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ValueOf" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="select" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="When" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="test" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Choose" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="when" ordered="false" lowerBound="1" eType="/1/When" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="otherwise" ordered="false" lowerBound="1" eType="/1/Otherwise" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Otherwise" eSuperTypes="/1/XSLTNode"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Sort" eSuperTypes="/1/XSLTNode">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="select" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="CWMRelationalData">
+    <eClassifiers xsi:type="ecore:EClass" name="QueryExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="expresssion" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CheckConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constraintElements" ordered="false" upperBound="-1" eType="/1/Column" eOpposite="/1/Column/column_constraints"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainedElements" ordered="false" upperBound="-1" eType="/1/Table" eOpposite="/1/Table/table_constraints"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scale" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNullable" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="collectionName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="characterSetName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="column_constraints" ordered="false" upperBound="-1" eType="/1/CheckConstraint" eOpposite="/1/CheckConstraint/constraintElements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/SQLDataType" eOpposite="/1/SQLDataType/structuralFeatures"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/1/ColumnSet" eOpposite="/1/ColumnSet/features"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="optionScopeColumnSet" ordered="false" eType="/1/NamedColumnSet" eOpposite="/1/NamedColumnSet/optionScopeColumn"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ColumnSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="features" ordered="false" upperBound="-1" eType="/1/Column" containment="true" eOpposite="/1/Column/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedColumnSet" eSuperTypes="/1/ColumnSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="optionScopeColumn" ordered="false" lowerBound="1" eType="/1/Column" eOpposite="/1/Column/optionScopeColumnSet"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="triggers" ordered="false" upperBound="-1" eType="/1/Trigger" eOpposite="/1/Trigger/namedColumnSet"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QueryColumnSet" eSuperTypes="/1/ColumnSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="query" ordered="false" lowerBound="1" eType="/1/QueryExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/1/NamedColumnSet">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTemporary" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="temporaryScope" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSystem" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table_constraints" ordered="false" upperBound="-1" eType="/1/CheckConstraint" eOpposite="/1/CheckConstraint/constrainedElements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="View" eSuperTypes="/1/NamedColumnSet">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isReadOnly" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="checkOption" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="queryExpression" ordered="false" lowerBound="1" eType="/1/QueryExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Trigger">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namedColumnSet" ordered="false" lowerBound="1" eType="/1/NamedColumnSet" eOpposite="/1/NamedColumnSet/triggers"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SQLDataType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="typeNumber" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="structuralFeatures" ordered="false" upperBound="-1" eType="/1/Column" eOpposite="/1/Column/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SQLDistinctType" eSuperTypes="/1/SQLDataType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scale" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sqlSimpleType" ordered="false" lowerBound="1" eType="/1/SQLSimpleType" eOpposite="/1/SQLSimpleType/sqlDistinctTypes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SQLSimpleType" eSuperTypes="/1/SQLDataType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="characterMaximumLength" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="characterOctetLength" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericPrecision" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericPrecisionRadix" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="numericScale" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateTimePrecision" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sqlDistinctTypes" ordered="false" upperBound="-1" eType="/1/SQLDistinctType" eOpposite="/1/SQLDistinctType/sqlSimpleType"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

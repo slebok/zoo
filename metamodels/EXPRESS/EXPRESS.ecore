@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="Express_metamodel">
+  <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::java::lang::void"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::java::lang::int"/>
+  <eSubpackages name="Rules">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::ONEOFConstraint" eSuperTypes="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::SupertypeRule" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ACommonElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::SupertypeRule::named-supertype" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::SupertypeRule::constraints" ordered="false" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint" containment="true" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint%3A%3Acollection"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="assertsAbstract" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::SubtypeConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::SubtypeConstraint::constrained-subtypes" ordered="false" lowerBound="1" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent/Express_metamodel%3A%3ARules%3A%3AExtent%3A%3Aconstraints"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::SubtypeConstraint::equivalent-rule" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::SubtypeConstraint::collection" ordered="false" lowerBound="1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3ASupertypeRule" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3ASupertypeRule/Express_metamodel%3A%3ARules%3A%3ASupertypeRule%3A%3Aconstraints"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::Extent" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ASETValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::Extent::constraints" ordered="false" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint%3A%3Aconstrained-subtypes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::Extent::content" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::Extent::within-population" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3APopulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::Extent::constraint-rules" ordered="false" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3AGlobalRule" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3AGlobalRule/Express_metamodel%3A%3ARules%3A%3AGlobalRule%3A%3Aconstrained-extents"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::Extent::for-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aextension"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::TOTAL_OVERConstraint" eSuperTypes="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::ANDConstraint" eSuperTypes="//Rules/Express_metamodel%3A%3ARules%3A%3ASubtypeConstraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::GlobalRule" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement //Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::GlobalRule::supporting-body" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::GlobalRule::constrained-extents" ordered="false" lowerBound="1" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent/Express_metamodel%3A%3ARules%3A%3AExtent%3A%3Aconstraint-rules"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::GlobalRule::contains-rules" ordered="false" lowerBound="1" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3ANamedRule" containment="true" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3ANamedRule/Express_metamodel%3A%3ARules%3A%3ANamedRule%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Rules::NamedRule" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::NamedRule::namespace" ordered="false" lowerBound="1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3AGlobalRule" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3AGlobalRule/Express_metamodel%3A%3ARules%3A%3AGlobalRule%3A%3Acontains-rules"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Rules::NamedRule::asserts-expression" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="Statements">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::ProcedureCall" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ProcedureCall::invokes" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AProcedure"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ProcedureCall::actual-parameters" ordered="false" upperBound="-1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AActualParameter" containment="true" eOpposite="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AActualParameter/Express_metamodel%3A%3AExpressions%3A%3AActualParameter%3A%3Ain-ProcedureCall"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::SkipStatement" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::SkipStatement::in-block" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement/Express_metamodel%3A%3AAlgorithms%3A%3AStatement%3A%3Abody-statements_SkipStatement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::AliasStatement" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement //Core/Express_metamodel%3A%3ACore%3A%3ALocalScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AliasStatement::binds-to-reference" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AliasStatement::body" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AliasStatement::alias-variable" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AAliasVariable" containment="true" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AAliasVariable/Express_metamodel%3A%3AStatements%3A%3AAliasVariable%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::ControlVariable" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3ANamedVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ControlVariable::bound-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ControlVariable::initial-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ControlVariable::namespace" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement%3A%3Acontrol-variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ControlVariable::increment" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::AliasVariable" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3ANamedVariable //Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVARVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AliasVariable::namespace" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AAliasStatement" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AAliasStatement/Express_metamodel%3A%3AStatements%3A%3AAliasStatement%3A%3Aalias-variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AliasVariable::referent" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::ControlStatement" abstract="true" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::VARCell" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::VARCell::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVARVariable"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::NullStatement" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::VARExpression" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" eType="//Core/ExpressText"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::AttributeCell" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AttributeCell::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::AttributeCell::base-entity" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::StatementBlock" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::StatementBlock::body-statements_Statement" ordered="false" upperBound="-1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement/Express_metamodel%3A%3AAlgorithms%3A%3AStatement%3A%3Ain-block"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="delimited" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::CaseAction">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::CaseAction::label-value" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::CaseAction::action" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefault" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::MemberCell" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::MemberCell::index-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::MemberCell::base-aggregate" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::RepeatStatement" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement //Core/Express_metamodel%3A%3ACore%3A%3ALocalScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::RepeatStatement::while-expression" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::RepeatStatement::body" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement/Express_metamodel%3A%3AAlgorithms%3A%3AStatement%3A%3Acontrolled-by"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::RepeatStatement::control-variable" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlVariable" containment="true" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlVariable/Express_metamodel%3A%3AStatements%3A%3AControlVariable%3A%3Anamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::RepeatStatement::until-expression" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::GroupCell" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::GroupCell::base-entity" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::GroupCell::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::VariableCell" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::VariableCell::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::CaseStatement" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::CaseStatement::cases" ordered="false" lowerBound="1" upperBound="-1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3ACaseAction" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::CaseStatement::selection-expression" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::IfStatement" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::IfStatement::if-condition" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::IfStatement::else-actions" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::IfStatement::then-actions" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::EscapeStatement" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::EscapeStatement::in-block" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement/Express_metamodel%3A%3AAlgorithms%3A%3AStatement%3A%3Abody-statements_EscapeStatement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::ReturnStatement" eSuperTypes="//Statements/Express_metamodel%3A%3AStatements%3A%3AControlStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::ReturnStatement::return-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Statements::Assignment" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::Assignment::assigned-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Statements::Assignment::variable" ordered="false" lowerBound="1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="MOF">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </eSubpackages>
+  <eSubpackages name="Expressions">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::Selector" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::Selector::entity-instance" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::RepeatCount">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::RepeatCount::derivation" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::EnumItemRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::EnumItemRef::refers-to" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::Literal" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::Literal::refers-to" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3ASimpleValue"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::BinaryIndex" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AIndexOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::BinaryIndex::first-bit" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::BinaryIndex::last-bit" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::IndeterminateRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::IndeterminateRef::refers-to" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AIndeterminate"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::SELFRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::IndexOperation" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::IndexOperation::base-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::BinaryOperation" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::BinaryOperation::left-operand" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::BinaryOperation::right-operand" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" ordered="false" unique="false" lowerBound="1" eType="//Expressions/BinaryOperator"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::AggregateInitializer" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AggregateInitializer::result-value" ordered="false" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AGenericAggregate"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AggregateInitializer::bindings" ordered="false" upperBound="-1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AMemberBinding" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::StringIndex" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AIndexOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::StringIndex::first-code" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::StringIndex::last-code" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::PartialEntityConstructor" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::PartialEntityConstructor::result-value" ordered="false" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3APartialEntityValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::PartialEntityConstructor::attribute-group" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::PartialEntityConstructor::bindings" ordered="false" upperBound="-1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AAttributeBinding" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::Coercion" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::Coercion::operand" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::Coercion::target-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AVariableType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::Primary" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::ActualParameter">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ActualParameter::in-ProcedureCall" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AProcedureCall" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AProcedureCall/Express_metamodel%3A%3AStatements%3A%3AProcedureCall%3A%3Aactual-parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ActualParameter::in-FunctionCall" ordered="false" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AFunctionCall" eOpposite="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AFunctionCall/Express_metamodel%3A%3AExpressions%3A%3AFunctionCall%3A%3Aactual-parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ActualParameter::formal-parameter" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ActualParameter::actual-referent" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AVARExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ActualParameter::actual-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::ParameterRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ParameterRef::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::AttributeRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3ASelector">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AttributeRef::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::AggregateIndex" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AIndexOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AggregateIndex::index-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::GroupRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3ASelector">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::GroupRef::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::UnaryOperation" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::UnaryOperation::unary-operand" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="operator" ordered="false" unique="false" lowerBound="1" eType="//Expressions/UnaryOperator"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::UsedInRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3ASelector">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::UsedInRef::inverse-of" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::ConstantRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ConstantRef::refers-to" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AConstant"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::QueryExpression" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalScope //Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::QueryExpression::select-condition" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::QueryExpression::query-variable" ordered="false" lowerBound="1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AQueryVariable" eOpposite="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AQueryVariable/Express_metamodel%3A%3AExpressions%3A%3AQueryVariable%3A%3Anamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::QueryExpression::aggregate-operand" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::QueryVariable" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3ANamedVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::QueryVariable::namespace" ordered="false" lowerBound="1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AQueryExpression" eOpposite="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AQueryExpression/Express_metamodel%3A%3AExpressions%3A%3AQueryExpression%3A%3Aquery-variable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::Operation" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::AttributeBinding">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AttributeBinding::attribute-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AttributeBinding::to-value" ordered="false" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AAttributeValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::AttributeBinding::attribute" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::FunctionCall" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::FunctionCall::actual-parameters" ordered="false" upperBound="-1" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AActualParameter" containment="true" eOpposite="//Expressions/Express_metamodel%3A%3AExpressions%3A%3AActualParameter/Express_metamodel%3A%3AExpressions%3A%3AActualParameter%3A%3Ain-FunctionCall"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::FunctionCall::invokes-function" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunction"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::FunctionCall::/returns-result" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunctionResult"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::MemberBinding">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::MemberBinding::repetition" ordered="false" eType="//Expressions/Express_metamodel%3A%3AExpressions%3A%3ARepeatCount" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::MemberBinding::to-slot" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AListMember"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::MemberBinding::member-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::ExtentRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::ExtentRef::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Expressions::VariableRef" eSuperTypes="//Expressions/Express_metamodel%3A%3AExpressions%3A%3APrimary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Expressions::VariableRef::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3ANamedVariable"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="UnaryOperator"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="BinaryOperator"/>
+    <eSubpackages name="BuiltInConstants"/>
+  </eSubpackages>
+  <eSubpackages name="Core">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::TypeElement" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::TypeElement::namespace" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType/Express_metamodel%3A%3ACore%3A%3ANamedType%3A%3Anamed-elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SingleEntityType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SingleEntityType::declares_ExplicitAttribute" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute%3A%3Aof-entity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SingleEntityType::declares_Attribute" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute" containment="true" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute/Express_metamodel%3A%3ACore%3A%3AAttribute%3A%3Aof-entity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SingleEntityType::declared-in" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Adeclares"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SingleEntityType::equivalent" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3APartialEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::AGGREGATEType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AGGREGATEType::upper-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AGGREGATEType::member-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AGGREGATEType::constraint" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructureConstraint" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructureConstraint/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructureConstraint%3A%3Amatching-structure"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AGGREGATEType::lower-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralBAGType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DomainRule" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADomainConstraint //Core/Express_metamodel%3A%3ACore%3A%3ATypeElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainRule::domain" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType/Express_metamodel%3A%3ACore%3A%3ANamedType%3A%3Adomain-rules"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralAggregationType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType //Core/Express_metamodel%3A%3ACore%3A%3AAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::GeneralAggregationType::member-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ConcreteType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Expression::evaluation" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Expression::interpretation-context" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Expression::data-type" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADataType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" eType="//Core/ExpressText"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::InverseAttribute" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InverseAttribute::models-role" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole/Express_metamodel%3A%3ACore%3A%3ADomainRole%3A%3Arange-view"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InverseAttribute::explicit" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute%3A%3Ainverse"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnique" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::EnumerationType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADefinedType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EnumerationType::values" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem%3A%3Aof-type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EnumerationType::declared-items" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem/Express_metamodel%3A%3AInstances%3A%3AEnumerationItem%3A%3Adeclared-in"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EnumerationType::extension" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType/Express_metamodel%3A%3ACore%3A%3AEnumerationType%3A%3Abase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EnumerationType::base" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType/Express_metamodel%3A%3ACore%3A%3AEnumerationType%3A%3Aextension"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isExtensible" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::VariableType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADataType //Core/Express_metamodel%3A%3ACore%3A%3AAttributeType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ArrayBound">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ArrayBound::bound-expression" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bound" ordered="false" unique="false" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralSETType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::LISTType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Redeclaration">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::derivation" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::restricted-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttributeType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::refines" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARedeclaration"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::upper-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::lower-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::scope" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aredeclarations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::original-attribute" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Redeclaration::refined-role" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARole"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMandatory" ordered="false" unique="false" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="alias" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::EntityType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType //Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::plays-role" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARole/Express_metamodel%3A%3ACore%3A%3ARole%3A%3Aof-entity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::redeclarations" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARedeclaration" containment="true" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARedeclaration/Express_metamodel%3A%3ACore%3A%3ARedeclaration%3A%3Ascope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::attributes" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::plays-range-role" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole/Express_metamodel%3A%3ACore%3A%3ARangeRole%3A%3Arange"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::declares" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType/Express_metamodel%3A%3ACore%3A%3ASingleEntityType%3A%3Adeclared-in"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::extension" ordered="false" upperBound="-1" eType="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent" eOpposite="//Rules/Express_metamodel%3A%3ARules%3A%3AExtent/Express_metamodel%3A%3ARules%3A%3AExtent%3A%3Afor-type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::invertible_attributes" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute%3A%3Areferencing-type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::plays-domain-role" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole/Express_metamodel%3A%3ACore%3A%3ADomainRole%3A%3Adomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::instances" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance/Express_metamodel%3A%3AInstances%3A%3AEntityInstance%3A%3Ainstance-of"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::unique-rules" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AUniqueRule" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AUniqueRule/Express_metamodel%3A%3ACore%3A%3AUniqueRule%3A%3Adomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::used-in" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute%3A%3Arange-type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::EntityType::subtype-of" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DataType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DataType::instances" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInstance/Express_metamodel%3A%3ACore%3A%3AInstance%3A%3Aof-type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::PartialEntityType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADataType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::PartialEntityType::components" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Schema" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Schema::documentation" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARemark" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARemark/Express_metamodel%3A%3ACore%3A%3ARemark%3A%3Adescribes-schema"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Schema::interfaces" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInterfacedElement" containment="true" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInterfacedElement/Express_metamodel%3A%3ACore%3A%3AInterfacedElement%3A%3Ainterfacing-schema"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Schema::schema-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement/Express_metamodel%3A%3ACore%3A%3ASchemaElement%3A%3Adefined-in"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Schema::interfaced-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement/Express_metamodel%3A%3ACore%3A%3ASchemaElement%3A%3Areferenced-in"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::InvertibleAttribute" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InvertibleAttribute::inverse" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInverseAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInverseAttribute/Express_metamodel%3A%3ACore%3A%3AInverseAttribute%3A%3Aexplicit"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InvertibleAttribute::range-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aused-in"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InvertibleAttribute::creates-relationship" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship/Express_metamodel%3A%3ACore%3A%3ARelationship%3A%3Abased-on"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InvertibleAttribute::referencing-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aattributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InvertibleAttribute::models-role" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole/Express_metamodel%3A%3ACore%3A%3ARangeRole%3A%3Adomain-view"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralizedType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType //Core/Express_metamodel%3A%3ACore%3A%3AAttributeType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::GeneralizedType::occurs-in" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType/Express_metamodel%3A%3ACore%3A%3AParameterType%3A%3Acontains"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::InterfacedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InterfacedElement::interfacing-schema" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchema" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchema/Express_metamodel%3A%3ACore%3A%3ASchema%3A%3Ainterfaces"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InterfacedElement::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement/Express_metamodel%3A%3ACore%3A%3ASchemaElement%3A%3Areferenced-as"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUSE" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interfacedId" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::NumericType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASimpleType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DefinedType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType //Core/Express_metamodel%3A%3ACore%3A%3AConcreteType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::UniqueRule" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ATypeElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::UniqueRule::domain" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aunique-rules"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::UniqueRule::key-component" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DomainRole" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ARole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainRole::range-view" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInverseAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInverseAttribute/Express_metamodel%3A%3ACore%3A%3AInverseAttribute%3A%3Amodels-role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainRole::domain" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aplays-domain-role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainRole::in-relationship" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship/Express_metamodel%3A%3ACore%3A%3ARelationship%3A%3Adomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DomainConstraint" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainConstraint::domain" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttributeType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAttributeType/Express_metamodel%3A%3ACore%3A%3AAttributeType%3A%3Aconstraints"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DomainConstraint::asserts" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::InstantiableType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType //Core/Express_metamodel%3A%3ACore%3A%3AVariableType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::InstantiableType::fundamental-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralLISTType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::NamedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::NamedElement::namespace" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScope" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AScope/Express_metamodel%3A%3ACore%3A%3AScope%3A%3Anamed-elements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::NamedElement::documentation" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARemark" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARemark/Express_metamodel%3A%3ACore%3A%3ARemark%3A%3Adescribes-element"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Attribute" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ATypeElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Attribute::attribute-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttributeType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAttributeType/Express_metamodel%3A%3ACore%3A%3AAttributeType%3A%3Arole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Attribute::of-entity" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType/Express_metamodel%3A%3ACore%3A%3ASingleEntityType%3A%3Adeclares_Attribute"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::BAGType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::RealType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANumericType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" ordered="false" unique="false" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::LogicType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASimpleType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GenericType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::GenericType::constraint" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualTypeConstraint" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualTypeConstraint/Express_metamodel%3A%3AAlgorithms%3A%3AActualTypeConstraint%3A%3Amatching-type"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEntity" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::StringType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASimpleType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::StringType::string-length-constraint" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ALengthConstraint" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::AnonymousType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteType //Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AnonymousType::specializes" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAnonymousType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::AlgorithmScope" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AlgorithmScope::common-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ACommonElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ACommonElement/Express_metamodel%3A%3ACore%3A%3ACommonElement%3A%3Alocal-scope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AlgorithmScope::variables" ordered="false" upperBound="-1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable/Express_metamodel%3A%3AAlgorithms%3A%3AVariable%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Instance" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Instance::appears-in-population" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3APopulation" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3APopulation/Express_metamodel%3A%3AInstances%3A%3APopulation%3A%3Acomposition_Instance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Instance::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADataType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADataType/Express_metamodel%3A%3ACore%3A%3ADataType%3A%3Ainstances"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::AttributeType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AttributeType::role" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute/Express_metamodel%3A%3ACore%3A%3AAttribute%3A%3Aattribute-type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AttributeType::constraints" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADomainConstraint" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADomainConstraint/Express_metamodel%3A%3ACore%3A%3ADomainConstraint%3A%3Adomain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::DerivedAttribute" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::DerivedAttribute::derivation" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::RangeRole" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ARole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::RangeRole::domain-view" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute%3A%3Amodels-role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::RangeRole::in-relationship" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship/Express_metamodel%3A%3ACore%3A%3ARelationship%3A%3Arange"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::RangeRole::range" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aplays-range-role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="id" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::LocalElement" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::LocalElement::namespace" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ALocalScope" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ALocalScope/Express_metamodel%3A%3ACore%3A%3ALocalScope%3A%3Alocal-elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Remark">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Remark::describes-schema" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchema" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchema/Express_metamodel%3A%3ACore%3A%3ASchema%3A%3Adocumentation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Remark::appears-in" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScope" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AScope/Express_metamodel%3A%3ACore%3A%3AScope%3A%3Aincludes-remarks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Remark::describes-element" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement/Express_metamodel%3A%3ACore%3A%3ANamedElement%3A%3Adocumentation"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTagged" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTail" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="//Core/ExpressText"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SizeConstraint" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADomainConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SizeConstraint::asserts" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bound" ordered="false" unique="false" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Role" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Role::in-relationship" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARelationship/Express_metamodel%3A%3ACore%3A%3ARelationship%3A%3Aroles"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Role::of-entity" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Aplays-role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Role::upper-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Role::lower-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SETType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SpecializedType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADefinedType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SpecializedType::underlying-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::GeneralARRAYType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::GeneralARRAYType::hi-index" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::GeneralARRAYType::lo-index" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOptional" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Relationship">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Relationship::domain" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRole/Express_metamodel%3A%3ACore%3A%3ADomainRole%3A%3Ain-relationship"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Relationship::roles" ordered="false" lowerBound="2" upperBound="2" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARole/Express_metamodel%3A%3ACore%3A%3ARole%3A%3Ain-relationship"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Relationship::based-on" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute/Express_metamodel%3A%3ACore%3A%3AInvertibleAttribute%3A%3Acreates-relationship"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Relationship::range" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARangeRole/Express_metamodel%3A%3ACore%3A%3ARangeRole%3A%3Ain-relationship"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::LengthConstraint" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADomainConstraint">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxLength" ordered="false" unique="false" eType="//MOF/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFixed" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::LocalScope" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AScope">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::LocalScope::local-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement/Express_metamodel%3A%3ACore%3A%3ALocalElement%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::NamedType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType //Core/Express_metamodel%3A%3ACore%3A%3AScope //Core/Express_metamodel%3A%3ACore%3A%3ACommonElement //Core/Express_metamodel%3A%3ACore%3A%3AAttributeType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::NamedType::named-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ATypeElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ATypeElement/Express_metamodel%3A%3ACore%3A%3ATypeElement%3A%3Anamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::NamedType::instantiates" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType/Express_metamodel%3A%3ACore%3A%3ASelectType%3A%3Aallowed-types"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::NamedType::domain-rules" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRule" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ADomainRule/Express_metamodel%3A%3ACore%3A%3ADomainRule%3A%3Adomain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::BinaryType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASimpleType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::BinaryType::binary-length-constraint" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ALengthConstraint" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ScopedId">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="localName" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definingScope" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScope" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::AggregationType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AggregationType::lower-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::AggregationType::upper-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnique" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordering" ordered="false" unique="false" lowerBound="1" eType="//Core/OrderingKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::Scope" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Scope::named-elements" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement/Express_metamodel%3A%3ACore%3A%3ANamedElement%3A%3Anamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::Scope::includes-remarks" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ARemark" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ARemark/Express_metamodel%3A%3ACore%3A%3ARemark%3A%3Aappears-in"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ParameterType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ParameterType::contains" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AGeneralizedType/Express_metamodel%3A%3ACore%3A%3AGeneralizedType%3A%3Aoccurs-in"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SelectType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ADefinedType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SelectType::allowed-types" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType/Express_metamodel%3A%3ACore%3A%3ANamedType%3A%3Ainstantiates"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SelectType::extension" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType/Express_metamodel%3A%3ACore%3A%3ASelectType%3A%3Abase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SelectType::base" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType/Express_metamodel%3A%3ACore%3A%3ASelectType%3A%3Aextension"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SelectType::select-list" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isExtensible" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEntity" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ActualType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AVariableType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ActualType::scope" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ExplicitAttribute" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ExplicitAttribute::of-entity" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType/Express_metamodel%3A%3ACore%3A%3ASingleEntityType%3A%3Adeclares_ExplicitAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOptional" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SimpleType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAnonymousType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Core/Keyword"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::CommonElement" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ASchemaElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::CommonElement::local-scope" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope%3A%3Acommon-elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::SchemaElement" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ANamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SchemaElement::referenced-as" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInterfacedElement" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInterfacedElement/Express_metamodel%3A%3ACore%3A%3AInterfacedElement%3A%3Arefers-to"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SchemaElement::referenced-in" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchema" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchema/Express_metamodel%3A%3ACore%3A%3ASchema%3A%3Ainterfaced-elements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::SchemaElement::defined-in" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchema" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3ASchema/Express_metamodel%3A%3ACore%3A%3ASchema%3A%3Aschema-elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ConcreteAggregationType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAnonymousType //Core/Express_metamodel%3A%3ACore%3A%3AAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ConcreteAggregationType::member-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Core::ARRAYType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AConcreteAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ARRAYType::lo-index" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Core::ARRAYType::hi-index" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOptional" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="Keyword"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="ExpressText"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Identifier"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="OrderingKind"/>
+    <eSubpackages name="GenericTypes"/>
+    <eSubpackages name="BuiltInTypes"/>
+  </eSubpackages>
+  <eSubpackages name="java">
+    <eSubpackages name="lang">
+      <eClassifiers xsi:type="ecore:EDataType" name="int"/>
+      <eClassifiers xsi:type="ecore:EDataType" name="void"/>
+    </eSubpackages>
+  </eSubpackages>
+  <eSubpackages name="Algorithms">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualTypeConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualTypeConstraint::matching-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AGenericType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AGenericType/Express_metamodel%3A%3ACore%3A%3AGenericType%3A%3Aconstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualTypeConstraint::required-type" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualDataType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::FunctionResult" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::FunctionResult::namespace" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunction" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunction/Express_metamodel%3A%3AAlgorithms%3A%3AFunction%3A%3Aresult"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Function" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Function::result" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunctionResult" containment="true" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AFunctionResult/Express_metamodel%3A%3AAlgorithms%3A%3AFunctionResult%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::InParameter" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::InParameter::variable" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AInVariable" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AInVariable/Express_metamodel%3A%3AAlgorithms%3A%3AInVariable%3A%3Asource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::LocalVariable" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::LocalVariable::initial-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualStructure" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AGenericElement //Core/Express_metamodel%3A%3ACore%3A%3AAGGREGATEType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualGenericType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AActualType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualGenericType::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualDataType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEntity" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Statement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Statement::in-block" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AStatementBlock" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AStatementBlock/Express_metamodel%3A%3AStatements%3A%3AStatementBlock%3A%3Abody-statements_Statement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Statement::body-statements_SkipStatement" ordered="false" upperBound="-1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3ASkipStatement" containment="true" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3ASkipStatement/Express_metamodel%3A%3AStatements%3A%3ASkipStatement%3A%3Ain-block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Statement::body-statements_EscapeStatement" ordered="false" upperBound="-1" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3AEscapeStatement" containment="true" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3AEscapeStatement/Express_metamodel%3A%3AStatements%3A%3AEscapeStatement%3A%3Ain-block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Statement::controlled-by" ordered="false" eType="//Statements/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement" eOpposite="//Statements/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement/Express_metamodel%3A%3AStatements%3A%3ARepeatStatement%3A%3Abody"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Statement::implements" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm%3A%3Abody"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" eType="//Core/ExpressText"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::NamedVariable" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::NamedVariable::variable-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AVariableType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::InVariable" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::InVariable::source" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AInParameter" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AInParameter/Express_metamodel%3A%3AAlgorithms%3A%3AInParameter%3A%3Avariable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Procedure" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualARRAYType" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualARRAYType::hi-index" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualARRAYType::lo-index" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AArrayBound" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOptional" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualSETType" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualAGGREGATEType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AActualType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualAGGREGATEType::upper-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualAGGREGATEType::refers-to" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructure"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualAGGREGATEType::member-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AVariableType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualAGGREGATEType::lower-bound" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASizeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Parameter" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Parameter::namespace" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm%3A%3Aformal-parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Parameter::structure-constraints" ordered="false" upperBound="-1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructureConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Parameter::type-constraints" ordered="false" upperBound="-1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualTypeConstraint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Parameter::formal-parameter-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inout" ordered="false" unique="false" lowerBound="1" eType="//MOF/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualStructureConstraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualStructureConstraint::matching-structure" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAGGREGATEType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAGGREGATEType/Express_metamodel%3A%3ACore%3A%3AAGGREGATEType%3A%3Aconstraint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualStructureConstraint::required-structure" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualStructure"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="//Core/Identifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Algorithm" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope //Core/Express_metamodel%3A%3ACore%3A%3ACommonElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Algorithm::body" ordered="false" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement" containment="true" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AStatement/Express_metamodel%3A%3AAlgorithms%3A%3AStatement%3A%3Aimplements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Algorithm::formal-parameters" ordered="false" upperBound="-1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter" eOpposite="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter/Express_metamodel%3A%3AAlgorithms%3A%3AParameter%3A%3Anamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualAggregationType" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AActualType //Core/Express_metamodel%3A%3ACore%3A%3AAggregationType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::ActualAggregationType::member-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AActualType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::VARVariable" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualLISTType" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualAggregationType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::Variable" abstract="true" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3ANamedVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::Variable::namespace" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope/Express_metamodel%3A%3ACore%3A%3AAlgorithmScope%3A%3Avariables"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::GenericElement" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ALocalElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::GenericElement::occurs-in" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AParameterType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::GenericElement::source" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Algorithms::GenericElement::namespace" ordered="false" lowerBound="1" eType="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AAlgorithm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="label" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::VARParameter" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AParameter //Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AVARVariable"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualDataType" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AGenericType //Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AGenericElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Algorithms::ActualBAGType" eSuperTypes="//Algorithms/Express_metamodel%3A%3AAlgorithms%3A%3AActualAggregationType"/>
+  </eSubpackages>
+  <eSubpackages name="Instances">
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::AttributeValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::AttributeValue::actual-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::AttributeValue::attribute" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExplicitAttribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::ARRAYValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AAggregateValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::ARRAYValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AARRAYType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::ARRAYValue::member-slot" ordered="false" lowerBound="1" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AArrayMember" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::RoleName" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AStringValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::RoleName::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAttribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="represents" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::EntityInstance" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ATypedInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EntityInstance::state" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityValue" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityValue/Express_metamodel%3A%3AInstances%3A%3AEntityValue%3A%3Adescribes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EntityInstance::instance-of" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType/Express_metamodel%3A%3ACore%3A%3AEntityType%3A%3Ainstances"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EntityInstance::appears-in-population" ordered="false" lowerBound="1" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3APopulation" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3APopulation/Express_metamodel%3A%3AInstances%3A%3APopulation%3A%3Acomposition_EntityInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="//Instances/EntityName"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::IntegerValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ARealValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::AggregateValue" abstract="true" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AConcreteValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::AggregateValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AAggregationType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::Constant" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ACommonElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Constant::value-expression" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Constant::actual-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Constant::data-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstantiableType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::LogicalValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ASimpleValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::TypedInstance" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::TypedInstance::satisfies-type" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASelectType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::ListMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::ListMember::member-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::BagMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::BagMember::member-value" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::SingleEntityValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SingleEntityValue::equivalent" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3APartialEntityValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SingleEntityValue::of-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASingleEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SingleEntityValue::properties" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AAttributeValue" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::Indeterminate" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::SingleLeafInstance" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SingleLeafInstance::characterizing-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::GenericAggregate" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ALISTValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::BinaryValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ASimpleValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::SpecializedValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ATypedInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SpecializedValue::of-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASpecializedType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SpecializedValue::fundamental-value" ordered="false" lowerBound="1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AConcreteValue"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::BAGValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AAggregateValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::BAGValue::member-slot" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3ABagMember" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::BAGValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ABAGType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::EnumerationItem" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3ATypeElement //Instances/Express_metamodel%3A%3AInstances%3A%3ATypedInstance //Instances/Express_metamodel%3A%3AInstances%3A%3AConcreteValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EnumerationItem::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType/Express_metamodel%3A%3ACore%3A%3AEnumerationType%3A%3Avalues"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EnumerationItem::declared-in" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AEnumerationType/Express_metamodel%3A%3ACore%3A%3AEnumerationType%3A%3Adeclared-items"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::EntityValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3APartialEntityValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EntityValue::corresponds to" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::EntityValue::describes" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance/Express_metamodel%3A%3AInstances%3A%3AEntityInstance%3A%3Astate"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::SETValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AAggregateValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SETValue::member-value" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SETValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASETType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::ArrayMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::ArrayMember::member-value" ordered="false" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" ordered="false" unique="false" lowerBound="1" eType="//MOF/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::Population">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Population::composition_EntityInstance" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance" eOpposite="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance/Express_metamodel%3A%3AInstances%3A%3AEntityInstance%3A%3Aappears-in-population"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Population::composition_Instance" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AInstance" eOpposite="//Core/Express_metamodel%3A%3ACore%3A%3AInstance/Express_metamodel%3A%3ACore%3A%3AInstance%3A%3Aappears-in-population"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::Population::governing-schema" ordered="false" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASchema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::RealValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ANumberValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::BooleanValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ALogicalValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::LISTValue" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstance //Instances/Express_metamodel%3A%3AInstances%3A%3AAggregateValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::LISTValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ALISTType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::LISTValue::member-slot" ordered="false" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3AListMember" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::StringValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ASimpleValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::TypeName" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AStringValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::TypeName::refers-to" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ANamedType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="represents" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3AScopedId" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::PartialEntityValue" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::PartialEntityValue::of-type" ordered="false" lowerBound="1" eType="//Core/Express_metamodel%3A%3ACore%3A%3APartialEntityType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::PartialEntityValue::components" ordered="false" lowerBound="1" upperBound="-1" eType="//Instances/Express_metamodel%3A%3AInstances%3A%3ASingleEntityValue" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::NumberValue" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3ASimpleValue"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::MultiLeafInstance" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AEntityInstance"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::SimpleValue" abstract="true" eSuperTypes="//Instances/Express_metamodel%3A%3AInstances%3A%3AConcreteValue">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Express_metamodel::Instances::SimpleValue::of-type" ordered="false" lowerBound="1" upperBound="-1" eType="//Core/Express_metamodel%3A%3ACore%3A%3ASimpleType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="//MOF/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Express_metamodel::Instances::ConcreteValue" abstract="true" eSuperTypes="//Core/Express_metamodel%3A%3ACore%3A%3AInstance"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="EntityName"/>
+  </eSubpackages>
+  <eSubpackages name="Express2"/>
+</ecore:EPackage>

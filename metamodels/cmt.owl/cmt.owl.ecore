@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="cmt">
+    <eClassifiers xsi:type="ecore:EClass" name="Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Meta-Reviewer" eSuperTypes="/0/Reviewer"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reviewer" eSuperTypes="/0/ConferenceMember /0/User">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedByAdministrator" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/assignReviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adjustBid" ordered="false" eType="/0/Bid" eOpposite="/0/Bid/adjustedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readPaper" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/readByReviewer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasBeenAssigned" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/assignedTo"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writeReview" ordered="false" eType="/0/Review" eOpposite="/0/Review/writtenBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignExternalReviewer" ordered="false" eType="/0/ExternalReviewer" eOpposite="/0/ExternalReviewer/assignedByReviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasConflictOfInterest" ordered="false" eType="/0/Document"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Document"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Preference"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommittee">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasProgramCommitteeMember" ordered="false" eType="/0/ProgramCommitteeMember" eOpposite="/0/ProgramCommitteeMember/memberOfProgramCommittee"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bid">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adjustedBy" ordered="false" eType="/0/Reviewer" eOpposite="/0/Reviewer/adjustBid"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Conference" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasConferenceMember" ordered="false" eType="/0/ConferenceMember" eOpposite="/0/ConferenceMember/memberOfConference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="paperAssignmentFinalizedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/finalizePaperAssignment"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviewCriteriaEnteredBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/enterReviewCriteria"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="paperAssignmentToolsRunBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/runPaperAssignmentTools"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="virtualMeetingEnabledBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/enableVirtualMeeting"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hardcopyMailingManifestsPrintedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/printHardcopyMailingManifests"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="detailsEnteredBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/enterConferenceDetails"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reviewerBiddingStartedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/startReviewerBidding"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" ordered="false" unique="false" eType="/0/date"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="reviewsPerPaper" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoURL" ordered="false" unique="false" eType="/0/anyURI"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="acceptsHardcopySubmissions" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="siteURL" ordered="false" unique="false" eType="/0/anyURI"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConferenceChair" eSuperTypes="/0/ConferenceMember /0/Chairman"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConferenceMember" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="memberOfConference" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/hasConferenceMember"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociatedChair" eSuperTypes="/0/ConferenceMember /0/Chairman"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommitteeMember" eSuperTypes="/0/Person /0/ConferenceMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="memberOfProgramCommittee" ordered="false" eType="/0/ProgramCommittee" eOpposite="/0/ProgramCommittee/hasProgramCommitteeMember"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxPapers" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/addProgramCommitteeMember"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuthorNotReviewer" eSuperTypes="/0/Author"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SubjectArea"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExternalReviewer" eSuperTypes="/0/Person">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedByReviewer" ordered="false" lowerBound="1" eType="/0/Reviewer" eOpposite="/0/Reviewer/assignExternalReviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Chairman" eSuperTypes="/0/Person /0/ConferenceMember"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProgramCommitteeChair" eSuperTypes="/0/ProgramCommitteeMember /0/Chairman">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="endReview" ordered="false" eType="/0/Review"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Acceptance" eSuperTypes="/0/Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rejection" eSuperTypes="/0/Decision"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Review" eSuperTypes="/0/Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writtenBy" ordered="false" eType="/0/Reviewer" eOpposite="/0/Reviewer/writeReview"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Paper" eSuperTypes="/0/Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasCo-author" ordered="false" eType="/0/Co-author" eOpposite="/0/Co-author/co-writePaper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasBid" ordered="false" eType="/0/Bid"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasDecision" ordered="false" eType="/0/Decision"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignedTo" ordered="false" eType="/0/Reviewer" eOpposite="/0/Reviewer/hasBeenAssigned"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasSubjectArea" ordered="false" eType="/0/SubjectArea"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readByReviewer" ordered="false" lowerBound="1" eType="/0/Reviewer" eOpposite="/0/Reviewer/readPaper"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="paperID" ordered="false" unique="false" eType="/0/unsignedLong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasAuthor" ordered="false" eType="/0/Author" eOpposite="/0/Author/writePaper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="acceptedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/acceptPaper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rejectedBy" ordered="false" eType="/0/Administrator" eOpposite="/0/Administrator/rejectPaper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="readByMeta-Reviewer" ordered="false" eType="/0/Meta-Reviewer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Author" eSuperTypes="/0/ConferenceMember /0/User">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="submitPaper" ordered="false" eType="/0/Paper"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="writePaper" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/hasAuthor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="/0/Person"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Co-author" eSuperTypes="/0/Author">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="co-writePaper" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/hasCo-author"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PaperAbstract" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PaperFullVersion" eSuperTypes="/0/Paper"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Administrator" eSuperTypes="/0/User">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="finalizePaperAssignment" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/paperAssignmentFinalizedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="runPaperAssignmentTools" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/paperAssignmentToolsRunBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enableVirtualMeeting" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/virtualMeetingEnabledBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startReviewerBidding" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/reviewerBiddingStartedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignReviewer" ordered="false" eType="/0/Reviewer" eOpposite="/0/Reviewer/assignedByAdministrator"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rejectPaper" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/rejectedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterConferenceDetails" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/detailsEnteredBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="printHardcopyMailingManifests" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/hardcopyMailingManifestsPrintedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="setMaxPapers" ordered="false" eType="/0/ProgramCommitteeMember"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterReviewCriteria" ordered="false" eType="/0/Conference" eOpposite="/0/Conference/reviewCriteriaEnteredBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="acceptPaper" ordered="false" eType="/0/Paper" eOpposite="/0/Paper/acceptedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addProgramCommitteeMember" ordered="false" eType="/0/ProgramCommitteeMember" eOpposite="/0/ProgramCommitteeMember/addedBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Meta-Review" eSuperTypes="/0/Review"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="date"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="unsignedLong"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="anyURI"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

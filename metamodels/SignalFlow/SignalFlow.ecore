@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SignalFlow">
+    <eClassifiers xsi:type="ecore:EClass" name="RootFolder">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundComponent" ordered="false" upperBound="-1" eType="/0/CompoundComponent" containment="true" eOpposite="/0/CompoundComponent/rootFolder"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CompoundComponent" eSuperTypes="/0/BaseComponent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootFolder" ordered="false" lowerBound="1" eType="/0/RootFolder" eOpposite="/0/RootFolder/compoundComponent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseComponent" ordered="false" upperBound="-1" eType="/0/BaseComponent" containment="true" eOpposite="/0/BaseComponent/compoundComponent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="localPort" ordered="false" upperBound="-1" eType="/0/LocalPort" containment="true" eOpposite="/0/LocalPort/compoundComponent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PrimitiveComponent" eSuperTypes="/0/BaseComponent"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BaseComponent">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signal" ordered="false" upperBound="-1" eType="/0/Signal" containment="true" eOpposite="/0/Signal/baseComponent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outputPort" ordered="false" upperBound="-1" eType="/0/OutputPort" containment="true" eOpposite="/0/OutputPort/baseComponent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inputPort" ordered="false" upperBound="-1" eType="/0/InputPort" containment="true" eOpposite="/0/InputPort/baseComponent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundComponent" ordered="false" lowerBound="1" eType="/0/CompoundComponent" eOpposite="/0/CompoundComponent/baseComponent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InputPort" eSuperTypes="/0/PortBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseComponent" ordered="false" lowerBound="1" eType="/0/BaseComponent" eOpposite="/0/BaseComponent/inputPort"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LocalPort" eSuperTypes="/0/PortBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundComponent" ordered="false" lowerBound="1" eType="/0/CompoundComponent" eOpposite="/0/CompoundComponent/localPort"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OutputPort" eSuperTypes="/0/PortBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseComponent" ordered="false" lowerBound="1" eType="/0/BaseComponent" eOpposite="/0/BaseComponent/outputPort"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PortBase">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationPortBase_PortBasesrc" ordered="false" lowerBound="1" eType="/0/AssociationPortBase_PortBase" eOpposite="/0/AssociationPortBase_PortBase/srcPortBase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationPortBase_PortBasedst" ordered="false" lowerBound="1" eType="/0/AssociationPortBase_PortBase" eOpposite="/0/AssociationPortBase_PortBase/dstPortBase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Signal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseComponent" ordered="false" lowerBound="1" eType="/0/BaseComponent" eOpposite="/0/BaseComponent/signal"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationPortBase_PortBase" ordered="false" lowerBound="1" eType="/0/AssociationPortBase_PortBase" eOpposite="/0/AssociationPortBase_PortBase/signal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationPortBase_PortBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="srcPortBase" ordered="false" lowerBound="1" upperBound="-1" eType="/0/PortBase" eOpposite="/0/PortBase/associationPortBase_PortBasesrc"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dstPortBase" ordered="false" lowerBound="1" upperBound="-1" eType="/0/PortBase" eOpposite="/0/PortBase/associationPortBase_PortBasedst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signal" ordered="false" lowerBound="1" eType="/0/Signal" eOpposite="/0/Signal/associationPortBase_PortBase"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

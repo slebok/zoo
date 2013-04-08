@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="MySQL">
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DataBase" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tables" ordered="false" upperBound="-1" eType="/1/Table" containment="true" eOpposite="/1/Table/database"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1" eType="/1/Column" containment="true" eOpposite="/1/Column/table"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="database" ordered="false" lowerBound="1" eType="/1/DataBase" eOpposite="/1/DataBase/tables"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPrimaryKey" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="null" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/columns"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntegerColumn" eSuperTypes="/1/Column">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAutoIncrement" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EnumColumn" eSuperTypes="/1/Column">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enumSet" ordered="false" lowerBound="1" eType="/1/EnumSet" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EnumSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enumItems" ordered="false" upperBound="-1" eType="/1/EnumItem" containment="true" eOpposite="/1/EnumItem/enumSet"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EnumItem" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enumSet" ordered="false" lowerBound="1" eType="/1/EnumSet" eOpposite="/1/EnumSet/enumItems"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

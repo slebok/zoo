@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="MSProject">
+    <eClassifiers xsi:type="ecore:EClass" name="MSPProject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" upperBound="-1" eType="/1/MSPResource" containment="true" eOpposite="/1/MSPResource/project"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/1/MSPLink" containment="true" eOpposite="/1/MSPLink/project"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" upperBound="-1" eType="/1/MSPTask" containment="true" eOpposite="/1/MSPTask/project"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPTask">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="finishDate" ordered="false" lowerBound="1" eType="/1/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startDate" ordered="false" lowerBound="1" eType="/1/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="project" ordered="false" lowerBound="1" eType="/1/MSPProject" eOpposite="/1/MSPProject/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="superTask" ordered="false" eType="/1/MSPTask" eOpposite="/1/MSPTask/subTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subTask" ordered="false" upperBound="-1" eType="/1/MSPTask" eOpposite="/1/MSPTask/superTask"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignment" ordered="false" upperBound="-1" eType="/1/MSPAssignment" eOpposite="/1/MSPAssignment/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inLink" ordered="false" upperBound="-1" eType="/1/MSPLink" eOpposite="/1/MSPLink/succ"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outLink" ordered="false" upperBound="-1" eType="/1/MSPLink" eOpposite="/1/MSPLink/pred"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPLink">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="project" ordered="false" lowerBound="1" eType="/1/MSPProject" eOpposite="/1/MSPProject/link"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="succ" ordered="false" lowerBound="1" eType="/1/MSPTask" eOpposite="/1/MSPTask/inLink"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pred" ordered="false" lowerBound="1" eType="/1/MSPTask" eOpposite="/1/MSPTask/outLink"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPAssignment">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/1/MSPTask" eOpposite="/1/MSPTask/assignment"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" lowerBound="1" eType="/1/MSPResource" eOpposite="/1/MSPResource/assignment"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPResource">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="cost" ordered="false" unique="false" lowerBound="1" eType="/0/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="project" ordered="false" lowerBound="1" eType="/1/MSPProject" eOpposite="/1/MSPProject/resource"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assignment" ordered="false" upperBound="-1" eType="/1/MSPAssignment" eOpposite="/1/MSPAssignment/resource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPHumanResource" eSuperTypes="/1/MSPResource">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MSPMachine" eSuperTypes="/1/MSPResource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="XSchema">
+    <eClassifiers xsi:type="ecore:EEnum" name="AttributeUseType">
+      <eLiterals name="null" value="1"/>
+      <eLiterals name="optional" value="2"/>
+      <eLiterals name="prohibited" value="3"/>
+      <eLiterals name="required" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AnnotedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" ordered="false" upperBound="-1" eType="/1/Annotation" containment="true" eOpposite="/1/Annotation/annotedElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Annotation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="documentations" upperBound="-1" eType="/1/Documentation" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="applicationInfos" upperBound="-1" eType="/1/ApplicationInfo" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="annotedElement" ordered="false" lowerBound="1" eType="/1/AnnotedElement" eOpposite="/1/AnnotedElement/annotations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Documentation">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ApplicationInfo">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true" eSuperTypes="/1/AnnotedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XSchema" eSuperTypes="/1/AnnotedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" ordered="false" upperBound="-1" eType="/1/XSchemaContentElement" containment="true" eOpposite="/1/XSchemaContentElement/schema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XSchemaContentElement" abstract="true" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="schema" ordered="false" eType="/1/XSchema" eOpposite="/1/XSchema/contents"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameters" abstract="true" eSuperTypes="/1/XSchemaContentElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typeRef" ordered="false" eType="/1/AbstractType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typeContain" ordered="false" eType="/1/AbstractType" containment="true" eOpposite="/1/AbstractType/container"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixed" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="default" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" eSuperTypes="/1/Parameters /1/AtomicContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="references" ordered="false" upperBound="-1" eType="/1/ElementRef" eOpposite="/1/ElementRef/referencedElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Occurable" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minOccurs" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxOccurs" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AbstractContent" abstract="true" eSuperTypes="/1/Occurable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="container" ordered="false" lowerBound="1" eType="/1/Container" eOpposite="/1/Container/contents"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="complexType" ordered="false" lowerBound="1" eType="/1/ComplexType" eOpposite="/1/ComplexType/content"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Container" abstract="true" eSuperTypes="/1/AbstractContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="/1/AbstractContent" containment="true" eOpposite="/1/AbstractContent/container"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicContent" abstract="true" eSuperTypes="/1/AbstractContent"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementRef" eSuperTypes="/1/AtomicContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedElement" ordered="false" lowerBound="1" eType="/1/Element" eOpposite="/1/Element/references"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GroupRef" eSuperTypes="/1/AtomicContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedGroup" ordered="false" lowerBound="1" eType="/1/Group" eOpposite="/1/Group/references"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="All" eSuperTypes="/1/Container"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="/1/XSchemaContentElement /1/Container">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="references" ordered="false" upperBound="-1" eType="/1/GroupRef" eOpposite="/1/GroupRef/referencedGroup"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Choice" eSuperTypes="/1/Container"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="/1/Container"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AbstractAttributeGroupContent" abstract="true" eSuperTypes="/1/Occurable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="container" ordered="false" lowerBound="1" eType="/1/AttributeGroup" eOpposite="/1/AttributeGroup/contents"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="complexType" ordered="false" lowerBound="1" eType="/1/ComplexType" eOpposite="/1/ComplexType/attributes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeGroup" eSuperTypes="/1/AbstractAttributeGroupContent /1/XSchemaContentElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="/1/AbstractAttributeGroupContent" containment="true" eOpposite="/1/AbstractAttributeGroupContent/container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="references" ordered="false" upperBound="-1" eType="/1/AttributeGroupRef" eOpposite="/1/AttributeGroupRef/referencedAttributeGroup"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeGroupRef" eSuperTypes="/1/AtomicAttributeGroupContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedAttributeGroup" ordered="false" lowerBound="1" eType="/1/AttributeGroup" eOpposite="/1/AttributeGroup/references"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicAttributeGroupContent" abstract="true" eSuperTypes="/1/AbstractAttributeGroupContent"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/1/Parameters /1/AtomicAttributeGroupContent">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="use" ordered="false" unique="false" eType="/1/AttributeUseType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="references" ordered="false" upperBound="-1" eType="/1/AttributeRef" eOpposite="/1/AttributeRef/referencedAttribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeRef" eSuperTypes="/1/AtomicAttributeGroupContent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedAttribute" ordered="false" lowerBound="1" eType="/1/Attribute" eOpposite="/1/Attribute/references"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AbstractType" abstract="true" eSuperTypes="/1/XSchemaContentElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="container" ordered="false" lowerBound="1" eType="/1/Parameters" eOpposite="/1/Parameters/typeContain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleType" eSuperTypes="/1/AbstractType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" ordered="false" upperBound="-1" eType="/1/ComplexTypeSimpleContent" eOpposite="/1/ComplexTypeSimpleContent/base"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComplexType" eSuperTypes="/1/AbstractType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensions" ordered="false" upperBound="-1" eType="/1/ComplexTypeComplexContent" eOpposite="/1/ComplexTypeComplexContent/base"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="content" ordered="false" eType="/1/AbstractContent" containment="true" eOpposite="/1/AbstractContent/complexType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false" upperBound="-1" eType="/1/AbstractAttributeGroupContent" containment="true" eOpposite="/1/AbstractAttributeGroupContent/complexType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComplexTypeSimpleContent" eSuperTypes="/1/ComplexType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="base" ordered="false" lowerBound="1" eType="/1/SimpleType" eOpposite="/1/SimpleType/extensions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComplexTypeComplexContent" eSuperTypes="/1/ComplexType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="base" ordered="false" lowerBound="1" eType="/1/ComplexType" eOpposite="/1/ComplexType/extensions"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

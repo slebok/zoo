@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="CPP">
+    <eClassifiers xsi:type="ecore:EClass" name="CDerived"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CStructured"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CBehavorialFeature"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CFunction" eSuperTypes="/1/CBehavorialFeature">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isVsrArg" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CStructureContents"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CField"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CDerivableType"/>
+    <eClassifiers xsi:type="ecore:EEnum" name="VisibilityKind">
+      <eLiterals name="vk_public" value="1"/>
+      <eLiterals name="vk_private" value="2"/>
+      <eLiterals name="vk_protected" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPReference" eSuperTypes="/1/CDerived"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPExtern" eSuperTypes="/1/CDerived">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkage" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPConst" eSuperTypes="/1/CDerived"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPTemplate" eSuperTypes="/1/CDerived">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" upperBound="-1" eType="/1/CPPClass" eOpposite="/1/CPPClass/templates"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPClass" eSuperTypes="/1/CStructured">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isVolatile" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/VisibilityKind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="templates" ordered="false" upperBound="-1" eType="/1/CPPTemplate" eOpposite="/1/CPPTemplate/classes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalizations" ordered="false" upperBound="-1" eType="/1/CPPGeneralization"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPGeneralization">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/VisibilityKind"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isVirtual" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supertype" ordered="false" lowerBound="1" eType="/1/CPPClass"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPOperation" eSuperTypes="/1/CFunction /1/CStructureContents">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStatic" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isExtern" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInline" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isVirtual" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPure" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/VisibilityKind"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isCtor" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDtor" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="throws" ordered="false" upperBound="-1" eType="/1/CPPClass"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPOperator" eSuperTypes="/1/CStructureContents">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInline" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/VisibilityKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CPPMember">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStatic" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isVolatile" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRegister" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/VisibilityKind"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

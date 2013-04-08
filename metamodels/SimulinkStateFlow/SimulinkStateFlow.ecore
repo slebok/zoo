@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SimulinkStateFlow">
+    <eClassifiers xsi:type="ecore:EClass" name="Simulink">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subSystem" ordered="false" upperBound="-1" eType="/0/System" containment="true" eOpposite="/0/System/simulink"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="System">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="simulink" ordered="false" lowerBound="1" eType="/0/Simulink" eOpposite="/0/Simulink/subSystem"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" ordered="false" lowerBound="1" eType="/0/Block" eOpposite="/0/Block/system"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lines" ordered="false" lowerBound="1" eType="/0/Line" eOpposite="/0/Line/system"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subSystem" ordered="false" upperBound="-1" eType="/0/System" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Connector"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Line">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" ordered="false" lowerBound="1" eType="/0/Block" eOpposite="/0/Block/lines"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="system" ordered="false" lowerBound="1" eType="/0/System" eOpposite="/0/System/lines"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BranchPoint" eSuperTypes="/0/Connector"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="/0/Connector">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="units" ordered="false" unique="false" lowerBound="1" eType="/0/Units"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Block">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="natagme" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="blockType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lines" ordered="false" upperBound="-1" eType="/0/Line" containment="true" eOpposite="/0/Line/block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/Parameter" containment="true" eOpposite="/0/Parameter/block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="annotations" ordered="false" upperBound="-1" eType="/0/Annotation" containment="true" eOpposite="/0/Annotation/block"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="blockRefs" ordered="false" upperBound="-1" eType="/0/BlockRef" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="system" ordered="false" lowerBound="1" eType="/0/System" eOpposite="/0/System/blocks"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BlockRef"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Primitive" eSuperTypes="/0/Block">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="deadLine" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="period" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionTime" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OutPut" eSuperTypes="/0/Port">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TriggerPort" eSuperTypes="/0/Port">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="triggerType" ordered="false" unique="false" lowerBound="1" eType="/0/TriggerEnum"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EnablePort" eSuperTypes="/0/Port">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="statesWhenEnabling" ordered="false" unique="false" lowerBound="1" eType="/0/EnableEnum"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="/0/Block">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceBlock" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Annotation">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" ordered="false" lowerBound="1" eType="/0/Block" eOpposite="/0/Block/annotations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="block" ordered="false" lowerBound="1" eType="/0/Block" eOpposite="/0/Block/parameters"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Units">
+      <eLiterals name="alpha" value="1"/>
+      <eLiterals name="beta" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="TriggerEnum">
+      <eLiterals name="alpha" value="1"/>
+      <eLiterals name="beta" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="EnableEnum">
+      <eLiterals name="alpha" value="1"/>
+      <eLiterals name="beta" value="2"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

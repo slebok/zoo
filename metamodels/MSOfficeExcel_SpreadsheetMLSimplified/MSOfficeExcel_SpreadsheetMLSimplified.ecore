@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="SpreadsheetMLSimplified">
+    <eClassifiers xsi:type="ecore:EClass" name="DateTimeType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hour" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minute" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="second" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ValueType" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vt_data" ordered="false" lowerBound="1" eType="/1/Data" eOpposite="/1/Data/value"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StringValue" eSuperTypes="/1/ValueType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NumberValue" eSuperTypes="/1/ValueType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DateTimeTypeValue" eSuperTypes="/1/ValueType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" lowerBound="1" eType="/1/DateTimeType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanValue" eSuperTypes="/1/ValueType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ErrorValue" eSuperTypes="/1/ValueType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Workbook">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="wb_worksheets" upperBound="-1" eType="/1/Worksheet" containment="true" eOpposite="/1/Worksheet/ws_workbook"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Worksheet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ws_workbook" ordered="false" lowerBound="1" eType="/1/Workbook" eOpposite="/1/Workbook/wb_worksheets"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ws_table" ordered="false" eType="/1/Table" containment="true" eOpposite="/1/Table/t_worksheet"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="t_worksheet" ordered="false" lowerBound="1" eType="/1/Worksheet" eOpposite="/1/Worksheet/ws_table"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="t_cols" upperBound="-1" eType="/1/Column" containment="true" eOpposite="/1/Column/c_table"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="t_rows" upperBound="-1" eType="/1/Row" containment="true" eOpposite="/1/Row/r_table"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TableElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" ordered="false" unique="false" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ColOrRowElement" abstract="true" eSuperTypes="/1/TableElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hidden" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="span" ordered="false" unique="false" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/1/ColOrRowElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c_table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/t_cols"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoFitWidth" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" ordered="false" unique="false" eType="/0/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Row" eSuperTypes="/1/ColOrRowElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="r_table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/t_rows"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="r_cells" upperBound="-1" eType="/1/Cell" containment="true" eOpposite="/1/Cell/c_row"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoFitHeight" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" ordered="false" unique="false" eType="/0/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Cell" eSuperTypes="/1/TableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c_row" ordered="false" lowerBound="1" eType="/1/Row" eOpposite="/1/Row/r_cells"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="arrayRange" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="formula" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hRef" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mergeAcross" ordered="false" unique="false" eType="/0/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mergeDown" ordered="false" unique="false" eType="/0/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="c_data" ordered="false" eType="/1/Data" containment="true" eOpposite="/1/Data/d_cell"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Data">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="d_cell" ordered="false" lowerBound="1" eType="/1/Cell" eOpposite="/1/Cell/c_data"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" lowerBound="1" eType="/1/ValueType" containment="true" eOpposite="/1/ValueType/vt_data"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

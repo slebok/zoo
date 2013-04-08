@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="FeatureDiagrams">
+    <eClassifiers xsi:type="ecore:EClass" name="Node">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preliminary" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="object" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false" upperBound="-1" eType="/0/Attribute" containment="true" eOpposite="/0/Attribute/node"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="no_dst" ordered="false" upperBound="-1" eType="/0/ORGroup" eOpposite="/0/ORGroup/no_src"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nx_dst" ordered="false" upperBound="-1" eType="/0/XORGroup" eOpposite="/0/XORGroup/nx_src"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cn_dst" ordered="false" upperBound="-1" eType="/0/Child" eOpposite="/0/Child/cn_src"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="editable" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="node" ordered="false" lowerBound="1" eType="/0/Node" eOpposite="/0/Node/attributes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Root" eSuperTypes="/0/Node"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Child" eSuperTypes="/0/Node">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cn_src" ordered="false" upperBound="-1" eType="/0/Node" eOpposite="/0/Node/cn_dst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cx_src" ordered="false" upperBound="-1" eType="/0/XORGroup" eOpposite="/0/XORGroup/cx_dst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="co_src" ordered="false" upperBound="-1" eType="/0/ORGroup" eOpposite="/0/ORGroup/co_dst"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XORGroup">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preliminary" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nx_src" ordered="false" upperBound="-1" eType="/0/Node" eOpposite="/0/Node/nx_dst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cx_dst" ordered="false" upperBound="-1" eType="/0/Child" eOpposite="/0/Child/cx_src"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ORGroup">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preliminary" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="no_src" ordered="false" upperBound="-1" eType="/0/Node" eOpposite="/0/Node/no_dst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="co_dst" ordered="false" upperBound="-1" eType="/0/Child" eOpposite="/0/Child/co_src"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

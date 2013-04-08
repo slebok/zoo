@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="JAVA">
+    <eClassifiers xsi:type="ecore:EClass" name="JavaElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassFeature" abstract="true" eSuperTypes="/0/JavaElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFinal" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassMember" abstract="true" eSuperTypes="/0/ClassFeature">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/JavaClass" eOpposite="/0/JavaClass/members"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/JavaClass" eOpposite="/0/JavaClass/typedElements"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStatic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPublic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="/0/ClassMember"/>
+    <eClassifiers xsi:type="ecore:EClass" name="JavaClass" eSuperTypes="/0/ClassFeature">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="members" ordered="false" upperBound="-1" eType="/0/ClassMember" containment="true" eOpposite="/0/ClassMember/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false" lowerBound="1" eType="/0/Package" eOpposite="/0/Package/classes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typedElements" ordered="false" upperBound="-1" eType="/0/ClassMember" eOpposite="/0/ClassMember/type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/FeatureParameter" eOpposite="/0/FeatureParameter/type"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStatic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPublic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="/0/ClassMember">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1" eType="/0/FeatureParameter" containment="true" eOpposite="/0/FeatureParameter/method"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/JavaElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" upperBound="-1" eType="/0/JavaClass" containment="true" eOpposite="/0/JavaClass/package"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="/0/JavaClass"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FeatureParameter" eSuperTypes="/0/ClassFeature">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/JavaClass" eOpposite="/0/JavaClass/parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="method" ordered="false" lowerBound="1" eType="/0/Method" eOpposite="/0/Method/parameters"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

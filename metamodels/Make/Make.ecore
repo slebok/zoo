@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="Make">
+    <eClassifiers xsi:type="ecore:EClass" name="Makefile">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="comment" ordered="false" eType="/0/Comment" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" lowerBound="1" upperBound="-1" eType="/0/Element" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Rule" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dependencies" upperBound="-1" eType="/0/Dependency" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="shellLines" lowerBound="1" upperBound="-1" eType="/0/ShellLine" containment="true" eOpposite="/0/ShellLine/ruleShellLine"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Macro" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ShellLine">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="command" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="display" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ruleShellLine" ordered="false" lowerBound="1" eType="/0/Rule" eOpposite="/0/Rule/shellLines"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Comment">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Dependency" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RuleDep" eSuperTypes="/0/Dependency">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ruledep" ordered="false" lowerBound="1" eType="/0/Rule"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FileDep" eSuperTypes="/0/Dependency">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

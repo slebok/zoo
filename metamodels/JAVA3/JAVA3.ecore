@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="JAVA">
+    <eClassifiers xsi:type="ecore:EClass" name="Modifier" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="/0/Modifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="superClass" ordered="false" eType="/0/Class"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="implement" ordered="false" upperBound="-1" eType="/0/Interface" eOpposite="/0/Interface/implementedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="methods" ordered="false" upperBound="-1" eType="/0/Method" containment="true" eOpposite="/0/Method/class"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fields" ordered="false" upperBound="-1" eType="/0/Field" containment="true" eOpposite="/0/Field/class"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Interface" eSuperTypes="/0/Modifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="superInterface" ordered="false" upperBound="-1" eType="/0/Interface"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="implementedBy" ordered="false" upperBound="-1" eType="/0/Class" eOpposite="/0/Class/implement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="abstractMethods" ordered="false" upperBound="-1" eType="/0/Method" containment="true" eOpposite="/0/Method/interface"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constants" ordered="false" upperBound="-1" eType="/0/Field" containment="true" eOpposite="/0/Field/interface"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="/0/Modifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="share" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="class" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/methods"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interface" ordered="false" lowerBound="1" eType="/0/Interface" eOpposite="/0/Interface/abstractMethods"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resultOf" ordered="false" eType="/0/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/Parameter" containment="true" eOpposite="/0/Parameter/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="/0/Modifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="share" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="class" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/fields"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interface" ordered="false" lowerBound="1" eType="/0/Interface" eOpposite="/0/Interface/constants"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="value" ordered="false" lowerBound="1" eType="/0/Value" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typeOf" ordered="false" lowerBound="1" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Value"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typeOf" ordered="false" eType="/0/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Method" eOpposite="/0/Method/parameters"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceType" eSuperTypes="/0/Type">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reference" ordered="false" lowerBound="1" eType="/0/Class"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="/0/Type"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Int" eSuperTypes="/0/PrimitiveType"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

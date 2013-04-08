@@ -1,0 +1,881 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SBVR">
+    <eClassifiers xsi:type="ecore:EClass" name="Actuality" eSuperTypes="/0/StateOfAffairs"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StateOfAffairs" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="name" ordered="false" upperBound="-1" eType="/0/Name"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Name" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Designation" eSuperTypes="/0/Representation">
+      <eOperations name="getSignifierText" eType="/1/String"/>
+      <eOperations name="setSignifierText">
+        <eParameters name="value" eType="/1/String"/>
+      </eOperations>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="implicitlyIsUnderstood" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signifier" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Representation" eSuperTypes="/0/Actuality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Meaning" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" upperBound="-1" eType="/0/Representation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Expression" eSuperTypes="/0/BindableTarget"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BindableTarget" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdoptedDefinition" eSuperTypes="/0/Definition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Definition" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Advice" eSuperTypes="/0/ElementOfGuidance"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGuidance" eSuperTypes="/0/Proposition">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPracticable" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Proposition" eSuperTypes="/0/Meaning">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFalse" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTrue" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="statement" ordered="false" upperBound="-1" eType="/0/Statement"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPossiblyTrue" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isObligatedToBeTrue" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPermittedToBeTrue" ordered="false" unique="false" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNecessarilyTrue" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Statement" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdviceOfContingency" eSuperTypes="/0/AdviceOfPossibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdviceOfPossibility" eSuperTypes="/0/Advice"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdviceOfOptionality" eSuperTypes="/0/AdviceOfPermission"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdviceOfPermission" eSuperTypes="/0/Advice"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AdviceStatement" eSuperTypes="/0/GuidanceStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="GuidanceStatement" eSuperTypes="/0/Statement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AggregationFormulation" eSuperTypes="/0/ProjectingFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectingFormulation" eSuperTypes="/0/LogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projection" ordered="false" lowerBound="1" eType="/0/Projection"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalFormulation" eSuperTypes="/0/SemanticFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SemanticFormulation" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Projection" eSuperTypes="/0/SemanticFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrainingFormulation" ordered="false" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projectionVariable" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="auxiliaryVariable" ordered="false" upperBound="-1" eType="/0/AuxiliaryVariable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="/0/BindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="restrictingFormulation" ordered="false" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projectionPosition" ordered="false" eType="/0/PositiveInteger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rangedoverConcept" ordered="false" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnitary" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PositiveInteger" eSuperTypes="/0/NonnegativeInteger"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NonnegativeInteger" eSuperTypes="/0/Integer"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Integer" eSuperTypes="/0/Number">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" eType="/1/integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Number" eSuperTypes="/0/Quantity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Quantity" eSuperTypes="/0/NounConcept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NounConcept" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Concept" eSuperTypes="/0/Meaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributiveNamespace" ordered="false" upperBound="-1" eType="/0/AttributiveNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definition" ordered="false" upperBound="-1" eType="/0/Definition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="moreGeneralConcept" ordered="false" upperBound="-1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="category" ordered="false" upperBound="-1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="essentialCharacteristic" ordered="false" upperBound="-1" eType="/0/Characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" ordered="false" upperBound="-1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceScheme" ordered="false" upperBound="-1" eType="/0/ReferenceScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="impliedCharacteristic" ordered="false" upperBound="-1" eType="/0/Characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="necessaryCharacteristic" ordered="false" upperBound="-1" eType="/0/Characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" upperBound="-1" eType="/0/Designation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extension" ordered="false" lowerBound="1" eType="/0/Set"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributiveNamespace" eSuperTypes="/0/Namespace"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Namespace" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" upperBound="-1" eType="/0/Uri"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Uri" eSuperTypes="/0/Text"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Text" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Characteristic" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactType" eSuperTypes="/0/Concept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" upperBound="-1" eType="/0/FactTypeForm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" upperBound="-1" eType="/0/FactTypeRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeForm" eSuperTypes="/0/Representation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="placeholder" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Placeholder"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Placeholder" eSuperTypes="/0/Designation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startingCharacterPosition" ordered="false" eType="/0/PositiveInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeRole" eSuperTypes="/0/Role">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleBinding" ordered="false" upperBound="-1" eType="/0/RoleBinding"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="/0/NounConcept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleBinding" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceScheme" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="simplyUsedRole" ordered="false" upperBound="-1" eType="/0/FactTypeRole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="identifyingCharacteristic" ordered="false" upperBound="-1" eType="/0/Characteristic"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionallyUsedRole" ordered="false" upperBound="-1" eType="/0/FactTypeRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Set" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" ordered="false" eType="/0/NonnegativeInteger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="element" ordered="false" upperBound="-1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuxiliaryVariable" eSuperTypes="/0/Variable"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AnswerNominalization" eSuperTypes="/0/ProjectingFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociativeFactType" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AssortmentFactType" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AtleastnQuantification" eSuperTypes="/0/Quantification">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minimumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Quantification" eSuperTypes="/0/LogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="scopeFormulation" ordered="false" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtmostnQuantification" eSuperTypes="/0/Quantification">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maximumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtmostoneQuantification" eSuperTypes="/0/AtmostnQuantification"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicFormulation" eSuperTypes="/0/LogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleBinding" ordered="false" upperBound="-1" eType="/0/RoleBinding"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BagProjection" eSuperTypes="/0/Projection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryFactType" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryLogicalOperation" eSuperTypes="/0/LogicalOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand2" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand1" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalOperation" eSuperTypes="/0/LogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedConcepts" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedGuidance" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedMeanings" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementaryFactType" ordered="false" upperBound="-1" eType="/0/FactType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessPolicy" eSuperTypes="/0/ElementOfGovernance"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGovernance" eSuperTypes="/0/ElementOfGuidance">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDirectlyEnforceable" ordered="false" unique="false" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessPolicyStatement" eSuperTypes="/0/GuidanceStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessRule" eSuperTypes="/0/ElementOfGuidance /0/Rule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rule" eSuperTypes="/0/Proposition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessVocabulary" eSuperTypes="/0/Vocabulary"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Vocabulary" eSuperTypes="/0/Set"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationFactType" eSuperTypes="/0/SpecializationFactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SpecializationFactType" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationScheme" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationType" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CharacteristicType" eSuperTypes="/0/ConceptType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptType" eSuperTypes="/0/ObjectType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ObjectType" eSuperTypes="/0/Concept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categorizationScheme" ordered="false" upperBound="-1" eType="/0/CategorizationScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categorizationType" ordered="false" upperBound="-1" eType="/0/CategorizationType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedLogicalFormulation" eSuperTypes="/0/ClosedSemanticFormulation /0/LogicalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedSemanticFormulation" eSuperTypes="/0/SemanticFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedProjection" eSuperTypes="/0/Projection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CommunicationContent" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Community" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" upperBound="-1" eType="/0/Uri"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subcommunity" ordered="false" upperBound="-1" eType="/0/Community"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsComposite" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsContinuant" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsDeveloped" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsOccurrent" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsPrimitive" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingAsUnitary" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingExistingDependently" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptOfThingExistingIndependently" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptualSchema" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Conjunction" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ContextOfThing" eSuperTypes="/0/Segmentation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Segmentation" eSuperTypes="/0/CategorizationScheme"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ContextualizationFactType" eSuperTypes="/0/SpecializationFactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ContextualizedConcept" eSuperTypes="/0/NounConcept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ContingencyStatement" eSuperTypes="/0/StatementOfAdviceOfPossibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StatementOfAdviceOfPossibility" eSuperTypes="/0/AdviceStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DefiniteDescription" eSuperTypes="/0/IntensionalDefinition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IntensionalDefinition" eSuperTypes="/0/Definition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DerivableConcept" eSuperTypes="/0/Concept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Description" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DescriptiveExample" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Disjunction" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Equivalence" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExactlynQuantification" eSuperTypes="/0/Quantification">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExactlyoneQuantification" eSuperTypes="/0/ExactlynQuantification"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExclusiveDisjunction" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExistentialQuantification" eSuperTypes="/0/AtleastnQuantification"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExplicitnessOfRepresentation" eSuperTypes="/0/CategorizationScheme"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExtensionalDefinition" eSuperTypes="/0/Definition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Facet" eSuperTypes="/0/ContextualizedConcept"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Fact" eSuperTypes="/0/Proposition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactModel" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactSymbol" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeHasFactInFactModel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fact" ordered="false" lowerBound="1" eType="/0/Fact"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factModel" ordered="false" lowerBound="1" eType="/0/FactModel"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeNominalization" eSuperTypes="/0/ProjectingFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeRoleDesignation" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeTemplating" eSuperTypes="/0/CategorizationScheme"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FormalRepresentation" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FundamentalConcept" eSuperTypes="/0/ObjectType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Icon" eSuperTypes="/0/NonverbalDesignation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NonverbalDesignation" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Implication" eSuperTypes="/0/BinaryLogicalOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="consequent" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="antecedent" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ImpossibilityStatement" eSuperTypes="/0/StructuralRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StructuralRuleStatement" eSuperTypes="/0/RuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RuleStatement" eSuperTypes="/0/GuidanceStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IndividualConcept" eSuperTypes="/0/NounConcept /0/BindableTarget"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InformalRepresentation" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InstantiationFormulation" eSuperTypes="/0/LogicalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IsfacetofFactType" eSuperTypes="/0/ContextualizationFactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IspropertyofFactType" eSuperTypes="/0/AssociativeFactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IsroleofFactType" eSuperTypes="/0/FactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="KindOfGuidanceStatement" eSuperTypes="/0/CategorizationScheme"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Language" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LevelOfEnforcement" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalFormulationKind" eSuperTypes="/0/ObjectType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalNegation" eSuperTypes="/0/LogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ModalFormulation" eSuperTypes="/0/LogicalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NandFormulation" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NecessityFormulation" eSuperTypes="/0/ModalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NecessityStatement" eSuperTypes="/0/StructuralRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NonnecessityStatement" eSuperTypes="/0/StatementOfAdviceOfPossibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NonobligationStatement" eSuperTypes="/0/StatementOfAdviceOfPermission"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StatementOfAdviceOfPermission" eSuperTypes="/0/AdviceStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NorFormulation" eSuperTypes="/0/BinaryLogicalOperation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Note" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NounConceptNominalization" eSuperTypes="/0/ProjectingFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NounForm" eSuperTypes="/0/FactTypeForm"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NumericRangeQuantification" eSuperTypes="/0/Quantification">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maximumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minimumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Objectification" eSuperTypes="/0/LogicalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ObligationFormulation" eSuperTypes="/0/ModalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ObligationStatement" eSuperTypes="/0/OperativeBusinessRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OperativeBusinessRuleStatement" eSuperTypes="/0/RuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OperativeBusinessRule" eSuperTypes="/0/ElementOfGovernance /0/BusinessRule">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="levelOfEnforcement" ordered="false" upperBound="-1" eType="/0/LevelOfEnforcement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OptionalityStatement" eSuperTypes="/0/StatementOfAdviceOfPermission"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OwnedDefinition" eSuperTypes="/0/Definition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PartitiveFactType" eSuperTypes="/0/BinaryFactType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PermissibilityFormulation" eSuperTypes="/0/ModalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PermissionStatement" eSuperTypes="/0/StatementOfAdviceOfPermission"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PossibilityFormulation" eSuperTypes="/0/ModalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PossibilityStatement" eSuperTypes="/0/StatementOfAdviceOfPossibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PreferredDesignation" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProhibitedDesignation" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProhibitionStatement" eSuperTypes="/0/OperativeBusinessRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PropositionNominalization" eSuperTypes="/0/LogicalFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Question" eSuperTypes="/0/Meaning"/>
+    <eClassifiers xsi:type="ecore:EClass" name="QuestionNominalization" eSuperTypes="/0/ProjectingFormulation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RealworldNumericalCorrespondence" eSuperTypes="/0/CategorizationScheme"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="/0/Representation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationFormality" eSuperTypes="/0/Segmentation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Res" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RestrictedPermissionStatement" eSuperTypes="/0/OperativeBusinessRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RestrictedPossibilityStatement" eSuperTypes="/0/StructuralRuleStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Rulebook" eSuperTypes="/0/Set"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SemanticCommunity" eSuperTypes="/0/Community">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" upperBound="-1" eType="/0/SpeechCommunity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunity" eSuperTypes="/0/Community"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SententialForm" eSuperTypes="/0/FactTypeForm"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SetProjection" eSuperTypes="/0/Projection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Situation" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SituationalRole" eSuperTypes="/0/ObjectType /0/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityAdoptsAdoptedDefinitionCitingReference">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adoptedDefinition" ordered="false" lowerBound="1" eType="/0/AdoptedDefinition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reference" ordered="false" lowerBound="1" eType="/0/Reference"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateOfAffairsInvolvesThingInRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateOfAffairs" ordered="false" lowerBound="1" eType="/0/StateOfAffairs"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing" ordered="false" lowerBound="1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" eType="/0/Role"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StructuralBusinessRule" eSuperTypes="/0/BusinessRule /0/StructuralRule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StructuralRule" eSuperTypes="/0/Rule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SubjectField" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Term" eSuperTypes="/0/Designation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TerminologicalDictionary" eSuperTypes="/0/Thing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" upperBound="-1" eType="/0/Uri" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ThingInContext" eSuperTypes="/0/Segmentation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="UniversalQuantification" eSuperTypes="/0/Quantification"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Viewpoint" eSuperTypes="/0/Thing"/>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyNamespace" eSuperTypes="/0/Namespace"/>
+    <eClassifiers xsi:type="ecore:EClass" name="WhetherornotFormulation" eSuperTypes="/0/BinaryLogicalOperation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inconsequent" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="consequent" ordered="false" upperBound="-1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtleastnQuantificationHasMinimumCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="atleastnQuantification" ordered="false" lowerBound="1" eType="/0/AtleastnQuantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minimumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtmostnQuantificationHasMaximumCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="atmostnQuantification" ordered="false" lowerBound="1" eType="/0/AtmostnQuantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maximumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicFormulationIsBasedOnFactType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="atomicFormulation" ordered="false" lowerBound="1" eType="/0/AtomicFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributiveNamespaceIsForSubjectConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributiveNamespace" ordered="false" lowerBound="1" eType="/0/AttributiveNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subjectConcept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributiveNamespaceIsWithinVocabularyNamespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributiveNamespace" ordered="false" lowerBound="1" eType="/0/AttributiveNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabularyNamespace" ordered="false" lowerBound="1" eType="/0/VocabularyNamespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryLogicalOperationHasLogicalOperand1">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="binaryLogicalOperation" ordered="false" lowerBound="1" eType="/0/BinaryLogicalOperation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand1" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryLogicalOperationHasLogicalOperand2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="binaryLogicalOperation" ordered="false" lowerBound="1" eType="/0/BinaryLogicalOperation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand2" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedMeaningsIncludesBodyOfSharedConcepts">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedConcepts" ordered="false" lowerBound="1" eType="/0/BodyOfSharedConcepts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedMeaningsIncludesBodyOfSharedGuidance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedGuidance" ordered="false" lowerBound="1" eType="/0/BodyOfSharedGuidance"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedMeaningsUnitesSemanticCommunity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="semanticCommunity" ordered="false" lowerBound="1" eType="/0/SemanticCommunity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyOfSharedMeanings1ContainsBodyOfSharedMeanings2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings1" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings2" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessPolicyIsBasisForAdvice">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="businessPolicy" ordered="false" lowerBound="1" eType="/0/BusinessPolicy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="advice" ordered="false" lowerBound="1" eType="/0/Advice"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessRuleIsDerivedFromBusinessPolicy">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="businessRule" ordered="false" lowerBound="1" eType="/0/BusinessRule"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="businessPolicy" ordered="false" lowerBound="1" eType="/0/BusinessPolicy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationSchemeContainsCategory">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categorizationScheme" ordered="false" lowerBound="1" eType="/0/CategorizationScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="category" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationSchemeIsForGeneralConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categorizationScheme" ordered="false" lowerBound="1" eType="/0/CategorizationScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalConcept" ordered="false" lowerBound="1" eType="/0/ObjectType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CategorizationTypeIsForGeneralConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="categorizationType" ordered="false" lowerBound="1" eType="/0/CategorizationType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalConcept" ordered="false" lowerBound="1" eType="/0/ObjectType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedLogicalFormulationFormalizesStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedLogicalFormulation" ordered="false" lowerBound="1" eType="/0/ClosedLogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="statement" ordered="false" lowerBound="1" eType="/0/Statement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedLogicalFormulationMeansProposition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedLogicalFormulation" ordered="false" lowerBound="1" eType="/0/ClosedLogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="proposition" ordered="false" lowerBound="1" eType="/0/Proposition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedProjectionDefinesFactType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedProjection" ordered="false" lowerBound="1" eType="/0/ClosedProjection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedProjectionDefinesNounConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedProjection" ordered="false" lowerBound="1" eType="/0/ClosedProjection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nounConcept" ordered="false" lowerBound="1" eType="/0/NounConcept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedProjectionFormalizesDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedProjection" ordered="false" lowerBound="1" eType="/0/ClosedProjection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definition" ordered="false" lowerBound="1" eType="/0/Definition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedProjectionMeansQuestion">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedProjection" ordered="false" lowerBound="1" eType="/0/ClosedProjection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="question" ordered="false" lowerBound="1" eType="/0/Question"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClosedSemanticFormulationFormulatesMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="closedSemanticFormulation" ordered="false" lowerBound="1" eType="/0/ClosedSemanticFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CommunicationContentIsComposedOfRepresentation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="communicationContent" ordered="false" lowerBound="1" eType="/0/CommunicationContent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CommunityHasSubcommunity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="community" ordered="false" lowerBound="1" eType="/0/Community"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subcommunity" ordered="false" lowerBound="1" eType="/0/Community"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CommunityHasUri">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="community" ordered="false" lowerBound="1" eType="/0/Community"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" lowerBound="1" eType="/0/Uri"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definition" ordered="false" lowerBound="1" eType="/0/Definition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasDesignation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasExtension">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extension" ordered="false" lowerBound="1" eType="/0/Set"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasImpliedCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="impliedCharacteristic" ordered="false" lowerBound="1" eType="/0/Characteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasInstance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" ordered="false" lowerBound="1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasNecessaryCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="necessaryCharacteristic" ordered="false" lowerBound="1" eType="/0/Characteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptHasSharedUnderstandingBySemanticCommunity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="semanticCommunity" ordered="false" lowerBound="1" eType="/0/SemanticCommunity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptIncorporatesCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characteristic" ordered="false" lowerBound="1" eType="/0/Characteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptIsClosedInConceptualSchema">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conceptualSchema" ordered="false" lowerBound="1" eType="/0/ConceptualSchema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptIsIncludedInBodyOfSharedConcepts">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedConcepts" ordered="false" lowerBound="1" eType="/0/BodyOfSharedConcepts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Concept1IsCoextensiveWithConcept2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept1" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept2" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Concept1SpecializesConcept2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept1" ordered="false" lowerBound="1" eType="/0/Concept"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept2" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptualSchemaIncludesConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conceptualSchema" ordered="false" lowerBound="1" eType="/0/ConceptualSchema"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConceptualSchemaIncludesFact">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conceptualSchema" ordered="false" lowerBound="1" eType="/0/ConceptualSchema"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fact" ordered="false" lowerBound="1" eType="/0/Fact"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DefinitionServesAsDesignation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definition" ordered="false" lowerBound="1" eType="/0/Definition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DescriptionPortraysMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description" ordered="false" lowerBound="1" eType="/0/Description"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DescriptiveExampleIllustratesMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptiveExample" ordered="false" lowerBound="1" eType="/0/DescriptiveExample"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DesignationHasSignifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signifier" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DesignationIsInNamespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" ordered="false" lowerBound="1" eType="/0/Namespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGuidanceAuthorizesStateOfAffairs">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementOfGuidance" ordered="false" lowerBound="1" eType="/0/ElementOfGuidance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateOfAffairs" ordered="false" lowerBound="1" eType="/0/StateOfAffairs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGuidanceIsIncludedInBodyOfSharedGuidance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementOfGuidance" ordered="false" lowerBound="1" eType="/0/ElementOfGuidance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedGuidance" ordered="false" lowerBound="1" eType="/0/BodyOfSharedGuidance"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGuidanceObligatesStateOfAffairs">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementOfGuidance" ordered="false" lowerBound="1" eType="/0/ElementOfGuidance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateOfAffairs" ordered="false" lowerBound="1" eType="/0/StateOfAffairs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementOfGuidanceProhibitsStateOfAffairs">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementOfGuidance" ordered="false" lowerBound="1" eType="/0/ElementOfGuidance"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateOfAffairs" ordered="false" lowerBound="1" eType="/0/StateOfAffairs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExactlynQuantificationHasCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="exactlynQuantification" ordered="false" lowerBound="1" eType="/0/ExactlynQuantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExpressionRepresentsMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/Expression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactModelIncludesFact">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factModel" ordered="false" lowerBound="1" eType="/0/FactModel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fact" ordered="false" lowerBound="1" eType="/0/Fact"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactModelIsBasedOnConceptualSchema">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factModel" ordered="false" lowerBound="1" eType="/0/FactModel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conceptualSchema" ordered="false" lowerBound="1" eType="/0/ConceptualSchema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeFormDemonstratesDesignation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" lowerBound="1" eType="/0/FactTypeForm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeFormIncorporatesFactSymbol">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" lowerBound="1" eType="/0/FactTypeForm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factSymbol" ordered="false" lowerBound="1" eType="/0/FactSymbol"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeFormIsInNamespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" lowerBound="1" eType="/0/FactTypeForm"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" ordered="false" lowerBound="1" eType="/0/Namespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeHasFactTypeForm">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" lowerBound="1" eType="/0/FactTypeForm"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeInternallyIsClosedInConceptualSchema">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conceptualSchema" ordered="false" lowerBound="1" eType="/0/ConceptualSchema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeIsElementaryInBodyOfSharedMeanings">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeRoleHasRoleBinding">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeRole" ordered="false" lowerBound="1" eType="/0/FactTypeRole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleBinding" ordered="false" lowerBound="1" eType="/0/RoleBinding"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FactTypeRoleIsInFactType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeRole" ordered="false" lowerBound="1" eType="/0/FactTypeRole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ImplicationHasAntecedent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="implication" ordered="false" lowerBound="1" eType="/0/Implication"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="antecedent" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ImplicationHasConsequent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="implication" ordered="false" lowerBound="1" eType="/0/Implication"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="consequent" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InstantiationFormulationBindsToBindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instantiationFormulation" ordered="false" lowerBound="1" eType="/0/InstantiationFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindableTarget" ordered="false" lowerBound="1" eType="/0/BindableTarget"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InstantiationFormulationConsidersConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instantiationFormulation" ordered="false" lowerBound="1" eType="/0/InstantiationFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="IntensionalDefinitionUsesDelimitingCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="intensionalDefinition" ordered="false" lowerBound="1" eType="/0/IntensionalDefinition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="delimitingCharacteristic" ordered="false" lowerBound="1" eType="/0/Characteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalFormulationConstrainsProjection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projection" ordered="false" lowerBound="1" eType="/0/Projection"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalFormulationRestrictsVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LogicalOperationHasLogicalOperand">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperation" ordered="false" lowerBound="1" eType="/0/LogicalOperation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalOperand" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MeaningCorrespondsToThing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing" ordered="false" lowerBound="1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModalFormulationEmbedsLogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modalFormulation" ordered="false" lowerBound="1" eType="/0/ModalFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NameReferencesThing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="name" ordered="false" lowerBound="1" eType="/0/Name"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing" ordered="false" lowerBound="1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamespaceHasUri">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" ordered="false" lowerBound="1" eType="/0/Namespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" lowerBound="1" eType="/0/Uri"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Namespace1IncorporatesNamespace2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace1" ordered="false" lowerBound="1" eType="/0/Namespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace2" ordered="false" lowerBound="1" eType="/0/Namespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NoteCommentsOnMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="note" ordered="false" lowerBound="1" eType="/0/Note"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NumericRangeQuantificationHasMaximumCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="numericRangeQuantification" ordered="false" lowerBound="1" eType="/0/NumericRangeQuantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maximumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NumericRangeQuantificationHasMinimumCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="numericRangeQuantification" ordered="false" lowerBound="1" eType="/0/NumericRangeQuantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minimumCardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ObjectificationBindsToBindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="objectification" ordered="false" lowerBound="1" eType="/0/Objectification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindableTarget" ordered="false" lowerBound="1" eType="/0/BindableTarget"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ObjectificationConsidersLogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="objectification" ordered="false" lowerBound="1" eType="/0/Objectification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OperativeBusinessRuleHasLevelOfEnforcement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operativeBusinessRule" ordered="false" lowerBound="1" eType="/0/OperativeBusinessRule"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="levelOfEnforcement" ordered="false" lowerBound="1" eType="/0/LevelOfEnforcement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlaceholderIsAtStartingCharacterPosition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="placeholder" ordered="false" lowerBound="1" eType="/0/Placeholder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="startingCharacterPosition" ordered="false" lowerBound="1" eType="/0/PositiveInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlaceholderIsInFactTypeForm">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="placeholder" ordered="false" lowerBound="1" eType="/0/Placeholder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeForm" ordered="false" lowerBound="1" eType="/0/FactTypeForm"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlaceholderUsesDesignation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="placeholder" ordered="false" lowerBound="1" eType="/0/Placeholder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designation" ordered="false" lowerBound="1" eType="/0/Designation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectingFormulationBindsToBindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projectingFormulation" ordered="false" lowerBound="1" eType="/0/ProjectingFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindableTarget" ordered="false" lowerBound="1" eType="/0/BindableTarget"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectingFormulationHasProjection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projectingFormulation" ordered="false" lowerBound="1" eType="/0/ProjectingFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projection" ordered="false" lowerBound="1" eType="/0/Projection"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectionHasAuxiliaryVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projection" ordered="false" lowerBound="1" eType="/0/Projection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="auxiliaryVariable" ordered="false" lowerBound="1" eType="/0/AuxiliaryVariable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectionIsOnVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projection" ordered="false" lowerBound="1" eType="/0/Projection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PropositionIsBasedOnFactType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="proposition" ordered="false" lowerBound="1" eType="/0/Proposition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factType" ordered="false" lowerBound="1" eType="/0/FactType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PropositionNominalizationBindsToBindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="propositionNominalization" ordered="false" lowerBound="1" eType="/0/PropositionNominalization"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindableTarget" ordered="false" lowerBound="1" eType="/0/BindableTarget"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PropositionNominalizationConsidersLogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="propositionNominalization" ordered="false" lowerBound="1" eType="/0/PropositionNominalization"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QuantificationIntroducesVariable">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantification" ordered="false" lowerBound="1" eType="/0/Quantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QuantificationScopesOverLogicalFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantification" ordered="false" lowerBound="1" eType="/0/Quantification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logicalFormulation" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Quantity1EqualsQuantity2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantity1" ordered="false" lowerBound="1" eType="/0/Quantity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantity2" ordered="false" lowerBound="1" eType="/0/Quantity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Quantity1IsLessThanQuantity2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantity1" ordered="false" lowerBound="1" eType="/0/Quantity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="quantity2" ordered="false" lowerBound="1" eType="/0/Quantity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferencePointsToInformationSource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reference" ordered="false" lowerBound="1" eType="/0/Reference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="informationSource" ordered="false" lowerBound="1" eType="/0/CommunicationContent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceSchemeExtensionallyUsesFactTypeRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceScheme" ordered="false" lowerBound="1" eType="/0/ReferenceScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeRole" ordered="false" lowerBound="1" eType="/0/FactTypeRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceSchemeIsForConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceScheme" ordered="false" lowerBound="1" eType="/0/ReferenceScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceSchemeSimplyUsesFactTypeRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceScheme" ordered="false" lowerBound="1" eType="/0/ReferenceScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeRole" ordered="false" lowerBound="1" eType="/0/FactTypeRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceSchemeUsesCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceScheme" ordered="false" lowerBound="1" eType="/0/ReferenceScheme"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="characteristic" ordered="false" lowerBound="1" eType="/0/Characteristic"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceSupportsMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reference" ordered="false" lowerBound="1" eType="/0/Reference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationHasExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationIsInDesignationContext">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designationContext" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationIsInSubjectField">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subjectField" ordered="false" lowerBound="1" eType="/0/SubjectField"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationRepresentsMeaning">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meaning" ordered="false" lowerBound="1" eType="/0/Meaning"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RepresentationUsesVocabulary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ResIsSensoryManifestationOfSignifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="res" ordered="false" lowerBound="1" eType="/0/Res"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signifier" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleBindingBindsToBindableTarget">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleBinding" ordered="false" lowerBound="1" eType="/0/RoleBinding"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindableTarget" ordered="false" lowerBound="1" eType="/0/BindableTarget"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleBindingOccursInAtomicFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roleBinding" ordered="false" lowerBound="1" eType="/0/RoleBinding"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="atomicFormulation" ordered="false" lowerBound="1" eType="/0/AtomicFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleRangesOverObjectType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" eType="/0/Role"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="objectType" ordered="false" lowerBound="1" eType="/0/ObjectType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RulebookIncludesRepresentation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rulebook" ordered="false" lowerBound="1" eType="/0/Rulebook"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="representation" ordered="false" lowerBound="1" eType="/0/Representation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SemanticCommunityHasSpeechCommunity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="semanticCommunity" ordered="false" lowerBound="1" eType="/0/SemanticCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SetHasCardinality">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="set" ordered="false" lowerBound="1" eType="/0/Set"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cardinality" ordered="false" lowerBound="1" eType="/0/NonnegativeInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityDeterminesRulebook">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rulebook" ordered="false" lowerBound="1" eType="/0/Rulebook"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityOwnsOwnedDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedDefinition" ordered="false" lowerBound="1" eType="/0/OwnedDefinition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityOwnsVocabulary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityRegulatesItsUsageOfSignifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="signifier" ordered="false" lowerBound="1" eType="/0/Expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityUsesLanguage">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="language" ordered="false" lowerBound="1" eType="/0/Language"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SpeechCommunityUsesVocabulary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StatementExpressesProposition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="statement" ordered="false" lowerBound="1" eType="/0/Statement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="proposition" ordered="false" lowerBound="1" eType="/0/Proposition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TermDenotesThing">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="term" ordered="false" lowerBound="1" eType="/0/Term"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing" ordered="false" lowerBound="1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TerminologicalDictionaryExpressesBodyOfSharedMeanings">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="terminologicalDictionary" ordered="false" lowerBound="1" eType="/0/TerminologicalDictionary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TerminologicalDictionaryHasUri">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="terminologicalDictionary" ordered="false" lowerBound="1" eType="/0/TerminologicalDictionary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uri" ordered="false" lowerBound="1" eType="/0/Uri"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TerminologicalDictionaryPresentsVocabulary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="terminologicalDictionary" ordered="false" lowerBound="1" eType="/0/TerminologicalDictionary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ThingIsInSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing" ordered="false" lowerBound="1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="set" ordered="false" lowerBound="1" eType="/0/Set"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Thing1IsThing2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing1" ordered="false" lowerBound="1" eType="/0/Thing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="thing2" ordered="false" lowerBound="1" eType="/0/Thing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableHasProjectionPosition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="projectionPosition" ordered="false" lowerBound="1" eType="/0/PositiveInteger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableIsFreesWithinSemanticFormulation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="semanticFormulation" ordered="false" lowerBound="1" eType="/0/SemanticFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableMapsToFactTypeRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="factTypeRole" ordered="false" lowerBound="1" eType="/0/FactTypeRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableRangesOverConcept">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="variable" ordered="false" lowerBound="1" eType="/0/Variable"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="concept" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyIsDesignedForSpeechCommunity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="speechCommunity" ordered="false" lowerBound="1" eType="/0/SpeechCommunity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyIsExpressedInLanguage">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="language" ordered="false" lowerBound="1" eType="/0/Language"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyIsUsedToExpressBodyOfSharedMeanings">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bodyOfSharedMeanings" ordered="false" lowerBound="1" eType="/0/BodyOfSharedMeanings"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyNamespaceIsDerivedFromVocabulary">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabularyNamespace" ordered="false" lowerBound="1" eType="/0/VocabularyNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyNamespaceIsForLanguage">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabularyNamespace" ordered="false" lowerBound="1" eType="/0/VocabularyNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="language" ordered="false" lowerBound="1" eType="/0/Language"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyNamespaceIsSpecificToDesignationContext">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabularyNamespace" ordered="false" lowerBound="1" eType="/0/VocabularyNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="designationContext" ordered="false" lowerBound="1" eType="/0/Concept"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VocabularyNamespaceIsSpecificToSubjectField">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabularyNamespace" ordered="false" lowerBound="1" eType="/0/VocabularyNamespace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subjectField" ordered="false" lowerBound="1" eType="/0/SubjectField"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Vocabulary1IncorporatesVocabulary2">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary1" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="vocabulary2" ordered="false" lowerBound="1" eType="/0/Vocabulary"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WhetherornotFormulationHasConsequent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="whetherornotFormulation" ordered="false" lowerBound="1" eType="/0/WhetherornotFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="consequent" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WhetherornotFormulationHasInconsequent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="whetherornotFormulation" ordered="false" lowerBound="1" eType="/0/WhetherornotFormulation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inconsequent" ordered="false" lowerBound="1" eType="/0/LogicalFormulation"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

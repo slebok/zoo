@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PL/I">
+    <eClassifiers xsi:type="ecore:EClass" name="PLIClassifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typedElements" ordered="false" upperBound="-1" eType="/0/PLIElement" eOpposite="/0/PLIElement/sharedType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLISimpleType" eSuperTypes="/0/PLIClassifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="alias" ordered="false" lowerBound="1" eType="/0/PLIAlias" eOpposite="/0/PLIAlias/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLINamedType" eSuperTypes="/0/PLIClassifier"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIComposedType" eSuperTypes="/0/PLIClassifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/PLIElement" containment="true" eOpposite="/0/PLIElement/group"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIAlias">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/PLISimpleType" containment="true" eOpposite="/0/PLISimpleType/alias"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contains" ordered="false" lowerBound="1" upperBound="-1" eType="/0/PLIAttribute" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIAttribute"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIComputationalType" eSuperTypes="/0/PLISimpleType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PLINonComputationalType" eSuperTypes="/0/PLISimpleType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sharedType" ordered="false" eType="/0/PLIClassifier" eOpposite="/0/PLIClassifier/typedElements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" eType="/0/PLIComposedType" eOpposite="/0/PLIComposedType/elements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="initial" ordered="false" eType="/0/PLIElementInitialValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/PLISourceText"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="array" ordered="false" eType="/0/PLIArray" containment="true" eOpposite="/0/PLIArray/arrayOf"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIElementInitialValue">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialValue" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLISourceText">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIArray">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arrayOf" ordered="false" eType="/0/PLIElement" eOpposite="/0/PLIElement/array"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIFixedBoundArray" eSuperTypes="/0/PLIArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="IBound" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="uBound" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referredTo" ordered="false" lowerBound="1" eType="/0/PLIElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIFixedLboundArray" eSuperTypes="/0/PLIArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="IBound" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="uBoundToAllocate" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referredTo" ordered="false" lowerBound="1" eType="/0/PLIElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIHBoundArray" eSuperTypes="/0/PLIArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="uBound" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="IBoundToAllocate" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referredTo" ordered="false" lowerBound="1" eType="/0/PLIElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PLIVariableBoundArray" eSuperTypes="/0/PLIArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="IBoundToAllocate" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hBoundToAllocate" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referredTo" ordered="false" lowerBound="1" eType="/0/PLIElement"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="UseCases">
+    <eClassifiers xsi:type="ecore:EClass" name="Classifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" ordered="false" upperBound="-1" eType="/0/Instance" eOpposite="/0/Instance/classifier"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Instance">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classifier" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Classifier" eOpposite="/0/Classifier/instance"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Actor" eSuperTypes="/0/Classifier"/>
+    <eClassifiers xsi:type="ecore:EClass" name="UseCase" eSuperTypes="/0/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="extensionPoint" ordered="false" unique="false" upperBound="-1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="includeAddition" ordered="false" lowerBound="1" eType="/0/Include" eOpposite="/0/Include/addition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="includeBase" ordered="false" lowerBound="1" eType="/0/Include" eOpposite="/0/Include/base"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extendExtension" ordered="false" lowerBound="1" eType="/0/Extend" eOpposite="/0/Extend/extension"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extendBase" ordered="false" lowerBound="1" eType="/0/Extend" eOpposite="/0/Extend/base"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionPoints" ordered="false" upperBound="-1" eType="/0/ExtensionPoint" eOpposite="/0/ExtensionPoint/useCase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UseCaseInstance" eSuperTypes="/0/Instance"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RelationShip" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Include" eSuperTypes="/0/RelationShip">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addition" ordered="false" lowerBound="1" eType="/0/UseCase" eOpposite="/0/UseCase/includeAddition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="base" ordered="false" lowerBound="1" eType="/0/UseCase" eOpposite="/0/UseCase/includeBase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Extend" eSuperTypes="/0/RelationShip">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="condition" ordered="false" lowerBound="1" eType="/0/BooleanExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extension" ordered="false" lowerBound="1" eType="/0/UseCase" eOpposite="/0/UseCase/extendExtension"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="base" ordered="false" lowerBound="1" eType="/0/UseCase" eOpposite="/0/UseCase/extendBase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionPoint" lowerBound="1" upperBound="-1" eType="/0/ExtensionPoint" eOpposite="/0/ExtensionPoint/extend"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExtensionPoint" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="location" ordered="false" lowerBound="1" eType="/0/LocationReference"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extend" ordered="false" upperBound="-1" eType="/0/Extend" eOpposite="/0/Extend/extensionPoint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="useCase" ordered="false" upperBound="-1" eType="/0/UseCase" eOpposite="/0/UseCase/extensionPoints"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LocationReference">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

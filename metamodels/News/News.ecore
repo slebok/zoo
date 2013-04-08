@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="News">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="link" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Newspaper" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="copyright" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pubDate" ordered="false" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="category" ordered="false" eType="/0/Category" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="news" ordered="false" upperBound="-1" eType="/0/News" containment="true" eOpposite="/0/News/newspaper"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="News" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="comments" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pubDate" ordered="false" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="category" ordered="false" eType="/0/Category" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="newspaper" ordered="false" lowerBound="1" eType="/0/Newspaper" eOpposite="/0/Newspaper/news"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Category">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="eDay" ordered="false" unique="false" lowerBound="1" eType="/0/DayKind"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hours" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minutes" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="seconds" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="DayKind">
+      <eLiterals name="Monday" value="1"/>
+      <eLiterals name="Tuesday" value="2"/>
+      <eLiterals name="Wednesday" value="3"/>
+      <eLiterals name="Thursday" value="4"/>
+      <eLiterals name="Friday" value="5"/>
+      <eLiterals name="Saturday" value="6"/>
+      <eLiterals name="Sunday" value="7"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

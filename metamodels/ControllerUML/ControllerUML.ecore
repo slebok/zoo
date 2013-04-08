@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="ControllerUML">
+    <eClassifiers xsi:type="ecore:EClass" name="ControllerAttribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="controller" ordered="false" lowerBound="1" eType="/1/Controller" eOpposite="/1/Controller/controllerAttribute"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Controller">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="controllerAttribute" ordered="false" upperBound="-1" eType="/1/ControllerAttribute" eOpposite="/1/ControllerAttribute/controller"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="behavior" ordered="false" lowerBound="1" eType="/1/StateMachine" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="states" ordered="false" upperBound="-1" eType="/1/State" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="substates" ordered="false" upperBound="-1" eType="/1/State" containment="true" eOpposite="/1/State/theContainer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theContainer" ordered="false" eType="/1/State" eOpposite="/1/State/substates"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outGoing" ordered="false" upperBound="-1" eType="/1/StateTransition" containment="true" eOpposite="/1/StateTransition/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/1/StateTransition" eOpposite="/1/StateTransition/target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SubControllerState" eSuperTypes="/1/State">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="controller" ordered="false" lowerBound="1" eType="/1/Controller"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ViewState" eSuperTypes="/1/State"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StateTransition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/outGoing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/incoming"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="trigger" ordered="false" lowerBound="1" eType="/1/Event"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="effect" ordered="false" eType="/1/StateMachineAction" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateMachineAction"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Event"/>
+  </ecore:EPackage>
+</xmi:XMI>

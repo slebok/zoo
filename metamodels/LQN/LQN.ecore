@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="LQN">
+    <eClassifiers xsi:type="ecore:EClass" name="LQN">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="created_On" ordered="false" lowerBound="1" eType="/1/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modified_On" ordered="false" lowerBound="1" eType="/1/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Task" containment="true" eOpposite="/1/Task/lqn"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processor" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Processor" containment="true" eOpposite="/1/Processor/lqn"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/TaskType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mutliplicity" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="replicas" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entry" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Entry" containment="true" eOpposite="/1/Entry/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processor" ordered="false" lowerBound="1" eType="/1/Processor" eOpposite="/1/Processor/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lqn" ordered="false" lowerBound="1" eType="/1/LQN" eOpposite="/1/LQN/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Activity" eOpposite="/1/Activity/task"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Processor">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scheduling" ordered="false" unique="false" lowerBound="1" eType="/1/SchedulingType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mutliplicity" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="replicas" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="spped" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/1/Task" eOpposite="/1/Task/processor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lqn" ordered="false" lowerBound="1" eType="/1/LQN" eOpposite="/1/LQN/processor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Entry">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="num_Phase" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="arrival_Rate" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contained_In" ordered="false" lowerBound="1" eType="/1/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="replay_To" ordered="false" lowerBound="1" eType="/1/Entry" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="callreceives" ordered="false" lowerBound="1" eType="/1/Call" eOpposite="/1/Call/entryreceives"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="callsends" ordered="false" lowerBound="1" eType="/1/Call" eOpposite="/1/Call/entrysends"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="phase" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Phase" eOpposite="/1/Phase/entry"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" eType="/1/Activity" containment="true" eOpposite="/1/Activity/entry"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/1/Task" eOpposite="/1/Task/entry"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Phase">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/PhaseType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="think_Time" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="execution_Demand" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="COV" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entry" ordered="false" lowerBound="1" eType="/1/Entry" eOpposite="/1/Entry/phase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" eType="/1/Activity" eOpposite="/1/Activity/phase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Activity">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="arrival_Rate" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contained_In" ordered="false" lowerBound="1" eType="/1/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="replay_To" ordered="false" lowerBound="1" eType="/1/Entry" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="linkPrecedes" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Link" eOpposite="/1/Link/activityPrecedes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="linkfollows" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Link" eOpposite="/1/Link/activityfollows"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="call" ordered="false" upperBound="-1" eType="/1/Call" eOpposite="/1/Call/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="phase" ordered="false" lowerBound="1" eType="/1/Phase" eOpposite="/1/Phase/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entry" ordered="false" lowerBound="1" eType="/1/Entry" eOpposite="/1/Entry/activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/1/Task" eOpposite="/1/Task/activity"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Link">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/LinkType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mean_Links" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fromActivity" ordered="false" lowerBound="1" eType="/1/Activity" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toActivity" ordered="false" lowerBound="1" eType="/1/Activity" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activityPrecedes" ordered="false" lowerBound="1" eType="/1/Activity" eOpposite="/1/Activity/linkPrecedes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activityfollows" ordered="false" lowerBound="1" eType="/1/Activity" eOpposite="/1/Activity/linkfollows"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CallPhase">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mean_Calls" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="refers_To" ordered="false" lowerBound="1" eType="/1/Phase" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="call" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Call" eOpposite="/1/Call/callPhase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Call">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toEntry" ordered="false" lowerBound="1" eType="/1/Entry" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="num_Phases" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/CallType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="callPhase" ordered="false" lowerBound="1" upperBound="-1" eType="/1/CallPhase" eOpposite="/1/CallPhase/call"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" eType="/1/Activity" eOpposite="/1/Activity/call"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entryreceives" ordered="false" eType="/1/Entry" eOpposite="/1/Entry/callreceives"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entrysends" ordered="false" eType="/1/Entry" eOpposite="/1/Entry/callsends"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EntryCall" eSuperTypes="/1/Call">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from_Entry" ordered="false" lowerBound="1" eType="/1/Entry" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ActivityCall" eSuperTypes="/1/Call">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fromActivity" ordered="false" lowerBound="1" eType="/1/Activity" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="SchedulingType">
+      <eLiterals name="FCFS" value="1"/>
+      <eLiterals name="preemptive_Priority" value="2"/>
+      <eLiterals name="head_of_line" value="3"/>
+      <eLiterals name="random" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="PhaseType">
+      <eLiterals name="stochastic" value="1"/>
+      <eLiterals name="deterministic" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="CallType">
+      <eLiterals name="synchronous" value="1"/>
+      <eLiterals name="asynchronous" value="2"/>
+      <eLiterals name="forwording" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="LinkType">
+      <eLiterals name="and_Fork" value="1"/>
+      <eLiterals name="and_join" value="2"/>
+      <eLiterals name="basic" value="3"/>
+      <eLiterals name="or_Fork" value="4"/>
+      <eLiterals name="or_join" value="5"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="TaskType">
+      <eLiterals name="a_reference" value="1"/>
+      <eLiterals name="non_reference" value="2"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

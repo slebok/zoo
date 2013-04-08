@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ebXML">
+    <eClassifiers xsi:type="ecore:EClass" name="MultyPartyCollaboration">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="partners" ordered="false" upperBound="-1" eType="/0/BusinessPartnerRole" containment="true" eOpposite="/0/BusinessPartnerRole/collaboration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessPartnerRole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="collaboration" ordered="false" lowerBound="1" eType="/0/MultyPartyCollaboration" eOpposite="/0/MultyPartyCollaboration/partners"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transition" ordered="false" eType="/0/Transaction" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performers" ordered="false" upperBound="-1" eType="/0/Performs" containment="true" eOpposite="/0/Performs/performedBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Performs">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performedBy" ordered="false" lowerBound="1" eType="/0/BusinessPartnerRole" eOpposite="/0/BusinessPartnerRole/performers"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="collaboration" ordered="false" lowerBound="1" eType="/0/BinaryCollaboration" eOpposite="/0/BinaryCollaboration/roles"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" eType="/0/AuthorizedRole" eOpposite="/0/AuthorizedRole/performers"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AuthorizedRole">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInitiator" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performers" ordered="false" upperBound="-1" eType="/0/Performs" eOpposite="/0/Performs/role"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transaction">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="onInitiation" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionGuard" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionExpression" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/0/BusinessState"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/0/BusinessState"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryCollaboration">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pattern" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeToPerform" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="postCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="beginsWhen" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="endsWhen" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="roles" ordered="false" upperBound="-1" eType="/0/Performs" containment="true" eOpposite="/0/Performs/collaboration"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" ordered="false" upperBound="-1" eType="/0/Transaction" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="states" ordered="false" upperBound="-1" eType="/0/BusinessState" containment="true" eOpposite="/0/BusinessState/collaboration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessState" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="collaboration" ordered="false" lowerBound="1" eType="/0/BinaryCollaboration" eOpposite="/0/BinaryCollaboration/states"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/0/AuthorizedRole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/0/AuthorizedRole"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Start" eSuperTypes="/0/BusinessState"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Fork" eSuperTypes="/0/BusinessState">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="waitForAll" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Join" eSuperTypes="/0/BusinessState"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompletionState" eSuperTypes="/0/BusinessState">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="guardCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Failure" eSuperTypes="/0/CompletionState"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Success" eSuperTypes="/0/CompletionState"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessActivity" abstract="true" eSuperTypes="/0/BusinessState"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessTransactionActivity" eSuperTypes="/0/BusinessActivity">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeToPerform" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isConcurrent" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLegallyBinding" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" lowerBound="1" eType="/0/BusinessTransaction"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CollaborationActivity" eSuperTypes="/0/BusinessActivity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" lowerBound="1" eType="/0/BinaryCollaboration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessTransaction">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pattern" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isGuaranteedDeliveryRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="preCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="postCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="beginsWhen" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="endsWhen" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="requester" ordered="false" lowerBound="1" eType="/0/RequestingBusinessActivity" containment="true" eOpposite="/0/RequestingBusinessActivity/transaction"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="responder" ordered="false" lowerBound="1" eType="/0/RespondingBusinessActivity" containment="true" eOpposite="/0/RespondingBusinessActivity/transaction"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessAction" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isIntelligiblecheckRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAuthorizationRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeToAcknowledgeReceipt" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNonRepudiationRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNonRepudiationOfRecipientRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RequestingBusinessActivity" eSuperTypes="/0/BusinessAction">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeToAcknowledgeAcceptance" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transaction" ordered="false" lowerBound="1" eType="/0/BusinessTransaction" containment="true" eOpposite="/0/BusinessTransaction/requester"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="documentEnvelope" ordered="false" lowerBound="1" eType="/0/DocumentEnvelope" eOpposite="/0/DocumentEnvelope/requesting"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RespondingBusinessActivity" eSuperTypes="/0/BusinessAction">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transaction" ordered="false" lowerBound="1" eType="/0/BusinessTransaction" containment="true" eOpposite="/0/BusinessTransaction/responder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="documentEnvelope" ordered="false" lowerBound="1" eType="/0/DocumentEnvelope" eOpposite="/0/DocumentEnvelope/responding"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentSecurity" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isConfidential" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTamperProof" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAuthenticated" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentEnvelope" eSuperTypes="/0/DocumentSecurity">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPositiveResponse" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="requesting" ordered="false" eType="/0/RequestingBusinessActivity" eOpposite="/0/RequestingBusinessActivity/documentEnvelope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="responding" ordered="false" eType="/0/RespondingBusinessActivity" eOpposite="/0/RespondingBusinessActivity/documentEnvelope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attachements" ordered="false" upperBound="-1" eType="/0/Attachment" containment="true" eOpposite="/0/Attachment/envelope"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" lowerBound="1" eType="/0/BusinessDocument" eOpposite="/0/BusinessDocument/envelopes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attachment" eSuperTypes="/0/DocumentSecurity">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="mimeType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="specification" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="envelope" ordered="false" lowerBound="1" eType="/0/DocumentEnvelope" eOpposite="/0/DocumentEnvelope/attachements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" lowerBound="1" eType="/0/BusinessDocument" eOpposite="/0/BusinessDocument/attachments"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessDocument">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="specificationLocation" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="specificationElement" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionExpression" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="envelopes" ordered="false" upperBound="-1" eType="/0/DocumentEnvelope" eOpposite="/0/DocumentEnvelope/document"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attachments" ordered="false" upperBound="-1" eType="/0/Attachment" eOpposite="/0/Attachment/document"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

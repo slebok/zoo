@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="SPEM">
+    <eClassifiers xsi:type="ecore:EClass" name="ArtifactUsageName">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInput" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOutput" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasWorkPerArtifact" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="artifactKind" ordered="false" lowerBound="1" eType="/1/ArtifactKind" eOpposite="/1/ArtifactKind/artifactUsageNames"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="workDefinition" ordered="false" lowerBound="1" eType="/1/WorkDefinition" eOpposite="/1/WorkDefinition/artifactUsageNames"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProcessDefinitionElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="guidances" ordered="false" upperBound="-1" eType="/1/Guidance" eOpposite="/1/Guidance/processDefinitionElements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processComponents" ordered="false" upperBound="-1" eType="/1/ProcessComponent" eOpposite="/1/ProcessComponent/processDefinitionElements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Guidance" eSuperTypes="/1/ProcessDefinitionElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processDefinitionElements" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ProcessDefinitionElement" eOpposite="/1/ProcessDefinitionElement/guidances"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArtifactKind" eSuperTypes="/1/ProcessDefinitionElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="artifactUsageNames" ordered="false" upperBound="-1" eType="/1/ArtifactUsageName" eOpposite="/1/ArtifactUsageName/artifactKind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="responsible" ordered="false" eType="/1/RoleKind" eOpposite="/1/RoleKind/artifactKinds"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WorkItem" eSuperTypes="/1/ProcessDefinitionElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleKind" eSuperTypes="/1/ProcessDefinitionElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="artifactKinds" ordered="false" upperBound="-1" eType="/1/ArtifactKind" eOpposite="/1/ArtifactKind/responsible"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Condition" eSuperTypes="/1/ProcessDefinitionElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProcessComponent" eSuperTypes="/1/ProcessDefinitionElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="processDefinitionElements" ordered="false" upperBound="-1" eType="/1/ProcessDefinitionElement" eOpposite="/1/ProcessDefinitionElement/processComponents"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Goal" eSuperTypes="/1/Condition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="workDefinition" ordered="false" lowerBound="1" eType="/1/WorkDefinition" eOpposite="/1/WorkDefinition/goal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Precondition" eSuperTypes="/1/Condition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="workDefinition" ordered="false" lowerBound="1" eType="/1/WorkDefinition" eOpposite="/1/WorkDefinition/precondition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WorkDefinition" eSuperTypes="/1/WorkItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="artifactUsageNames" ordered="false" upperBound="-1" eType="/1/ArtifactUsageName" containment="true" eOpposite="/1/ArtifactUsageName/workDefinition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="goal" ordered="false" eType="/1/Goal" containment="true" eOpposite="/1/Goal/workDefinition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="precondition" ordered="false" eType="/1/Precondition" containment="true" eOpposite="/1/Precondition/workDefinition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ActivityKind" eSuperTypes="/1/WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="performer" ordered="false" lowerBound="1" upperBound="-1" eType="/1/RoleKind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assistant" ordered="false" upperBound="-1" eType="/1/RoleKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Iteration" eSuperTypes="/1/WorkDefinition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Phase" eSuperTypes="/1/WorkDefinition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Lifecycle" eSuperTypes="/1/WorkDefinition"/>
+  </ecore:EPackage>
+</xmi:XMI>

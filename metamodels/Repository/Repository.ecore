@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Repository">
+    <eClassifiers xsi:type="ecore:EClass" name="Subsystem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" upperBound="-1" eType="/1/Class" containment="true" eOpposite="/1/Class/parentSubsystem"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relations" ordered="false" upperBound="-1" eType="/1/Relation" containment="true" eOpposite="/1/Relation/subsystem"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subsystem" ordered="false" lowerBound="1" eType="/1/Subsystem" eOpposite="/1/Subsystem/relations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" lowerBound="2" upperBound="2" eType="/1/Class" eOpposite="/1/Class/relations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="is_deferred" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="features" ordered="false" upperBound="-1" eType="/1/Feature" containment="true" eOpposite="/1/Feature/theClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentSubsystem" ordered="false" lowerBound="1" eType="/1/Subsystem" eOpposite="/1/Subsystem/classes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subsystem" ordered="false" lowerBound="1" eType="/1/Subsystem"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relations" ordered="false" upperBound="-1" eType="/1/Relation" eOpposite="/1/Relation/classes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Feature">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="theClass" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/features"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="/1/Feature"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Routine" eSuperTypes="/1/Feature"/>
+  </ecore:EPackage>
+</xmi:XMI>

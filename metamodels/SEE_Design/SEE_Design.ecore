@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SEEDesign">
+    <eClassifiers xsi:type="ecore:EClass" name="LogFile">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" ordered="false" lowerBound="1" eType="/0/LogFile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logger" ordered="false" lowerBound="1" eType="/0/Logger" eOpposite="/0/Logger/logFile"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Logger">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="instance" ordered="false" lowerBound="1" eType="/0/Logger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/Expression" eOpposite="/0/Expression/logger"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logFile" ordered="false" lowerBound="1" eType="/0/LogFile" eOpposite="/0/LogFile/logger"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="loggingOn" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="logger" ordered="false" lowerBound="1" eType="/0/Logger" eOpposite="/0/Logger/expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Literal" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableExpression" eSuperTypes="/0/Literal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NumberExpression" eSuperTypes="/0/Literal"/>
+    <eClassifiers xsi:type="ecore:EClass" name="UnaryOperator" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operand" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UnaryPlusOp" eSuperTypes="/0/UnaryOperator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="UnaryMinusOp" eSuperTypes="/0/UnaryOperator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BinaryOperator" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operand1" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operand2" ordered="false" lowerBound="1" eType="/0/Expression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlusOperator" eSuperTypes="/0/BinaryOperator"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MinusOperator" eSuperTypes="/0/BinaryOperator"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

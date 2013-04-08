@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PetriNet">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PetriNet" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="places" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Place" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" ordered="false" upperBound="-1" eType="/1/Transition" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arcs" ordered="false" upperBound="-1" eType="/1/Arc" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Place" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/1/TransToPlaceArc" eOpposite="/1/TransToPlaceArc/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" ordered="false" upperBound="-1" eType="/1/PlaceToTransArc" eOpposite="/1/PlaceToTransArc/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" lowerBound="1" upperBound="-1" eType="/1/PlaceToTransArc" eOpposite="/1/PlaceToTransArc/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoing" ordered="false" lowerBound="1" upperBound="-1" eType="/1/TransToPlaceArc" eOpposite="/1/TransToPlaceArc/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Arc" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlaceToTransArc" eSuperTypes="/1/Arc">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/Place" eOpposite="/1/Place/outgoing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/Transition" eOpposite="/1/Transition/incoming"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TransToPlaceArc" eSuperTypes="/1/Arc">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/Transition" eOpposite="/1/Transition/outgoing"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/Place" eOpposite="/1/Place/incoming"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

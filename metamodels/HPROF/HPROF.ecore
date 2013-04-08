@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="HPROF">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" unique="false" upperBound="-1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Profile" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="header" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="threadActions" upperBound="-1" eType="/0/ThreadAction" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="traces" upperBound="-1" eType="/0/Trace" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="times" ordered="false" lowerBound="1" eType="/0/Times" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="methods" upperBound="-1" eType="/0/Method" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullyQualifiedName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stackTraceElements" ordered="false" upperBound="-1" eType="/0/StackTraceElement" eOpposite="/0/StackTraceElement/method"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ThreadAction" abstract="true" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ThreadStart" eSuperTypes="/0/ThreadAction">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="obj" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ThreadEnd" eSuperTypes="/0/ThreadAction"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Trace" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="threadId" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1" eType="/0/StackTraceElement" containment="true" eOpposite="/0/StackTraceElement/trace"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="times" ordered="false" upperBound="-1" eType="/0/Time" eOpposite="/0/Time/trace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StackTraceElement" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="method" ordered="false" lowerBound="1" eType="/0/Method" eOpposite="/0/Method/stackTraceElements"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="line" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="trace" ordered="false" lowerBound="1" eType="/0/Trace" eOpposite="/0/Trace/elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Times" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="total" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/Time" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Time" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="rank" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="self" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="accum" ordered="false" unique="false" lowerBound="1" eType="/1/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="trace" ordered="false" lowerBound="1" eType="/0/Trace" eOpposite="/0/Trace/times"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="method" ordered="false" lowerBound="1" eType="/0/Method"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/0/Day"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/0/Month"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dayOfMonth" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="hour" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minutes" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="seconds" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Day">
+      <eLiterals name="Monday" value="1"/>
+      <eLiterals name="Tuesday" value="2"/>
+      <eLiterals name="Wednesday" value="3"/>
+      <eLiterals name="Thursday" value="4"/>
+      <eLiterals name="Friday" value="5"/>
+      <eLiterals name="Saturday" value="6"/>
+      <eLiterals name="Sunday" value="7"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Month">
+      <eLiterals name="January" value="1"/>
+      <eLiterals name="February" value="2"/>
+      <eLiterals name="March" value="3"/>
+      <eLiterals name="April" value="4"/>
+      <eLiterals name="May" value="5"/>
+      <eLiterals name="June" value="6"/>
+      <eLiterals name="July" value="7"/>
+      <eLiterals name="August" value="8"/>
+      <eLiterals name="September" value="9"/>
+      <eLiterals name="October" value="10"/>
+      <eLiterals name="November" value="11"/>
+      <eLiterals name="December" value="12"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

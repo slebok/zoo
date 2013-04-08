@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="CSharp">
+    <eClassifiers xsi:type="ecore:EClass" name="Member">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/0/Type" eOpposite="/0/Type/members"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TypedAttribute" eSuperTypes="/0/Member">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Field" eSuperTypes="/0/TypedAttribute"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Property" eSuperTypes="/0/TypedAttribute">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isReadable" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isWritable" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MethodBase" eSuperTypes="/0/Member">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFinal" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStatic" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/Parameter" containment="true" eOpposite="/0/Parameter/method"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Constructor" eSuperTypes="/0/MethodBase"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="/0/MethodBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" ordered="false" lowerBound="1" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="/0/Member">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="qualifiedName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSealed" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="nameSpace" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="members" ordered="false" upperBound="-1" eType="/0/Member" containment="true" eOpposite="/0/Member/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="t_container" ordered="false" eType="/0/Assembly" eOpposite="/0/Assembly/content"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="super" ordered="false" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isIn" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOut" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="method" ordered="false" lowerBound="1" eType="/0/MethodBase" eOpposite="/0/MethodBase/parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Assembly">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="content" ordered="false" upperBound="-1" eType="/0/Type" containment="true" eOpposite="/0/Type/t_container"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

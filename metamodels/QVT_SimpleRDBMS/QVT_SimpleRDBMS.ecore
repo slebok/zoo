@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SimpleRDBMS">
+    <eClassifiers xsi:type="ecore:EClass" name="RModelElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Schema" eSuperTypes="/0/RModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tables" ordered="false" upperBound="-1" eType="/0/Table" containment="true" eOpposite="/0/Table/schema"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/0/RModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="schema" ordered="false" lowerBound="1" eType="/0/Schema" eOpposite="/0/Schema/tables"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="column" ordered="false" upperBound="-1" eType="/0/Column" containment="true" eOpposite="/0/Column/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="key" ordered="false" upperBound="-1" eType="/0/Key" containment="true" eOpposite="/0/Key/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="foreignKey" ordered="false" upperBound="-1" eType="/0/ForeignKey" containment="true" eOpposite="/0/ForeignKey/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/0/RModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Table" eOpposite="/0/Table/column"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="key" ordered="false" upperBound="-1" eType="/0/Key" eOpposite="/0/Key/column"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="foreignKey" ordered="false" upperBound="-1" eType="/0/ForeignKey" eOpposite="/0/ForeignKey/column"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Key" eSuperTypes="/0/RModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Table" eOpposite="/0/Table/key"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="column" ordered="false" upperBound="-1" eType="/0/Column" eOpposite="/0/Column/key"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="refersToOpposite" ordered="false" upperBound="-1" eType="/0/ForeignKey" eOpposite="/0/ForeignKey/refersTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ForeignKey" eSuperTypes="/0/RModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="column" ordered="false" upperBound="-1" eType="/0/Column" eOpposite="/0/Column/foreignKey"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Table" eOpposite="/0/Table/foreignKey"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="refersTo" ordered="false" lowerBound="1" eType="/0/Key" eOpposite="/0/Key/refersToOpposite"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

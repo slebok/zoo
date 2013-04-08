@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="KDMSimplified">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="annotation" ordered="false" upperBound="-1" eType="/0/Annotation" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" ordered="false" upperBound="-1" eType="/0/Attribute" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taggedValue" ordered="false" upperBound="-1" eType="/0/TaggedValue" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" ordered="false" eType="/0/Stereotype" eOpposite="/0/Stereotype/extendedElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMEntity" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inbound" ordered="false" upperBound="-1" eType="/0/KDMRelationship" eOpposite="/0/KDMRelationship/to"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outbound" ordered="false" upperBound="-1" eType="/0/KDMRelationship" eOpposite="/0/KDMRelationship/from"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/0/KDMContainer" eOpposite="/0/KDMContainer/ownedElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" upperBound="-1" eType="/0/KDMGroup" eOpposite="/0/KDMGroup/groupedElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="model" ordered="false" lowerBound="1" eType="/0/KDMModel" eOpposite="/0/KDMModel/ownedElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMContainer" abstract="true" eSuperTypes="/0/KDMEntity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElement" ordered="false" upperBound="-1" eType="/0/KDMEntity" containment="true" eOpposite="/0/KDMEntity/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMGroup" abstract="true" eSuperTypes="/0/KDMEntity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="groupedElement" ordered="false" upperBound="-1" eType="/0/KDMEntity" eOpposite="/0/KDMEntity/group"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMRelationship" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/0/KDMEntity" eOpposite="/0/KDMEntity/inbound"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/0/KDMEntity" eOpposite="/0/KDMEntity/outbound"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="model" ordered="false" lowerBound="1" eType="/0/KDMModel" eOpposite="/0/KDMModel/ownedRelation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Annotation" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="note" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMExtensionFamily" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" ordered="false" upperBound="-1" eType="/0/Stereotype" containment="true" eOpposite="/0/Stereotype/family"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Stereotype" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseClass" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="family" ordered="false" lowerBound="1" eType="/0/KDMExtensionFamily" eOpposite="/0/KDMExtensionFamily/stereotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extendedElement" ordered="false" lowerBound="1" eType="/0/ModelElement" eOpposite="/0/ModelElement/stereotype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tag" ordered="false" upperBound="-1" eType="/0/TagDefinition" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TagDefinition" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tag" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TaggedValue" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tag" ordered="false" lowerBound="1" eType="/0/TagDefinition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMFramework" abstract="true" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extension" ordered="false" upperBound="-1" eType="/0/KDMExtensionFamily" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="KDMModel" abstract="true" eSuperTypes="/0/KDMFramework">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElement" ordered="false" upperBound="-1" eType="/0/KDMEntity" containment="true" eOpposite="/0/KDMEntity/model"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedRelation" ordered="false" upperBound="-1" eType="/0/KDMRelationship" containment="true" eOpposite="/0/KDMRelationship/model"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

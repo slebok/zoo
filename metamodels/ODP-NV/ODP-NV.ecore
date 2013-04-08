@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ODPNV">
+    <eClassifiers xsi:type="ecore:EClass" name="Node">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="manager" ordered="false" lowerBound="1" eType="/0/Nucleus" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capsules" ordered="false" upperBound="-1" eType="/0/Capsule" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Nucleus" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="otherEngObjects" ordered="false" upperBound="-1" eType="/0/EngineeringObject" eOpposite="/0/EngineeringObject/nodeManager"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="beos" ordered="false" upperBound="-1" eType="/0/BEO" eOpposite="/0/BEO/beoNodeManager"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Capsule">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="otherEngObjects" ordered="false" upperBound="-1" eType="/0/EngineeringObject" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capsuleManager" ordered="false" lowerBound="1" eType="/0/CapsuleManager" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clusterManagers" ordered="false" upperBound="-1" eType="/0/ClusterManager" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clusters" ordered="false" upperBound="-1" eType="/0/Cluster" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodeManager" ordered="false" lowerBound="1" eType="/0/Nucleus" eOpposite="/0/Nucleus/otherEngObjects"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CapsuleManager" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cmClusterManagers" ordered="false" upperBound="-1" eType="/0/ClusterManager" eOpposite="/0/ClusterManager/capsuleManager"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Cluster">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clusterManager" ordered="false" lowerBound="1" eType="/0/ClusterManager" eOpposite="/0/ClusterManager/clusters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clusterBeos" ordered="false" upperBound="-1" eType="/0/BEO" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClusterManager" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clusters" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Cluster" eOpposite="/0/Cluster/clusterManager"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="clustermanagerBeos" ordered="false" upperBound="-1" eType="/0/BEO" eOpposite="/0/BEO/beoManager"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="capsuleManager" ordered="false" lowerBound="1" eType="/0/CapsuleManager" eOpposite="/0/CapsuleManager/cmClusterManagers"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BEO" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="beoNodeManager" ordered="false" lowerBound="1" eType="/0/Nucleus" eOpposite="/0/Nucleus/beos"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="locallyBoundObjects" ordered="false" upperBound="-1" eType="/0/BEO" eOpposite="/0/BEO/localbinds"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="localbinds" ordered="false" upperBound="-1" eType="/0/BEO" eOpposite="/0/BEO/locallyBoundObjects"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="beoManager" ordered="false" lowerBound="1" eType="/0/ClusterManager" eOpposite="/0/ClusterManager/clustermanagerBeos"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="beoChannel" ordered="false" upperBound="-1" eType="/0/Channel" eOpposite="/0/Channel/chEndPoint"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="beoStub" ordered="false" upperBound="-1" eType="/0/Stub" eOpposite="/0/Stub/stBeo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Stub" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stChannel" ordered="false" lowerBound="1" eType="/0/Channel" eOpposite="/0/Channel/chStub"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stBinder" ordered="false" lowerBound="1" eType="/0/Binder" eOpposite="/0/Binder/chBinder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stBeo" ordered="false" lowerBound="1" eType="/0/BEO" eOpposite="/0/BEO/beoStub"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Binder" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bdChannel" ordered="false" lowerBound="1" eType="/0/Channel" eOpposite="/0/Channel/chBinder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chBinder" ordered="false" lowerBound="1" eType="/0/Stub" eOpposite="/0/Stub/stBinder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bdProtocolObject" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ProtocolObject" eOpposite="/0/ProtocolObject/poBinder"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProtocolObject" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="poChannel" ordered="false" lowerBound="1" eType="/0/Channel" eOpposite="/0/Channel/chPObject"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="poBinder" ordered="false" lowerBound="1" eType="/0/Binder" eOpposite="/0/Binder/bdProtocolObject"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="poInterceptor" ordered="false" upperBound="-1" eType="/0/Interceptor" eOpposite="/0/Interceptor/intProtocolObject"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="poBoundProtocolObject" ordered="false" upperBound="-1" eType="/0/ProtocolObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Interceptor" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="intChannel" ordered="false" lowerBound="1" eType="/0/Channel" eOpposite="/0/Channel/chInterceptor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="intProtocolObject" ordered="false" lowerBound="2" upperBound="2" eType="/0/ProtocolObject" eOpposite="/0/ProtocolObject/poInterceptor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Channel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chStub" ordered="false" lowerBound="2" upperBound="-1" eType="/0/Stub" containment="true" eOpposite="/0/Stub/stChannel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chBinder" ordered="false" lowerBound="2" upperBound="-1" eType="/0/Binder" containment="true" eOpposite="/0/Binder/bdChannel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chPObject" ordered="false" lowerBound="2" upperBound="-1" eType="/0/ProtocolObject" containment="true" eOpposite="/0/ProtocolObject/poChannel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chInterceptor" ordered="false" upperBound="-1" eType="/0/Interceptor" containment="true" eOpposite="/0/Interceptor/intChannel"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="chEndPoint" ordered="false" lowerBound="2" upperBound="-1" eType="/0/BEO" eOpposite="/0/BEO/beoChannel"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClientServerChannel" eSuperTypes="/0/Channel"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ControllingObject" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="coDomain" ordered="false" upperBound="-1" eType="/0/Domain" eOpposite="/0/Domain/domControllingObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SecurityAuthority" eSuperTypes="/0/ControllingObject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ManagementAuthority" eSuperTypes="/0/ControllingObject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AddressingAuthority" eSuperTypes="/0/ControllingObject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NamingAuthority" eSuperTypes="/0/ControllingObject"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlledObject" eSuperTypes="/0/EngineeringObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cdoDomain" ordered="false" upperBound="-1" eType="/0/Domain" eOpposite="/0/Domain/domMember"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Domain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentDomain" ordered="false" lowerBound="1" eType="/0/Domain" eOpposite="/0/Domain/subDomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subDomain" ordered="false" upperBound="-1" eType="/0/Domain" eOpposite="/0/Domain/parentDomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="domControllingObject" ordered="false" lowerBound="1" eType="/0/ControllingObject" eOpposite="/0/ControllingObject/coDomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="domMember" ordered="false" upperBound="-1" eType="/0/ControlledObject" eOpposite="/0/ControlledObject/cdoDomain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SecurityDomain" eSuperTypes="/0/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ManagementDomain" eSuperTypes="/0/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AddressingDomain" eSuperTypes="/0/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NamingDomain" eSuperTypes="/0/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EngineeringInterfaceReferenceManagementDomain" eSuperTypes="/0/NamingDomain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eirmdReference" ordered="false" upperBound="-1" eType="/0/EngineeringInterfaceReference" eOpposite="/0/EngineeringInterfaceReference/eirManagementDomain"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eirmdManagementPolicy" ordered="false" lowerBound="1" eType="/0/EngineeringInterfaceReferenceManagementPolicy" eOpposite="/0/EngineeringInterfaceReferenceManagementPolicy/eirmpManagementDomain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EngineeringInterfaceReferenceManagementPolicy">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eirmpManagementDomain" ordered="false" upperBound="-1" eType="/0/EngineeringInterfaceReferenceManagementDomain" eOpposite="/0/EngineeringInterfaceReferenceManagementDomain/eirmdManagementPolicy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EngineeringInterfaceReference">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eirManagementDomain" ordered="false" lowerBound="1" eType="/0/EngineeringInterfaceReferenceManagementDomain" eOpposite="/0/EngineeringInterfaceReferenceManagementDomain/eirmdReference"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="datatypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

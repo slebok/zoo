@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="XQuery">
+    <eClassifiers xsi:type="ecore:EClass" name="XQueryProgram">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1" eType="/0/ExecutableExpression" containment="true" eOpposite="/0/ExecutableExpression/xQueryProgram"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentNode" ordered="false" eType="/0/ElementNode" eOpposite="/0/ElementNode/nodes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="returnEx" ordered="false" lowerBound="1" eType="/0/Return" eOpposite="/0/Return/expressions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExecutableExpression" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="xQueryProgram" ordered="false" lowerBound="1" eType="/0/XQueryProgram" eOpposite="/0/XQueryProgram/expressions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="functionDeclaration" ordered="false" lowerBound="1" eType="/0/FunctionDeclaration" eOpposite="/0/FunctionDeclaration/expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FLWOR" eSuperTypes="/0/ExecutableExpression">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="for" ordered="false" lowerBound="1" eType="/0/For" containment="true" eOpposite="/0/For/flwor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="let" ordered="false" lowerBound="1" eType="/0/Let" containment="true" eOpposite="/0/Let/flwor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="where" ordered="false" lowerBound="1" eType="/0/Where" containment="true" eOpposite="/0/Where/flwor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="orderBy" ordered="false" lowerBound="1" eType="/0/OrderBy" containment="true" eOpposite="/0/OrderBy/flwor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="return" ordered="false" lowerBound="1" eType="/0/Return" containment="true" eOpposite="/0/Return/flwor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FunctionCall" eSuperTypes="/0/ExecutableExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/XPath" containment="true" eOpposite="/0/XPath/functionCall"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FunctionDeclaration" eSuperTypes="/0/ExecutableExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ExecutableExpression" containment="true" eOpposite="/0/ExecutableExpression/functionDeclaration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementNode" eSuperTypes="/0/Node">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" ordered="false" upperBound="-1" eType="/0/Expression" containment="true" eOpposite="/0/Expression/parentNode"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeNode" eSuperTypes="/0/Node">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TextNode" eSuperTypes="/0/ElementNode"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ReturnXPath" eSuperTypes="/0/Expression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="XPath" eSuperTypes="/0/ReturnXPath">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="functionCall" ordered="false" lowerBound="1" eType="/0/FunctionCall" eOpposite="/0/FunctionCall/parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="for" ordered="false" lowerBound="1" eType="/0/For" eOpposite="/0/For/expression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="let" ordered="false" lowerBound="1" eType="/0/Let" eOpposite="/0/Let/expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanExp" eSuperTypes="/0/XPath">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="where" ordered="false" lowerBound="1" eType="/0/Where" eOpposite="/0/Where/expression"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="For">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="var" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="flwor" ordered="false" lowerBound="1" eType="/0/FLWOR" eOpposite="/0/FLWOR/for"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/XPath" containment="true" eOpposite="/0/XPath/for"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Let">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="var" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="flwor" ordered="false" lowerBound="1" eType="/0/FLWOR" eOpposite="/0/FLWOR/let"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/XPath" containment="true" eOpposite="/0/XPath/let"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Where">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="flwor" ordered="false" lowerBound="1" eType="/0/FLWOR" eOpposite="/0/FLWOR/where"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expression" ordered="false" lowerBound="1" eType="/0/BooleanExp" containment="true" eOpposite="/0/BooleanExp/where"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OrderBy">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="flwor" ordered="false" lowerBound="1" eType="/0/FLWOR" containment="true" eOpposite="/0/FLWOR/orderBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Return">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="flwor" ordered="false" lowerBound="1" eType="/0/FLWOR" eOpposite="/0/FLWOR/return"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" ordered="false" upperBound="-1" eType="/0/Expression" containment="true" eOpposite="/0/Expression/returnEx"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

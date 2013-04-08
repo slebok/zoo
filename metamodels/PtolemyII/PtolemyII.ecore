@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PtolemyII">
+    <eClassifiers xsi:type="ecore:EClass" name="EDataType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/1/NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="att_container" ordered="false" lowerBound="1" eType="/1/Entity" eOpposite="/1/Entity/attributes"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="/1/NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1" eType="/1/Attribute" containment="true" eOpposite="/1/Attribute/att_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" upperBound="-1" eType="/1/Parameter" containment="true" eOpposite="/1/Parameter/pa_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ports" upperBound="-1" eType="/1/Port" containment="true" eOpposite="/1/Port/po_container"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="/1/NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="po_container" ordered="false" lowerBound="1" eType="/1/Entity" eOpposite="/1/Entity/ports"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="links" ordered="false" upperBound="-1" eType="/1/Relation" eOpposite="/1/Relation/ports"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relation" eSuperTypes="/1/NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ports" ordered="false" upperBound="-1" eType="/1/Port" eOpposite="/1/Port/links"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Director" eSuperTypes="/1/NamedObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ca_container" ordered="false" lowerBound="1" eType="/1/CompositeActor" eOpposite="/1/CompositeActor/directors"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter" eSuperTypes="/1/Attribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pa_container" ordered="false" lowerBound="1" eType="/1/Entity" eOpposite="/1/Entity/parameters"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dataType" ordered="false" lowerBound="1" eType="/1/EDataType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComponentPort" eSuperTypes="/1/Port"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ComponentRelation" eSuperTypes="/1/Relation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="re_container" ordered="false" lowerBound="1" eType="/1/CompositeEntity" eOpposite="/1/CompositeEntity/relations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComponentEntity" eSuperTypes="/1/Attribute">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ce_container" ordered="false" lowerBound="1" eType="/1/CompositeEntity" eOpposite="/1/CompositeEntity/containees"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AtomicActor" eSuperTypes="/1/ComponentEntity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeEntity" eSuperTypes="/1/ComponentEntity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containees" upperBound="-1" eType="/1/ComponentEntity" containment="true" eOpposite="/1/ComponentEntity/ce_container"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1" eType="/1/ComponentRelation" containment="true" eOpposite="/1/ComponentRelation/re_container"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WorkSpace" eSuperTypes="/1/CompositeEntity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeActor" eSuperTypes="/1/CompositeEntity">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="directors" ordered="false" upperBound="2" eType="/1/Director" eOpposite="/1/Director/ca_container"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

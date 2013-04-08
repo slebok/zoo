@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="FSM">
+    <eClassifiers xsi:type="ecore:EClass" name="MgaObject">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="/0/MgaObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" ordered="false" lowerBound="1" eType="/0/StateMachine" eOpposite="/0/StateMachine/transition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationStateState" ordered="false" lowerBound="1" eType="/0/AssociationStateState" eOpposite="/0/AssociationStateState/transition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="/0/MgaObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" ordered="false" lowerBound="1" eType="/0/StateMachine" eOpposite="/0/StateMachine/state"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationStateStatedst" ordered="false" lowerBound="1" upperBound="-1" eType="/0/AssociationStateState" eOpposite="/0/AssociationStateState/dstTransition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="associationStateStatesrc" ordered="false" lowerBound="1" upperBound="-1" eType="/0/AssociationStateState" eOpposite="/0/AssociationStateState/srcTransition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateMachine" eSuperTypes="/0/MgaObject">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootFolder" ordered="false" lowerBound="1" eType="/0/RootFolder" eOpposite="/0/RootFolder/stateMachine"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="state" ordered="false" upperBound="-1" eType="/0/State" containment="true" eOpposite="/0/State/stateMachine"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transition" ordered="false" upperBound="-1" eType="/0/Transition" containment="true" eOpposite="/0/Transition/stateMachine"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RootFolder">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootFolders" ordered="false" upperBound="-1" eType="/0/RootFolder" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" ordered="false" upperBound="-1" eType="/0/StateMachine" containment="true" eOpposite="/0/StateMachine/rootFolder"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationStateState">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transition" ordered="false" lowerBound="1" eType="/0/Transition" eOpposite="/0/Transition/associationStateState"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dstTransition" ordered="false" lowerBound="1" upperBound="-1" eType="/0/State" eOpposite="/0/State/associationStateStatedst"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="srcTransition" ordered="false" lowerBound="1" upperBound="-1" eType="/0/State" eOpposite="/0/State/associationStateStatesrc"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

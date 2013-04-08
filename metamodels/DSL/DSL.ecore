@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="DSL">
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="identity" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LoadedElement" abstract="true" eSuperTypes="//Namespace">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLoaded" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Namespace" abstract="true" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DomainModel" eSuperTypes="//LoadedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classifiers" ordered="false" upperBound="-1" eType="//Classifier" containment="true" eOpposite="//Classifier/domainModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="types" ordered="false" upperBound="-1" eType="//Type" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="//LoadedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="properties" ordered="false" upperBound="-1" eType="//ValueProperty" containment="true" eOpposite="//ValueProperty/owner"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="superType" ordered="false" eType="//Classifier" eOpposite="//Classifier/subTypes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subTypes" ordered="false" upperBound="-1" eType="//Classifier" eOpposite="//Classifier/superType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="domainModel" ordered="false" lowerBound="1" eType="//DomainModel" eOpposite="//DomainModel/classifiers"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="//Classifier">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSerializationRoot" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Relationship" eSuperTypes="//Classifier">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEmbedding" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" ordered="false" lowerBound="2" upperBound="2" eType="//Role" containment="true" eOpposite="//Role/relation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="min" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Integer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="max" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Integer"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isUnbounded" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="accepts" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/String"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOrdered" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNavigableFrom" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPropertyGenerator" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="//Classifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="//Classifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relation" ordered="false" lowerBound="1" eType="//Relationship" eOpposite="//Relationship/roles"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ValueProperty" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="//Classifier" eOpposite="//Classifier/properties"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="//Type"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Type" abstract="true" eSuperTypes="//Namespace"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleType" eSuperTypes="//Type"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumerationLiteral" eSuperTypes="//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="//PrimitiveTypes/Integer"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="//Type">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="literals" ordered="false" upperBound="-1" eType="//EnumerationLiteral" containment="true"/>
+  </eClassifiers>
+  <eSubpackages name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </eSubpackages>
+</ecore:EPackage>

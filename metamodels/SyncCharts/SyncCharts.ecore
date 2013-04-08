@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="OCLExpression">
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="behavior" ordered="false" upperBound="-1" eType="/0/SyncChart" eOpposite="/0/SyncChart/context"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SyncChart">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="context" ordered="false" eType="/0/ModelElement" eOpposite="/0/ModelElement/behavior"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceState" ordered="false" upperBound="-1" eType="/0/ReferenceState" eOpposite="/0/ReferenceState/subSyncChart"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ReferenceState">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subSyncChart" ordered="false" lowerBound="1" eType="/0/SyncChart" eOpposite="/0/SyncChart/referenceState"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containers" ordered="false" eType="/0/Stg" eOpposite="/0/Stg/referenceState"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Arc" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isImmediate" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/0/Vertex" eOpposite="/0/Vertex/incoming"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/Vertex" eOpposite="/0/Vertex/outcoming"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stg" ordered="false" eType="/0/Stg" eOpposite="/0/Stg/arc"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Vertex" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/0/Arc" eOpposite="/0/Arc/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outcoming" ordered="false" upperBound="-1" eType="/0/Arc" eOpposite="/0/Arc/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PseudoState" eSuperTypes="/0/Vertex">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="kind" ordered="false" lowerBound="1" eType="/0/PseudoStateKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PseudoStateKind"/>
+    <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="/0/Vertex">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFinal" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleState" eSuperTypes="/0/State"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="/0/State /0/ReferenceState">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="canTerminate" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSuspendable" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stg" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Stg" eOpposite="/0/Stg/compositeState"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Stg">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="withFinal" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compositeState" ordered="false" lowerBound="1" eType="/0/CompositeState" eOpposite="/0/CompositeState/stg"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arc" ordered="false" upperBound="-1" eType="/0/Arc" containment="true" eOpposite="/0/Arc/stg"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referenceState" ordered="false" upperBound="-1" eType="/0/ReferenceState" containment="true" eOpposite="/0/ReferenceState/containers"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="/0/Arc">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="kind" ordered="false" lowerBound="1" eType="/0/TransitionKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TransitionKind"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PseudoTransition" eSuperTypes="/0/Arc">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="kind" ordered="false" lowerBound="1" eType="/0/PseudoTransitionKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PseudoTransitionKind"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

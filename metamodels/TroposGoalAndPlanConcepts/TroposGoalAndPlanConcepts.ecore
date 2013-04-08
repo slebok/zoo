@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="GoalAndPlanConcepts">
+    <eClassifiers xsi:type="ecore:EClass" name="Actor">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="decomposition" ordered="false" upperBound="-1" eType="/1/Decomposition" eOpposite="/1/Decomposition/PointOfView"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contribution" ordered="false" upperBound="-1" eType="/1/Contribution" eOpposite="/1/Contribution/PointOfView"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansEnd" ordered="false" upperBound="-1" eType="/1/MeansEnd" eOpposite="/1/MeansEnd/PointOfView"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Decomposition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="PointOfView" ordered="false" lowerBound="1" eType="/1/Actor" eOpposite="/1/Actor/decomposition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Contribution">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="metric" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributer" ordered="false" lowerBound="1" eType="/1/Goal" eOpposite="/1/Goal/contributionR"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributed" ordered="false" lowerBound="1" eType="/1/Goal" eOpposite="/1/Goal/contributionD"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="PointOfView" ordered="false" lowerBound="1" eType="/1/Actor" eOpposite="/1/Actor/contribution"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Goal">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributionR" ordered="false" upperBound="-1" eType="/1/Contribution" eOpposite="/1/Contribution/contributer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contributionD" ordered="false" upperBound="-1" eType="/1/Contribution" eOpposite="/1/Contribution/contributed"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansEndS" ordered="false" upperBound="-1" eType="/1/MeansEnd" eOpposite="/1/MeansEnd/means"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansEndD" ordered="false" upperBound="-1" eType="/1/MeansEnd" eOpposite="/1/MeansEnd/end"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecomposition" ordered="false" eType="/1/BooleanDecomposition" eOpposite="/1/BooleanDecomposition/root"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecLink" ordered="false" upperBound="-1" eType="/1/BooleanDecLink" eOpposite="/1/BooleanDecLink/target"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MeansEnd">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansR" ordered="false" eType="/1/Resource" eOpposite="/1/Resource/meansEndR"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="means" ordered="false" eType="/1/Goal" eOpposite="/1/Goal/meansEndS"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="end" ordered="false" lowerBound="1" eType="/1/Goal" eOpposite="/1/Goal/meansEndD"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="PointOfView" ordered="false" lowerBound="1" eType="/1/Actor" eOpposite="/1/Actor/meansEnd"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansP" ordered="false" eType="/1/Plan" eOpposite="/1/Plan/meansEndP"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Resource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansEndR" ordered="false" upperBound="-1" eType="/1/MeansEnd" eOpposite="/1/MeansEnd/meansR"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Plan">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meansEndP" ordered="false" upperBound="-1" eType="/1/MeansEnd" eOpposite="/1/MeansEnd/meansP"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecompositionP" ordered="false" eType="/1/BooleanDecomposition" eOpposite="/1/BooleanDecomposition/rootP"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecLinkP" ordered="false" upperBound="-1" eType="/1/BooleanDecLink" eOpposite="/1/BooleanDecLink/targetP"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanDecomposition" eSuperTypes="/1/Decomposition">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="root" ordered="false" eType="/1/Goal" eOpposite="/1/Goal/booleanDecomposition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rootP" ordered="false" eType="/1/Plan" eOpposite="/1/Plan/booleanDecompositionP"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecLinkD" ordered="false" lowerBound="1" upperBound="-1" eType="/1/BooleanDecLink" containment="true" eOpposite="/1/BooleanDecLink/booleanDecompositionB"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanDecLink">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="booleanDecompositionB" ordered="false" lowerBound="1" eType="/1/BooleanDecomposition" eOpposite="/1/BooleanDecomposition/booleanDecLinkD"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" eType="/1/Goal" eOpposite="/1/Goal/booleanDecLink"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targetP" ordered="false" eType="/1/Plan" eOpposite="/1/Plan/booleanDecLinkP"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AndDecLink" eSuperTypes="/1/BooleanDecLink"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OrDecLink" eSuperTypes="/1/BooleanDecLink"/>
+  </ecore:EPackage>
+</xmi:XMI>

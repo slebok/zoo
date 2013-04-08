@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SimpleUML">
+    <eClassifiers xsi:type="ecore:EClass" name="UMLModelElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/0/UMLModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/attribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/Classifier" eOpposite="/0/Classifier/typeOpposite"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/UMLModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/PackageElement" containment="true" eOpposite="/0/PackageElement/namespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PackageElement" abstract="true" eSuperTypes="/0/UMLModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" ordered="false" lowerBound="1" eType="/0/Package" eOpposite="/0/Package/elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="/0/PackageElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typeOpposite" ordered="false" upperBound="-1" eType="/0/Attribute" eOpposite="/0/Attribute/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="/0/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" ordered="false" upperBound="-1" eType="/0/Attribute" containment="true" eOpposite="/0/Attribute/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="general" ordered="false" upperBound="-1" eType="/0/Class" eOpposite="/0/Class/generalOpposite"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalOpposite" ordered="false" upperBound="-1" eType="/0/Class" eOpposite="/0/Class/general"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reverse" ordered="false" upperBound="-1" eType="/0/Association" eOpposite="/0/Association/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="forward" ordered="false" upperBound="-1" eType="/0/Association" eOpposite="/0/Association/destination"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PrimitiveDataType" eSuperTypes="/0/Classifier"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Association" eSuperTypes="/0/PackageElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/reverse"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="destination" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/forward"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

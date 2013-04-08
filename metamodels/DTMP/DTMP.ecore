@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="DTMP">
+    <eClassifiers xsi:type="ecore:EClass" name="State">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isStart" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEnd" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFail" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incoming" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/to"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outGoing" ordered="false" upperBound="-1" eType="/1/Transition" eOpposite="/1/Transition/from"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="formalParam" upperBound="-1" eType="/1/Parameter" eOpposite="/1/Parameter/state"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="transProb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/incoming"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/outGoing"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="state" ordered="false" lowerBound="1" eType="/1/State" eOpposite="/1/State/formalParam"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="MoMM">
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="potency" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="hasClass" ordered="false" lowerBound="1" eType="/1/ModelElement" eOpposite="/1/ModelElement/classElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classElement" ordered="false" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/hasClass"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementTarget" ordered="false" lowerBound="1" eType="/1/Relationship" eOpposite="/1/Relationship/target"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementSource" ordered="false" lowerBound="1" eType="/1/Relationship" eOpposite="/1/Relationship/source"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false" upperBound="-1" eType="/1/Attribute"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attType" ordered="false" lowerBound="1" eType="/1/Attribute" eOpposite="/1/Attribute/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/1/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/ModelElement" eOpposite="/1/ModelElement/attType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relationship" abstract="true" eSuperTypes="/1/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/1/ModelElement" eOpposite="/1/ModelElement/elementTarget"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/1/ModelElement" eOpposite="/1/ModelElement/elementSource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Generalization" eSuperTypes="/1/Relationship"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Association" eSuperTypes="/1/Relationship">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxSource" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxTarget" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minSource" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minTarget" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

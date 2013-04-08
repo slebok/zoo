@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ODPCV">
+  <eClassifiers xsi:type="ecore:EClass" name="EnvironmentContract">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ec_to_a" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/constrainer_ec"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifier_ec" ordered="false" lowerBound="1" eType="//ComputationalTemplate" eOpposite="//ComputationalTemplate/ct_to_ec"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComputationalTemplate" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ct_to_ec" ordered="false" lowerBound="1" eType="//EnvironmentContract" eOpposite="//EnvironmentContract/specifier_ec"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ct_to_bh" ordered="false" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/specifier_bh"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComputationalObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="co_to_i" ordered="false" lowerBound="1" upperBound="-1" eType="//Interface" eOpposite="//Interface/owner_i"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="co_to_bh" ordered="false" lowerBound="1" eType="//Behaviour" eOpposite="//Behaviour/owner_bh"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifier_co" ordered="false" lowerBound="1" eType="//ComputationalObjectTemplate" eOpposite="//ComputationalObjectTemplate/cot_to_co"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="co_to_st" ordered="false" lowerBound="1" eType="//State" containment="true" eOpposite="//State/st_to_co"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BindingObject" eSuperTypes="//ComputationalObject"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ComputationalObjectTemplate" eSuperTypes="//ComputationalTemplate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cot_to_co" ordered="false" upperBound="-1" eType="//ComputationalObject" eOpposite="//ComputationalObject/specifier_co"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="part_provide" ordered="false" upperBound="-1" eType="//ComputationalInterfaceTemplate" eOpposite="//ComputationalInterfaceTemplate/aggregate_provide"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="part_request" ordered="false" upperBound="-1" eType="//ComputationalInterfaceTemplate" eOpposite="//ComputationalInterfaceTemplate/aggregate_request"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComputationalInterfaceTemplate" eSuperTypes="//ComputationalTemplate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cit_to_i" ordered="false" upperBound="-1" eType="//Interface" eOpposite="//Interface/specifier_i"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="aggregate_provide" ordered="false" upperBound="-1" eType="//ComputationalObjectTemplate" eOpposite="//ComputationalObjectTemplate/part_provide"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="aggregate_request" ordered="false" upperBound="-1" eType="//ComputationalObjectTemplate" eOpposite="//ComputationalObjectTemplate/part_request"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cit_to_intsig" ordered="false" lowerBound="1" eType="//InterfaceSignature" containment="true" eOpposite="//InterfaceSignature/intsig_to_cit"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Interface" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner_i" ordered="false" lowerBound="1" eType="//ComputationalObject" eOpposite="//ComputationalObject/co_to_i"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="i_to_bd" ordered="false" eType="//Binding" eOpposite="//Binding/bd_to_i"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifier_i" ordered="false" lowerBound="1" eType="//ComputationalInterfaceTemplate" eOpposite="//ComputationalInterfaceTemplate/cit_to_i"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="i_to_ina" ordered="false" lowerBound="1" upperBound="-1" eType="//Interaction" containment="true" eOpposite="//Interaction/ina_to_i"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Binding">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bd_to_i" ordered="false" lowerBound="2" upperBound="-1" eType="//Interface" eOpposite="//Interface/i_to_bd"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SignalInterface" eSuperTypes="//Interface"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationInterface" eSuperTypes="//Interface"/>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamInterface" eSuperTypes="//Interface"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceSignature" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intsig_to_cit" ordered="false" lowerBound="1" eType="//ComputationalInterfaceTemplate" eOpposite="//ComputationalInterfaceTemplate/cit_to_intsig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SignalInterfaceSignature" eSuperTypes="//InterfaceSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sgisig_to_ssig" upperBound="-1" eType="//SignalSignature" containment="true" eOpposite="//SignalSignature/ssig_to_sgisig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OperationInterfaceSignature" eSuperTypes="//InterfaceSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="optisig_to_ansig" upperBound="-1" eType="//AnnouncementSignature" containment="true" eOpposite="//AnnouncementSignature/ansig_to_optisig"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="optisig_to_intsig" upperBound="-1" eType="//InterrogationSignature" containment="true" eOpposite="//InterrogationSignature/intsig_to_optisig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StreamInterfaceSignature" eSuperTypes="//InterfaceSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="strisig_to_fsig" upperBound="-1" eType="//FlowSignature" containment="true" eOpposite="//FlowSignature/fsig_to_strisig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InteractionSignature" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isig_to_at" ordered="false" lowerBound="1" eType="//ActionTemplate" eOpposite="//ActionTemplate/at_to_isig"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isig_to_param" upperBound="-1" eType="//Parameter" containment="true" eOpposite="//Parameter/param_to_isig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="param_to_isig" ordered="false" lowerBound="1" eType="//InteractionSignature" eOpposite="//InteractionSignature/isig_to_param"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnnouncementSignature" eSuperTypes="//InteractionSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ansig_to_optisig" ordered="false" lowerBound="1" eType="//OperationInterfaceSignature" eOpposite="//OperationInterfaceSignature/optisig_to_ansig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterrogationSignature" eSuperTypes="//InteractionSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intsig_to_optisig" ordered="false" lowerBound="1" eType="//OperationInterfaceSignature" eOpposite="//OperationInterfaceSignature/optisig_to_intsig"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="intsig_to_tersig" lowerBound="1" upperBound="-1" eType="//TerminationSignature" containment="true" eOpposite="//TerminationSignature/tersig_to_intsig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TerminationSignature" eSuperTypes="//InteractionSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tersig_to_intsig" ordered="false" lowerBound="1" eType="//InterrogationSignature" eOpposite="//InterrogationSignature/intsig_to_tersig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SignalSignature" eSuperTypes="//InteractionSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ssig_to_sgisig" ordered="false" lowerBound="1" eType="//SignalInterfaceSignature" eOpposite="//SignalInterfaceSignature/sgisig_to_ssig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FlowSignature" eSuperTypes="//InteractionSignature">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fsig_to_strisig" ordered="false" lowerBound="1" eType="//StreamInterfaceSignature" eOpposite="//StreamInterfaceSignature/strisig_to_fsig"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ActionTemplate">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="at_to_a" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/specifier_a"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="at_to_isig" ordered="false" lowerBound="1" eType="//InteractionSignature" containment="true" eOpposite="//InteractionSignature/isig_to_at"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Behaviour">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifier_bh" ordered="false" lowerBound="1" eType="//ComputationalTemplate" eOpposite="//ComputationalTemplate/ct_to_bh"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner_bh" ordered="false" lowerBound="1" eType="//ComputationalObject" eOpposite="//ComputationalObject/co_to_bh"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bh_to_a" lowerBound="1" upperBound="-1" eType="//Action" containment="true" eOpposite="//Action/a_to_bh"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constrainer_ec" ordered="false" upperBound="-1" eType="//EnvironmentContract" eOpposite="//EnvironmentContract/ec_to_a"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="changedState" ordered="false" upperBound="-1" eType="//State" eOpposite="//State/changer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="specifier_a" ordered="false" lowerBound="1" eType="//ActionTemplate" eOpposite="//ActionTemplate/at_to_a"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a_to_bh" ordered="false" lowerBound="1" eType="//Behaviour" eOpposite="//Behaviour/bh_to_a"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="startState" ordered="false" lowerBound="1" eType="//State" eOpposite="//State/endState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endState" ordered="false" lowerBound="1" eType="//State" eOpposite="//State/startState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="changer" ordered="false" upperBound="-1" eType="//Action" eOpposite="//Action/changedState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="st_to_co" ordered="false" lowerBound="1" eType="//ComputationalObject" eOpposite="//ComputationalObject/co_to_st"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InternalAction" eSuperTypes="//Action"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Interaction" abstract="true" eSuperTypes="//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ina_to_i" ordered="false" lowerBound="1" eType="//Interface" eOpposite="//Interface/i_to_ina"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="//Interaction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Signal" eSuperTypes="//Interaction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Operation" abstract="true" eSuperTypes="//Interaction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="opt_to_inv" ordered="false" lowerBound="1" eType="//Invocation" containment="true" eOpposite="//Invocation/inv_to_opt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Announcement" eSuperTypes="//Operation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Interrogation" eSuperTypes="//Operation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="int_to_ter" ordered="false" eType="//Termination" eOpposite="//Termination/owner_ter"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Invocation" eSuperTypes="//Interaction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inv_to_ter" ordered="false" lowerBound="1" eType="//Termination" eOpposite="//Termination/ter_to_inv"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="inv_to_opt" ordered="false" lowerBound="1" eType="//Operation" eOpposite="//Operation/opt_to_inv"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Termination" eSuperTypes="//Interaction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner_ter" ordered="false" lowerBound="1" eType="//Interrogation" eOpposite="//Interrogation/int_to_ter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ter_to_inv" ordered="false" lowerBound="1" eType="//Invocation" eOpposite="//Invocation/inv_to_ter"/>
+  </eClassifiers>
+</ecore:EPackage>

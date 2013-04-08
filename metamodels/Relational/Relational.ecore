@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Relational">
+    <eClassifiers xsi:type="ecore:EClass" name="Named" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/1/Named">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="col" upperBound="-1" eType="/1/Column" containment="true" eOpposite="/1/Column/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="key" ordered="false" upperBound="-1" eType="/1/Column" eOpposite="/1/Column/keyOf"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/1/Named">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/col"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="keyOf" ordered="false" eType="/1/Table" eOpposite="/1/Table/key"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="/1/Named"/>
+  </ecore:EPackage>
+</xmi:XMI>

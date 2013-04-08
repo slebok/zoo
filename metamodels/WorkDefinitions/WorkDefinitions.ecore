@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="WorkDefinitions">
+    <eClassifiers xsi:type="ecore:EClass" name="WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentWorks" ordered="false" upperBound="-1" eType="/0/WorkDefinition" eOpposite="/0/WorkDefinition/subWorks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subWorks" ordered="false" upperBound="-1" eType="/0/WorkDefinition" eOpposite="/0/WorkDefinition/parentWorks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/0/ProcessPerformer" eOpposite="/0/ProcessPerformer/features"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProcessPerformer">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="features" ordered="false" upperBound="-1" eType="/0/WorkDefinition" containment="true" eOpposite="/0/WorkDefinition/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="/0/ProcessPerformer">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="products" ordered="false" upperBound="-1" eType="/0/WorkProduct" eOpposite="/0/WorkProduct/responsible"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WorkProduct">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="responsible" ordered="false" lowerBound="1" eType="/0/Role" eOpposite="/0/Role/products"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Lifecycle" eSuperTypes="/0/WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="phases" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Phase" containment="true" eOpposite="/0/Phase/lifeCycle"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Phase" eSuperTypes="/0/WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lifeCycle" ordered="false" lowerBound="1" eType="/0/Lifecycle" eOpposite="/0/Lifecycle/phases"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="iterations" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Iteration" containment="true" eOpposite="/0/Iteration/phase"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Iteration" eSuperTypes="/0/WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="phase" ordered="false" lowerBound="1" eType="/0/Phase" eOpposite="/0/Phase/iterations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activities" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Activity" containment="true" eOpposite="/0/Activity/iteration"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="/0/WorkDefinition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="iteration" ordered="false" lowerBound="1" eType="/0/Iteration" eOpposite="/0/Iteration/activities"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="steps" ordered="false" upperBound="-1" eType="/0/Step" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Step"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

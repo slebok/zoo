@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="DOT">
+    <eClassifiers xsi:type="ecore:EClass" name="Label" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="element" ordered="false" lowerBound="1" eType="/1/GraphElement" eOpposite="/1/GraphElement/label"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleLabel" eSuperTypes="/1/Label">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComplexLabel" eSuperTypes="/1/Label">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compartments" lowerBound="1" upperBound="-1" eType="/1/Compartment" containment="true" eOpposite="/1/Compartment/complexLabel"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Compartment" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="complexLabel" ordered="false" lowerBound="1" eType="/1/ComplexLabel" eOpposite="/1/ComplexLabel/compartments"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compartments" ordered="false" eType="/1/Compartment" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="anchor" ordered="false" eType="/1/Anchor" eOpposite="/1/Anchor/source"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="VerticalCompartment" eSuperTypes="/1/Compartment"/>
+    <eClassifiers xsi:type="ecore:EClass" name="HorizontalCompartment" eSuperTypes="/1/Compartment"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleCompartment" eSuperTypes="/1/Compartment">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Anchor">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" eType="/1/Compartment" eOpposite="/1/Compartment/anchor"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GraphElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="label" ordered="false" eType="/1/Label" containment="true" eOpposite="/1/Label/element"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="style" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Graph" eSuperTypes="/1/GraphElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="rankDir" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="labeljust" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="labelloc" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="concentrate" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" upperBound="-1" eType="/1/Nodelike" containment="true" eOpposite="/1/Nodelike/graph"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="boundingBox" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="compound" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="layers" ordered="false" upperBound="-1" eType="/1/Layer" containment="true" eOpposite="/1/Layer/graph"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="nodeSeparation" ordered="false" unique="false" eType="/0/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ordering" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratio" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="center" ordered="false" unique="false" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Layer" eSuperTypes="/1/GraphElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" ordered="false" upperBound="-1" eType="/1/Nodelike" eOpposite="/1/Nodelike/layers"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arcs" ordered="false" upperBound="-1" eType="/1/Arc" eOpposite="/1/Arc/layers"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="graph" ordered="false" lowerBound="1" eType="/1/Graph" eOpposite="/1/Graph/layers"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="layerSeparator" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Nodelike" abstract="true" eSuperTypes="/1/GraphElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/1/SubGraph" eOpposite="/1/SubGraph/nodes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="refers" ordered="false" upperBound="-1" eType="/1/Arc" eOpposite="/1/Arc/fromNode"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referredBy" ordered="false" upperBound="-1" eType="/1/Arc" eOpposite="/1/Arc/toNode"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="graph" ordered="false" eType="/1/Graph" eOpposite="/1/Graph/nodes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="layers" ordered="false" upperBound="-1" eType="/1/Layer" eOpposite="/1/Layer/nodes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SubGraph" eSuperTypes="/1/Nodelike">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" upperBound="-1" eType="/1/Nodelike" containment="true" eOpposite="/1/Nodelike/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="labelloc" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="/1/Nodelike">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fixedSize" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fontname" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fontsize" ordered="false" unique="false" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" ordered="false" unique="false" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" ordered="false" unique="false" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="shape" ordered="false" eType="/1/NodeShape" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Arc" abstract="true" eSuperTypes="/1/GraphElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fromNode" ordered="false" lowerBound="1" eType="/1/Nodelike" eOpposite="/1/Nodelike/refers"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toNode" ordered="false" lowerBound="1" eType="/1/Nodelike" eOpposite="/1/Nodelike/referredBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="layers" ordered="false" upperBound="-1" eType="/1/Layer" eOpposite="/1/Layer/arcs"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="constraint" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="group" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minlen" ordered="false" unique="false" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sameHead" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sameTail" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="lhead" ordered="false" eType="/1/Nodelike"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ltail" ordered="false" eType="/1/Nodelike"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="decorate" ordered="false" unique="false" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DirectedArc" eSuperTypes="/1/Arc">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arrowHead" ordered="false" eType="/1/ArrowShape" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="headlabel" ordered="false" eType="/1/Label"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taillabel" ordered="false" eType="/1/Label"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arrowTail" ordered="false" eType="/1/ArrowShape" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tail_lp" ordered="false" unique="false" eType="/0/Double"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="head_lp" ordered="false" unique="false" eType="/0/Double"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UndirectedArc" eSuperTypes="/1/Arc"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Shape" abstract="true" eSuperTypes="/1/GraphElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="peripheries" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NodeShape" abstract="true" eSuperTypes="/1/Shape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleNodeShape" eSuperTypes="/1/NodeShape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PointNodeShape" eSuperTypes="/1/NodeShape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ComplexNodeShape" abstract="true" eSuperTypes="/1/NodeShape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PolygonNodeShape" eSuperTypes="/1/ComplexNodeShape">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sides" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="skew" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="distortion" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRegular" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="orientation" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MNodeShape" eSuperTypes="/1/ComplexNodeShape">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toplabel" ordered="false" eType="/1/Label" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bottomlabel" ordered="false" eType="/1/Label" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RecordNodeShape" eSuperTypes="/1/ComplexNodeShape"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ArrowShape" eSuperTypes="/1/Shape">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="clipping" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPlain" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

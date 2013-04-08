@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="QoSConceptualModel">
+    <eClassifiers xsi:type="ecore:EClass" name="QoSComponent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="profile" ordered="false" upperBound="-1" eType="/1/QoSProfile" eOpposite="/1/QoSProfile/for"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" lowerBound="1" eType="/1/Operation" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSProfile" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="for" ordered="false" lowerBound="1" eType="/1/QoSComponent" eOpposite="/1/QoSComponent/profile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="provide" ordered="false" lowerBound="1" upperBound="-1" eType="/1/QoSStatement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uses" ordered="false" lowerBound="1" upperBound="-1" eType="/1/QoSStatement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSContraints" eSuperTypes="/1/QoSCharacteristic"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CompoundProfile" eSuperTypes="/1/QoSProfile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="profileTransition" ordered="false" upperBound="-1" eType="/1/ProfileTransition" eOpposite="/1/ProfileTransition/compoundProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="simpleProfile" lowerBound="1" upperBound="-1" eType="/1/SimpleProfile" containment="true" eOpposite="/1/SimpleProfile/compoundProfile"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleProfile" eSuperTypes="/1/QoSProfile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundProfile" ordered="false" lowerBound="1" eType="/1/CompoundProfile" eOpposite="/1/CompoundProfile/simpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" lowerBound="1" eType="/1/QoSStatement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="provides" ordered="false" lowerBound="1" eType="/1/QoSStatement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ProfileTransition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1" eType="/1/Operation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/1/SimpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/1/SimpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundProfile" ordered="false" lowerBound="1" eType="/1/CompoundProfile" containment="true" eOpposite="/1/CompoundProfile/profileTransition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contraints" ordered="false" lowerBound="1" upperBound="-1" eType="/1/QoSContraints" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="relation" ordered="false" lowerBound="1" eType="/1/CoumpoundQoSStatement" eOpposite="/1/CoumpoundQoSStatement/statement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" upperBound="-1" eType="/1/Parameter" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SingleQoSStatement" eSuperTypes="/1/QoSStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contraint" ordered="false" lowerBound="1" eType="/1/QoSContraint" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CoumpoundQoSStatement" eSuperTypes="/1/QoSStatement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="statement" ordered="false" lowerBound="2" upperBound="-1" eType="/1/QoSStatement" containment="true" eOpposite="/1/QoSStatement/relation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSContraint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="qualification" ordered="false" lowerBound="1" eType="/1/QualificationKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QualificationKind" eSuperTypes="/1/QoSCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSCharacteristic">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="invariant" ordered="false" lowerBound="1" eType="/1/BooleanExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parallel_and_composition" ordered="false" lowerBound="1" eType="/1/MappingExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parallel_or_composition" ordered="false" lowerBound="1" eType="/1/MappingExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sequential_composition" ordered="false" lowerBound="1" eType="/1/MappingExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="values" ordered="false" lowerBound="1" eType="/1/MappingExpression"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="statisticalAttribute" ordered="false" upperBound="-1" eType="/1/StatisticalAttributekindKind" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameter" ordered="false" lowerBound="1" eType="/1/Parameter" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="domain" ordered="false" lowerBound="1" eType="/1/Domain"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MappingExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StatisticalAttributekindKind"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Domain" eSuperTypes="/1/DataType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="direction" ordered="false" lowerBound="1" eType="/1/DirectionKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DirectionKind">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Numeric" eSuperTypes="/1/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Set" eSuperTypes="/1/Domain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stringSet" lowerBound="1" upperBound="-1" eType="/1/StringSet" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="/1/Domain"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StringSet">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="string" ordered="false" unique="false" lowerBound="1" upperBound="-1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

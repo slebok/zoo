@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="WordprocessingMLBasicDef">
+    <eClassifiers xsi:type="ecore:EClass" name="StringProperty" eSuperTypes="/1/StringType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StringType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="val" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="BreakType">
+      <eLiterals name="bt_page" value="1"/>
+      <eLiterals name="bt_column" value="2"/>
+      <eLiterals name="bt_text_wrapping" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="NoteValue">
+      <eLiterals name="ftn_normal" value="1"/>
+      <eLiterals name="ftn_separator" value="2"/>
+      <eLiterals name="ftn_continuation_separator" value="3"/>
+      <eLiterals name="ftn_continuation_notice" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="OnOffType">
+      <eLiterals name="oot_on" value="1"/>
+      <eLiterals name="oot_off" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="FldCharTypeProperty">
+      <eLiterals name="fctp_begin" value="1"/>
+      <eLiterals name="fctp_separate" value="2"/>
+      <eLiterals name="fctp_end" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="WordDocument">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ignoreSubtree" ordered="false" eType="/1/StringProperty" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ignoreElements" ordered="false" eType="/1/StringProperty" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="body" ordered="false" lowerBound="1" eType="/1/BodyElt" containment="true" eOpposite="/1/BodyElt/be_wordDocument"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BodyElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="be_wordDocument" ordered="false" lowerBound="1" eType="/1/WordDocument" eOpposite="/1/WordDocument/body"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="blockLevelElts" upperBound="-1" eType="/1/BlockLevelElt" containment="true" eOpposite="/1/BlockLevelElt/ble_bodyElt"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BlockLevelElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ble_bodyElt" ordered="false" lowerBound="1" eType="/1/BodyElt" eOpposite="/1/BodyElt/blockLevelElts"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ble_note" ordered="false" lowerBound="1" eType="/1/NoteElt" eOpposite="/1/NoteElt/n_blockLevelElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BlockLevelChunkElt" abstract="true" eSuperTypes="/1/BlockLevelElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ParaElt" eSuperTypes="/1/BlockLevelChunkElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pContentElts" upperBound="-1" eType="/1/ParaContentElt" containment="true" eOpposite="/1/ParaContentElt/pce_pElt"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParaContentElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pce_pElt" ordered="false" lowerBound="1" eType="/1/ParaElt" eOpposite="/1/ParaElt/pContentElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RunElt" eSuperTypes="/1/ParaContentElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rContentElts" upperBound="-1" eType="/1/RunContentElt" containment="true" eOpposite="/1/RunContentElt/rce_rElt"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="RunContentElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rce_rElt" ordered="false" lowerBound="1" eType="/1/RunElt" eOpposite="/1/RunElt/rContentElts"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BreakElt" eSuperTypes="/1/RunContentElt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" eType="/1/BreakType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Text" eSuperTypes="/1/RunContentElt /1/StringType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DelText" eSuperTypes="/1/RunContentElt /1/StringType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InstrText" eSuperTypes="/1/RunContentElt /1/StringType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DelInstrText" eSuperTypes="/1/RunContentElt /1/StringType"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NoBreakHyphen" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SoftHyphen" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AnnotationRef" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FootnoteRef" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EndnoteRef" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Separator" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ContinuationSeparator" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PgNum" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Cr" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Footnote" eSuperTypes="/1/RunContentElt /1/NoteElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Endnote" eSuperTypes="/1/RunContentElt /1/NoteElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NoteElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="n_blockLevelElts" lowerBound="1" upperBound="-1" eType="/1/BlockLevelElt" containment="true" eOpposite="/1/BlockLevelElt/ble_note"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" eType="/1/NoteValue"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="suppressRef" ordered="false" unique="false" eType="/1/OnOffType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Picture" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Symbol" eSuperTypes="/1/RunContentElt /1/SymElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SymElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="font" ordered="false" lowerBound="1" eType="/1/StringType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="char" ordered="false" lowerBound="1" eType="/1/StringType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tab" eSuperTypes="/1/RunContentElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FldChar" eSuperTypes="/1/RunContentElt /1/FldCharElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FldCharElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fldData" ordered="false" eType="/1/StringType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fldCharType" ordered="false" unique="false" lowerBound="1" eType="/1/FldCharTypeProperty"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fldLock" ordered="false" unique="false" lowerBound="1" eType="/1/OnOffType"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

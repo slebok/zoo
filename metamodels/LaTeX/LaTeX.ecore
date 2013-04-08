@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="LaTeX">
+    <eClassifiers xsi:type="ecore:EClass" name="ValuedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Title" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Name" eSuperTypes="/0/ValuedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="author" ordered="false" eType="/0/Author" eOpposite="/0/Author/names"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="organisation" ordered="false" eType="/0/Organisation" eOpposite="/0/Organisation/names"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Author">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="names" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Name" containment="true" eOpposite="/0/Name/author"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Adress" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Organisation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="names" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Name" containment="true" eOpposite="/0/Name/organisation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adress" ordered="false" lowerBound="1" eType="/0/Adress" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="heading" ordered="false" lowerBound="1" eType="/0/Heading" eOpposite="/0/Heading/organisations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Phone" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Fax" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EMail" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Heading">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="organisations" ordered="false" upperBound="-1" eType="/0/Organisation" containment="true" eOpposite="/0/Organisation/heading"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="phone" ordered="false" eType="/0/Phone" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fax" ordered="false" eType="/0/Fax" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="email" ordered="false" eType="/0/EMail" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Abstract" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Keywords" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SectionBody">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="corps" ordered="false" upperBound="-1" eType="/0/Corps" containment="true" eOpposite="/0/Corps/sectionbody"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="section" ordered="false" lowerBound="1" eType="/0/Section" eOpposite="/0/Section/sectionBody"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Corps" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sectionbody" ordered="false" lowerBound="1" eType="/0/SectionBody" eOpposite="/0/SectionBody/corps"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Value" eSuperTypes="/0/Corps /0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Cite" eSuperTypes="/0/Corps /0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Path" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Label" eSuperTypes="/0/ValuedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Figure" eSuperTypes="/0/Corps">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="path" ordered="false" lowerBound="1" eType="/0/Path" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="label" ordered="false" lowerBound="1" eType="/0/Label" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="title" ordered="false" lowerBound="1" eType="/0/Title" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Item" eSuperTypes="/0/ValuedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemscontainer" ordered="false" eType="/0/Items" eOpposite="/0/Items/item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enumeratecontainer" ordered="false" eType="/0/Enumerate" eOpposite="/0/Enumerate/item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Items" eSuperTypes="/0/Corps">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="item" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Item" containment="true" eOpposite="/0/Item/itemscontainer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Enumerate" eSuperTypes="/0/Corps">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="item" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Item" containment="true" eOpposite="/0/Item/enumeratecontainer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="/0/Corps">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="title" ordered="false" lowerBound="1" eType="/0/Title" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sectionBody" ordered="false" lowerBound="1" eType="/0/SectionBody" containment="true" eOpposite="/0/SectionBody/section"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description" eSuperTypes="/0/ValuedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/Date" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Citation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="label" ordered="false" lowerBound="1" eType="/0/Label" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="author" ordered="false" lowerBound="1" eType="/0/Author" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description" ordered="false" lowerBound="1" eType="/0/Description" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bibliography" ordered="false" lowerBound="1" eType="/0/Bibliography" eOpposite="/0/Bibliography/citations"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Bibliography">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="citations" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Citation" containment="true" eOpposite="/0/Citation/bibliography"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="documentbody" ordered="false" lowerBound="1" eType="/0/DocumentBody" eOpposite="/0/DocumentBody/bibliography"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentBody">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sections" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Section" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bibliography" ordered="false" upperBound="-1" eType="/0/Bibliography" containment="true" eOpposite="/0/Bibliography/documentbody"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" lowerBound="1" eType="/0/Document" eOpposite="/0/Document/documentbody"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/Type" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="title" ordered="false" lowerBound="1" eType="/0/Title" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="author" ordered="false" eType="/0/Author" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" eType="/0/Date" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="heading" ordered="false" eType="/0/Heading" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="abstract" ordered="false" eType="/0/Abstract" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="keywords" ordered="false" eType="/0/Keywords" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="documentbody" ordered="false" lowerBound="1" eType="/0/DocumentBody" containment="true" eOpposite="/0/DocumentBody/document"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

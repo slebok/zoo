@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="IMSTransactionMessage">
+    <eClassifiers xsi:type="ecore:EEnum" name="OIMAPrefixFormats">
+      <eLiterals name="opp_one" value="1"/>
+      <eLiterals name="opp_two" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TwoByteField"/>
+    <eClassifiers xsi:type="ecore:EClass" name="VariableLengthField"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IMSTransactionMessage">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="OIMAPrefixFormat" ordered="false" unique="false" lowerBound="1" eType="/1/OIMAPrefixFormats"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="standardFieldsFlag" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="OIMAPrefixComponent" ordered="false" eType="/1/OIMAPrefix" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="standardFieldComponent" ordered="false" eType="/1/StandardFields" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="messageComponent" ordered="false" lowerBound="1" eType="/1/ApplicationData" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OIMAPrefix">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="controlDataComponent" ordered="false" lowerBound="1" eType="/1/ControlData" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateDataComponent" ordered="false" lowerBound="1" eType="/1/StateData" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="securityDataComponent" ordered="false" eType="/1/SecurityData" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="userDataComponent" ordered="false" eType="/1/UserData" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlData"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StateData"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SecurityData"/>
+    <eClassifiers xsi:type="ecore:EClass" name="UserData"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StandardFields">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="length" ordered="false" lowerBound="1" eType="/1/TwoByteField"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="reservedField" ordered="false" lowerBound="1" eType="/1/TwoByteField"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="transactionCode" ordered="false" lowerBound="1" eType="/1/VariableLengthField"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ApplicationData">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="languageElements" ordered="false" upperBound="-1" eType="/1/TDLangElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fieldComponents" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Field" containment="true" eOpposite="/1/Field/fieldContainer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Field">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fieldContainer" ordered="false" lowerBound="1" eType="/1/ApplicationData" eOpposite="/1/ApplicationData/fieldComponents"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TDLangElement"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="MavenMaven">
+    <eClassifiers xsi:type="ecore:EClass" name="Project">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="xmlns" ordered="false" upperBound="-1" eType="/0/Xmlns" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="default" ordered="false" eType="/0/Goal"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="path" ordered="false" eType="/0/Path" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="properties" upperBound="-1" eType="/0/AntProperty" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taskdefs" ordered="false" upperBound="-1" eType="/0/AntTaskDef" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="prePostGoals" ordered="false" upperBound="-1" eType="/0/PrePostGoal" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="goals" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Goal" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Xmlns">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AntProperty" abstract="true" eSuperTypes="/0/ContentsGoal"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AntPropertyName" abstract="true" eSuperTypes="/0/AntProperty">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AntPropertyValue" eSuperTypes="/0/AntPropertyName">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AntPropertyLocation" eSuperTypes="/0/AntPropertyName">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AntPropertyFile" eSuperTypes="/0/AntProperty">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AntPropertyEnv" eSuperTypes="/0/AntProperty">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="environment" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="JellyCommand" abstract="true" eSuperTypes="/0/ContentsGoal"/>
+    <eClassifiers xsi:type="ecore:EClass" name="JellySet" eSuperTypes="/0/JellyCommand">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="var" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="JellyForEach" eSuperTypes="/0/JellyCommand">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="items" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="var" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="indexVar" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" ordered="false" lowerBound="1" eType="/0/ContentsGoal" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AbstractGoal" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contentsGoal" lowerBound="1" upperBound="-1" eType="/0/ContentsGoal" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ContentsGoal" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AttainGoal" eSuperTypes="/0/ContentsGoal">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attainGoal" ordered="false" lowerBound="1" eType="/0/Goal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PrePostGoal" abstract="true" eSuperTypes="/0/AbstractGoal"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PreGoal" eSuperTypes="/0/PrePostGoal">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="centralGoal" ordered="false" lowerBound="1" eType="/0/Goal" eOpposite="/0/Goal/preGoal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PostGoal" eSuperTypes="/0/PrePostGoal">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="centralGoal" ordered="false" lowerBound="1" eType="/0/Goal" eOpposite="/0/Goal/postGoal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Goal" eSuperTypes="/0/AbstractGoal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="preGoal" ordered="false" eType="/0/PreGoal" eOpposite="/0/PreGoal/centralGoal"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="postGoal" ordered="false" eType="/0/PostGoal" eOpposite="/0/PostGoal/centralGoal"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Pattern" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Basic" abstract="true" eSuperTypes="/0/Pattern"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Mapper" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classname" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classpath" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classpathref" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="from" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="to" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InExcludes" abstract="true" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ifCondition" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="unless" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Includes" eSuperTypes="/0/InExcludes"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Excludes" eSuperTypes="/0/InExcludes"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IncludesFile" eSuperTypes="/0/InExcludes"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExcludesFile" eSuperTypes="/0/InExcludes"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FileList" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="files" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Filter" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="token" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FiltersFile" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PathElement" eSuperTypes="/0/Basic">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Set" abstract="true" eSuperTypes="/0/Pattern"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PatternSet" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inexcludes" ordered="false" lowerBound="1" upperBound="-1" eType="/0/InExcludes" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FileSet" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="patternset" ordered="false" upperBound="-1" eType="/0/PatternSet" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="include" ordered="false" upperBound="-1" eType="/0/Includes" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="exclude" ordered="false" upperBound="-1" eType="/0/Excludes" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FilterSet" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="starttoken" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="endtoken" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="filter" ordered="false" upperBound="-1" eType="/0/Filter" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="filtersfile" ordered="false" upperBound="-1" eType="/0/FiltersFile" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Path" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refid" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="path" ordered="false" eType="/0/Path" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pathElement" ordered="false" upperBound="-1" eType="/0/PathElement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fileset" ordered="false" upperBound="-1" eType="/0/FileSet" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassPath" eSuperTypes="/0/Set">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refid" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pathElement" ordered="false" upperBound="-1" eType="/0/PathElement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fileset" ordered="false" upperBound="-1" eType="/0/FileSet" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task" abstract="true" eSuperTypes="/0/ContentsGoal"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AntTaskDef" eSuperTypes="/0/ContentsGoal">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classname" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NewTask" eSuperTypes="/0/Task">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taskName" ordered="false" lowerBound="1" eType="/0/AntTaskDef"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false" upperBound="-1" eType="/0/Attribut" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribut">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PreDefinedTask" abstract="true" eSuperTypes="/0/Task">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="taskname" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExecutionTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Exec" eSuperTypes="/0/ExecutionTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="executable" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Java" eSuperTypes="/0/ExecutionTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="classname" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="jar" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fork" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classPath" ordered="false" eType="/0/ClassPath" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MiscellaneousTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Echo" eSuperTypes="/0/MiscellaneousTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="message" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="append" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tstamp" eSuperTypes="/0/MiscellaneousTask">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="format" ordered="false" upperBound="-1" eType="/0/FormatTstamp" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FormatTstamp">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="property" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pattern" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="locale" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CompileTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Javac" eSuperTypes="/0/CompileTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="srcdir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destdir" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="debug" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fork" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="optimize" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="deprecation" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inExcludes" ordered="false" upperBound="-1" eType="/0/InExcludes" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classPath" ordered="false" eType="/0/ClassPath" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DocumentationTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Javadoc" eSuperTypes="/0/DocumentationTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourcepath" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destdir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="packagenames" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultexcludes" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="use" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="windowtitle" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchiveTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Jar" eSuperTypes="/0/ArchiveTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="jarfile" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="basedir" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="compress" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="encoding" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="manifest" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FileTask" abstract="true" eSuperTypes="/0/PreDefinedTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Mkdir" eSuperTypes="/0/FileTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dir" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Copy" eSuperTypes="/0/FileTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="presservelastmodified" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tofile" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="todir" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="overwrite" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="filtering" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="flatten" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="includeEmptyDirs" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fileset" ordered="false" eType="/0/FileSet" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="filterset" ordered="false" eType="/0/FilterSet" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mapper" ordered="false" eType="/0/Mapper" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Delete" eSuperTypes="/0/FileTask">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dir" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verbose" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="quiet" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="failonerror" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="includeEmptyDirs" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="includes" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="includesfile" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="excludes" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="excludesfile" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultexcludes" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

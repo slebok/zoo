@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="PetriNet"
+    nsURI="PetriNetV1" nsPrefix="PetriNet">
+  <eClassifiers xsi:type="ecore:EClass" name="Place">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="net" ordered="false" lowerBound="1"
+        eType="#//Net" eOpposite="#//Net/place"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="src" upperBound="-1" eType="#//Transition"
+        eOpposite="#//Transition/dst"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dst" upperBound="-1" eType="#//Transition"
+        eOpposite="#//Transition/src"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="net" ordered="false" lowerBound="1"
+        eType="#//Net" eOpposite="#//Net/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="src" lowerBound="1" upperBound="-1"
+        eType="#//Place" eOpposite="#//Place/dst"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dst" lowerBound="1" upperBound="-1"
+        eType="#//Place" eOpposite="#//Place/src"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Net">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="place" lowerBound="1" upperBound="-1"
+        eType="#//Place" containment="true" eOpposite="#//Place/net"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transition" lowerBound="1"
+        upperBound="-1" eType="#//Transition" containment="true" eOpposite="#//Transition/net"/>
+  </eClassifiers>
+</ecore:EPackage>

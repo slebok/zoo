@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="USECASEUML">
+    <eClassifiers xsi:type="ecore:EClass" name="Requirement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NonFunctionnelRequirement" eSuperTypes="/1/Requirement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="scopes" ordered="false" upperBound="-1" eType="/1/UseCase" eOpposite="/1/UseCase/scoped_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FunctionnelRequirement" eSuperTypes="/1/Requirement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specifies" ordered="false" upperBound="-1" eType="/1/UseCase" eOpposite="/1/UseCase/specified_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="UseCase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="scenario" ordered="false" upperBound="-1" eType="/1/ScenarioDescription" eOpposite="/1/ScenarioDescription/useCase"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="condition" ordered="false" upperBound="-1" eType="/1/Condition" eOpposite="/1/Condition/constrained_with"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interacter" ordered="false" upperBound="-1" eType="/1/Role" eOpposite="/1/Role/interacted_with"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specified_by" ordered="false" upperBound="-1" eType="/1/FunctionnelRequirement" eOpposite="/1/FunctionnelRequirement/specifies"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="scoped_by" ordered="false" upperBound="-1" eType="/1/NonFunctionnelRequirement" eOpposite="/1/NonFunctionnelRequirement/scopes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meet_by" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Goal" eOpposite="/1/Goal/to_meet"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Goal">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to_meet" ordered="false" lowerBound="1" upperBound="-1" eType="/1/UseCase" eOpposite="/1/UseCase/meet_by"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interacted_with" ordered="false" upperBound="-1" eType="/1/UseCase" eOpposite="/1/UseCase/interacter"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="HumanRole" eSuperTypes="/1/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemRole" eSuperTypes="/1/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EventRole" eSuperTypes="/1/Role"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Manage" eSuperTypes="/1/UseCase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="managed_Resource" ordered="false" upperBound="-1" eType="/1/Resource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Resource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ScenarioDescription">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="useCase" ordered="false" lowerBound="1" eType="/1/UseCase" eOpposite="/1/UseCase/scenario"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Condition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constrained_with" ordered="false" upperBound="-1" eType="/1/UseCase" eOpposite="/1/UseCase/condition"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Pre" eSuperTypes="/1/Condition"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Post" eSuperTypes="/1/Condition"/>
+  </ecore:EPackage>
+</xmi:XMI>

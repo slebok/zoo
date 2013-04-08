@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="EclipsePlugIn">
+    <eClassifiers xsi:type="ecore:EClass" name="Application">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionPoints" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ExtensionPoint" containment="true" eOpposite="/0/ExtensionPoint/application"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExtensionPoint">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="application" ordered="false" lowerBound="1" eType="/0/Application" eOpposite="/0/Application/extensionPoints"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="descriptions" ordered="false" upperBound="-1" eType="/0/Description" eOpposite="/0/Description/extensionPoints"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="plugIn" ordered="false" lowerBound="1" eType="/0/PlugIn" eOpposite="/0/PlugIn/extensionPoints"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="xmlSchema" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionPoints" ordered="false" upperBound="-1" eType="/0/ExtensionPoint" eOpposite="/0/ExtensionPoint/descriptions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Extension">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isConfiguredInto" ordered="false" lowerBound="1" eType="/0/ExtensionPoint"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PlugIn">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayableName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="supplier" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="configures" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Extension"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extensionPoints" ordered="false" upperBound="-1" eType="/0/ExtensionPoint" containment="true" eOpposite="/0/ExtensionPoint/plugIn"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="requires" ordered="false" upperBound="-1" eType="/0/PlugIn"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uses" ordered="false" upperBound="-1" eType="/0/Librairy" eOpposite="/0/Librairy/plugIn"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Librairy">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="plugIn" ordered="false" lowerBound="1" eType="/0/PlugIn" eOpposite="/0/PlugIn/uses"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Class" containment="true" eOpposite="/0/Class/librairy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="librairy" ordered="false" lowerBound="1" eType="/0/Librairy" eOpposite="/0/Librairy/classes"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

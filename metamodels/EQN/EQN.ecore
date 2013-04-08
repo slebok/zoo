@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="EQN">
+    <eClassifiers xsi:type="ecore:EClass" name="RoutingChain">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="queuingNetwork" ordered="false" upperBound="-1" eType="/0/QueuingNetwork" eOpposite="/0/QueuingNetwork/workLoad"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QueuingNetwork">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="center" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Center" containment="true" eOpposite="/0/Center/queuingNetwork"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="workLoad" ordered="false" lowerBound="1" eType="/0/RoutingChain" containment="true" eOpposite="/0/RoutingChain/queuingNetwork"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ExecutionGraph">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodeNested" ordered="false" lowerBound="1" eType="/0/Node" eOpposite="/0/Node/nested"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="node" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Node" containment="true" eOpposite="/0/Node/executionGraph"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Center">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="node" ordered="false" lowerBound="1" eType="/0/Node" eOpposite="/0/Node/demand"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="queuingNetwork" ordered="false" lowerBound="1" eType="/0/QueuingNetwork" eOpposite="/0/QueuingNetwork/center"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Node">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nested" ordered="false" lowerBound="1" eType="/0/ExecutionGraph" eOpposite="/0/ExecutionGraph/nodeNested"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="executionGraph" ordered="false" lowerBound="1" eType="/0/ExecutionGraph" eOpposite="/0/ExecutionGraph/node"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="demand" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Center" eOpposite="/0/Center/node"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Special" eSuperTypes="/0/Center"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ActiveCenter" eSuperTypes="/0/Center"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PassiveCenter" eSuperTypes="/0/Center"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Source" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Sink" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Fork" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Join" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Split" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Allocate" eSuperTypes="/0/Special"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Release" eSuperTypes="/0/Special"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

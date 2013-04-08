@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="MMASharengo">
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="/0/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation" eSuperTypes="/0/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="/0/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" upperBound="-1" eType="/0/ServiceOperation" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessObject" eSuperTypes="/0/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" upperBound="-1" eType="/0/BusinessObjectOperation" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ServiceOperation" eSuperTypes="/0/Operation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="BOFlows" ordered="false" upperBound="-1" eType="/0/Service2BusinessObjectFlow" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rules" ordered="false" upperBound="-1" eType="/0/BusinessRule" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessObjectOperation" eSuperTypes="/0/Operation">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rules" ordered="false" upperBound="-1" eType="/0/BusinessRule" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessRule" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="expr" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Flow" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Service2BusinessObjectFlow" eSuperTypes="/0/Flow"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

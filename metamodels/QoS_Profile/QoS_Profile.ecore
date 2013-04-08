@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="QoSProfile">
+    <eClassifiers xsi:type="ecore:EClass" name="QoSComponent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" lowerBound="1" eType="/1/Operation" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="profile" ordered="false" upperBound="-1" eType="/1/QoSProfile" eOpposite="/1/QoSProfile/for"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation"/>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSProfile" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="for" ordered="false" lowerBound="1" eType="/1/QoSComponent" eOpposite="/1/QoSComponent/profile"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CompoundProfile" eSuperTypes="/1/QoSProfile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="profileTransition" ordered="false" upperBound="-1" eType="/1/ProfileTransition" eOpposite="/1/ProfileTransition/compoundProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="simpleProfile" lowerBound="1" upperBound="-1" eType="/1/SimpleProfile" containment="true" eOpposite="/1/SimpleProfile/compoundProfile"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleProfile" eSuperTypes="/1/QoSProfile">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundProfile" ordered="false" lowerBound="1" eType="/1/CompoundProfile" eOpposite="/1/CompoundProfile/simpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="uses" ordered="false" lowerBound="1" eType="/1/QoSStatement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="provides" ordered="false" lowerBound="1" eType="/1/QoSStatement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="QoSStatement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProfileTransition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" upperBound="-1" eType="/1/Operation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/1/SimpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/1/SimpleProfile"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compoundProfile" ordered="false" lowerBound="1" eType="/1/CompoundProfile" containment="true" eOpposite="/1/CompoundProfile/profileTransition"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

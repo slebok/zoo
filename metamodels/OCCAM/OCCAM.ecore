@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="OCCAM">
+    <eClassifiers xsi:type="ecore:EClass" name="OCCAM_Program">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="occam_Elements" ordered="false" upperBound="-1" eType="/0/OCCAM_Element" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="files" ordered="false" upperBound="-1" eType="/0/File" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OCCAM_Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Process" eSuperTypes="/0/OCCAM_Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="declaration" ordered="false" lowerBound="1" eType="/0/Declaration" containment="true" eOpposite="/0/Declaration/process"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constructors" ordered="false" upperBound="-1" eType="/0/Constructor" containment="true" eOpposite="/0/Constructor/process"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/0/DataType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="libraries" ordered="false" upperBound="-1" eType="/0/Library"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toChannel" ordered="false" lowerBound="1" eType="/0/Channel"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Channel">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toServer" ordered="false" lowerBound="1" eType="/0/Server"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toProcess" ordered="false" lowerBound="1" eType="/0/Process"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action" eSuperTypes="/0/OCCAM_Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constructor" ordered="false" lowerBound="1" eType="/0/Constructor" eOpposite="/0/Constructor/actions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="while" ordered="false" lowerBound="1" eType="/0/While" eOpposite="/0/While/actions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="if" ordered="false" lowerBound="1" eType="/0/If" eOpposite="/0/If/actions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Assignment" eSuperTypes="/0/Action"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Input" eSuperTypes="/0/Action"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Output" eSuperTypes="/0/Action"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Constructor" eSuperTypes="/0/OCCAM_Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="process" ordered="false" lowerBound="1" eType="/0/Process" eOpposite="/0/Process/constructors"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actions" ordered="false" upperBound="-1" eType="/0/Action" containment="true" eOpposite="/0/Action/constructor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="buckels" ordered="false" upperBound="-1" eType="/0/Buckel" containment="true" eOpposite="/0/Buckel/constructor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="childrens" ordered="false" upperBound="-1" eType="/0/Constructor" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Buckel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constructor" ordered="false" lowerBound="1" eType="/0/Constructor" eOpposite="/0/Constructor/buckels"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="If" eSuperTypes="/0/Buckel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false" upperBound="-1" eType="/0/Condition" containment="true" eOpposite="/0/Condition/if"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actions" ordered="false" upperBound="-1" eType="/0/Action" containment="true" eOpposite="/0/Action/if"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="While" eSuperTypes="/0/Buckel">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conditions" ordered="false" upperBound="-1" eType="/0/Condition" containment="true" eOpposite="/0/Condition/while"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actions" ordered="false" upperBound="-1" eType="/0/Action" containment="true" eOpposite="/0/Action/while"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Condition">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementRight" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementLeft" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="typeCondition" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="if" ordered="false" lowerBound="1" eType="/0/If" eOpposite="/0/If/conditions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="while" ordered="false" lowerBound="1" eType="/0/While" eOpposite="/0/While/conditions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Sequential" eSuperTypes="/0/Constructor"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Parallel" eSuperTypes="/0/Constructor"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Alternative" eSuperTypes="/0/Constructor"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataType" eSuperTypes="/0/OCCAM_Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Library">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="File">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Server">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="toChannel" ordered="false" lowerBound="1" eType="/0/Channel"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Declaration">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="process" ordered="false" lowerBound="1" eType="/0/Process" eOpposite="/0/Process/declaration"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/DataType" containment="true"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

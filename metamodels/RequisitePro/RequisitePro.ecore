@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="RequisitePro">
+    <eClassifiers xsi:type="ecore:EClass" name="DescribedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ContainerElt" abstract="true" eSuperTypes="/0/NamedElt /0/DescribedElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="content" ordered="false" upperBound="-1" eType="/0/ContainedElt" containment="true" eOpposite="/0/ContainedElt/package"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="packages" ordered="false" upperBound="-1" eType="/0/Package" containment="true" eOpposite="/0/Package/parentPackage"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="/0/ContainerElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/ContainerElt">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parentPackage" ordered="false" lowerBound="1" eType="/0/ContainerElt" eOpposite="/0/ContainerElt/packages"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ContainedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false" lowerBound="1" eType="/0/ContainerElt" eOpposite="/0/ContainerElt/content"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TypedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="/0/DescribedElt /0/NamedElt /0/ContainedElt /0/TypedElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/0/TypedElt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Requirement" eSuperTypes="/0/NamedElt /0/ContainedElt /0/TypedElt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" ordered="false" upperBound="-1" eType="/0/Attribute" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="location" ordered="false" lowerBound="1" eType="/0/Document"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" eType="/0/Requirement" eOpposite="/0/Requirement/children"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="children" ordered="false" upperBound="-1" eType="/0/Requirement" eOpposite="/0/Requirement/parent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="coverLink" ordered="false" upperBound="-1" eType="/0/Requirement"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="BusinessProcessModel">
+    <eClassifiers xsi:type="ecore:EClass" name="Namespace" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Task" abstract="true" eSuperTypes="/0/Namespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsDataSet" ordered="false" lowerBound="3" upperBound="-1" eType="/0/DataSet" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsControlPoint" ordered="false" upperBound="-1" eType="/0/ControlPoint" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="invoker" ordered="false" upperBound="-1" eType="/0/InvokerTask" eOpposite="/0/InvokerTask/invokes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="terminator" ordered="false" upperBound="-1" eType="/0/TerminatorTask" eOpposite="/0/TerminatorTask/terminates"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DataSet" abstract="true" eSuperTypes="/0/Namespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contains" ordered="false" upperBound="-1" eType="/0/DataElement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" upperBound="-1" eType="/0/ControlFlow"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="triggers" ordered="false" upperBound="-1" eType="/0/ControlPoint"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Parameter"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataElement" abstract="true" eSuperTypes="/0/Parameter">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sink" ordered="false" lowerBound="1" eType="/0/DataFlow"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/DataFlow"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Flow" eSuperTypes="/0/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataFlow" eSuperTypes="/0/Flow"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlFlow" eSuperTypes="/0/Flow"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ControlPoint" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sink" ordered="false" upperBound="-1" eType="/0/ControlFlow"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Input" eSuperTypes="/0/DataElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Output" eSuperTypes="/0/DataElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OutputSet" eSuperTypes="/0/DataSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsOutput" ordered="false" upperBound="-1" eType="/0/Output" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InputSet" eSuperTypes="/0/DataSet">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsInput" ordered="false" upperBound="-1" eType="/0/Input" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Exception" eSuperTypes="/0/Output"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleTask" eSuperTypes="/0/Task"/>
+    <eClassifiers xsi:type="ecore:EClass" name="CoumpoundTask" eSuperTypes="/0/Task">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsTask" ordered="false" upperBound="-1" eType="/0/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsFlow" ordered="false" upperBound="-1" eType="/0/Flow" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="realizes" ordered="false" lowerBound="1" eType="/0/BusinessProcess"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MutliTask" eSuperTypes="/0/CoumpoundTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InvokerTask" eSuperTypes="/0/SimpleTask">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="invokes" ordered="false" upperBound="-1" eType="/0/Task" eOpposite="/0/Task/invoker"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TerminatorTask" eSuperTypes="/0/SimpleTask">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="terminates" ordered="false" upperBound="-1" eType="/0/Task" eOpposite="/0/Task/terminator"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ApplicationTask" eSuperTypes="/0/SimpleTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Decision" eSuperTypes="/0/ApplicationTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Clock" eSuperTypes="/0/ApplicationTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SendCommunication" eSuperTypes="/0/ApplicationTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ReceiveCommunication" eSuperTypes="/0/ApplicationTask"/>
+    <eClassifiers xsi:type="ecore:EClass" name="BusinessProcess" eSuperTypes="/0/ApplicationTask"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

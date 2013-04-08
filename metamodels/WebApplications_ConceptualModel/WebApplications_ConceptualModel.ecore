@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="CompleteWebApplication">
+    <eClassifiers xsi:type="ecore:EClass" name="HyperLink">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="server" ordered="false" upperBound="-1" eType="/0/Server/ServerPage" eOpposite="/0/Server/ServerPage/link"/>
+    </eClassifiers>
+    <eSubpackages name="Client">
+      <eClassifiers xsi:type="ecore:EClass" name="ClientPage">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="hyperlink" ordered="false" lowerBound="1" eType="/0/HyperLink"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ClientPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="consistsOf" ordered="false" lowerBound="1" eType="/0/Client/ClientPage" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="representsSMP" ordered="false" lowerBound="1" eType="/0/Server/ServerPageModule"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LogicInterface" eSuperTypes="/0/Client/ClientPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="represents" ordered="false" lowerBound="1" eType="/0/Server/LogicModule"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="generatedBy" ordered="false" lowerBound="1" eType="/0/Server/Renderer"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="DesignElement" eSuperTypes="/0/Client/ClientPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="represents" ordered="false" lowerBound="1" eType="/0/Server/DesignModule"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="Server">
+      <eClassifiers xsi:type="ecore:EClass" name="ServerPage">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/0/HyperLink" eOpposite="/0/HyperLink/server"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="generates" ordered="false" upperBound="-1" eType="/0/Client/ClientPage"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="module" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/ServerPageModule" containment="true" eOpposite="/0/Server/ServerPageModule/contains"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ServerPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="contains" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/ServerPage" eOpposite="/0/Server/ServerPage/module"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" lowerBound="1" eType="/0/Server/Link"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="containsModule" ordered="false" lowerBound="1" eType="/0/Server/DesignModule" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="DesignModule" eSuperTypes="/0/Server/ServerPageModule"/>
+      <eClassifiers xsi:type="ecore:EClass" name="LogicModule" eSuperTypes="/0/Server/ServerPageModule">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="useCase" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/UseCase" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="logicElement" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/LogicElement" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Link">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="page" ordered="false" lowerBound="1" eType="/0/Server/ServerPage"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="posts" ordered="false" lowerBound="1" eType="/0/Server/Data"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="BeginUseCase" eSuperTypes="/0/Server/Link">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="useCase" ordered="false" lowerBound="1" eType="/0/Server/UseCase"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="UseCase" eSuperTypes="/0/Server/Link">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="logicElem" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/LogicElement" containment="true" eOpposite="/0/Server/LogicElement/uses"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="LogicElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="uses" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/UseCase" eOpposite="/0/Server/UseCase/logicElem"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="generatedBy" ordered="false" lowerBound="1" eType="/0/Server/LogicElement" eOpposite="/0/Server/LogicElement/next"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="next" ordered="false" lowerBound="1" eType="/0/Server/LogicElement" eOpposite="/0/Server/LogicElement/generatedBy"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Alternative" eSuperTypes="/0/Server/LogicElement"/>
+      <eClassifiers xsi:type="ecore:EClass" name="UserDecision" eSuperTypes="/0/Server/LogicElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="allows" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/Alternative" containment="true"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ServerDecision" eSuperTypes="/0/Server/LogicElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="evaluatesResultOf" ordered="false" lowerBound="1" eType="/0/Server/Processor"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Processor" eSuperTypes="/0/Server/LogicElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="persistentData" ordered="false" upperBound="-1" eType="/0/Server/Data" eOpposite="/0/Server/Data/persist"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="inputData" ordered="false" upperBound="-1" eType="/0/Server/Data" eOpposite="/0/Server/Data/uses"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="outputData" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/Data" eOpposite="/0/Server/Data/computes"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Renderer" eSuperTypes="/0/Server/LogicElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="renders" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Server/Data" eOpposite="/0/Server/Data/renderer"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Data">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="renderer" ordered="false" upperBound="-1" eType="/0/Server/Renderer" eOpposite="/0/Server/Renderer/renders"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="persist" ordered="false" upperBound="-1" eType="/0/Server/Processor" eOpposite="/0/Server/Processor/persistentData"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="uses" ordered="false" upperBound="-1" eType="/0/Server/Processor" eOpposite="/0/Server/Processor/inputData"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="computes" ordered="false" upperBound="-1" eType="/0/Server/Processor" eOpposite="/0/Server/Processor/outputData"/>
+      </eClassifiers>
+    </eSubpackages>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

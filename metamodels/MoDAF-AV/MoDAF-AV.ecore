@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="MoDAF">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MoDAFModel" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterprise" ordered="false" lowerBound="1" eType="/1/Enterprise" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="environment" ordered="false" lowerBound="1" eType="/1/Environment" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operationalMissions" ordered="false" lowerBound="1" upperBound="-1" eType="/1/OperationalMission" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architectures" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Architecture" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architecturalDescription" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ArchitecturalDescription" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architecturalReferences" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ArchitecturalReference" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architecturalFrameworks" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ArchitecturalFramework" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architectureMetadatas" ordered="false" upperBound="-1" eType="/1/ArchitectureMetaData" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="metaDatas" ordered="false" upperBound="-1" eType="/1/MetaData" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stakeholders" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Stakeholder" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stakeholderHasConcerns" ordered="false" lowerBound="1" upperBound="-1" eType="/1/StakeholderHasConcern" containment="true" eOpposite="/1/StakeholderHasConcern/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Enterprise" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="inhabits" ordered="false" lowerBound="1" eType="/1/Environment" eOpposite="/1/Environment/influences"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fulfills" ordered="false" lowerBound="1" upperBound="-1" eType="/1/OperationalMission"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Environment" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="influences" ordered="false" lowerBound="1" eType="/1/Enterprise" eOpposite="/1/Enterprise/inhabits"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OperationalMission" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Architecture" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="enterprise" ordered="false" lowerBound="1" eType="/1/Enterprise"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="describedBy" ordered="false" lowerBound="1" eType="/1/ArchitecturalDescription"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitecturalDescription" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="approvialAuthority" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="architect" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="assumptionAndConstraints" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="creatingOrganisation" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dateCompleted" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="purpose" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="recommendations" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="summaryOfFindings" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tollsUsed" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="viewpoints" ordered="false" lowerBound="1" upperBound="-1" eType="/1/View"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="products" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ArchitecturalProduct" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taxonomy" ordered="false" lowerBound="1" eType="/1/Taxonomy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitecturalReference" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referred" ordered="false" lowerBound="1" eType="/1/ArchitecturalDescription"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referrer" ordered="false" lowerBound="1" eType="/1/ArchitecturalDescription"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitecturalProduct" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="architecturalElements" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Elements" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definingView" ordered="false" lowerBound="1" eType="/1/View"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="addresses" ordered="false" upperBound="-1" eType="/1/Concern" eOpposite="/1/Concern/adressedBy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Elements" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitecturalFramework" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedMember" ordered="false" lowerBound="1" upperBound="-1" eType="/1/View" containment="true" eOpposite="/1/View/definingFramework"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="View" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="framework" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="frameworkWebsite" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewCode" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewDescription" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definingFramework" ordered="false" lowerBound="1" eType="/1/ArchitecturalFramework" eOpposite="/1/ArchitecturalFramework/ownedMember"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="usedToCover" ordered="false" upperBound="-1" eType="/1/Concern" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Concern" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="adressedBy" ordered="false" upperBound="-1" eType="/1/ArchitecturalProduct" eOpposite="/1/ArchitecturalProduct/addresses"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StakeholderHasConcern">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="client" ordered="false" lowerBound="1" eType="/1/Stakeholder"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supplier" ordered="false" lowerBound="1" eType="/1/Concern"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/1/MoDAFModel" eOpposite="/1/MoDAFModel/stakeholderHasConcerns"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Stakeholder" eSuperTypes="/1/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MetaData">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dublinCoreElement" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="modMetaDataElement" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureMetaData" eSuperTypes="/1/MetaData">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="annotatedArchitecture" ordered="false" lowerBound="1" eType="/1/ArchitecturalDescription"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Taxonomy" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" ordered="false" upperBound="-1" eType="/1/ClassifiedElement" containment="true" eOpposite="/1/ClassifiedElement/taxonomy"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassifiedElement" abstract="true" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taxonomy" ordered="false" lowerBound="1" eType="/1/Taxonomy" eOpposite="/1/Taxonomy/contents"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Standard" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="publishedWebsite" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="publisher" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ratificationDate" ordered="false" lowerBound="1" eType="/1/TimeExpression" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="withdrawalDate" ordered="false" lowerBound="1" eType="/1/TimeExpression" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MeasurableProperty" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="maxValue" ordered="false" eType="/1/LiteralSpecification" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="minValue" ordered="false" eType="/1/LiteralSpecification" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CapabilityRequirement" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Effect" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EnduringTask" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OperationalConstraint" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodeUsageContext" ordered="false" eType="/1/Property" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PostType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganisationType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RoleInOrganisation" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LocationType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OperationalActivity" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationExchange" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="requirementText" ordered="false" unique="false" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Competence" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationElement" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="NodeConnectionType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="System" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataElement" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemFunction" eSuperTypes="/1/ClassifiedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="systemUsageContext" ordered="false" lowerBound="1" eType="/1/Property" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SystemConnectionSpecification" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Service" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Unit" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Dimension" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganisationProjectRelationship" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProjectThreadType" eSuperTypes="/1/ClassifiedElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TimeExpression">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="LiteralSpecification">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Property">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

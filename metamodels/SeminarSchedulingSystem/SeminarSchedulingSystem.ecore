@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="SeminarSchedulingSystem">
+    <eClassifiers xsi:type="ecore:EClass" name="SeminarSchedulingSystem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="presenter" ordered="false" upperBound="-1" eType="/0/Presenter" eOpposite="/0/Presenter/seminarSchedulingSystem"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="seminar" ordered="false" upperBound="-1" eType="/0/Seminar" eOpposite="/0/Seminar/seminarSchedulingSystem"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Presenter">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="seminarSchedulingSystem" ordered="false" lowerBound="1" eType="/0/SeminarSchedulingSystem" eOpposite="/0/SeminarSchedulingSystem/presenter"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="qualifiedFor" ordered="false" upperBound="-1" eType="/0/Seminar" eOpposite="/0/Seminar/qualified"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="offering" upperBound="-1" eType="/0/Offering" eOpposite="/0/Offering/presenter"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Seminar">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="seminarSchedulingSystem" ordered="false" lowerBound="1" eType="/0/SeminarSchedulingSystem" eOpposite="/0/SeminarSchedulingSystem/seminar"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="qualified" ordered="false" upperBound="-1" eType="/0/Presenter" eOpposite="/0/Presenter/qualifiedFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="offering" upperBound="-1" eType="/0/Offering" eOpposite="/0/Offering/seminar"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Offering">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="is_cancelled" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="date" ordered="false" lowerBound="1" eType="/0/Date"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attendee" ordered="false" upperBound="-1" eType="/0/Attendee" eOpposite="/0/Attendee/offering"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="presenter" ordered="false" eType="/0/Presenter" eOpposite="/0/Presenter/offering"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="seminar" ordered="false" eType="/0/Seminar" eOpposite="/0/Seminar/offering"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Date">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="month" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="day" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attendee">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="offering" ordered="false" upperBound="-1" eType="/0/Offering" eOpposite="/0/Offering/attendee"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

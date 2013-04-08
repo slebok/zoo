@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="UMLMetamodelFragment">
+    <eClassifiers xsi:type="ecore:EClass" name="Class">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" lowerBound="1" eType="/0/Generalization"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="child" ordered="false" lowerBound="1" eType="/0/Generalization"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dependency" ordered="false" lowerBound="1" eType="/0/Dependency" eOpposite="/0/Dependency/client"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Generalization"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Dependency">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supplier" ordered="false" lowerBound="1" eType="/0/StateMachine"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="client" ordered="false" lowerBound="1" eType="/0/Class" eOpposite="/0/Class/dependency"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stereotype" ordered="false" lowerBound="1" eType="/0/Stereotype" eOpposite="/0/Stereotype/extendedElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Stereotype">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseClass" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="extendedElement" ordered="false" lowerBound="1" eType="/0/Dependency" eOpposite="/0/Dependency/stereotype"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="context" ordered="false" lowerBound="1" eType="/0/Class"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="top" ordered="false" lowerBound="1" eType="/0/State" containment="true" eOpposite="/0/State/stateMachine"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="/0/StateVertex">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" ordered="false" eType="/0/StateMachine" eOpposite="/0/StateMachine/top"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="internal" ordered="false" lowerBound="1" eType="/0/Transition" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="CompositeState" eSuperTypes="/0/State">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subvertex" ordered="false" lowerBound="1" eType="/0/StateVertex" containment="true" eOpposite="/0/StateVertex/compositeState"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SimpleState" eSuperTypes="/0/State"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FinalState" eSuperTypes="/0/State"/>
+    <eClassifiers xsi:type="ecore:EClass" name="StateVertex">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="compositeState" ordered="false" eType="/0/CompositeState" eOpposite="/0/CompositeState/subvertex"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PseudoState" eSuperTypes="/0/StateVertex"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="trigger" ordered="false" eType="/0/Event"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/StateVertex"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/0/StateVertex"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Event"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

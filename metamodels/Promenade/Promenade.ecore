@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Promenade">
+    <eClassifiers xsi:type="ecore:EClass" name="Strong" eSuperTypes="/1/DynPrecedence /1/BasPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Start" eSuperTypes="/1/DynPrecedence /1/BasPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="End" eSuperTypes="/1/DynPrecedence /1/BasPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="FeedBack" eSuperTypes="/1/DynPrecedence /1/BasPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Weak" eSuperTypes="/1/DynPrecedence /1/DerPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Grouping" eSuperTypes="/1/DynPrecedence /1/DerPrecedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Precedence">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="deprecs" ordered="false" upperBound="-1" eType="/1/DerPrecedence" eOpposite="/1/DerPrecedence/precs"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parbind" ordered="false" upperBound="-1" eType="/1/ParBinding" eOpposite="/1/ParBinding/precs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DynPrecedence" eSuperTypes="/1/Precedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DerPrecedence" eSuperTypes="/1/Precedence">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="precs" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Precedence" eOpposite="/1/Precedence/deprecs"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="auxTasks" ordered="false" upperBound="-1" eType="/1/MetaTaskOccurence" eOpposite="/1/MetaTaskOccurence/dprecs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BasPrecedence" eSuperTypes="/1/Precedence"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MetaTaskOccurence" eSuperTypes="/1/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dprecs" ordered="false" upperBound="-1" eType="/1/DerPrecedence" eOpposite="/1/DerPrecedence/auxTasks"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="taskCl" ordered="false" upperBound="-1" eType="/1/MetaTask" eOpposite="/1/MetaTask/occurs"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParBinding">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inclusion" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="precs" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Precedence" eOpposite="/1/Precedence/parbind"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targetPar" ordered="false" lowerBound="1" eType="/1/ParameterPrec" eOpposite="/1/ParameterPrec/parbindsTar"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sourcePar" ordered="false" lowerBound="1" eType="/1/ParameterPrec" eOpposite="/1/ParameterPrec/parbindsSour"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParameterPrec" eSuperTypes="/1/ParameterUML">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parbindsTar" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParBinding" eOpposite="/1/ParBinding/targetPar"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parbindsSour" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParBinding" eOpposite="/1/ParBinding/sourcePar"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dstParams" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParameterPrec" eOpposite="/1/ParameterPrec/orParams"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="orParams" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParameterPrec" eOpposite="/1/ParameterPrec/dstParams"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyUMLsupp" ordered="false" lowerBound="1" eType="/1/DependancyUML" eOpposite="/1/DependancyUML/suppier"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyUMLcli" ordered="false" lowerBound="1" eType="/1/DependancyUML" eOpposite="/1/DependancyUML/client"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DependancyUML">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="suppier" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/dependencyUMLsupp"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="client" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ModelElement" eOpposite="/1/ModelElement/dependencyUMLcli"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MetaTask" eSuperTypes="/1/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="params" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParameterUML" eOpposite="/1/ParameterUML/task"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="occurs" ordered="false" upperBound="-1" eType="/1/MetaTaskOccurence" eOpposite="/1/MetaTaskOccurence/taskCl"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParameterUML">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" lowerBound="1" eType="/1/MetaTask" eOpposite="/1/MetaTask/params"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="doc" ordered="false" lowerBound="1" upperBound="-1" eType="/1/MetaDocument" eOpposite="/1/MetaDocument/params"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MetaDocument">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="params" ordered="false" lowerBound="1" upperBound="-1" eType="/1/ParameterUML" eOpposite="/1/ParameterUML/doc"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

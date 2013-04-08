@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="CSM">
+    <eClassifiers xsi:type="ecore:EClass" name="CSM">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="step" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Step" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalResource" ordered="false" lowerBound="1" upperBound="-1" eType="/0/GeneralResource" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="scenarion" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Scenarion" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GeneralResource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resourceAcquire" ordered="false" upperBound="-1" eType="/0/ResourceAcquire" eOpposite="/0/ResourceAcquire/generalResource"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resourceRelease" ordered="false" upperBound="-1" eType="/0/ResourceRelease" eOpposite="/0/ResourceRelease/generalResource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Step" eSuperTypes="/0/Scenarion">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="postPath" ordered="false" eType="/0/PathConnection" eOpposite="/0/PathConnection/post"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="prePath" ordered="false" eType="/0/PathConnection" eOpposite="/0/PathConnection/pre"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activeResource" ordered="false" lowerBound="1" eType="/0/ActiveResource" eOpposite="/0/ActiveResource/step"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Scenarion">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="step" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Step" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="root" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Start"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Start" eSuperTypes="/0/Step">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="workload" ordered="false" eType="/0/Workload" eOpposite="/0/Workload/start"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="End" eSuperTypes="/0/Step"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ResourceAcquire" eSuperTypes="/0/Step">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalResource" ordered="false" lowerBound="1" eType="/0/GeneralResource" eOpposite="/0/GeneralResource/resourceAcquire"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ResourceRelease" eSuperTypes="/0/Step">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalResource" ordered="false" lowerBound="1" eType="/0/GeneralResource" eOpposite="/0/GeneralResource/resourceRelease"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Workload">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="start" ordered="false" lowerBound="1" eType="/0/Start" eOpposite="/0/Start/workload"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Component" eSuperTypes="/0/PassiveResource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ProcessingResource" eSuperTypes="/0/ActiveResource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ExternalService" eSuperTypes="/0/ActiveResource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ActiveResource" eSuperTypes="/0/GeneralResource">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="step" ordered="false" upperBound="-1" eType="/0/Step" eOpposite="/0/Step/activeResource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PassiveResource" eSuperTypes="/0/GeneralResource"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Message"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PathConnection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="message" ordered="false" eType="/0/Message"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="post" ordered="false" upperBound="-1" eType="/0/Step" eOpposite="/0/Step/postPath"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pre" ordered="false" upperBound="-1" eType="/0/Step" eOpposite="/0/Step/prePath"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Join" eSuperTypes="/0/PathConnection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Fork" eSuperTypes="/0/PathConnection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Merge" eSuperTypes="/0/PathConnection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Branch" eSuperTypes="/0/PathConnection"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Seqence" eSuperTypes="/0/PathConnection"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+</xmi:XMI>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="DTD">
+    <eClassifiers xsi:type="ecore:EEnum" name="Occurence">
+      <eLiterals name="zeroOrOne" value="1"/>
+      <eLiterals name="zeroOrMore" value="2"/>
+      <eLiterals name="oneOrMore" value="3"/>
+      <eLiterals name="one" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="OtherAttributeTypeEnum">
+      <eLiterals name="cdata" value="1"/>
+      <eLiterals name="id" value="2"/>
+      <eLiterals name="idref" value="3"/>
+      <eLiterals name="entityType" value="4"/>
+      <eLiterals name="entities" value="5"/>
+      <eLiterals name="nmtoken" value="6"/>
+      <eLiterals name="nmtakens" value="7"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TypeDescription" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Notation" eSuperTypes="/0/TypeDescription">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="/0/TypeDescription">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" eSuperTypes="/0/TypeDescription"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AnyElement" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="RestrictedElement" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="content" ordered="false" eType="/0/ElementContent" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementContent" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Mixed" eSuperTypes="/0/ElementContent">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elements" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Children" abstract="true" eSuperTypes="/0/ElementContent">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="occ" ordered="false" unique="false" lowerBound="1" eType="/0/Occurence"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Sequence" eSuperTypes="/0/Children">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="children" lowerBound="2" upperBound="-1" eType="/0/Children"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Leaf" eSuperTypes="/0/Children">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="elementName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Choice" eSuperTypes="/0/Children">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="childrenChoice" ordered="false" lowerBound="2" upperBound="-1" eType="/0/Children"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeList" eSuperTypes="/0/TypeDescription">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containsAttributes" ordered="false" lowerBound="1" upperBound="-1" eType="/0/AttributeDescription" eOpposite="/0/AttributeDescription/attributeList"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeDescription" abstract="true" eSuperTypes="/0/TypeDescription">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributeList" ordered="false" lowerBound="1" eType="/0/AttributeList" eOpposite="/0/AttributeList/containsAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/AttributeType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NoDefaultValue" eSuperTypes="/0/AttributeDescription">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRequired" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DefaultValue" eSuperTypes="/0/AttributeDescription">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFixed" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AttributeType" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Enumeration" eSuperTypes="/0/AttributeType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="values" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OtherAttributeType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/OtherAttributeTypeEnum"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+</xmi:XMI>

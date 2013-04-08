@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Class">
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElt" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="/1/NamedElt"/>
+    <eClassifiers xsi:type="ecore:EClass" name="DataType" eSuperTypes="/1/Classifier"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="/1/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="super" ordered="false" upperBound="-1" eType="/1/Class"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attr" upperBound="-1" eType="/1/Attribute" containment="true" eOpposite="/1/Attribute/owner"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/1/NamedElt">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiValued" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/1/Classifier"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" lowerBound="1" eType="/1/Class" eOpposite="/1/Class/attr"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

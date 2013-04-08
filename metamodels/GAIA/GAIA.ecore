@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="GAIA">
+    <eClassifiers xsi:type="ecore:EClass" name="OrganizationalStructure">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="organization" ordered="false" upperBound="-1" eType="/0/Organization" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Organization">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="collaborates" ordered="false" lowerBound="1" eType="/0/Organization" eOpposite="/0/Organization/interacts"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interacts" ordered="false" lowerBound="1" eType="/0/Organization" eOpposite="/0/Organization/collaborates"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="member" ordered="false" upperBound="-1" eType="/0/AgentType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="observes" ordered="false" upperBound="-1" eType="/0/OrganizationalRule"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganizationalRule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SafetyRule" eSuperTypes="/0/OrganizationalRule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LivenessRule" eSuperTypes="/0/OrganizationalRule"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AgentType">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="provides" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Service"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="collaborates" ordered="false" lowerBound="1" eType="/0/AgentType" eOpposite="/0/AgentType/agentType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="agentType" ordered="false" lowerBound="1" eType="/0/AgentType" eOpposite="/0/AgentType/collaborates"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="plays" ordered="false" upperBound="-1" eType="/0/Role"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Service">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputs" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputs" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pre-conditions" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="post-conditions" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Role">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="activity" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Activity"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="communication" ordered="false" upperBound="-1" eType="/0/Communication"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="responsibility" ordered="false" lowerBound="1" upperBound="-1" eType="/0/Responsibility"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actsOn" ordered="false" eType="/0/AssociationConnector" eOpposite="/0/AssociationConnector/role"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Activity"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Responsibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="LivenessProperty" eSuperTypes="/0/Responsibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="SafetyProperty" eSuperTypes="/0/Responsibility"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AssociationConnector">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="actsOn" ordered="false" upperBound="-1" eType="/0/Resource"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="role" ordered="false" lowerBound="1" eType="/0/Role" eOpposite="/0/Role/actsOn"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="permission" ordered="false" upperBound="-1" eType="/0/Permission" eOpposite="/0/Permission/association"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Permission">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="association" ordered="false" lowerBound="1" eType="/0/AssociationConnector" eOpposite="/0/AssociationConnector/permission"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Resource">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="permitted_action" ordered="false" upperBound="-1" eType="/0/Action"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="environnement" ordered="false" lowerBound="1" eType="/0/Environnement" eOpposite="/0/Environnement/resource"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Environnement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" upperBound="-1" eType="/0/Resource" containment="true" eOpposite="/0/Resource/environnement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Action">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Communication">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="observes" ordered="false" upperBound="-1" eType="/0/OrganizationalRule"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="protocol" ordered="false" lowerBound="1" eType="/0/Protocol"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Protocol">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="initiator" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="partner" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputs" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputs" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

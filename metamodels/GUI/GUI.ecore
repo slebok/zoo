@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="GUI">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Named" abstract="true" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GUI" eSuperTypes="/0/Named">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="guiTabs" upperBound="-1" eType="/0/Tab" containment="true" eOpposite="/0/Tab/gui"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Tab" eSuperTypes="/0/Named">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="gui" ordered="false" lowerBound="1" eType="/0/GUI" eOpposite="/0/GUI/guiTabs"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" lowerBound="1" eType="/0/Group" eOpposite="/0/Group/tabGroup"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Composant" abstract="true" eSuperTypes="/0/Named">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="composantGroup" ordered="false" lowerBound="1" eType="/0/Group" eOpposite="/0/Group/composants"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Layout">
+      <eLiterals name="default" value="1"/>
+      <eLiterals name="horizontal" value="2"/>
+      <eLiterals name="vertical" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="layout" ordered="false" unique="false" lowerBound="1" eType="/0/Layout"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tabGroup" ordered="false" eType="/0/Tab" eOpposite="/0/Tab/group"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="composants" upperBound="-1" eType="/0/Composant" containment="true" eOpposite="/0/Composant/composantGroup"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Label" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TextArea" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="nbRows" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="tabColumns" upperBound="-1" eType="/0/Column" containment="true" eOpposite="/0/Column/columnTab"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Column" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="columnTab" ordered="false" lowerBound="1" eType="/0/Table" eOpposite="/0/Table/tabColumns"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ComboBox" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="listRows" upperBound="-1" eType="/0/Row" containment="true" eOpposite="/0/Row/rowList"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Row" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="rowList" ordered="false" lowerBound="1" eType="/0/ComboBox" eOpposite="/0/ComboBox/listRows"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="listItems" upperBound="-1" eType="/0/Item" containment="true" eOpposite="/0/Item/itemList"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Item" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemList" ordered="false" lowerBound="1" eType="/0/Row" eOpposite="/0/Row/listItems"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Button" eSuperTypes="/0/Composant">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

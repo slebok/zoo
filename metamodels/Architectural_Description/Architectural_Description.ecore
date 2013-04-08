@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ArchitecturalDescription">
+    <eClassifiers xsi:type="ecore:EClass" name="Architecture">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="describedBy" ordered="false" lowerBound="1" eType="/0/ArchitectureDescription"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureDescription">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="selects" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureView" eOpposite="/0/ArchitectureView/selectedBy"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="organizedBy" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureView" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureView">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="selectedBy" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureDescription" eOpposite="/0/ArchitectureDescription/selects"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="constituents" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ModelElement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="conformsTo" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureViewPoint" eOpposite="/0/ArchitectureViewPoint/views"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureViewPoint">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defines" ordered="false" lowerBound="1" eType="/0/MainView"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="views" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureView" eOpposite="/0/ArchitectureView/conformsTo"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MainView">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isProjectedOnto" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ArchitectureView"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="consistsOf" ordered="false" lowerBound="1" upperBound="-1" eType="/0/ModelElement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

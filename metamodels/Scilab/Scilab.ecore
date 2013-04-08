@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Scilab">
+    <eClassifiers xsi:type="ecore:EClass" name="Man">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyword" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="exemple" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="meta" ordered="false" upperBound="-1" eType="/1/Meta" containment="true" eOpposite="/1/Meta/man"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Meta">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="meta" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version_CSI" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="version_DOC" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="author" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="man" ordered="false" lowerBound="1" eType="/1/Man" eOpposite="/1/Man/meta"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Short_Description" eSuperTypes="/1/Biblio">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Calling_Sequence">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="calling_Sequence_Item" ordered="false" upperBound="-1" eType="/1/Calling_Sequence_Item" containment="true" eOpposite="/1/Calling_Sequence_Item/calling_Sequence"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Calling_Sequence_Item">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="calling_Sequence_Item" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="calling_Sequence" ordered="false" lowerBound="1" eType="/1/Calling_Sequence" eOpposite="/1/Calling_Sequence/calling_Sequence_Item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" ordered="false" unique="false" eType="/1/InOut"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Indent" ordered="false" upperBound="-1" eType="/1/Param_Indent" containment="true" eOpposite="/1/Param_Indent/param"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param_Indent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param" ordered="false" lowerBound="1" eType="/1/Param" eOpposite="/1/Param/param_Indent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Description" ordered="false" lowerBound="1" eType="/1/Param_Description" eOpposite="/1/Param_Description/param_Indent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Item" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Param_Item" containment="true" eOpposite="/1/Param_Item/param_Indent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param_Item">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Indent" ordered="false" lowerBound="1" eType="/1/Param_Indent" eOpposite="/1/Param_Indent/param_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Name" ordered="false" lowerBound="1" eType="/1/Param_Name" containment="true" eOpposite="/1/Param_Name/param_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Description" ordered="false" lowerBound="1" eType="/1/Param_Description" containment="true" eOpposite="/1/Param_Description/param_Item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param_Name">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Item" ordered="false" lowerBound="1" eType="/1/Param_Item" eOpposite="/1/Param_Item/param_Name"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param_Description" eSuperTypes="/1/Used_Functions">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Indent" ordered="false" upperBound="-1" eType="/1/Param_Indent" containment="true" eOpposite="/1/Param_Indent/param_Description"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="param_Item" ordered="false" lowerBound="1" eType="/1/Param_Item" eOpposite="/1/Param_Item/param_Description"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description" eSuperTypes="/1/Used_Functions">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemize" ordered="false" upperBound="-1" eType="/1/Itemize" containment="true" eOpposite="/1/Itemize/description"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description_Indent" ordered="false" upperBound="-1" eType="/1/Description_Indent" containment="true" eOpposite="/1/Description_Indent/description"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description_Indent">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description" ordered="false" lowerBound="1" eType="/1/Description" eOpposite="/1/Description/description_Indent"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description_Item" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Description_Item" containment="true" eOpposite="/1/Description_Item/description_Indent"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Description_Item">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description_Indent" ordered="false" lowerBound="1" eType="/1/Description_Indent" eOpposite="/1/Description_Indent/description_Item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AIMG">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="See_Also">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="see_Also_Item" ordered="false" upperBound="-1" eType="/1/See_Also_Item" containment="true" eOpposite="/1/See_Also_Item/see_Also"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Exemple">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="exemple" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="xml_space" ordered="false" unique="false" lowerBound="1" eType="/1/PreDef"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="See_Also_Item">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="see_Also" ordered="false" lowerBound="1" eType="/1/See_Also" eOpposite="/1/See_Also/see_Also_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/1/Link" containment="true" eOpposite="/1/Link/see_Also_Item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="A" eSuperTypes="/1/AIMG">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="psppp" ordered="false" lowerBound="1" eType="/1/PSPPP" eOpposite="/1/PSPPP/a"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors_Item" ordered="false" lowerBound="1" eType="/1/Authors_Item" eOpposite="/1/Authors_Item/a"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Img" eSuperTypes="/1/AIMG">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="src" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="psppp" ordered="false" lowerBound="1" eType="/1/PSPPP" eOpposite="/1/PSPPP/img"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Biblio">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="p" ordered="false" upperBound="-1" eType="/1/P" containment="true" eOpposite="/1/P/biblio"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sp" ordered="false" upperBound="-1" eType="/1/SP" containment="true" eOpposite="/1/SP/biblio"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="pp" ordered="false" upperBound="-1" eType="/1/PP" containment="true" eOpposite="/1/PP/biblio"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Used_Functions" eSuperTypes="/1/Biblio">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verbatim" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false" upperBound="-1" eType="/1/Table" containment="true" eOpposite="/1/Table/used_Functions"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PSPPP">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="em" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bd" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tt" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="a" ordered="false" upperBound="-1" eType="/1/A" containment="true" eOpposite="/1/A/psppp"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/1/Link" containment="true" eOpposite="/1/Link/psppp"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="img" ordered="false" upperBound="-1" eType="/1/Img" containment="true" eOpposite="/1/Img/psppp"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="P" eSuperTypes="/1/PSPPP">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="biblio" ordered="false" lowerBound="1" eType="/1/Biblio" eOpposite="/1/Biblio/p"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="SP" eSuperTypes="/1/PSPPP">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="biblio" ordered="false" lowerBound="1" eType="/1/Biblio" eOpposite="/1/Biblio/sp"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PP" eSuperTypes="/1/PSPPP">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="biblio" ordered="false" lowerBound="1" eType="/1/Biblio" eOpposite="/1/Biblio/pp"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Itemize" eSuperTypes="/1/Used_Functions">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="item" ordered="false" lowerBound="1" eType="/1/Item" eOpposite="/1/Item/itemize"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="section" ordered="false" lowerBound="1" eType="/1/Section" eOpposite="/1/Section/itemize"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors_Item" ordered="false" lowerBound="1" eType="/1/Authors_Item" eOpposite="/1/Authors_Item/itemize"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="description" ordered="false" lowerBound="1" eType="/1/Description" eOpposite="/1/Description/itemize"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Item" eSuperTypes="/1/Used_Functions /1/Itemize">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemize" ordered="false" upperBound="-1" eType="/1/Itemize" containment="true" eOpposite="/1/Itemize/item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table_New_Row" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Table_New_Row" containment="true" eOpposite="/1/Table_New_Row/table"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="used_Functions" ordered="false" lowerBound="1" eType="/1/Used_Functions" eOpposite="/1/Used_Functions/table"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table_New_Row">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table_New_Column" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Table_New_Column" containment="true" eOpposite="/1/Table_New_Column/table_New_Row"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table" ordered="false" lowerBound="1" eType="/1/Table" eOpposite="/1/Table/table_New_Row"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Table_New_Column">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="em" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bd" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tt" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="table_New_Row" ordered="false" lowerBound="1" eType="/1/Table_New_Row" eOpposite="/1/Table_New_Row/table_New_Column"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Link">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="link" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="psppp" ordered="false" lowerBound="1" eType="/1/PSPPP" eOpposite="/1/PSPPP/link"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="see_Also_Item" ordered="false" lowerBound="1" eType="/1/See_Also_Item" eOpposite="/1/See_Also_Item/link"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors_Item" ordered="false" lowerBound="1" eType="/1/Authors_Item" eOpposite="/1/Authors_Item/link"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Authors">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors_Item" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Authors_Item" containment="true" eOpposite="/1/Authors_Item/authors"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Authors_Item" eSuperTypes="/1/Biblio">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="Verb" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="em" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bd" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="tt" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="verbatim" ordered="false" unique="false" upperBound="-1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="a" ordered="false" upperBound="-1" eType="/1/A" containment="true" eOpposite="/1/A/authors_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="link" ordered="false" upperBound="-1" eType="/1/Link" containment="true" eOpposite="/1/Link/authors_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="authors" ordered="false" lowerBound="1" eType="/1/Authors" eOpposite="/1/Authors/authors_Item"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemize" ordered="false" lowerBound="1" upperBound="-1" eType="/1/Itemize" containment="true" eOpposite="/1/Itemize/authors_Item"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Section" eSuperTypes="/1/Used_Functions /1/Itemize">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="itemize" ordered="false" upperBound="-1" eType="/1/Itemize" containment="true" eOpposite="/1/Itemize/section"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="InOut">
+      <eLiterals name="in" value="1"/>
+      <eLiterals name="out" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="PreDef">
+      <eLiterals name="Preserve" value="1"/>
+      <eLiterals name="Default" value="2"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

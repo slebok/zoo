@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ODPEV">
+  <eClassifiers xsi:type="ecore:EClass" name="EnterpriseObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoConfigurations" ordered="false" upperBound="-1" eType="//Community" eOpposite="//Community/coMembers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoRoles" ordered="false" upperBound="-1" eType="//Role" eOpposite="//Role/rolefillers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoArtefactActions" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/actArtefactRoleFillers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoResourceActions" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/actResourceRoleFillers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoActorActions" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/actActorRoleFillers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoPolicy" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poEnterpriseObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoEOAR" ordered="false" upperBound="-1" eType="//EO_A_R" eOpposite="//EO_A_R/eoarSubject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoEOPD" ordered="false" lowerBound="1" eType="//EO_P_D" eOpposite="//EO_P_D/eopdAgent"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ODPSystem" eSuperTypes="//EnterpriseObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="odpBehaviour" ordered="false" lowerBound="1" eType="//Scope" eOpposite="//Scope/scOdpSystem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="odpObjectives" ordered="false" lowerBound="1" upperBound="-1" eType="//Objective" eOpposite="//Objective/objFulfiller"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="odpSpecifier" ordered="false" lowerBound="1" eType="//EnterpriseSpecification" eOpposite="//EnterpriseSpecification/esDescribedSystems"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Party" eSuperTypes="//EnterpriseObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ptyAccountableAction" ordered="false" upperBound="-1" eType="//AccountableAction" eOpposite="//AccountableAction/aaAccountableParty"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ptyEOPD" ordered="false" lowerBound="1" eType="//EO_P_D" eOpposite="//EO_P_D/eopdPrincipal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Objective">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objFulfiller" ordered="false" eType="//ODPSystem" eOpposite="//ODPSystem/odpObjectives"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objSpecifier" ordered="false" lowerBound="1" eType="//Contract" eOpposite="//Contract/ctObjective"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objRefiners" ordered="false" upperBound="-1" eType="//Objective" eOpposite="//Objective/objRefinement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objRefinement" ordered="false" eType="//Objective" eOpposite="//Objective/objRefiners"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objAchievers" ordered="false" upperBound="-1" eType="//Process" eOpposite="//Process/prObjectives"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="objFulfillers" ordered="false" lowerBound="1" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/beObjectives"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Scope">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="scOdpSystem" ordered="false" lowerBound="1" eType="//ODPSystem" eOpposite="//ODPSystem/odpBehaviour"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnterpriseSpecification">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="esDescribedSystems" ordered="false" lowerBound="1" upperBound="-1" eType="//ODPSystem" eOpposite="//ODPSystem/odpSpecifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="esContext" ordered="false" lowerBound="1" eType="//FieldOfApplication" eOpposite="//FieldOfApplication/faEnterpriseSpecifications"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FieldOfApplication">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="faEnterpriseSpecifications" ordered="false" lowerBound="1" eType="//EnterpriseSpecification" eOpposite="//EnterpriseSpecification/esContext"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Policy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poSpecifier" ordered="false" lowerBound="1" eType="//Contract" eOpposite="//Contract/ctPolicies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poOwner" ordered="false" lowerBound="1" eType="//Community" eOpposite="//Community/coPolicy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poProcess" ordered="false" upperBound="-1" eType="//Process" eOpposite="//Process/prConstrainer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poBehaviour" ordered="false" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/bePolicyConstrainer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poChanger" ordered="false" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/bePolicy"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poRole" ordered="false" upperBound="-1" eType="//Role" eOpposite="//Role/roleConstrainer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="poEnterpriseObject" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoPolicy"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PolicyEnvelope" eSuperTypes="//Policy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pePolicySetter" ordered="false" lowerBound="1" eType="//Behaviour" eOpposite="//Behaviour/bePolicyEnvelope"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="peBehaviour" ordered="false" eType="//Behaviour" eOpposite="//Behaviour/beConstrainer"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="peValues" lowerBound="1" upperBound="-1" eType="//PolicyValue" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="peCurrentValue" ordered="false" lowerBound="1" eType="//PolicyValue" eOpposite="//PolicyValue/pvValue"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PolicyValue" eSuperTypes="//Policy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pvValue" ordered="false" lowerBound="1" eType="//PolicyEnvelope" eOpposite="//PolicyEnvelope/peCurrentValue"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssigmentPolicy" eSuperTypes="//Policy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="apEOAR" ordered="false" upperBound="-1" eType="//EO_A_R" eOpposite="//EO_A_R/eoarGovernor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Contract">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ctPolicies" ordered="false" lowerBound="1" eType="//Policy" eOpposite="//Policy/poSpecifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ctObjective" ordered="false" lowerBound="1" eType="//Objective" eOpposite="//Objective/objSpecifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ctBehaviours" ordered="false" lowerBound="1" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/beSpecifiers"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Process">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prObjectives" ordered="false" lowerBound="1" upperBound="-1" eType="//Objective" eOpposite="//Objective/objAchievers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prDetails" ordered="false" lowerBound="1" upperBound="-1" eType="//Step" eOpposite="//Step/stGraphs"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prRefinement" ordered="false" eType="//Step" eOpposite="//Step/stAbstraction"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prConstrainer" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poProcess"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Step">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stGraphs" ordered="false" lowerBound="1" upperBound="-1" eType="//Process" eOpposite="//Process/prDetails"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stAbstraction" ordered="false" eType="//Process" eOpposite="//Process/prRefinement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Action" eSuperTypes="//Step">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actBehaviours" ordered="false" lowerBound="1" upperBound="-1" eType="//Behaviour" eOpposite="//Behaviour/beActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actArtefactRoleFillers" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoArtefactActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actResourceRoleFillers" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoResourceActions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actActorRoleFillers" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoActorActions"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AccountableAction" abstract="true" eSuperTypes="//Action">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="aaAccountableParty" ordered="false" lowerBound="1" upperBound="-1" eType="//Party" eOpposite="//Party/ptyAccountableAction"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Prescription" eSuperTypes="//AccountableAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Commitment" eSuperTypes="//AccountableAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Declaration" eSuperTypes="//AccountableAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Evaluation" eSuperTypes="//AccountableAction"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Delegation" eSuperTypes="//AccountableAction">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dlgEOPD" ordered="false" lowerBound="1" eType="//EO_P_D" eOpposite="//EO_P_D/eopdAction"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Behaviour">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="beObjectives" ordered="false" lowerBound="1" upperBound="-1" eType="//Objective" eOpposite="//Objective/objFulfillers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="beSpecifiers" ordered="false" lowerBound="1" upperBound="-1" eType="//Contract" eOpposite="//Contract/ctBehaviours"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="beActions" ordered="false" lowerBound="1" upperBound="-1" eType="//Action" eOpposite="//Action/actBehaviours"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="beIdentifier" ordered="false" eType="//Role" eOpposite="//Role/roleBehaviour"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bePolicyEnvelope" ordered="false" eType="//PolicyEnvelope" eOpposite="//PolicyEnvelope/pePolicySetter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="beConstrainer" ordered="false" eType="//PolicyEnvelope" eOpposite="//PolicyEnvelope/peBehaviour"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bePolicyConstrainer" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poBehaviour"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bePolicy" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poChanger"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Community">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coAbstraction" ordered="false" eType="//CommunityObject" eOpposite="//CommunityObject/cobjRefinement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coMembers" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoConfigurations"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coCommunityRoles" ordered="false" upperBound="-1" eType="//Role" eOpposite="//Role/roleSpecifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coPolicy" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poOwner"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CommunityObject" eSuperTypes="//EnterpriseObject">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cobjRefinement" ordered="false" lowerBound="1" eType="//Community" eOpposite="//Community/coAbstraction"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Role">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleBehaviour" ordered="false" lowerBound="1" eType="//Behaviour" eOpposite="//Behaviour/beIdentifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleSpecifier" ordered="false" lowerBound="1" eType="//Community" eOpposite="//Community/coCommunityRoles"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rolefillers" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoRoles"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleConstrainer" ordered="false" upperBound="-1" eType="//Policy" eOpposite="//Policy/poRole"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roleEOAR" ordered="false" upperBound="-1" eType="//EO_A_R" eOpposite="//EO_A_R/eoarSubjectRole"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceRole" eSuperTypes="//Role"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Violation" eSuperTypes="//Behaviour">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vioProhibitor" ordered="false" lowerBound="1" eType="//Rule" eOpposite="//Rule/ruViolation"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ruViolation" ordered="false" upperBound="-1" eType="//Violation" eOpposite="//Violation/vioProhibitor"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Obligation" eSuperTypes="//Rule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Authorisation" eSuperTypes="//Rule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Permission" eSuperTypes="//Rule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Prohibition" eSuperTypes="//Rule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EO_A_R">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoarSubject" ordered="false" upperBound="-1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoEOAR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoarSubjectRole" ordered="false" lowerBound="1" upperBound="-1" eType="//Role" eOpposite="//Role/roleEOAR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eoarGovernor" ordered="false" upperBound="-1" eType="//AssigmentPolicy" eOpposite="//AssigmentPolicy/apEOAR"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EO_P_D">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eopdAgent" ordered="false" lowerBound="1" eType="//EnterpriseObject" eOpposite="//EnterpriseObject/eoEOPD"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eopdPrincipal" ordered="false" lowerBound="1" eType="//Party" eOpposite="//Party/ptyEOPD"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="eopdAction" ordered="false" lowerBound="1" eType="//Delegation" eOpposite="//Delegation/dlgEOPD"/>
+  </eClassifiers>
+</ecore:EPackage>

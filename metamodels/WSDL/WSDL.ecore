@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="WSDL">
+    <eClassifiers xsi:type="ecore:EClass" name="Port">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="service" ordered="false" lowerBound="1" eType="/0/Service" eOpposite="/0/Service/ports"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="binding" ordered="false" lowerBound="1" eType="/0/Binding" eOpposite="/0/Binding/ports"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Service">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ports" ordered="false" upperBound="-1" eType="/0/Port" containment="true" eOpposite="/0/Port/service"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Param">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="message" ordered="false" lowerBound="1" eType="/0/Message" eOpposite="/0/Message/params"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Input" eSuperTypes="/0/Param">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operation" ordered="false" lowerBound="1" eType="/0/Operation" eOpposite="/0/Operation/input"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Output" eSuperTypes="/0/Param">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operation" ordered="false" lowerBound="1" eType="/0/Operation" eOpposite="/0/Operation/output"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PortType">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" upperBound="-1" eType="/0/Operation" containment="true" eOpposite="/0/Operation/type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bindings" ordered="false" upperBound="-1" eType="/0/Binding" eOpposite="/0/Binding/type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Operation">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="input" ordered="false" eType="/0/Input" containment="true" eOpposite="/0/Input/operation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="output" ordered="false" eType="/0/Output" containment="true" eOpposite="/0/Output/operation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/PortType" eOpposite="/0/PortType/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="faults" ordered="false" upperBound="-1" eType="/0/Fault" containment="true" eOpposite="/0/Fault/operation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StartWithExtensions"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Binding" eSuperTypes="/0/StartWithExtensions">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ports" ordered="false" upperBound="-1" eType="/0/Port" eOpposite="/0/Port/binding"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/PortType" eOpposite="/0/PortType/bindings"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operations" ordered="false" upperBound="-1" eType="/0/BindingOperation" containment="true" eOpposite="/0/BindingOperation/bind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BindingFault" eSuperTypes="/0/StartWithExtensions">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operation" ordered="false" lowerBound="1" eType="/0/BindingOperation" containment="true" eOpposite="/0/BindingOperation/faults"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="binding" ordered="false" lowerBound="1" eType="/0/Fault"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="BindingOperation" eSuperTypes="/0/StartWithExtensions">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="bind" ordered="false" lowerBound="1" eType="/0/Binding" eOpposite="/0/Binding/operations"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="binding" ordered="false" lowerBound="1" eType="/0/Operation"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="input" ordered="false" eType="/0/StartWithExtensions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="output" ordered="false" eType="/0/StartWithExtensions"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="faults" ordered="false" upperBound="-1" eType="/0/BindingFault" containment="true" eOpposite="/0/BindingFault/operation"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Fault">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="operation" ordered="false" lowerBound="1" eType="/0/Operation" eOpposite="/0/Operation/faults"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="message" ordered="false" lowerBound="1" eType="/0/Message" eOpposite="/0/Message/faults"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Message">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="params" ordered="false" upperBound="-1" eType="/0/Param" eOpposite="/0/Param/message"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="faults" ordered="false" upperBound="-1" eType="/0/Fault" eOpposite="/0/Fault/message"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parts" ordered="false" upperBound="-1" eType="/0/Part" eOpposite="/0/Part/message"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Part">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="message" ordered="false" lowerBound="1" eType="/0/Message" eOpposite="/0/Message/parts"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

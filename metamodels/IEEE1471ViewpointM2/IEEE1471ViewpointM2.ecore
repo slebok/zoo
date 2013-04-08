@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="IEEE1471">
+  <eClassifiers xsi:type="ecore:EClass" name="Viewpoint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" upperBound="-1" eType="//ViewpointImport"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="covers" ordered="false" lowerBound="1" upperBound="-1" eType="//Concern"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supplierDependency" ordered="false" upperBound="-1" eType="//ViewpointDependency" eOpposite="//ViewpointDependency/supplier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="clientDependency" ordered="false" upperBound="-1" eType="//ViewpointDependency" eOpposite="//ViewpointDependency/client"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isImportTo" ordered="false" eType="//Stakeholder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="architecturalConstruct" ordered="false" upperBound="-1" eType="//ArchitecturalConstruct" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="process" ordered="false" lowerBound="1" eType="//Process" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Concern"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Stakeholder">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="concerns" ordered="false" eType="//Concern"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewpointImport"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ViewpointDependency">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="supplier" ordered="false" lowerBound="1" eType="//Viewpoint" eOpposite="//Viewpoint/supplierDependency"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="client" ordered="false" lowerBound="1" eType="//Viewpoint" eOpposite="//Viewpoint/clientDependency"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Process">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methodology" ordered="false" lowerBound="1" upperBound="-1" eType="//Technique"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Technique">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" ordered="false" upperBound="-1" eType="//AnalysisMethod"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="applies" ordered="false" lowerBound="1" upperBound="-1" eType="//Rule" eOpposite="//Rule/techniques"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AnalysisMethod">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="analysis" ordered="false" lowerBound="1" eType="//Language"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ArchitecturalConstruct"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule" eSuperTypes="//ArchitecturalConstruct">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="techniques" ordered="false" lowerBound="1" upperBound="-1" eType="//Technique" eOpposite="//Technique/applies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guidance" ordered="false" lowerBound="1" eType="//Language"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModelOrganization" eSuperTypes="//Rule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ModellingRule"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Language" eSuperTypes="//ArchitecturalConstruct"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Mapping" eSuperTypes="//ArchitecturalConstruct">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="input" ordered="false" lowerBound="1" eType="//Language"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ouput" ordered="false" lowerBound="1" eType="//Language"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Pattern" eSuperTypes="//ArchitecturalConstruct"/>
+</ecore:EPackage>

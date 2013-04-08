@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Grafcet">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true" eSuperTypes="/1/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Grafcet" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/1/Element" containment="true" eOpposite="/1/Element/grafcet"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="connections" ordered="false" upperBound="-1" eType="/1/Connection" containment="true" eOpposite="/1/Connection/grafcet"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="grafcet" ordered="false" lowerBound="1" eType="/1/Grafcet" eOpposite="/1/Grafcet/elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Step" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInitial" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isActive" ordered="false" unique="false" lowerBound="1" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="action" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incomingConnections" ordered="false" upperBound="-1" eType="/1/TransitionToStep" eOpposite="/1/TransitionToStep/to"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingConnections" ordered="false" upperBound="-1" eType="/1/StepToTransition" eOpposite="/1/StepToTransition/from"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="/1/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="incomingConnections" ordered="false" upperBound="-1" eType="/1/StepToTransition" eOpposite="/1/StepToTransition/to"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingConnections" ordered="false" upperBound="-1" eType="/1/TransitionToStep" eOpposite="/1/TransitionToStep/from"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Connection" abstract="true" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="grafcet" ordered="false" lowerBound="1" eType="/1/Grafcet" eOpposite="/1/Grafcet/connections"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="StepToTransition" eSuperTypes="/1/Connection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/1/Step" eOpposite="/1/Step/outgoingConnections"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/1/Transition" eOpposite="/1/Transition/incomingConnections"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="TransitionToStep" eSuperTypes="/1/Connection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="from" ordered="false" lowerBound="1" eType="/1/Transition" eOpposite="/1/Transition/outgoingConnections"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="to" ordered="false" lowerBound="1" eType="/1/Step" eOpposite="/1/Step/incomingConnections"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

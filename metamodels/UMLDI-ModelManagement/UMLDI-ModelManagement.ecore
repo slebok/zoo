@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="Core">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="namespace" ordered="false" eType="/0/Namespace" eOpposite="/0/Namespace/ownedElement"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" eType="/3/VisibilityKind"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSpecification" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="GeneralizableElement" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="generalization" ordered="false" upperBound="-1" eType="/0/Generalization" eOpposite="/0/Generalization/child"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRoot" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLeaf" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Namespace" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ownedElement" ordered="false" upperBound="-1" eType="/0/ModelElement" containment="true" eOpposite="/0/ModelElement/namespace"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Classifier" abstract="true" eSuperTypes="/0/GeneralizableElement /0/Namespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="powertypeRange" ordered="false" upperBound="-1" eType="/0/Generalization" eOpposite="/0/Generalization/powertype"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="feature" upperBound="-1" eType="/0/Feature" containment="true" eOpposite="/0/Feature/owner"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Feature" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/0/Classifier" eOpposite="/0/Classifier/feature"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="ownerScope" ordered="false" unique="false" lowerBound="1" eType="/3/ScopeKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relationship" abstract="true" eSuperTypes="/0/ModelElement"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Generalization" eSuperTypes="/0/Relationship">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parent" ordered="false" lowerBound="1" eType="/0/GeneralizableElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="powertype" ordered="false" eType="/0/Classifier" eOpposite="/0/Classifier/powertypeRange"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="child" ordered="false" lowerBound="1" eType="/0/GeneralizableElement" eOpposite="/0/GeneralizableElement/generalization"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="discriminator" ordered="false" unique="false" eType="/2/String"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="Model_Management">
+    <eClassifiers xsi:type="ecore:EClass" name="Package" eSuperTypes="/0/GeneralizableElement /0/Namespace">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elementImport" ordered="false" upperBound="-1" eType="/1/ElementImport" containment="true" eOpposite="/1/ElementImport/package"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Model" eSuperTypes="/1/Package"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Subsystem" eSuperTypes="/1/Package /0/Classifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInstantiable" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ElementImport">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="package" ordered="false" lowerBound="1" eType="/1/Package" eOpposite="/1/Package/elementImport"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="importedElement" ordered="false" lowerBound="1" eType="/0/ModelElement"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" eType="/3/VisibilityKind"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="alias" ordered="false" unique="false" eType="/2/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSpecification" ordered="false" unique="false" lowerBound="1" eType="/2/Boolean"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Float"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Long"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="Data_Types">
+    <eClassifiers xsi:type="ecore:EEnum" name="ScopeKind">
+      <eLiterals name="sk_instance" value="1"/>
+      <eLiterals name="sk_classifier" value="2"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="VisibilityKind">
+      <eLiterals name="vk_public" value="1"/>
+      <eLiterals name="vk_protected" value="2"/>
+      <eLiterals name="vk_private" value="3"/>
+      <eLiterals name="vk_package" value="4"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

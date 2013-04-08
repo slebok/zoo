@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ActorConcept">
+  <eClassifiers xsi:type="ecore:EClass" name="Actor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyE" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/dependee"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyR" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/depender"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="goal" ordered="false" upperBound="-1" eType="//Goal" eOpposite="//Goal/wanter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plan" ordered="false" upperBound="-1" eType="//Plan" eOpposite="//Plan/capableOf"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resource" ordered="false" upperBound="-1" eType="//Resource" eOpposite="//Resource/use"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Goal">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="wanter" ordered="false" lowerBound="1" eType="//Actor" eOpposite="//Actor/goal"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plan" ordered="false" lowerBound="1" upperBound="-1" eType="//Plan" eOpposite="//Plan/isFulfilled"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyWG" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/WhyG"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyG" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/goal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SoftGoal" eSuperTypes="//Goal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="HardGoal" eSuperTypes="//Goal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Dependency">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependee" ordered="false" lowerBound="1" eType="//Actor" eOpposite="//Actor/dependencyE"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depender" ordered="false" lowerBound="1" eType="//Actor" eOpposite="//Actor/dependencyR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="goal" ordered="false" eType="//Goal" eOpposite="//Goal/dependencyG"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="WhyG" ordered="false" eType="//Goal" eOpposite="//Goal/dependencyWG"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="WhyR" ordered="false" eType="//Resource" eOpposite="//Resource/dependencyWR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceD" ordered="false" eType="//Resource" eOpposite="//Resource/dependencyR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="WhyP" ordered="false" eType="//Plan" eOpposite="//Plan/dependencyWP"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="plan" ordered="false" eType="//Plan" eOpposite="//Plan/dependencyP"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Plan">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="isFulfilled" ordered="false" lowerBound="1" eType="//Goal" eOpposite="//Goal/plan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="capableOf" ordered="false" lowerBound="1" eType="//Actor" eOpposite="//Actor/plan"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyWP" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/WhyP"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyP" ordered="false" upperBound="-1" eType="//Dependency" eOpposite="//Dependency/plan"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Resource">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="use" ordered="false" lowerBound="1" eType="//Actor" eOpposite="//Actor/resource"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyWR" ordered="false" lowerBound="1" eType="//Dependency" eOpposite="//Dependency/WhyR"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dependencyR" ordered="false" lowerBound="1" eType="//Dependency" eOpposite="//Dependency/resourceD"/>
+  </eClassifiers>
+</ecore:EPackage>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="DoDAF">
+    <eClassifiers xsi:type="ecore:EClass" name="Element" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="view" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DoDAFModel" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="document" ordered="false" upperBound="-1" eType="/0/Document" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="am" ordered="false" upperBound="-1" eType="/0/AM" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="task" ordered="false" upperBound="-1" eType="/0/Task" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="iaDocument" ordered="false" upperBound="-1" eType="/0/InformationAssetDocument" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="amSpecification" ordered="false" upperBound="-1" eType="/0/AMSpecification" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="doscr" ordered="false" upperBound="-1" eType="/0/DOSCR" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="organizationType" ordered="false" upperBound="-1" eType="/0/OrganizationType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Document" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="cites" ordered="false" upperBound="-1" eType="/0/InformationAssetDocument"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="records" ordered="false" upperBound="-1" eType="/0/ArchitectureDocument" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheReferenceFor" ordered="false" upperBound="-1" eType="/0/IE" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isThePrimaryReferenceFor" ordered="false" upperBound="-1" eType="/0/PA" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AMSpecification" eSuperTypes="/0/Document">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSpecifiedUsing" ordered="false" upperBound="-1" eType="/0/AMSpecificationElement" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AMSpecificationElement" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subject" ordered="false" eType="/0/PAExchangeRequirement" eOpposite="/0/PAExchangeRequirement/isTheSubjectOf"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PAExchangeRequirement" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheSubjectOf" ordered="false" upperBound="-1" eType="/0/AMSpecificationElement" eOpposite="/0/AMSpecificationElement/subject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ArchitectureDocument" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="IE" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isAssociatedWith" ordered="false" upperBound="-1" eType="/0/AMIERole"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isOrdinateOf" ordered="false" upperBound="-1" eType="/0/IE" eOpposite="/0/IE/isSubordinateOf"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSubordinateOf" ordered="false" upperBound="-1" eType="/0/IE" eOpposite="/0/IE/isOrdinateOf"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AMIERole" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defines" ordered="false" upperBound="-1" eType="/0/AMPA"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Control" eSuperTypes="/0/AMIERole">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destination" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Input" eSuperTypes="/0/AMIERole">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheInputThatIsDefinedBy" ordered="false" upperBound="-1" eType="/0/Output"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destination" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="information" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Output" eSuperTypes="/0/AMIERole">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destination" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="information" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Mechanism" eSuperTypes="/0/AMIERole">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="destination" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="resourceType" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MechanismSystem" eSuperTypes="/0/Mechanism"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MechanismReference" eSuperTypes="/0/Mechanism"/>
+    <eClassifiers xsi:type="ecore:EClass" name="MechanismFacility" eSuperTypes="/0/Mechanism"/>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationAssetDocument" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="AMPA" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isOrdinateOf" ordered="false" upperBound="-1" eType="/0/AMPA" eOpposite="/0/AMPA/isSubordinateOf"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isSubordinateOf" ordered="false" upperBound="-1" eType="/0/AMPA" eOpposite="/0/AMPA/isOrdinateOf"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="defines" ordered="false" upperBound="-1" eType="/0/AMIERole" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PACapability" eSuperTypes="/0/Element"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PA" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheProducerFor" ordered="false" upperBound="-1" eType="/0/PAExchangeRequirement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheConsumerFor" ordered="false" upperBound="-1" eType="/0/PAExchangeRequirement" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isParentFor" ordered="false" upperBound="-1" eType="/0/PA" eOpposite="/0/PA/isChildFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isChildFor" ordered="false" upperBound="-1" eType="/0/PA" eOpposite="/0/PA/isParentFor"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has" ordered="false" upperBound="-1" eType="/0/PACapability" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isIncludedIn" ordered="false" upperBound="-1" eType="/0/AMPA"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="correspondsTo" ordered="false" upperBound="-1" eType="/0/PATask"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="AM" eSuperTypes="/0/InformationAsset">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="specifies" ordered="false" upperBound="-1" eType="/0/AMSpecification"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="includes" ordered="false" upperBound="-1" eType="/0/AMPA" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="paTask" ordered="false" upperBound="-1" eType="/0/PATask"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="InformationAsset" abstract="true" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isDescribedUsing" ordered="false" upperBound="-1" eType="/0/PACapability" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedIn" ordered="false" upperBound="-1" eType="/0/InformationAssetDocument"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Task" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="levelIdentifier" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="references" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="cost" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PATask" eSuperTypes="/0/Task">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedBy" ordered="false" lowerBound="1" eType="/0/InformationAsset"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Organization" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="type" ordered="false" lowerBound="1" eType="/0/OrganizationType" eOpposite="/0/OrganizationType/isTheTypeOf"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="supplies" ordered="false" upperBound="-1" eType="/0/InformationAsset"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="providesStewardshipFor" ordered="false" upperBound="-1" eType="/0/InformationAsset"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="owns" ordered="false" upperBound="-1" eType="/0/InformationAsset"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="develops" ordered="false" upperBound="-1" eType="/0/IE"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedAs" ordered="false" upperBound="-1" eType="/0/MechanismReference"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OrganizationType" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isTheTypeOf" ordered="false" upperBound="-1" eType="/0/Organization" containment="true" eOpposite="/0/Organization/type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedAs" ordered="false" upperBound="-1" eType="/0/MechanismReference" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="OperationalRole" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="isCitedAs" ordered="false" upperBound="-1" eType="/0/MechanismReference" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Occupation" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedForOR" ordered="false" upperBound="-1" eType="/0/OperationalRole" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedForPT" ordered="false" upperBound="-1" eType="/0/PersonType" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PersonType" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedFor" ordered="false" upperBound="-1" eType="/0/OperationalRole" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="can" ordered="false" upperBound="-1" eType="/0/Skill" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Skill" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedFor" ordered="false" upperBound="-1" eType="/0/OperationalRole" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="DOSCR" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeAn" ordered="false" lowerBound="1" eType="/0/Occupation" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="appliesTo" ordered="false" upperBound="-1" eType="/0/PersonType" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="mayBeCitedFor" ordered="false" upperBound="-1" eType="/0/OperationalRole" containment="true"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

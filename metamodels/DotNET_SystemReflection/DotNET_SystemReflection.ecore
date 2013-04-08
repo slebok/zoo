@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+  </ecore:EPackage>
+  <ecore:EPackage name="DNSR">
+    <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Assembly" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="imageRuntimeVersion" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="evidence" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="codeBase" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="entryPoint" ordered="false" lowerBound="1" eType="/1/MethodInfo"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="modules" ordered="false" upperBound="-1" eType="/1/Module" containment="true" eOpposite="/1/Module/assembly"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="manifestModule" ordered="false" lowerBound="1" eType="/1/Module"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="referencedAssembly" ordered="false" upperBound="-1" eType="/1/Assembly"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="manifest" ordered="false" lowerBound="1" eType="/1/ManifestResource" containment="true" eOpposite="/1/ManifestResource/assembly"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ManifestResource">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assembly" ordered="false" lowerBound="1" eType="/1/Assembly" eOpposite="/1/Assembly/manifest"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Module" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="qualifiedName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="scopeName" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="assembly" ordered="false" lowerBound="1" eType="/1/Assembly" eOpposite="/1/Assembly/modules"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="types" ordered="false" upperBound="-1" eType="/1/Type" containment="true" eOpposite="/1/Type/module"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MemberInfo" abstract="true" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="memberType" ordered="false" unique="false" lowerBound="1" eType="/1/MemberTypes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="declaringType" ordered="false" lowerBound="1" eType="/1/Type" eOpposite="/1/Type/members"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="PropertyInfo" eSuperTypes="/1/MemberInfo">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="propertyType" ordered="false" lowerBound="1" eType="/1/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributes" ordered="false" unique="false" upperBound="-1" eType="/1/PropertyAttributes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="FieldInfo" eSuperTypes="/1/MemberInfo">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="fieldType" ordered="false" lowerBound="1" eType="/1/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributes" ordered="false" unique="false" upperBound="-1" eType="/1/FieldAttributes"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EventInfo" eSuperTypes="/1/MemberInfo">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMulticast" ordered="false" unique="false" eType="/0/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributes" ordered="false" unique="false" eType="/1/EventAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="eventHandlerType" ordered="false" lowerBound="1" eType="/1/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ParameterInfo" eSuperTypes="/1/NamedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultValue" ordered="false" unique="false" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="position" ordered="false" unique="false" lowerBound="1" eType="/0/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributes" ordered="false" unique="false" upperBound="-1" eType="/1/ParameterAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameterType" ordered="false" lowerBound="1" eType="/1/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="member" ordered="false" lowerBound="1" eType="/1/MethodBase" eOpposite="/1/MethodBase/parameters"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MethodBase" abstract="true" eSuperTypes="/1/MemberInfo">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributes" ordered="false" unique="false" upperBound="-1" eType="/1/MethodAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="parameters" ordered="false" upperBound="-1" eType="/1/ParameterInfo" containment="true" eOpposite="/1/ParameterInfo/member"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="MethodInfo" eSuperTypes="/1/MethodBase">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="returnType" ordered="false" eType="/1/Type"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ConstructorInfo" eSuperTypes="/1/MethodBase"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Type" eSuperTypes="/1/MemberInfo">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" ordered="false" unique="false" lowerBound="1" eType="/0/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="genericParameterAttributes" ordered="false" unique="false" upperBound="-1" eType="/1/GenericParameterAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="typeAttributes" ordered="false" unique="false" upperBound="-1" eType="/1/TypeAttributes"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="baseType" ordered="false" eType="/1/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="module" ordered="false" lowerBound="1" eType="/1/Module" eOpposite="/1/Module/types"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interfaces" ordered="false" upperBound="-1" eType="/1/Type"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="members" ordered="false" upperBound="-1" eType="/1/MemberInfo" containment="true" eOpposite="/1/MemberInfo/declaringType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="EventAttributes">
+      <eLiterals name="None" value="1"/>
+      <eLiterals name="ReservedMask" value="2"/>
+      <eLiterals name="RTSpecialName" value="3"/>
+      <eLiterals name="SpecialName" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="FieldAttributes">
+      <eLiterals name="FieldAccessMask" value="1"/>
+      <eLiterals name="PrivateScope" value="2"/>
+      <eLiterals name="Private" value="3"/>
+      <eLiterals name="Assembly" value="4"/>
+      <eLiterals name="Family" value="5"/>
+      <eLiterals name="FamANDAssem" value="6"/>
+      <eLiterals name="FamORAssem" value="7"/>
+      <eLiterals name="Public" value="8"/>
+      <eLiterals name="Shared" value="9"/>
+      <eLiterals name="InitOnly" value="10"/>
+      <eLiterals name="Literal" value="11"/>
+      <eLiterals name="NotSerialized" value="12"/>
+      <eLiterals name="SpecialName" value="13"/>
+      <eLiterals name="PinvokeImpl" value="14"/>
+      <eLiterals name="ReservedMask" value="15"/>
+      <eLiterals name="RTSpecialName" value="16"/>
+      <eLiterals name="HasFieldMarshal" value="17"/>
+      <eLiterals name="HasDefault" value="18"/>
+      <eLiterals name="HasFieldRVA" value="19"/>
+      <eLiterals name="Static" value="20"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="GenericParameterAttributes">
+      <eLiterals name="HasElementType" value="1"/>
+      <eLiterals name="Abstract" value="2"/>
+      <eLiterals name="AnsiClass" value="3"/>
+      <eLiterals name="AutoClass" value="4"/>
+      <eLiterals name="AutoLayout" value="5"/>
+      <eLiterals name="ByRef" value="6"/>
+      <eLiterals name="Class" value="7"/>
+      <eLiterals name="COMObject" value="8"/>
+      <eLiterals name="Contextful" value="9"/>
+      <eLiterals name="Enum" value="10"/>
+      <eLiterals name="ExplicitLayout" value="11"/>
+      <eLiterals name="Import" value="12"/>
+      <eLiterals name="Interface" value="13"/>
+      <eLiterals name="LayoutSequential" value="14"/>
+      <eLiterals name="MarshalByRef" value="15"/>
+      <eLiterals name="NestedAssembly" value="16"/>
+      <eLiterals name="NestedFamADNAssem" value="17"/>
+      <eLiterals name="NestedFamily" value="18"/>
+      <eLiterals name="NestedFamORAssem" value="19"/>
+      <eLiterals name="NestedPrivate" value="20"/>
+      <eLiterals name="NestedPublic" value="21"/>
+      <eLiterals name="NotPublic" value="22"/>
+      <eLiterals name="Pointer" value="23"/>
+      <eLiterals name="Primitive" value="24"/>
+      <eLiterals name="Public" value="25"/>
+      <eLiterals name="Sealed" value="26"/>
+      <eLiterals name="Serializable" value="27"/>
+      <eLiterals name="SpecialName" value="28"/>
+      <eLiterals name="UnicodeClass" value="29"/>
+      <eLiterals name="ValueType" value="30"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="MemberTypes">
+      <eLiterals name="Constructor" value="1"/>
+      <eLiterals name="Event" value="2"/>
+      <eLiterals name="Field" value="3"/>
+      <eLiterals name="Method" value="4"/>
+      <eLiterals name="Property" value="5"/>
+      <eLiterals name="TypeInfo" value="6"/>
+      <eLiterals name="Custom" value="7"/>
+      <eLiterals name="NestedType" value="8"/>
+      <eLiterals name="All" value="9"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="MethodAttributes">
+      <eLiterals name="Abstract" value="1"/>
+      <eLiterals name="Assembly" value="2"/>
+      <eLiterals name="ChekedAccessOnOverride" value="3"/>
+      <eLiterals name="FamADNAssem" value="4"/>
+      <eLiterals name="Family" value="5"/>
+      <eLiterals name="FamORAssem" value="6"/>
+      <eLiterals name="Final" value="7"/>
+      <eLiterals name="HasSecurity" value="8"/>
+      <eLiterals name="HideBySig" value="9"/>
+      <eLiterals name="MemberAccessMask" value="10"/>
+      <eLiterals name="NewSlot" value="11"/>
+      <eLiterals name="PInvokeImpl" value="12"/>
+      <eLiterals name="Private" value="13"/>
+      <eLiterals name="PrivateScope" value="14"/>
+      <eLiterals name="Public" value="15"/>
+      <eLiterals name="RequiredSecObject" value="16"/>
+      <eLiterals name="ReservedMask" value="17"/>
+      <eLiterals name="ReuseSlot" value="18"/>
+      <eLiterals name="RTSpecialName" value="19"/>
+      <eLiterals name="SpecialName" value="20"/>
+      <eLiterals name="Static" value="21"/>
+      <eLiterals name="UnmanagedExport" value="22"/>
+      <eLiterals name="Virtual" value="23"/>
+      <eLiterals name="VtableLayoutMask" value="24"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="ParameterAttributes">
+      <eLiterals name="HasDefault" value="1"/>
+      <eLiterals name="HasDefaultMArshal" value="2"/>
+      <eLiterals name="In" value="3"/>
+      <eLiterals name="Lcid" value="4"/>
+      <eLiterals name="None" value="5"/>
+      <eLiterals name="Optional" value="6"/>
+      <eLiterals name="Out" value="7"/>
+      <eLiterals name="Reserved3" value="8"/>
+      <eLiterals name="Reserved4" value="9"/>
+      <eLiterals name="ReservedMask" value="10"/>
+      <eLiterals name="RetVal" value="11"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="PropertyAttributes">
+      <eLiterals name="NotSupported" value="1"/>
+      <eLiterals name="Optional" value="2"/>
+      <eLiterals name="Read" value="3"/>
+      <eLiterals name="Required" value="4"/>
+      <eLiterals name="Write" value="5"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="TypeAttributes">
+      <eLiterals name="Abstract" value="1"/>
+      <eLiterals name="AnsiClass" value="2"/>
+      <eLiterals name="AutoClass" value="3"/>
+      <eLiterals name="AutoLayout" value="4"/>
+      <eLiterals name="BeforFieldInit" value="5"/>
+      <eLiterals name="Class" value="6"/>
+      <eLiterals name="ClassSemanticsMask" value="7"/>
+      <eLiterals name="ExplicitLayout" value="8"/>
+      <eLiterals name="HasSecutity" value="9"/>
+      <eLiterals name="Import" value="10"/>
+      <eLiterals name="Interface" value="11"/>
+      <eLiterals name="LayoutMask" value="12"/>
+      <eLiterals name="NestedAssembly" value="13"/>
+      <eLiterals name="NestedFamADNAssem" value="14"/>
+      <eLiterals name="NestedFamily" value="15"/>
+      <eLiterals name="NestedFamORAssem" value="16"/>
+      <eLiterals name="NestedPrivate" value="17"/>
+      <eLiterals name="NestedPublic" value="18"/>
+      <eLiterals name="NotPublic" value="19"/>
+      <eLiterals name="Public" value="20"/>
+      <eLiterals name="ReservedMask" value="21"/>
+      <eLiterals name="RTSpecialName" value="22"/>
+      <eLiterals name="Sealed" value="23"/>
+      <eLiterals name="SequentialLayout" value="24"/>
+      <eLiterals name="Serializable" value="25"/>
+      <eLiterals name="SpecialName" value="26"/>
+      <eLiterals name="StringFormatMask" value="27"/>
+      <eLiterals name="UnicodeClass" value="28"/>
+      <eLiterals name="VisibilityMask" value="29"/>
+    </eClassifiers>
+  </ecore:EPackage>
+</xmi:XMI>

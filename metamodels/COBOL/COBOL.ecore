@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="COBOL">
+    <eClassifiers xsi:type="ecore:EEnum" name="COBOLUsageValue">
+      <eLiterals name="cuv_binary" value="1"/>
+      <eLiterals name="cuv_dbcs" value="2"/>
+      <eLiterals name="cuv_double" value="3"/>
+      <eLiterals name="cuv_display" value="4"/>
+      <eLiterals name="cuv_float" value="5"/>
+      <eLiterals name="cuv_index" value="6"/>
+      <eLiterals name="cuv_objectReference" value="7"/>
+      <eLiterals name="cuv_packedDecimal" value="8"/>
+      <eLiterals name="cuv_pointer" value="9"/>
+      <eLiterals name="cuv_procedurePointer" value="10"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="COBOLInitialValueKind">
+      <eLiterals name="civk_string_value" value="1"/>
+      <eLiterals name="civk_low_value" value="2"/>
+      <eLiterals name="civk_high_value" value="3"/>
+      <eLiterals name="civk_zero_value" value="4"/>
+      <eLiterals name="civk_quotes" value="5"/>
+      <eLiterals name="civk_null" value="6"/>
+      <eLiterals name="civk_all_literal" value="7"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="refined" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sharedType" ordered="false" lowerBound="1" eType="/0/COBOLClassifier" eOpposite="/0/COBOLClassifier/typedElements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="group" ordered="false" eType="/0/COBOLComposedType" eOpposite="/0/COBOLComposedType/elements"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="initial" ordered="false" upperBound="-1" eType="/0/COBOLElementInitialValue"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contains" ordered="false" upperBound="-1" eType="/0/COBOL88Element" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/COBOLSourceText"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="array" ordered="false" eType="/0/COBOLFixedLengthArray" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLClassifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="typeded" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="typedElements" ordered="false" upperBound="-1" eType="/0/COBOLElement" eOpposite="/0/COBOLElement/sharedType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLSimpleType" eSuperTypes="/0/COBOLClassifier">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="usageValue" ordered="false" unique="false" lowerBound="1" eType="/0/COBOLUsageValue"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pictureString" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="usage" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLComposedType" eSuperTypes="/0/COBOLClassifier">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" ordered="false" upperBound="-1" eType="/0/COBOLElement" containment="true" eOpposite="/0/COBOLElement/group"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLElementInitialValue">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="initVal" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueKind" ordered="false" unique="false" lowerBound="1" eType="/0/COBOLInitialValueKind"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOL88Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="has" ordered="false" lowerBound="1" upperBound="-1" eType="/0/COBOL88ElementValue" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOL88ElementValue">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerLimit" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperLimit" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="range" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLRedefiningElement" eSuperTypes="/0/COBOLElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="redefines" ordered="false" lowerBound="1" eType="/0/COBOLElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOL66Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="end" ordered="false" eType="/0/COBOLElement"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="start" ordered="false" lowerBound="1" eType="/0/COBOLElement"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLSourceText">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="source" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLFixedLengthArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxUpper" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="COBOLVariableLengthArray" eSuperTypes="/0/COBOLFixedLengthArray">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minUpper" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="dependingOn" ordered="false" lowerBound="1" eType="/0/COBOLElement"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Double"/>
+  </ecore:EPackage>
+</xmi:XMI>

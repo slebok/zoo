@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="yUML">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" unique="false" upperBound="-1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Model" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" upperBound="-1" eType="/0/Class" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1" eType="/0/ModelElement" containment="true" eOpposite="/0/ModelElement/model"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Class" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="model" ordered="false" lowerBound="1" eType="/0/Model" eOpposite="/0/Model/elements"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ColorableElement" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassReference" eSuperTypes="/0/ColorableElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="class" ordered="false" lowerBound="1" eType="/0/Class"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="stereotype" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="definition" ordered="false" eType="/0/ClassDefinition" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="AssociationType">
+      <eLiterals name="simpleAssociation" value="1"/>
+      <eLiterals name="aggregation" value="2"/>
+      <eLiterals name="composition" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Relationship" abstract="true" eSuperTypes="/0/ModelElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/ClassReference" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/0/ClassReference" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassDefinition" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" upperBound="-1" eType="/0/Attribute" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="methods" upperBound="-1" eType="/0/Method" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Association" eSuperTypes="/0/Relationship">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/AssociationType"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sourceCardinality" ordered="false" eType="/0/Cardinality" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceLabel" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="navigableSource" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourceVisibility" ordered="false" unique="false" lowerBound="1" eType="/0/Visibility"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targetCardinality" ordered="false" eType="/0/Cardinality" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetLabel" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="navigableTarget" ordered="false" unique="false" lowerBound="1" eType="/1/Boolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="targetVisibility" ordered="false" unique="false" lowerBound="1" eType="/0/Visibility"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Inheritance" eSuperTypes="/0/Relationship"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Cardinality" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" ordered="false" unique="false" eType="/1/Integer"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" ordered="false" unique="false" lowerBound="1" eType="/1/Integer"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Visibility">
+      <eLiterals name="unspecified" value="1"/>
+      <eLiterals name="public" value="2"/>
+      <eLiterals name="private" value="3"/>
+      <eLiterals name="protected" value="4"/>
+      <eLiterals name="package" value="5"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ClassMember" abstract="true" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="visibility" ordered="false" unique="false" lowerBound="1" eType="/0/Visibility"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="/0/ClassMember">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Method" eSuperTypes="/0/ClassMember">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="arguments" ordered="false" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Note" eSuperTypes="/0/ColorableElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" ordered="false" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NoteAssociation" eSuperTypes="/0/Relationship">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="note" ordered="false" lowerBound="1" eType="/0/Note" containment="true"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

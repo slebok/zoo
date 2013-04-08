@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="GraphML">
+    <eClassifiers xsi:type="ecore:EClass" name="LocatedElement" abstract="true">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="location" ordered="false" unique="false" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsBefore" unique="false" upperBound="-1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsAfter" unique="false" upperBound="-1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Root" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="keys" upperBound="-1" eType="/0/Key" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="graphs" upperBound="-1" eType="/0/Graph" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Element" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="datas" upperBound="-1" eType="/0/Data" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Key" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="for" ordered="false" unique="false" lowerBound="1" eType="/0/ElemType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="attrName" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" ordered="false" unique="false" lowerBound="1" eType="/0/AttrType"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="defValue" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Graph" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="/0/Element" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="edgeDefault" ordered="false" unique="false" lowerBound="1" eType="/0/EdgeType"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Edge" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="source" ordered="false" lowerBound="1" eType="/0/Node"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="target" ordered="false" lowerBound="1" eType="/0/Node"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="sourceport" ordered="false" lowerBound="1" eType="/0/Port"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="targetport" ordered="false" lowerBound="1" eType="/0/Port"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="HyperEdge" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="endpoints" upperBound="-1" eType="/0/EndPoint" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="/0/Element">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="subgraph" ordered="false" lowerBound="1" eType="/0/Graph" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="ports" upperBound="-1" eType="/0/Port" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Port" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EndPoint" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="node" ordered="false" lowerBound="1" eType="/0/Node"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="port" ordered="false" lowerBound="1" eType="/0/Port"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Data" eSuperTypes="/0/LocatedElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" ordered="false" unique="false" lowerBound="1" eType="/1/String"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="ElemType">
+      <eLiterals name="edge" value="1"/>
+      <eLiterals name="node" value="2"/>
+      <eLiterals name="graph" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="AttrType">
+      <eLiterals name="double" value="1"/>
+      <eLiterals name="string" value="2"/>
+      <eLiterals name="integer" value="3"/>
+      <eLiterals name="boolean" value="4"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="EdgeType">
+      <eLiterals name="directed" value="1"/>
+      <eLiterals name="undirected" value="2"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="double"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>

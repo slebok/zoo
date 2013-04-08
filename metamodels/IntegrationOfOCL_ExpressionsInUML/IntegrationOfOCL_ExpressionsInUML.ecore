@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="OCLExpression">
+    <eClassifiers xsi:type="ecore:EClass" name="PreCondition" eSuperTypes="/0/Core/Constraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="PortCondition" eSuperTypes="/0/Core/Constraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Invariant" eSuperTypes="/0/Core/Constraint"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="/0/Core/Constraint"/>
+    <eSubpackages name="Core">
+      <eClassifiers xsi:type="ecore:EClass" name="ModelElement" abstract="true">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="1" upperBound="-1" eType="/0/Core/Constraint" eOpposite="/0/Core/Constraint/constrainedElement"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="Constraint" eSuperTypes="/0/Core/ModelElement">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="constrainedElement" lowerBound="1" upperBound="-1" eType="/0/Core/ModelElement" eOpposite="/0/Core/ModelElement/constraint"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="body" ordered="false" lowerBound="1" eType="/0/DataTypes/BooleanExpression" eOpposite="/0/DataTypes/BooleanExpression/constraint"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="DataTypes">
+      <eClassifiers xsi:type="ecore:EClass" name="Expression">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="body" ordered="false" eType="/0/OCl/OCLExpression" eOpposite="/0/OCl/OCLExpression/owner"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="BooleanExpression" eSuperTypes="/0/DataTypes/Expression">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" ordered="false" eType="/0/Core/Constraint" containment="true" eOpposite="/0/Core/Constraint/body"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="OCl">
+      <eClassifiers xsi:type="ecore:EClass" name="OCLExpression" abstract="true">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="owner" ordered="false" eType="/0/DataTypes/Expression" eOpposite="/0/DataTypes/Expression/body"/>
+      </eClassifiers>
+    </eSubpackages>
+  </ecore:EPackage>
+  <ecore:EPackage name="PrimitiveTypes">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String"/>
+  </ecore:EPackage>
+</xmi:XMI>
