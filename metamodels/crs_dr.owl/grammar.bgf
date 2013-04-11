@@ -76,6 +76,18 @@
   <xns1:production>
     <nonterminal>Thing</nonterminal>
     <xns1:expression>
+      <nonterminal>Conference</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Thing</nonterminal>
+    <xns1:expression>
+      <nonterminal>conference</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Thing</nonterminal>
+    <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <nonterminal>Person</nonterminal>
@@ -119,7 +131,84 @@
   <xns1:production>
     <nonterminal>Meta-Reviewer</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>invites_co-reviewers</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>invited_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>has_a_review_reference_or_expertise</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedByAdministrator</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>adjustBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readPaper</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBeenAssigned</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writeReview</selector>
+	    <xns1:expression>
+	      <nonterminal>Review</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignExternalReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>ExternalReviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -324,6 +413,24 @@
     <nonterminal>Person</nonterminal>
     <xns1:expression>
       <nonterminal>Volunteer</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Person</nonterminal>
+    <xns1:expression>
+      <nonterminal>ProgramCommitteeMember</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Person</nonterminal>
+    <xns1:expression>
+      <nonterminal>Chairman</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Person</nonterminal>
+    <xns1:expression>
+      <nonterminal>Administrator</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -697,7 +804,48 @@
   <xns1:production>
     <nonterminal>ConferenceChair</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>memberOfConference</selector>
+	<xns1:expression>
+	  <nonterminal>Conference</nonterminal>
+	</xns1:expression>
+      </selectable>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>Reviewer</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>ConferenceChair</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>AssociatedChair</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>Author</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>ProgramCommitteeMember</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ConferenceMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>Chairman</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -714,7 +862,18 @@
   <xns1:production>
     <nonterminal>AssociatedChair</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>memberOfConference</selector>
+	<xns1:expression>
+	  <nonterminal>Conference</nonterminal>
+	</xns1:expression>
+      </selectable>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ProgramCommitteeMember</nonterminal>
+    <xns1:expression>
+      <nonterminal>ProgramCommitteeChair</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -751,7 +910,32 @@
   <xns1:production>
     <nonterminal>AuthorNotReviewer</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writes</selector>
+	    <xns1:expression>
+	      <nonterminal>Contribution</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>submitPaper</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writePaper</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -774,7 +958,250 @@
   <xns1:production>
     <nonterminal>Chairman</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <nonterminal>ConferenceChair</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Chairman</nonterminal>
+    <xns1:expression>
+      <nonterminal>AssociatedChair</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Chairman</nonterminal>
+    <xns1:expression>
+      <nonterminal>ProgramCommitteeChair</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Chairman</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>inverse_of_add</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>execute</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>get</selector>
+	    <xns1:expression>
+	      <nonterminal>Inforamtion</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>use</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>register</selector>
+	    <xns1:expression>
+	      <nonterminal>Account</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>modify</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>take_part_in</selector>
+	    <xns1:expression>
+	      <nonterminal>Event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>remove</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>add</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>send</selector>
+	    <xns1:expression>
+	      <nonterminal>Activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>added_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contributes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_an_email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_gender</selector>
+	    <xns1:expression>
+	      <nonterminal>EEnum</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>employedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Organization</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasHomePage</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSurname</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFax</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFirstName</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasPhone</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasConflictOfInterest</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>memberOfConference</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1031,13 +1458,207 @@
   <xns1:production>
     <nonterminal>PaperAbstract</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>PaperFullVersion</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1162,13 +1783,47 @@
   <xns1:production>
     <nonterminal>Meta-Review</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>reviews</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewed_contribution</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writtenBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Workshop</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasTopic</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAdministrativeEvent</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1271,6 +1926,12 @@
     <nonterminal>User</nonterminal>
     <xns1:expression>
       <nonterminal>Committee</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>User</nonterminal>
+    <xns1:expression>
+      <nonterminal>Administrator</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1386,13 +2047,159 @@
   <xns1:production>
     <nonterminal>Symposium</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>conists_of</selector>
+	    <xns1:expression>
+	      <nonterminal>Event_Tracks</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>confirmed_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Approval_Email</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>defined_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Event_Setup</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>approved_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>starts_on</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>ends_on</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Abstract</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1431,6 +2238,12 @@
   <xns1:production>
     <nonterminal>Document</nonterminal>
     <xns1:expression>
+      <nonterminal>Review</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Document</nonterminal>
+    <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
@@ -1462,19 +2275,126 @@
   <xns1:production>
     <nonterminal>Invited_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Admin_Role</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>assigned_by</selector>
+	<xns1:expression>
+	  <nonterminal>Administrator</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Paper_Typologies</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>define</selector>
+	<xns1:expression>
+	  <nonterminal>Event</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1639,13 +2559,115 @@
   <xns1:production>
     <nonterminal>Short_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Author_Role</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>assigned_by</selector>
+	<xns1:expression>
+	  <nonterminal>Administrator</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1682,7 +2704,12 @@
   <xns1:production>
     <nonterminal>Committe_Role</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>assigned_by</selector>
+	<xns1:expression>
+	  <nonterminal>Administrator</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1694,7 +2721,12 @@
   <xns1:production>
     <nonterminal>Submission_Template</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>define</selector>
+	<xns1:expression>
+	  <nonterminal>Event</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1712,7 +2744,28 @@
   <xns1:production>
     <nonterminal>Event_Creation</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>has_result</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sent_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1735,13 +2788,63 @@
   <xns1:production>
     <nonterminal>Submission</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>recieved_by</selector>
+	    <xns1:expression>
+	      <nonterminal>User</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>used_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>submited__by</selector>
+	    <xns1:expression>
+	      <nonterminal>User</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Template</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>recieved_by</selector>
+	    <xns1:expression>
+	      <nonterminal>User</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>used_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>submited__by</selector>
+	    <xns1:expression>
+	      <nonterminal>User</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1753,7 +2856,12 @@
   <xns1:production>
     <nonterminal>Event_Tracks</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>define</selector>
+	<xns1:expression>
+	  <nonterminal>Event</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1816,7 +2924,12 @@
   <xns1:production>
     <nonterminal>Head_Role</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>assigned_by</selector>
+	<xns1:expression>
+	  <nonterminal>Administrator</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1828,37 +2941,211 @@
   <xns1:production>
     <nonterminal>Corresponding_Author</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writes</selector>
+	    <xns1:expression>
+	      <nonterminal>Contribution</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>submitPaper</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writePaper</selector>
+	    <xns1:expression>
+	      <nonterminal>Paper</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Reviewer_Role</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>assigned_by</selector>
+	<xns1:expression>
+	  <nonterminal>Administrator</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Event_Approval</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>has_result</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sent_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Registration</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>has_result</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sent_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Full_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasCo-author</selector>
+	    <xns1:expression>
+	      <nonterminal>Co-author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasBid</selector>
+	    <xns1:expression>
+	      <nonterminal>Bid</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasDecision</selector>
+	    <xns1:expression>
+	      <nonterminal>Decision</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>assignedTo</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSubjectArea</selector>
+	    <xns1:expression>
+	      <nonterminal>SubjectArea</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByReviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>paperID</selector>
+	    <xns1:expression>
+	      <nonterminal>unsignedLong</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAuthor</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>acceptedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>rejectedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrator</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>readByMeta-Reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>Meta-Reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Research_Topic</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>define</selector>
+	<xns1:expression>
+	  <nonterminal>Event</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1876,13 +3163,24 @@
   <xns1:production>
     <nonterminal>Email_Template</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>define</selector>
+	<xns1:expression>
+	  <nonterminal>Event</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Conference_participant</nonterminal>
     <xns1:expression>
       <nonterminal>Passive_conference_participant</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Conference_participant</nonterminal>
+    <xns1:expression>
+      <nonterminal>Active_conference_participant</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1977,6 +3275,12 @@
     <nonterminal>Conference_contributor</nonterminal>
     <xns1:expression>
       <nonterminal>Invited_speaker</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Conference_contributor</nonterminal>
+    <xns1:expression>
+      <nonterminal>Active_conference_participant</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2233,7 +3537,24 @@
   <xns1:production>
     <nonterminal>Information_for_participants</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_authors</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_date_of_issue</selector>
+	    <xns1:expression>
+	      <nonterminal>date</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2275,6 +3596,12 @@
   <xns1:production>
     <nonterminal>Conference_document</nonterminal>
     <xns1:expression>
+      <nonterminal>Review</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Conference_document</nonterminal>
+    <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
@@ -2302,9 +3629,83 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
+    <nonterminal>Regular_contribution</nonterminal>
+    <xns1:expression>
+      <nonterminal>Paper</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>Poster</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>is_submitted_at</selector>
+	<xns1:expression>
+	  <nonterminal>Conference_volume</nonterminal>
+	</xns1:expression>
+      </selectable>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Poster</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writtenBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>dealsWith</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>remark</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>abstract</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contactEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasKeyword</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasTitle</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2481,25 +3882,70 @@
   <xns1:production>
     <nonterminal>Call_for_paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_authors</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_date_of_issue</selector>
+	    <xns1:expression>
+	      <nonterminal>date</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Conference_announcement</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_authors</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_date_of_issue</selector>
+	    <xns1:expression>
+	      <nonterminal>date</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Invited_talk</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>is_given_by</selector>
+	<xns1:expression>
+	  <nonterminal>Active_conference_participant</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Conference_part</nonterminal>
     <xns1:expression>
       <nonterminal>Track</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Conference_part</nonterminal>
+    <xns1:expression>
+      <nonterminal>Tutorial</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2564,13 +4010,43 @@
   <xns1:production>
     <nonterminal>Track</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_track-workshop-tutorial_topic</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_part_of_conference_volumes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_volume</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_track-workshop-tutorial_chair</selector>
+	    <xns1:expression>
+	      <nonterminal>Track-workshop_chair</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Rejected_contribution</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>has_a_review</selector>
+	<xns1:expression>
+	  <nonterminal>Review</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2665,7 +4141,24 @@
   <xns1:production>
     <nonterminal>Call_for_participation</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_authors</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_date_of_issue</selector>
+	    <xns1:expression>
+	      <nonterminal>date</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2798,7 +4291,24 @@
   <xns1:production>
     <nonterminal>Accepted_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>full_paper_size</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_author</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -2845,13 +4355,47 @@
   <xns1:production>
     <nonterminal>Rejected_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>full_paper_size</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_author</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Undecided_Paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>full_paper_size</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_author</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -3063,6 +4607,12 @@
   <xns1:production>
     <nonterminal>article</nonterminal>
     <xns1:expression>
+      <nonterminal>review</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>article</nonterminal>
+    <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
@@ -3142,7 +4692,72 @@
   <xns1:production>
     <nonterminal>Contact_Person</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_author_of</selector>
+	    <xns1:expression>
+	      <nonterminal>article</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>performs_activity</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_employed_in</selector>
+	    <xns1:expression>
+	      <nonterminal>institute</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_topic_of_interest</selector>
+	    <xns1:expression>
+	      <nonterminal>topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>supervises</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>e-mail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -3409,13 +5024,127 @@
   <xns1:production>
     <nonterminal>managing_of_conference_process</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_followed_by</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_monitored_by</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_intensity</selector>
+	    <xns1:expression>
+	      <nonterminal>intensity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_result</selector>
+	    <xns1:expression>
+	      <nonterminal>article</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_performed_by</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_supervised_by</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Program_Committee_Chair</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_author_of</selector>
+	    <xns1:expression>
+	      <nonterminal>article</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>performs_activity</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_employed_in</selector>
+	    <xns1:expression>
+	      <nonterminal>institute</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_topic_of_interest</selector>
+	    <xns1:expression>
+	      <nonterminal>topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>supervises</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>e-mail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -3477,7 +5206,80 @@
   <xns1:production>
     <nonterminal>group_email</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>article_written_by</selector>
+	    <xns1:expression>
+	      <nonterminal>author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_abstract</selector>
+	    <xns1:expression>
+	      <nonterminal>abstract</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>goes_through</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_sent_to</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_created_in</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>structure_created_by</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_author</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>gives_classification</selector>
+	    <xns1:expression>
+	      <nonterminal>classification</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -3543,7 +5345,80 @@
   <xns1:production>
     <nonterminal>abstract_of_paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>article_written_by</selector>
+	    <xns1:expression>
+	      <nonterminal>author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_reviewer</selector>
+	    <xns1:expression>
+	      <nonterminal>reviewer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_abstract</selector>
+	    <xns1:expression>
+	      <nonterminal>abstract</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>goes_through</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_sent_to</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_created_in</selector>
+	    <xns1:expression>
+	      <nonterminal>activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>structure_created_by</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_author</selector>
+	    <xns1:expression>
+	      <nonterminal>human</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>gives_classification</selector>
+	    <xns1:expression>
+	      <nonterminal>classification</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -3952,13 +5827,87 @@
   <xns1:production>
     <nonterminal>Short_paper</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>writtenBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Author</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>dealsWith</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>remark</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>abstract</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contactEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasKeyword</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasTitle</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Reviewing_results_event</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>follows</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_with</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4017,31 +5966,152 @@
   <xns1:production>
     <nonterminal>Reviewing_event</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>follows</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_with</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Registration_of_participants_event</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>follows</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_with</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Submission_event</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>follows</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_with</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Camera_Ready_event</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>follows</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_with</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Tutorial</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasTopic</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasAdministrativeEvent</selector>
+	    <xns1:expression>
+	      <nonterminal>Administrative_event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_track-workshop-tutorial_topic</selector>
+	    <xns1:expression>
+	      <nonterminal>Topic</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>is_part_of_conference_volumes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_volume</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_a_track-workshop-tutorial_chair</selector>
+	    <xns1:expression>
+	      <nonterminal>Track-workshop_chair</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Working_event</nonterminal>
+    <xns1:expression>
+      <nonterminal>Workshop</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Working_event</nonterminal>
+    <xns1:expression>
+      <nonterminal>Tutorial</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4070,7 +6140,12 @@
   <xns1:production>
     <nonterminal>Member</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>earlyRegistration</selector>
+	<xns1:expression>
+	  <nonterminal>Boolean</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4128,37 +6203,915 @@
   <xns1:production>
     <nonterminal>Chair_PC</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>inverse_of_add</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>execute</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>get</selector>
+	    <xns1:expression>
+	      <nonterminal>Inforamtion</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>use</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>register</selector>
+	    <xns1:expression>
+	      <nonterminal>Account</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>modify</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>take_part_in</selector>
+	    <xns1:expression>
+	      <nonterminal>Event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>remove</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>add</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>send</selector>
+	    <xns1:expression>
+	      <nonterminal>Activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>added_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contributes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_an_email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_gender</selector>
+	    <xns1:expression>
+	      <nonterminal>EEnum</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>employedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Organization</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasHomePage</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSurname</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFax</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFirstName</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasPhone</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasConflictOfInterest</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Student</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>earlyRegistration</selector>
+	<xns1:expression>
+	  <nonterminal>Boolean</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Science_Worker</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>inverse_of_add</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>execute</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>get</selector>
+	    <xns1:expression>
+	      <nonterminal>Inforamtion</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>use</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>register</selector>
+	    <xns1:expression>
+	      <nonterminal>Account</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>modify</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>take_part_in</selector>
+	    <xns1:expression>
+	      <nonterminal>Event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>remove</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>add</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>send</selector>
+	    <xns1:expression>
+	      <nonterminal>Activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>added_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contributes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_an_email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_gender</selector>
+	    <xns1:expression>
+	      <nonterminal>EEnum</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>employedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Organization</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasHomePage</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSurname</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFax</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFirstName</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasPhone</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasConflictOfInterest</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Assistant</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>inverse_of_add</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>execute</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>get</selector>
+	    <xns1:expression>
+	      <nonterminal>Inforamtion</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>use</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>register</selector>
+	    <xns1:expression>
+	      <nonterminal>Account</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>modify</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>take_part_in</selector>
+	    <xns1:expression>
+	      <nonterminal>Event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>remove</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>add</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>send</selector>
+	    <xns1:expression>
+	      <nonterminal>Activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>added_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contributes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_an_email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_gender</selector>
+	    <xns1:expression>
+	      <nonterminal>EEnum</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>employedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Organization</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasHomePage</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSurname</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFax</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFirstName</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasPhone</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasConflictOfInterest</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Volunteer</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>inverse_of_add</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>execute</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>get</selector>
+	    <xns1:expression>
+	      <nonterminal>Inforamtion</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>use</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>register</selector>
+	    <xns1:expression>
+	      <nonterminal>Account</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>modify</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>take_part_in</selector>
+	    <xns1:expression>
+	      <nonterminal>Event</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>remove</selector>
+		<xns1:expression>
+		  <nonterminal>Thing</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>add</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>send</selector>
+	    <xns1:expression>
+	      <nonterminal>Activity</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>added_by</selector>
+	    <xns1:expression>
+	      <nonterminal>Person</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contributes</selector>
+	    <xns1:expression>
+	      <nonterminal>Conference_document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_an_email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_first_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_gender</selector>
+	    <xns1:expression>
+	      <nonterminal>EEnum</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_the_last_name</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>employedBy</selector>
+	    <xns1:expression>
+	      <nonterminal>Organization</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasHomePage</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasSurname</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFax</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasFirstName</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasPhone</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasEmail</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>hasConflictOfInterest</selector>
+	    <xns1:expression>
+	      <nonterminal>Document</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>email</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Regular</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>earlyRegistration</selector>
+	<xns1:expression>
+	  <nonterminal>Boolean</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4230,7 +7183,24 @@
   <xns1:production>
     <nonterminal>pc_meeting</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_startdate</selector>
+	    <xns1:expression>
+	      <nonterminal>dateTime</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_enddate</selector>
+	    <xns1:expression>
+	      <nonterminal>dateTime</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4243,6 +7213,12 @@
     <nonterminal>event</nonterminal>
     <xns1:expression>
       <nonterminal>session</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>event</nonterminal>
+    <xns1:expression>
+      <nonterminal>conference</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4271,7 +7247,24 @@
   <xns1:production>
     <nonterminal>session</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_startdate</selector>
+	    <xns1:expression>
+	      <nonterminal>dateTime</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>has_enddate</selector>
+	    <xns1:expression>
+	      <nonterminal>dateTime</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4318,6 +7311,12 @@
     <nonterminal>document</nonterminal>
     <xns1:expression>
       <nonterminal>abstract</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>document</nonterminal>
+    <xns1:expression>
+      <nonterminal>review</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -4407,6 +7406,31 @@
 	  <nonterminal>review</nonterminal>
 	</xns1:expression>
       </selectable>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Boolean</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <terminal>true</terminal>
+	</xns1:expression>
+	<xns1:expression>
+	  <terminal>false</terminal>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Integer</nonterminal>
+    <xns1:expression>
+      <value>int</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>String</nonterminal>
+    <xns1:expression>
+      <value>string</value>
     </xns1:expression>
   </xns1:production>
 </xns1:grammar>

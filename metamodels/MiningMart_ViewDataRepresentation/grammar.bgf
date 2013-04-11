@@ -28,6 +28,12 @@
   <xns1:production>
     <nonterminal>ModelElement</nonterminal>
     <xns1:expression>
+      <nonterminal>RelationShip</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>ModelElement</nonterminal>
+    <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <nonterminal>Classifier</nonterminal>
@@ -85,6 +91,12 @@
     <nonterminal>Class</nonterminal>
     <xns1:expression>
       <nonterminal>UserInput</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Class</nonterminal>
+    <xns1:expression>
+      <nonterminal>Concept</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -152,6 +164,12 @@
   <xns1:production>
     <nonterminal>Attribute</nonterminal>
     <xns1:expression>
+      <nonterminal>Value</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Attribute</nonterminal>
+    <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
@@ -170,6 +188,31 @@
 	  </selectable>
 	</xns1:expression>
       </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>String</nonterminal>
+    <xns1:expression>
+      <value>string</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Integer</nonterminal>
+    <xns1:expression>
+      <value>int</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Boolean</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <terminal>true</terminal>
+	</xns1:expression>
+	<xns1:expression>
+	  <terminal>false</terminal>
+	</xns1:expression>
+      </choice>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -465,19 +508,238 @@
   <xns1:production>
     <nonterminal>Snapshot</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>number</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>file</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>dbConnectString</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>user</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasColumn</selector>
+		<xns1:expression>
+		  <nonterminal>Column</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasKey</selector>
+		<xns1:expression>
+		  <nonterminal>Key</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToConcept</selector>
+	    <xns1:expression>
+	      <nonterminal>Concept</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToRelationShip</selector>
+	    <xns1:expression>
+	      <nonterminal>RelationShip</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>Table</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>number</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>file</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>dbConnectString</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>user</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasColumn</selector>
+		<xns1:expression>
+		  <nonterminal>Column</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasKey</selector>
+		<xns1:expression>
+		  <nonterminal>Key</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToConcept</selector>
+	    <xns1:expression>
+	      <nonterminal>Concept</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToRelationShip</selector>
+	    <xns1:expression>
+	      <nonterminal>RelationShip</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>View</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>number</selector>
+	    <xns1:expression>
+	      <nonterminal>Integer</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>file</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>dbConnectString</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>user</selector>
+	    <xns1:expression>
+	      <nonterminal>String</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasColumn</selector>
+		<xns1:expression>
+		  <nonterminal>Column</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasKey</selector>
+		<xns1:expression>
+		  <nonterminal>Key</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToConcept</selector>
+	    <xns1:expression>
+	      <nonterminal>Concept</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>correspondsToRelationShip</selector>
+	    <xns1:expression>
+	      <nonterminal>RelationShip</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -553,7 +815,36 @@
   <xns1:production>
     <nonterminal>PrimaryKey</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>isUsedForIndex</selector>
+	    <xns1:expression>
+	      <nonterminal>Boolean</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>hasColumn</selector>
+		<xns1:expression>
+		  <nonterminal>Column</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>isAssociatedToColumnSet</selector>
+	    <xns1:expression>
+	      <nonterminal>ColumnSet</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -842,6 +1133,12 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
+    <nonterminal>Scalar</nonterminal>
+    <xns1:expression>
+      <nonterminal>Binary</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>Time</nonterminal>
     <xns1:expression>
       <epsilon/>
@@ -1009,6 +1306,12 @@
   <xns1:production>
     <nonterminal>Nominal</nonterminal>
     <xns1:expression>
+      <nonterminal>Binary</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Nominal</nonterminal>
+    <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <nonterminal>Categorial</nonterminal>
@@ -1020,6 +1323,24 @@
 	  <nonterminal>Constant</nonterminal>
 	</xns1:expression>
       </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Parameter</nonterminal>
+    <xns1:expression>
+      <nonterminal>Concept</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Parameter</nonterminal>
+    <xns1:expression>
+      <nonterminal>RelationShip</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Parameter</nonterminal>
+    <xns1:expression>
+      <nonterminal>Value</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>

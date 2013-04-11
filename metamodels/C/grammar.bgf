@@ -2,6 +2,31 @@
 
 <xns1:grammar xmlns:xns1="http://planet-sl.org/bgf">
   <xns1:production>
+    <nonterminal>Integer</nonterminal>
+    <xns1:expression>
+      <value>int</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>String</nonterminal>
+    <xns1:expression>
+      <value>string</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Boolean</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <terminal>true</terminal>
+	</xns1:expression>
+	<xns1:expression>
+	  <terminal>false</terminal>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>CDataType</nonterminal>
     <xns1:expression>
       <nonterminal>CIntegral</nonterminal>
@@ -328,6 +353,12 @@
   <xns1:production>
     <nonterminal>CClassifier</nonterminal>
     <xns1:expression>
+      <nonterminal>CStructured</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>CClassifier</nonterminal>
+    <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <nonterminal>CDataType</nonterminal>
@@ -342,6 +373,18 @@
     <nonterminal>Derived</nonterminal>
     <xns1:expression>
       <epsilon/>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>CStructureContents</nonterminal>
+    <xns1:expression>
+      <nonterminal>CStructuralFeature</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>CStructureContents</nonterminal>
+    <xns1:expression>
+      <nonterminal>CStructured</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -385,13 +428,31 @@
   <xns1:production>
     <nonterminal>CStruct</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contains</selector>
+	    <xns1:expression>
+	      <nonterminal>CStructureContents</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </plus>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
     <nonterminal>CUnion</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>contains</selector>
+	    <xns1:expression>
+	      <nonterminal>CStructureContents</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </plus>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -421,6 +482,12 @@
     <nonterminal>CTypedElement</nonterminal>
     <xns1:expression>
       <nonterminal>CParameter</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>CTypedElement</nonterminal>
+    <xns1:expression>
+      <nonterminal>CStructuralFeature</nonterminal>
     </xns1:expression>
   </xns1:production>
   <xns1:production>

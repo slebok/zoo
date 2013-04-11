@@ -2,6 +2,31 @@
 
 <xns1:grammar xmlns:xns1="http://planet-sl.org/bgf">
   <xns1:production>
+    <nonterminal>Boolean</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <terminal>true</terminal>
+	</xns1:expression>
+	<xns1:expression>
+	  <terminal>false</terminal>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>Integer</nonterminal>
+    <xns1:expression>
+      <value>int</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>String</nonterminal>
+    <xns1:expression>
+      <value>string</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>QoSComponent</nonterminal>
     <xns1:expression>
       <sequence>
@@ -43,7 +68,76 @@
   <xns1:production>
     <nonterminal>QoSContraints</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>invariant</selector>
+	    <xns1:expression>
+	      <nonterminal>BooleanExpression</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_and_composition</selector>
+	    <xns1:expression>
+	      <nonterminal>MappingExpression</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parallel_or_composition</selector>
+	    <xns1:expression>
+	      <nonterminal>MappingExpression</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sequential_composition</selector>
+	    <xns1:expression>
+	      <nonterminal>MappingExpression</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>values</selector>
+	    <xns1:expression>
+	      <nonterminal>MappingExpression</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>statisticalAttribute</selector>
+		<xns1:expression>
+		  <nonterminal>StatisticalAttributekindKind</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>parameter</selector>
+	    <xns1:expression>
+	      <nonterminal>Parameter</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>domain</selector>
+	    <xns1:expression>
+	      <nonterminal>Domain</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -422,7 +516,12 @@
   <xns1:production>
     <nonterminal>Numeric</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>direction</selector>
+	<xns1:expression>
+	  <nonterminal>DirectionKind</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -443,7 +542,12 @@
   <xns1:production>
     <nonterminal>Enumeration</nonterminal>
     <xns1:expression>
-      <epsilon/>
+      <selectable>
+	<selector>direction</selector>
+	<xns1:expression>
+	  <nonterminal>DirectionKind</nonterminal>
+	</xns1:expression>
+      </selectable>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
