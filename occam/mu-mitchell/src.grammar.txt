@@ -1,0 +1,60 @@
+process = STOP j SKIP j action j construction j instance
+j speciﬁcation
+process
+action = assignment j input j output
+assignment = variable := expression
+input = channel ? variable
+output = channel ! expression
+construction = sequence j conditional j loop j parallel j alternation
+sequence = SEQ
+f process g
+j SEQ replicator
+process
+conditional = IF
+f choice g
+j IF replicator
+choice
+choice = boolean
+process
+boolean = expression
+loop = WHILE boolean
+process
+parallel = PAR
+f process g
+j PAR replicator
+process
+alternation = ALT
+f alternative g
+j ALT replicator
+alternative
+alternative = guard
+process
+guard = input j boolean & input
+replicator = name = base FOR count
+base = expression
+count = expression
+type = primitive.type
+j [ expression ] primitive.type
+primitive.type = INT j CHAN
+literal = integer
+element = name j name [ subscript ]
+subscript = expression
+variable = element
+channel = element
+operand = variable j literal j ( expression )
+expression = monadic.operator operand
+j operand dyadic.operator operand
+j operand
+speciﬁcation = declaration j deﬁnition
+declaration = type name :
+j INT name = expression :
+j VAL name IS expression :
+deﬁnition = PROC name ( f0, formal g )
+procedure.body
+:
+formal = primitive.type name
+procedure.body = process
+instance = name ( f0, actual g )
+actual = element
+monadic.operator = - j NOT
+dyadic.operator = + j - j * j / j n j = j < j > j <= j >= j <> j AND j OR
