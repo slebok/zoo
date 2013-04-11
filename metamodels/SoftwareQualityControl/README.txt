@@ -6,6 +6,6 @@ date : 2005/07/04
 Domain : Software, Quality control, Software life cycle
 Description :  This metamodel describes a simple structure to manage software quality control and especially bug tracking. It is based on a simple Excel table representation. 
 See : 
-Authors : Hugo Bruneliere
+Authors : Hugo Brunelière
 
 Grammar in a broad sense extracted automatically on 8 April 2013 by Vadim Zaytsev, http://grammarware.net

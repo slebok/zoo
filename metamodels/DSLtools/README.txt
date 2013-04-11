@@ -6,6 +6,6 @@ date : 2006
 Domain : DSL tools
 Description :  a Microsoft DSL tools metamodel. 
 See : <a href="http://msdn.microsoft.com/en-us/library/bb126235.aspx" class="external free" title="http://msdn.microsoft.com/en-us/library/bb126235.aspx" rel="nofollow">http://msdn.microsoft.com/en-us/library/bb126235.aspx</a>
-Authors : Hugo BruneliÃ?Â¨re
+Authors : Hugo Brunelière
 
 Grammar in a broad sense extracted automatically on 8 April 2013 by Vadim Zaytsev, http://grammarware.net

@@ -7,7 +7,7 @@ Domain : Metamodelization
 Description :  This metamodel fragment describes preliminary version of the multiple metalevels 
 See : This metamodel has been extracted from information available in the following article:
 Article The Essence of Multilevel Metamodeling
-by Colin Atkinson, Thomas KÃ?Â¼hne
+by Colin Atkinson, Thomas Kühne
 Page 32, Section 4.4, Fig. 10. the MoMM
 Lecture Notes in Computer Science 2185
 Martin Gogolla, Cris Kobryn

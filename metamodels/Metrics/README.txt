@@ -6,6 +6,6 @@ date : 2007/01/25
 Domain : Metrics
 Description :  This metamodel describes a simple generic structure for expressing any kinds of metrics. 
 See : 
-Authors : Hugo Bruneliere
+Authors : Hugo Brunelière
 
 Grammar in a broad sense extracted automatically on 8 April 2013 by Vadim Zaytsev, http://grammarware.net

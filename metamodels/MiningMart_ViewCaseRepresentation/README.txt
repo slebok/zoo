@@ -6,7 +6,7 @@ date : 2006/07/21
 Domain : Mining Mart
 Description :  This metamodel represents the concepts Case representation of Mining Mart. 
 See : M4 - The Mining Mart MetaModel
-Authors: Anca Vaduva, JÃ?Â¶rg-Uwe Kietz, Regina ZÃ?Â¼cker and Klaus R. Dittrich
+Authors: Anca Vaduva, Jörg-Uwe Kietz, Regina Zücker and Klaus R. Dittrich
 <a href="ftp://ftp.ifi.unizh.ch/pub/techreports/TR-2001/ifi-2001.02.pdf" class="external free" title="ftp://ftp.ifi.unizh.ch/pub/techreports/TR-2001/ifi-2001.02.pdf" rel="nofollow">ftp://ftp.ifi.unizh.ch/pub/techreports/TR-2001/ifi-2001.02.pdf</a>, page 20
 Authors : SIMON Eric
 

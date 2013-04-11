@@ -6,6 +6,6 @@ date : 2008/06/24
 Domain : Eclipse
 Description :  An Eclipse Plug-in Metamodel 
 See : <a href="http://www.eclipse.org" class="external free" title="http://www.eclipse.org" rel="nofollow">http://www.eclipse.org</a>
-Authors : Mathieu VÃ©nisse
+Authors : Mathieu Vénisse
 
 Grammar in a broad sense extracted automatically on 8 April 2013 by Vadim Zaytsev, http://grammarware.net

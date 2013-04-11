@@ -7,7 +7,7 @@ Domain : Sync Chart
 Description :  This metamodel fragment describes SyncCharts 
 See : This metamodel fragment has been extracted from information available in the following article :
 Article Integrating the Synchronous Paradigm into UML : Application to Control-Dominated Systems
-by Charles André, Marie-AgnÃ?Â¨s Peraldi-Frati, Jean-paul Rigault
+by Charles André, Marie-Agnès Peraldi-Frati, Jean-Paul Rigault
 Page 173, Section 3.3, Fig. 2. A UML meta-model for SyncCharts
 Lecture Notes in Computer Science 2460
 Jean Marc Jézéquel, Heinrich Hussman, Stephen Cook
