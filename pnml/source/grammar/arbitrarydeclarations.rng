@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of High-level Petri nets user-defined grammar.
+		This schema implements the extended signature framework 
+		for user-defined (different from user-declared) sorts and operators
+		on High-level Petri nets.
+		
+		File name: arbitrarydeclarations.rng	
+		Version: 2009
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+
+	<define name="Declaration" combine="choice">
+		<ref name="Unparsed"/>
+	</define>
+	
+	<define name="SortDeclaration" combine="choice">
+		<a:documentation>
+			A Sort declaration is a user-declared sort, using built-in sorts.
+			It defines known concrete sort declarations.
+		</a:documentation>
+		<ref name="ArbitrarySort"/>
+	</define>
+	
+	<define name="OperatorDeclaration" combine="choice">
+		<a:documentation>
+			An Operator declaration is a user-declared operator using built-in.
+			constructs.
+		</a:documentation>
+		<ref name="ArbitraryOperator"/>
+	</define>
+	
+	<define name="ArbitrarySort">
+		<a:documentation>
+			A user-defined Sort declaration is a SortDeclaration.
+			Users have the possibility to add 
+			any well-formed XML pattern to complete this definition.
+			It has an id.
+		</a:documentation>
+		<element name="arbitrarysort">
+			<ref name="SortDeclaration.content"/>
+		</element>
+	</define>
+
+	<define name="ArbitraryOperator">
+		<a:documentation>
+			A user-defined operator declaration is an Operator Declaration. 
+			It refers to its input and output sorts.
+		</a:documentation> 
+		<element name="arbitraryoperator">
+			<ref name="OperatorDeclaration.content"/>
+			<interleave>
+				<zeroOrMore>
+					<element name="input">
+						<ref name="Sort"/>
+					</element>
+				</zeroOrMore>
+				<element name="output">
+					<ref name="Sort"/>
+				</element>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="Unparsed">
+		<a:documentation>
+			A user-defined element which is unparsed.
+			It is defined with the 'anyElement' construct.
+		</a:documentation>
+		<element name="unparsed">
+			<ref name="Declaration.content"/>
+			<zeroOrMore>
+				<ref name="anyElement"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	
+</grammar>

@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar ns="http://www.pnml.org/version-2009/grammar/pnml"
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		Petri Net Markup Language (PNML) schema.
+		RELAX NG implementation of PNML Core Model.
+
+		File name: pnmlcoremodel.rng
+		Version: 2009
+		(c) 2001-2009
+		Michael Weber,
+		Ekkart Kindler,
+		Christian Stehno, 
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<include href="http://www.pnml.org/version-2009/grammar/anyElement.rng"/>
+
+	<start>
+		<ref name="pnml.element"/>
+	</start>
+	
+	<define name="pnml.element">
+		<element name="pnml">
+			<a:documentation>
+				A PNML document consists of one or more Petri nets.
+				It has a version.
+			</a:documentation>
+			<oneOrMore>
+				<ref name="pnml.content"/>
+			</oneOrMore>
+		</element>
+	</define>
+
+	<define name="pnml.content">
+		<ref name="net.element"/>
+	</define>
+
+	<define name="net.element">
+		<element name="net">
+			<a:documentation>
+				A net has a unique identifier (id) and refers to
+				its Petri Net Type Definition (PNTD) (type).
+			</a:documentation>
+			<ref name="identifier.content"/>
+			<ref name="nettype.uri"/>
+			<a:documentation>
+				The sub-elements of a net may occur in any order. 
+				A net consists of at least a top-level page which 
+				may contain several objects. A net may have a name,
+				other labels (net.labels) and tool specific information in any order.   
+			</a:documentation>
+			<interleave>
+				<optional>
+					<ref name="Name"/>
+				</optional>
+				<ref name="net.labels"/>
+				<oneOrMore>
+					<ref name="page.content"/>
+				</oneOrMore>
+				<zeroOrMore>
+					<ref name="toolspecific.element"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="identifier.content">
+		<a:documentation>
+			Identifier (id) declaration shared by all objects in any PNML model.
+		</a:documentation>
+		<attribute name="id">
+			<data type="ID"/>
+		</attribute>
+	</define>
+
+	<define name="nettype.uri">
+		<a:documentation>
+			The net type (nettype.uri) of a net should be redefined in the grammar
+			for a new Petri net Type.
+			An example of such a definition is in ptnet.pntd, the grammar
+			for P/T Nets. The following value is a default.
+		</a:documentation>
+		<attribute name="type">
+			<value>http://www.pnml.org/version-2009/grammar/pnmlcoremodel</value> 
+		</attribute>
+	</define>
+
+	<define name="net.labels">
+		<a:documentation>
+			A net may have unspecified many labels. This pattern should be used
+			within a PNTD to define the net labels.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="basicobject.content">
+		<a:documentation>
+			Basic contents for any object of a PNML model.
+		</a:documentation>
+		<interleave>
+			<optional>
+				<ref name="Name"/>
+			</optional>
+			<zeroOrMore>
+				<ref name="toolspecific.element"/>
+			</zeroOrMore>
+		</interleave>	
+	</define> 
+
+
+	<define name="page.content">
+		<a:documentation>
+			A page has an id. It may have a name and tool specific information.
+			It may also have graphical information. It can also have many arbitrary labels.
+			Note: according to this definition, a page may contain other pages. 
+			All these sub-elements may occur in any order.
+		</a:documentation>
+		<element name="page">
+			<ref name="identifier.content"/>	
+			<interleave>
+				<ref name="basicobject.content"/>
+				<ref name="page.labels"/>
+				<zeroOrMore>
+					<ref name="netobject.content"/>
+				</zeroOrMore>
+				<optional>
+					<element name="graphics">
+						<ref name="pagegraphics.content"/>
+					</element>
+				</optional>
+			</interleave> 
+		</element>
+	</define>
+
+	<define name="netobject.content">
+		<a:documentation>
+			A net object is either a page, a node or an arc. 
+			A node is a place or a transition, a reference place of
+			a reference transition.
+		</a:documentation>
+		<choice>     
+			<ref name="page.content"/>      
+			<ref name="place.content"/>  
+			<ref name="transition.content"/>    
+			<ref name="refplace.content"/>
+			<ref name="reftrans.content"/>
+			<ref name="arc.content"/>
+		</choice>
+	</define>
+
+	<define name="page.labels">
+		<a:documentation>
+			A page may have unspecified many labels. This pattern should be used
+			within a PNTD to define new labels for the page concept.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="place.content">
+		<a:documentation>
+			A place may have several labels (place.labels) and the same content 
+			as a node.
+		</a:documentation>
+		<element name="place">
+			<ref name="identifier.content"/>
+			<interleave>
+				<ref name="basicobject.content"/>
+				<ref name="place.labels"/>
+				<ref name="node.content"/>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="place.labels">
+		<a:documentation>
+			A place may have arbitrary many labels. This pattern should be used
+			within a PNTD to define the place labels.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="transition.content">
+		<a:documentation>
+			A transition may have several labels (transition.labels) and the same 
+			content as a node.
+		</a:documentation>
+		<element name="transition">
+			<ref name="identifier.content"/>		
+			<interleave>
+				<ref name="basicobject.content"/>
+				<ref name="transition.labels"/>
+				<ref name="node.content"/>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="transition.labels">
+		<a:documentation>
+			A transition may have arbitrary many labels. This pattern should be 
+			used within a PNTD to define the transition labels.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="node.content">
+		<a:documentation>
+			A node may have graphical information.
+		</a:documentation>    
+		<optional>
+			<element name="graphics">
+				<ref name="nodegraphics.content"/>
+			</element>
+		</optional>  
+	</define>
+
+	<define name="reference">
+		<a:documentation>
+			Here, we define the attribute ref including its data type.
+			Modular PNML will extend this definition in order to change
+			the behavior of references to export nodes of module instances.
+		</a:documentation>
+		<attribute name="ref">
+			<data type="IDREF"/>
+		</attribute>
+	</define>
+
+	<define name="refplace.content">
+		<a:documentation>
+			A reference place is a reference node.
+		</a:documentation>
+		<a:documentation>
+			Validating instruction: 
+			- _ref_ MUST refer to _id_ of a reference place or of a place.
+			- _ref_ MUST NOT refer to _id_ of its reference place element.
+			- _ref_ MUST NOT refer to a cycle of reference places.
+		</a:documentation>
+		<element name="referencePlace">
+			<ref name="refnode.content"/>
+		</element>
+	</define>
+
+	<define name="reftrans.content">
+		<a:documentation>
+			A reference transition is a reference node.
+		</a:documentation>
+		<a:documentation>
+			Validating instruction: 
+			- The reference (ref) MUST refer to a reference transition or to a 
+			transition.
+			- The reference (ref) MUST NOT refer to the identifier (id) of its
+			reference transition element.
+			- The reference (ref) MUST NOT refer to a cycle of reference transitions.
+		</a:documentation>
+		<element name="referenceTransition">
+			<ref name="refnode.content"/>
+		</element>
+	</define>
+
+	<define name="refnode.content">
+		<a:documentation>
+			A reference node has the same content as a node.
+			It adds a reference (ref) to a (reference) node.
+		</a:documentation>
+		<ref name="identifier.content"/>
+		<ref name="reference"/>
+		<ref name="basicobject.content"/>
+		<ref name="node.content"/>  
+	</define>
+
+	<define name="arc.content">
+		<a:documentation>
+			An arc has a unique identifier (id) and
+			refers both to the node's id of its source and 
+			the node's id of its target.
+			In general, if the source attribute refers to a place, 
+			then the target attribute refers to a transition and vice versa.
+		</a:documentation>
+		<element name="arc">
+			<ref name="identifier.content"/>
+			<attribute name="source">
+				<data type="IDREF"/>
+			</attribute>
+			<attribute name="target">
+				<data type="IDREF"/>
+			</attribute>
+			<a:documentation>
+				The sub-elements of an arc may occur in any order.
+				An arc may have a name, graphical and tool specific information.
+				It may also have several labels.
+			</a:documentation>
+			<interleave>
+				<optional>
+					<ref name="Name"/>
+				</optional>
+				<ref name="arc.labels"/>
+				<optional>
+					<element name="graphics">
+						<ref name="edgegraphics.content"/>
+					</element>
+				</optional>
+				<zeroOrMore>
+					<ref name="toolspecific.element"/>
+				</zeroOrMore>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="arc.labels">
+		<a:documentation>
+			An arc may have arbitrary many labels. This pattern should be used
+			within a PNTD to define the arc labels.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="pagegraphics.content">
+		<a:documentation>
+			A page graphics is actually a node graphics
+		</a:documentation>
+		<ref name="nodegraphics.content"/> 
+	</define>
+
+	<define name="nodegraphics.content">
+		<a:documentation>
+			The sub-elements of a node's graphical part occur in any order.
+			At least, there may be one position element.
+			Furthermore, there may be a dimension, a fill, and a line element.
+		</a:documentation>
+		<interleave>
+			<ref name="position.element"/>
+			<optional>
+				<ref name="dimension.element"/>
+			</optional>
+			<optional>
+				<ref name="fill.element"/>
+			</optional>
+			<optional>
+				<ref name="line.element"/>
+			</optional>
+		</interleave>
+	</define>
+
+	<define name="edgegraphics.content">
+		<a:documentation>
+			The sub-elements of an arc's graphical part occur in any order.
+			There may be zero or more position elements.
+			Furthermore, there may be a line element.
+		</a:documentation>
+		<interleave>
+			<zeroOrMore>
+				<ref name="position.element"/>
+			</zeroOrMore>
+			<optional>
+				<ref name="line.element"/>
+			</optional>
+		</interleave>
+	</define>
+
+	<define name="simpletext.content">
+		<a:documentation>
+			This definition describes the contents of simple text labels
+			without graphics.
+		</a:documentation>
+		<optional>
+			<element name="text">
+				<a:documentation>
+					A text should have a value. 
+					If not, then there must be a default.
+				</a:documentation>
+				<text/>
+			</element>
+		</optional>
+	</define>
+
+	<define name="annotationstandard.content">
+		<a:documentation>
+			The definition annotationstandard.content describes the 
+			standard contents of an annotation.
+			Each annotation may have graphical or tool specific information.
+		</a:documentation>
+		<interleave>
+			<optional>
+				<element name="graphics">
+					<ref name="annotationgraphics.content"/>
+				</element>
+			</optional>
+			<zeroOrMore>
+				<ref name="toolspecific.element"/>
+			</zeroOrMore>
+		</interleave>
+	</define>
+
+	<define name="simpletextlabel.content">
+		<a:documentation>
+			A simple text label is an annotation to a net object containing 
+			arbitrary text.
+			Its sub-elements occur in any order.
+			A simple text label behaves like an attribute to a net object.
+			Furthermore, it contains the standard annotation contents which 
+			basically defines the graphics of the text.
+		</a:documentation>
+		<interleave>
+			<ref name="simpletext.content"/>
+			<ref name="annotationstandard.content"/>
+		</interleave>
+	</define>
+
+	<define name="Name">
+		<a:documentation>
+			Label definition for a user given name of an 
+			element.
+		</a:documentation>
+		<element name="name">
+			<ref name="simpletextlabel.content"/>
+		</element>
+	</define>
+
+	<define name="annotationgraphics.content">
+		<a:documentation>
+			An annotation's graphics part requires an offset element describing
+			the offset the center point of the surrounding text box has to
+			the reference point of the net object on which the annotation occurs.
+			Furthermore, an annotation's graphic element may have a fill, a line, 
+			and font element.
+		</a:documentation>
+		<ref name="offset.element"/>
+		<interleave>
+			<optional>
+				<ref name="fill.element"/>
+			</optional>
+			<optional>
+				<ref name="line.element"/>
+			</optional>
+			<optional>
+				<ref name="font.element"/>
+			</optional>
+		</interleave>
+	</define>
+
+	<define name="position.element">
+		<a:documentation>
+			A position element describes Cartesian coordinates.
+		</a:documentation>
+		<element name="position">
+			<ref name="coordinate.attributes"/>
+		</element>
+	</define>
+
+	<define name="offset.element">
+		<a:documentation>
+			An offset element describes Cartesian coordinates.
+		</a:documentation>
+		<element name="offset">
+			<ref name="coordinate.attributes"/>
+		</element>
+	</define>
+
+	<define name="coordinate.attributes">
+		<a:documentation>
+			The coordinates are decimal numbers and refer to an appropriate 
+			xy-system where the x-axis runs from left to right and the y-axis
+			from top to bottom.
+		</a:documentation>
+		<attribute name="x">
+			<data type="decimal"/>
+		</attribute>
+		<attribute name="y">
+			<data type="decimal"/>
+		</attribute>
+	</define>
+
+	<define name="dimension.element">
+		<a:documentation>
+			A dimension element describes the width (x coordinate) and height 
+			(y coordinate) of a node.  
+			The coordinates are actually positive decimals.
+		</a:documentation>
+		<element name="dimension">
+			<attribute name="x">
+				<ref name="positiveDecimal.content"/>
+			</attribute>
+			<attribute name="y">
+				<ref name="positiveDecimal.content"/>
+			</attribute>
+		</element>
+	</define>
+
+	<define name="positiveDecimal.content" ns="http://www.w3.org/2001/XMLSchema-datatypes">
+		<a:documentation>
+			Definition of a restricted positive decimals domain with a total digits 
+			number of 4 and 1 fraction digit. Ranges from 0 to 999.9
+		</a:documentation>
+		<data type='decimal'>
+			<param name='totalDigits'>4</param>
+			<param name='fractionDigits'>1</param>
+			<param name='minExclusive'>0</param>
+		</data>
+	</define>
+
+	<define name="fill.element">
+		<a:documentation>
+			A fill element describes the interior colour, the gradient colour,
+			and the gradient rotation between the colors of an object.  If an
+			image is available the other attributes are ignored.
+		</a:documentation>
+		<element name="fill">
+			<optional>
+				<attribute name="color">
+					<ref name="color.type"/>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="gradient-color">
+					<ref name="color.type"/>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="gradient-rotation">
+					<choice>
+						<value>vertical</value>
+						<value>horizontal</value>
+						<value>diagonal</value>
+					</choice>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="image">
+					<data type="anyURI"/>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+
+	<define name="line.element">
+		<a:documentation>
+			A line element describes the shape, the colour, the width, and the 
+			style of an object.
+		</a:documentation>
+		<element name="line">
+			<optional>
+				<attribute name="shape">
+					<choice>
+						<value>line</value>
+						<value>curve</value>
+					</choice>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="color">
+					<ref name="color.type"/>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="width">
+					<ref name="positiveDecimal.content"/>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="style">
+					<choice>
+						<value>solid</value>
+						<value>dash</value>
+						<value>dot</value>
+					</choice>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+
+	<define name="color.type">
+		<a:documentation>
+			This describes the type of a color attribute. Actually, this comes
+			from the CSS2 (and latest versions) data type system.
+		</a:documentation>
+		<text/>
+	</define>
+
+	<define name="font.element">
+		<a:documentation>
+			A font element describes several font attributes, the decoration, 
+			the alignment, and the rotation angle of an annotation's text.
+			The font attributes (family, style, weight, size) should be conform
+			to the CSS2 and latest versions data type system.
+		</a:documentation>
+		<element name="font">
+			<optional>
+				<attribute name="family">
+					<text/>  <!-- actually, CSS2 and latest versions font-family -->
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="style">
+					<text/>  <!-- actually, CSS2 and latest versions font-style -->
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="weight">
+					<text/>  <!-- actually, CSS2 and latest versions font-weight -->
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="size">
+					<text/>  <!-- actually, CSS2 and latest versions font-size -->
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="decoration">
+					<choice>
+						<value>underline</value>
+						<value>overline</value>
+						<value>line-through</value>
+					</choice>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="align">
+					<choice>
+						<value>left</value>
+						<value>center</value>
+						<value>right</value>
+					</choice>
+				</attribute>
+			</optional>
+			<optional>
+				<attribute name="rotation">
+					<data type="decimal"/>
+				</attribute>
+			</optional>
+		</element>
+	</define>
+
+	<define name="toolspecific.element">
+		<a:documentation>
+			The tool specific information refers to a tool and its version.
+			The further substructure is up to the tool.
+		</a:documentation>
+		<element name="toolspecific">
+			<attribute name="tool">
+				<text/>
+			</attribute>
+			<attribute name="version">
+				<text/>
+			</attribute>
+			<zeroOrMore>
+				<ref name="anyElement"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	
+</grammar>

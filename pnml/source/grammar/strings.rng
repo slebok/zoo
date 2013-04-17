@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Strings grammar.
+		Strings are part of high-level specific sorts.
+		They define the general-purpose string type and 
+		related operators over elements of that type.
+		
+		File name: strings.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			String is a built-in sort.
+		</a:documentation>
+		<ref name="String"/>
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			StringOperator is a built-in operator.
+		</a:documentation>
+		<ref name="StringOperator"/>
+	</define>
+	
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			StringConstant is a built-in constant.
+		</a:documentation>
+		<ref name="StringConstant"/>	
+	</define>
+	
+	<define name="String">
+		<a:documentation>
+			A String type is a built-in sort.
+		</a:documentation>
+		<element name="string">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="StringConstant.content">
+		<a:documentation>
+			This definition describes the contents strings.
+		</a:documentation>
+		<element name="value">
+			<text/>
+		</element>
+	</define>
+
+	<define name="StringConstant">
+		<a:documentation>
+			Defines the constant string which may appear in any label
+			 of a High-level Petri net object, except in the signature.
+		</a:documentation>
+		<element name="stringconstant">
+			<interleave>
+				<ref name="StringConstant.content"/>
+				<ref name="BuiltInConstant.content"/>
+			</interleave>
+		</element>
+	</define>
+
+	<!-- Declaration of standard string operators -->
+
+	<define name="StringOperator.content">
+		<a:documentation>
+			Its content derives from the one of BuiltInOperator
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+
+	<define name="StringOperator">
+		<a:documentation>
+			It is a built-in operator.
+		</a:documentation>
+		<choice>
+			<ref name="StringLessThan"/>
+			<ref name="StringLessThanOrEqual"/>
+			<ref name="StringGreaterThan"/>
+			<ref name="StringGreaterThanOrEqual"/>
+			<ref name="StringConcatenation"/>
+			<ref name="StringAppend"/>
+			<ref name="StringLength"/>
+			<ref name="Substring"/>
+		</choice>
+	</define>
+
+	<define name="StringLessThan">
+		<a:documentation>
+			Defines the 'less than' operator between two strings.
+		</a:documentation>
+		<element name="lts">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringLessThanOrEqual">
+		<a:documentation>
+			Defines the 'less than or equal' operator.
+		</a:documentation>
+		<element name="leqs">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringGreaterThan">
+		<a:documentation>
+			Defines the 'greater than' operator.
+		</a:documentation>
+		<element name="gts">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringGreaterThanOrEqual">
+		<a:documentation>
+			Defines the 'greater than or equal' operator.
+		</a:documentation>
+		<element name="geqs">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringConcatenation">
+		<a:documentation>
+			Defines the 'concatenation' of two strings.
+		</a:documentation>
+		<element name="stringconcatenation">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringLength">
+		<a:documentation>
+			Defines the 'length' of a string.
+		</a:documentation>
+		<element name="stringlength">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+	<define name="StringAppend">
+		<a:documentation>
+			Defines the 'append' operator between an element and a string.
+		</a:documentation>
+		<element name="stringappend">
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+	
+	<define name="Substring">
+		<a:documentation>
+			With this operator, specified substrings
+			can be extracted from larger strings.
+		</a:documentation>
+		<element name="substring">		
+			<attribute name="start">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+			<attribute name="length">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+			<ref name="StringOperator.content"/>
+		</element>
+	</define>
+
+</grammar>

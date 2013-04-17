@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Finite Integer Ranges grammar.
+		Finite Integer Ranges are part of the high-level common sorts.
+		They define any finite integer range and related operators 
+		over elements of that sort.
+		
+		File name: finiteintranges.rng
+		Version: 2009  
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			FiniteIntRange is a built-in sort.
+		</a:documentation>
+		<ref name="FiniteIntRange"/>		
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			FiniteIntRangeOperator is a built-in operator.
+		</a:documentation>
+		<ref name="FiniteIntRangeOperator"/>
+	</define>
+	
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			FiniteIntRangeConstant is a built-in constant.
+		</a:documentation>
+		<ref name="FiniteIntRangeConstant"/>
+	</define>
+	
+	<define name="FiniteIntRange">
+		<a:documentation>
+			A FiniteIntRange is a built-in sort.
+		</a:documentation>
+		<element name="finiteintrange">
+			<attribute name="start">
+				<data type="integer"/>
+			</attribute>
+			<attribute name="end">
+				<data type="integer"/>
+			</attribute>
+		</element>
+	</define>
+
+	<define name="FiniteIntRangeOperator.content">
+		<a:documentation>
+			The content of FiniteIntRangeOperator is the one of BuiltInOperator.
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+	
+	<define name="FiniteIntRangeOperator">
+		<a:documentation>
+			It is a built-in operator. It defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="FIRLessThan"/>
+			<ref name="FIRLessThanOrEqual"/>
+			<ref name="FIRGreaterThan"/>
+			<ref name="FIRGreaterThanOrEqual"/>
+		</choice>
+	</define>
+
+	<!-- Declaration of standard finite integer operators -->
+
+	<define name="FIRLessThan">
+		<a:documentation>
+			Defines the 'less than' operator.
+		</a:documentation>
+		<element name="lessthan">
+			<ref name="FiniteIntRangeOperator.content"/>
+		</element>
+	</define>
+
+	<define name="FIRLessThanOrEqual">
+		<a:documentation>
+			Defines the 'less than or equal' operator.
+		</a:documentation>
+		<element name="lessthanorequal">
+			<ref name="FiniteIntRangeOperator.content"/>
+		</element>
+	</define>
+
+	<define name="FIRGreaterThan">
+		<a:documentation>
+			Defines the 'greater than' operator.
+		</a:documentation>
+		<element name="greaterthan">
+			<ref name="FiniteIntRangeOperator.content"/>
+		</element>
+	</define>
+
+	<define name="FIRGreaterThanOrEqual">
+		<a:documentation>
+			Defines the 'greater than or equal' operator.
+		</a:documentation>
+		<element name="greaterthanorequal">
+			<ref name="FiniteIntRangeOperator.content"/>
+		</element>
+	</define>
+
+	<define name="FiniteIntRangeConstant">
+		<a:documentation>
+			Defines the constant of a declared Finite Integer Range sort.
+			It refers to that declared sort.
+		</a:documentation>
+		<element name="finiteintrangeconstant">
+			<attribute name="value">
+				<data type="integer"/>
+			</attribute>
+			<ref name="FiniteIntRange"/>
+			<ref name="BuiltInConstant.content"/>				
+		</element>
+	</define>
+
+</grammar>

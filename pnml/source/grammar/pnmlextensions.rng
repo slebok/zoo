@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of PNML Extensions package.
+		This package is meant to define specific extensions to 
+		PT-Net type that would appear mostly as tool specific
+		features. Those features are not semantically speaking essential
+		to the exchange of PNML models.
+
+		File name: pnmlextensions.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+
+	<define name="toolspecific.content" combine="interleave">
+		<a:documentation>
+			Individual tokens positions as toolspecific elements.
+		</a:documentation>
+		<optional>
+			<ref name="TokenGraphics"/>	
+		</optional>
+	</define>
+
+	<define name="TokenGraphics">
+		<a:documentation>
+			Individual tokens, may be have positions.
+			This element gathers them.
+			There should be as many token positions as the initial
+			marking states.
+		</a:documentation>
+		<element name="tokengraphics">
+			<zeroOrMore>
+				<ref name="TokenPosition"/>	
+			</zeroOrMore>
+		</element>
+	</define>
+	
+	<define name="TokenPosition">
+		<a:documentation>
+			The actual position of an individual token.
+			It is a coordinate.attributes.
+		</a:documentation>
+		<element name="tokenposition">
+			<ref name="coordinate.attributes"/>	
+		</element>
+	</define>
+
+</grammar>

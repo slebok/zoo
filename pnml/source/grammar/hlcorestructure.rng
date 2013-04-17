@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of High-level Petri nets Core Structure grammar.
+		This schema implements the core structure shared by High-level Petri nets types.
+
+		File name: hlcorestructure.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<!-- Definition of additional labels for high-level nets -->
+
+	<define name="net.labels" combine="interleave">
+		<a:documentation>
+			A high-level net may have a Declaration.
+		</a:documentation>
+		<zeroOrMore><ref name="HLDeclaration"/></zeroOrMore>
+	</define>
+
+	<define name="page.labels" combine="interleave">
+		<a:documentation>
+			A page of a high-level net may also have a Declaration.
+		</a:documentation>
+		<zeroOrMore><ref name="HLDeclaration"/></zeroOrMore>
+	</define>
+
+	<define name="place.labels" combine="interleave">
+		<a:documentation>
+			A place of a high-level net may have a Type and an HLMarking.
+		</a:documentation>
+		<interleave>
+			<optional><ref name="Type"/></optional>
+			<optional><ref name="HLMarking"/></optional>
+		</interleave>
+	</define>
+
+	<define name="transition.labels" combine="interleave">
+		<a:documentation>
+			A transition of a high-level net may have a Condition.
+		</a:documentation>
+		<optional><ref name="Condition"/></optional>
+	</define>
+
+	<define name="arc.labels" combine="interleave">
+		<a:documentation>
+			An arc of a high-level net may have a high-level inscription.
+		</a:documentation>
+		<optional><ref name="HLAnnotation"/></optional>
+	</define>
+
+	<!-- Complex labels definition for high-level nets. -->
+
+	<define name="HLDeclaration">
+		<a:documentation>
+			The 'Declaration' label definition for a net node or a page.
+		</a:documentation>
+		<element name="declaration">
+		  <interleave>
+			<ref name="simpletextlabel.content"/>
+			<optional>
+				<element name="structure">
+					<ref name="Declarations"/>
+				</element>
+			</optional>
+		  </interleave>
+		</element>
+	</define>
+
+	<define name="Type">
+		<a:documentation>
+			The 'Type' label definition for a place.
+		</a:documentation>
+		<element name="type">
+		  <interleave>
+			<ref name="simpletextlabel.content"/>
+			<optional>
+				<element name="structure">
+					<ref name="Sort"/>
+				</element>
+			</optional>
+		  </interleave>
+		</element>
+	</define>
+
+	<define name="HLMarking">
+		<a:documentation>
+			The 'high-level initial marking' label definition for a place.
+			The same reasoning applies as for the definitions above.
+		</a:documentation>
+		<element name="hlinitialMarking">
+		  <interleave>
+			<ref name="simpletextlabel.content"/>
+			<optional>
+				<element name="structure">
+					<ref name="Term"/>
+				</element>
+			</optional>
+		  </interleave>
+		</element>
+	</define>
+
+	<define name="Condition">
+		<a:documentation>
+			The 'Condition' label definition expressing the guard of a transition.
+			The same reasoning applies as for the above definitions.
+		</a:documentation>
+		<element name="condition">
+		  <interleave>
+			<ref name="simpletextlabel.content"/>
+			<optional>
+				<element name="structure">
+					<ref name="Term"/>
+				</element>
+			</optional>
+		  </interleave>
+		</element>
+	</define>
+
+	<define name="HLAnnotation">
+		<a:documentation>
+			The 'HLAnnotation' label definition for an arc.
+		</a:documentation>
+		<element name="hlinscription">
+		  <interleave>
+			<ref name="simpletextlabel.content"/>
+			<optional>
+				<element name="structure">
+					<ref name="Term"/>
+				</element>
+			</optional>
+		  </interleave>
+		</element>
+	</define>
+
+</grammar>

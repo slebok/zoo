@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar ns="http://www.pnml.org/version-2009/grammar/pnml"
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	>
+
+	<a:documentation>
+		File name: resetptnet.pntd
+		Version  : 2009
+		author   : Jan Martijn van der Werf
+		e-mail   : j.m.e.m.v.d.werf@tue.nl
+		revision : 2
+		by       : L. Hillah, Afnor
+
+		(c) 2009 Technische Universiteit Eindhoven
+	</a:documentation>
+
+	<include href="http://www.pnml.org/version-2009/grammar/ptnet.pntd">
+		<a:documentation>
+			We override the ptnet definition of net type, since we only allow
+			for reset nets in this definition
+		</a:documentation>
+		<define name="nettype.uri" combine="choice">
+			<a:documentation>
+				The URI value for the net type attribute,
+				declaring the type of P/T nets.
+			</a:documentation>
+			<attribute name="type">
+				<value>http://www.pnml.org/version-2009/extensions/resetptnet</value>
+			</attribute>
+		</define>
+	</include>
+
+	<include href="http://www.pnml.org/version-2009/extensions/specialarcs.rng">
+		<a:documentation>
+			We override the enumeration definition "specialarc.value" to
+			only allow normal and reset arcs.
+		</a:documentation>
+		<define name="specialarc.value">
+			<a:documentation>
+				Enumeration for the values of this special PT net
+				arcs, allowing normal and reset arcs only.
+			</a:documentation>
+			<choice>
+				<value>normal</value>
+				<value>reset</value>
+			</choice>
+		</define>
+	</include>
+
+
+	<define name="arc.labels" combine="interleave">
+		<a:documentation>
+			An arc of an inhibitor P/T net may be either a normal or a reset arc.
+			According to the standard, this characteristic is an attribute
+			of the corresponding arc.
+			In models of this new net type, every arc should thus be 
+			systematically distinguished between normal and reset.
+		</a:documentation>
+		<ref name="ArcType"/>
+	</define>
+
+</grammar>

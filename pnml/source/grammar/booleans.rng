@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Booleans grammar.
+		Booleans are part of the high-level common sorts.
+		They define the bool sort and related operators over 
+		elements of that sort.
+
+		File name: booleans.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="Operator" combine="choice">
+		<a:documentation>
+			Equality and Inequality are operators.
+		</a:documentation>
+		<choice>
+			<ref name="Equality"/>
+			<ref name="Inequality"/>
+		</choice>
+	</define>
+	
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			Bool is a built-in sort.
+		</a:documentation>
+		<ref name="Bool"/>
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			BooleanOperator is a built-in operator.
+		</a:documentation>
+		<ref name="BooleanOperator"/>
+	</define>
+	
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			BooleanConstant is a built-in constant.
+		</a:documentation>
+		<ref name="BooleanConstant"/>	
+	</define>
+	
+	<define name="Bool">
+		<a:documentation>
+			A Bool is a built-in sort.
+		</a:documentation>
+		<element name="bool">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="BooleanOperator.content">
+		<a:documentation>
+			The content of BooleanOperator.content is the one of BuiltInOperator.content
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+
+	<define name="BooleanOperator">
+		<a:documentation>
+			A Boolean operator is a built-in operator.
+			Its defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="And"/>	
+			<ref name="Or"/>
+			<ref name="Imply"/>
+			<ref name="Not"/>
+		</choice>
+	</define>
+
+	<!-- Declaration of standard boolean operators -->
+
+	<define name="And">
+		<a:documentation>
+			Defines the boolean operator "and".
+		</a:documentation>
+		<element name="and">
+			<ref name="BooleanOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Or">
+		<a:documentation>
+			Defines the boolean operator "or".
+		</a:documentation>
+		<element name="or">
+			<ref name="BooleanOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Not">
+		<a:documentation>
+			Defines the boolean operator "not".
+		</a:documentation>
+		<element name="not">
+			<ref name="BooleanOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Imply">
+		<a:documentation>
+			Defines the boolean operator "imply".
+		</a:documentation>
+		<element name="imply">
+			<ref name="BooleanOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Equality">
+		<a:documentation>
+			Defines the boolean operator "equality" which may not necessary 
+			have booleans as input Sorts.
+		</a:documentation>
+		<element name="equality">
+			<ref name="Operator.content"/>
+		</element>
+	</define>
+
+	<define name="Inequality">
+		<a:documentation>
+			Defines the boolean function "inequality" which may not necessary 
+			have booleans as input Sorts.
+		</a:documentation>
+		<element name="inequality">
+			<ref name="Operator.content"/>
+		</element>
+	</define>
+
+	<define name="BooleanConstant">
+		<a:documentation>
+			Declaration of the "true" constant.
+		</a:documentation>
+		<element name="booleanconstant">		
+			<attribute name="value">
+				<data type="boolean"/>
+			</attribute>
+			<ref name="BuiltInConstant.content"/>
+		</element>
+	</define>
+		
+</grammar>

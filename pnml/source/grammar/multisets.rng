@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Multisets grammar.
+		This schema implements the multiset constructs package for High-level Petri Nets.
+
+		File name: multisets.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			Cardinality, CardinalityOf, Contains are built-in operators
+		</a:documentation>
+		<choice>
+			<ref name="Cardinality"/>
+			<ref name="CardinalityOf"/>
+			<ref name="Contains"/>
+		</choice>
+	</define>
+
+	<define name="MultisetOperator" combine="choice">
+		<a:documentation>
+			The concrete Multiset Operators.
+		</a:documentation>
+		<choice>
+			<ref name="Add"/>
+			<ref name="All"/>
+			<ref name="NumberOf"/>
+			<ref name="Subtract"/>
+			<ref name="ScalarProduct"/>
+			<ref name="Empty"/>
+		</choice>
+	</define>
+	
+	<define name="Add">
+		<a:documentation>
+			Defines the 'addition' of multisets.
+		</a:documentation>
+		<element name="add">
+			<ref name="MultisetOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Subtract">
+		<a:documentation>
+			Defines the 'subtraction' of two multisets.
+		</a:documentation>
+		<element name="subtract">
+			<ref name="MultisetOperator.content"/>
+		</element>
+	</define>
+
+	<define name="All">
+		<a:documentation>
+			Defines the 'broadcast' operator over a multiset.
+		</a:documentation>
+		<element name="all">
+			<ref name="MultisetOperator.content"/>
+			<ref name="Sort"/>
+		</element>
+	</define>
+
+	<define name="Empty">
+		<a:documentation>
+			Defines the 'empty' multiset.
+		</a:documentation>
+		<element name="empty">
+			<ref name="MultisetOperator.content"/>
+			<ref name="Sort"/>
+		</element>
+	</define>
+
+	<define name="ScalarProduct">
+		<a:documentation>
+			Defines the 'scalar product' of multisets.
+		</a:documentation>
+		<element name="scalarproduct">
+			<ref name="MultisetOperator.content"/>
+		</element>
+	</define>
+
+	<define name="NumberOf">
+		<a:documentation>
+			Defines the construction of a multiset with a natural number 
+			and an element of a sort.
+		</a:documentation>
+		<element name="numberof">
+			<ref name="MultisetOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Cardinality">
+		<a:documentation>
+			Defines the cardinality of a multiset.
+		</a:documentation>
+		<element name="cardinality">
+			<ref name="BuiltInOperator.content"/>
+		</element>
+	</define>
+
+	<define name="CardinalityOf">
+		<a:documentation>
+			Defines the cardinality of an element in a multiset.
+		</a:documentation>
+		<element name="cardinalityof">
+			<ref name="BuiltInOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Contains">
+		<a:documentation>
+			Defines the containment relationship between two multisets.
+		</a:documentation>
+		<element name="contains">
+			<ref name="BuiltInOperator.content"/>
+		</element>
+	</define>
+
+</grammar>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Integers grammar.
+		Integers are part of high-level specific sorts.
+		They define the general-purpose integer sort and
+		related operators over elements of that sort.
+		
+		File name: integers.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		June 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			Number is a built-in sort.
+		</a:documentation>
+		<ref name="Number"/>		
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			IntegerOperator is a built-in operator.
+		</a:documentation>
+		<ref name="IntegerOperator"/>
+	</define>
+	
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			NumberConstant is a built-in constant.
+		</a:documentation>
+		<ref name="NumberConstant"/>
+	</define>
+	
+	<define name="Number">
+		<a:documentation>
+			A number is a built-in sort.
+		</a:documentation>
+		<choice>
+			<ref name="Natural"/>
+			<ref name="Positive"/>
+			<ref name="Integer"/>
+		</choice>
+	</define>
+
+	<define name="Integer">
+		<a:documentation>
+			An integer type is a number.
+		</a:documentation>
+		<element name="integer">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="Natural">
+		<a:documentation>
+			A natural is a number.
+		</a:documentation>
+		<element name="natural">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="Positive">
+		<a:documentation>
+			A positive is a number.
+		</a:documentation>
+		<element name="positive">
+			<empty/>
+		</element>
+	</define>
+
+	<define name="IntegerOperator.content">
+		<a:documentation>
+			Its content derives from the one of built-in operator.
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+	
+	<define name="IntegerOperator">
+		<a:documentation>
+			It is a built-in operator. It defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="Addition"/>
+			<ref name="Subtraction"/>
+			<ref name="Multiplication"/>
+			<ref name="Division"/>
+			<ref name="Modulo"/>
+			<ref name="GreaterThan"/>
+			<ref name="GreaterThanOrEqual"/>
+			<ref name="LessThan"/>
+			<ref name="LessThanOrEqual"/>
+		</choice>
+		
+	</define>
+
+	<!-- Declaration of standard finite integer operators -->
+
+	<define name="NumberConstant">
+		<a:documentation>
+			Defines a constant number.
+			Must comply with the OCL constraint described in
+			Integers package figure.
+		</a:documentation>
+		<element name="numberconstant">
+			<attribute name="value">
+				<data type="integer"/>
+			</attribute>
+			<interleave>
+				<ref name="BuiltInConstant.content"/>
+				<ref name="Number"/>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="LessThan">
+		<a:documentation>
+			Defines the 'less than' operator.
+		</a:documentation>
+		<element name="lt">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="LessThanOrEqual">
+		<a:documentation>
+			Defines the 'less than or equal' operator.
+		</a:documentation>
+		<element name="leq">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="GreaterThan">
+		<a:documentation>
+			Defines the 'greater than' operator.
+		</a:documentation>
+		<element name="gt">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="GreaterThanOrEqual">
+		<a:documentation>
+			Defines the 'greater than or equal' operator.
+		</a:documentation>
+		<element name="geq">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="Addition">
+		<a:documentation>
+			Defines the arithmetic 'addition' operator.
+		</a:documentation>
+		<element name="addition">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="Subtraction">
+		<a:documentation>
+			Defines the arithmetic 'subtraction' operator.
+		</a:documentation>
+		<element name="subtraction">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="Multiplication">
+		<a:documentation>
+			Defines the arithmetic 'multiplication' operator.
+		</a:documentation>
+		<element name="mult">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="Division">
+		<a:documentation>
+			Defines the arithmetic 'division' operator.
+		</a:documentation>
+		<element name="div">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+	<define name="Modulo">
+		<a:documentation>
+			Defines the arithmetic 'modulo' operator.
+		</a:documentation>
+		<element name="mod">
+			<ref name="IntegerOperator"/>
+		</element>
+	</define>
+
+</grammar>

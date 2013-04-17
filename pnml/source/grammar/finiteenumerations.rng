@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Finite Enumerations grammar.
+		Finite enumerations are part of high-level common sorts.
+		They are used by both HLPNGs and Symmetric Nets.
+		They define any finite enumeration sort and related operators
+		over elements of that sort.
+		
+		File name: finiteenumerations.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="OperatorDeclaration" combine="choice">
+		<a:documentation>
+			An Operator declaration is a user-declared operator using built-in.
+			constructs.
+		</a:documentation>
+		<ref name="FEConstant"/>
+	</define>
+	
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			FiniteEnumeration is a built-in sort.
+		</a:documentation>
+		<ref name="FiniteEnumeration"/>
+	</define>
+	
+	<define name="FiniteEnumeration.content">
+		<a:documentation>
+			The content of a Finite Enumeration is composed of constants.
+		</a:documentation>
+		<zeroOrMore>
+			<ref name="FEConstant"/>
+		</zeroOrMore>
+	</define>
+	
+	<define name="FiniteEnumeration">
+		<a:documentation>
+			A Finite Enumeration is a built-in sort.
+		</a:documentation>
+		<element name="finiteenumeration">
+			<ref name="FiniteEnumeration.content"/>
+		</element>
+	</define>
+
+	<define name="FEConstant">
+		<a:documentation>
+			It is a built-in constant. It is a finite enumeration element.
+		</a:documentation>
+		<element name="feconstant">
+			<ref name="OperatorDeclaration.content"/> 
+		</element>
+	</define>
+	
+</grammar>

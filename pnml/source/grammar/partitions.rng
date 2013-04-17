@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Partitions grammar.
+		Partitions are part of high-level common sorts.
+		They are used by Symmetric Nets.
+		
+		File name: partitions.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+    <!-- Declarative part of a Partition, which is found in the signature of a Symmetric Net -->
+
+	<define name="SortDeclaration" combine="choice">
+		<a:documentation>
+			A Sort declaration is a user-declared sort, using built-in sorts.
+			It defines known concrete sort declarations.
+		</a:documentation>
+		<ref name="Partition"/>
+	</define>
+	
+	<define name="OperatorDeclaration" combine="choice">
+		<a:documentation>
+			An Operator declaration is a user-declared operator using built-in.
+			constructs.
+		</a:documentation>
+		<ref name="PartitionElement"/>
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			PartitionOperator is a built-in operator.
+		</a:documentation>
+		<ref name="PartitionOperator"/>
+	</define>
+	
+	<define name="Partition">
+		<a:documentation>
+			A Partition is a SortDecl.
+			It is defined over a NamedSort which it refers to.
+		</a:documentation>
+		<element name="partition">
+			<ref name="SortDeclaration.content"/>
+			  <interleave>
+			   	<ref name="Sort"/>
+			   	<group>
+			   		<oneOrMore>
+				 		<ref name="PartitionElement"/>
+			   		</oneOrMore>
+			   </group>
+			  </interleave>
+		</element>
+	</define>
+
+	<define name="PartitionElement">
+		<a:documentation>
+			Defines an element of a Partition.
+		</a:documentation>
+		<element name="partitionelement">
+			<ref name="OperatorDeclaration.content"/> 
+			<oneOrMore>
+				<ref name="Term"/>
+			</oneOrMore>
+		</element>
+	</define>
+	
+    <!-- Operators -->
+	<define name="PartitionOperator.content">
+		<a:documentation>
+			Its content derives from the one of built-in operator.
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+	
+	<define name="PartitionOperator">
+		<a:documentation>
+			It is a built-in operator. It defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="PartitionLessThan"/>
+			<ref name="PartitionGreaterThan"/>
+			<ref name="PartitionElementOf"/>
+		</choice>
+	</define>
+	
+	<define name="PartitionLessThan">
+		<a:documentation>
+			Defines the 'less than' operator between two partitions.
+		</a:documentation>
+		<element name="ltp">
+			<ref name="PartitionOperator.content"/>
+		</element>
+	</define>
+	
+	<define name="PartitionGreaterThan">
+		<a:documentation>
+			Defines the 'greater than' operator.
+		</a:documentation>
+		<element name="gtp">
+			<ref name="PartitionOperator.content"/>
+		</element>
+	</define>
+
+	<define name="PartitionElementOf">
+		<a:documentation>
+			Returns the PartitionElement of a finite sort constant.
+		</a:documentation>
+		<element name="partitionelementof">
+			<attribute name="refpartition">
+				<data type="IDREF"/>
+			</attribute>
+			<ref name="PartitionOperator.content"/>
+		</element>
+	</define>
+
+</grammar>

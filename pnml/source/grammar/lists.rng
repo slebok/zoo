@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Lists grammar.
+		The list signature is part of high-level specific sorts.
+		It defines the general-purpose list sort and related operators 
+		over elements of that sort.
+
+		File name: lists.rng
+		Version: 2009   
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			List is a built-in sort.
+		</a:documentation>
+		<ref name="List"/>	
+	</define>
+	
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			ListOperator is a built-in operator.
+		</a:documentation>
+		<ref name="ListOperator"/>
+	</define>
+	
+	<define name="List">
+		<a:documentation>
+			A List is a built-in sort.
+			It is a set over a basis sort.
+		</a:documentation>
+		<element name="list">
+			<ref name="Sort"/>
+		</element>
+	</define>
+
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			EmptyList is a built-in constant.
+		</a:documentation>
+		<ref name="EmptyList"/>
+	</define>
+	
+	<define name="ListOperator.content">
+		<a:documentation>
+			It is derived from BuiltInOperator.content
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+	
+	<define name="ListOperator">
+		<a:documentation>
+			It is a built-in operator. It defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="ListAppend"/>
+			<ref name="ListConcatenation"/>
+			<ref name="MakeList"/>
+			<ref name="ListLength"/>
+			<ref name="MemberAtIndex"/>
+			<ref name="Sublist"/>
+		</choice>
+	</define>
+
+	<!-- Declaration of standard list operators -->
+
+	<define name="EmptyList">
+		<a:documentation>
+			This operator defines an empty list which is a built-in constant.
+		</a:documentation>
+		<element name="emptylist">
+			<interleave>
+				<ref name="Sort"/>
+				<ref name="BuiltInConstant.content"/>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="ListLength">
+		<a:documentation>
+			Defines the 'length' of a list.
+		</a:documentation>
+		<element name="listlength">
+			<ref name="ListOperator.content"/>
+		</element>
+	</define>
+
+	<define name="MakeList">
+		<a:documentation>
+			This operators creates a new list.
+		</a:documentation>
+		<element name="makelist">
+			<interleave>
+				<ref name="Sort"/>
+				<ref name="ListOperator.content"/>
+			</interleave>
+		</element>
+	</define>
+
+	<define name="ListConcatenation">
+		<a:documentation>
+			Defines the 'concatenation' of two lists.
+		</a:documentation>
+		<element name="listconcatenation">
+			<ref name="ListOperator.content"/>
+		</element>
+	</define>
+
+	<define name="ListAppend">
+		<a:documentation>
+			Defines the 'append' operation of an element to a list.
+		</a:documentation>
+		<element name="listappend">
+			<ref name="ListOperator.content"/>
+		</element>
+	</define>
+	
+	<define name="MemberAtIndex">
+		<a:documentation>
+			At which index is an element in a List ?
+		</a:documentation>
+		<element name="memberatindex">
+			<attribute name="index">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+			<ref name="ListOperator.content"/>
+		</element>
+	</define>
+	
+	<define name="Sublist">
+		<a:documentation>
+			With this operator, specified sublists
+			can be extracted from larger lists.
+		</a:documentation>
+		<element name="sublist">		
+			<attribute name="start">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+			<attribute name="length">
+				<data type="nonNegativeInteger"/>
+			</attribute>
+			<ref name="ListOperator.content"/>
+		</element>
+	</define>
+
+</grammar>

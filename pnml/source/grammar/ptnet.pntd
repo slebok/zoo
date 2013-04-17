@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar ns="http://www.pnml.org/version-2009/grammar/pnml"
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"> 
+
+	<a:documentation>
+		RELAX NG implementation of Petri Net Type Definition for Place/Transition nets.
+		This PNTD re-defines the value of nettype.uri for P/T nets.
+		
+		File name: ptnet.pntd
+		Version: 2009
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<a:documentation>
+		The PT Net type definition.
+		This document also declares its namespace.
+		All labels of this Petri net type come from the Conventions document.
+		The use of token graphics as tool specific feature is possible.
+	</a:documentation>
+
+	<include href="http://www.pnml.org/version-2009/grammar/conventions.rng"/>
+	
+	<!--
+	<include href="http://www.pnml.org/version-2009/grammar/pnmlextensions.rng"/>
+		We do not need to include this, because the pnmlcoremodel.rng covers any
+		toolspecific extension.
+	-->
+	
+	<include href="http://www.pnml.org/version-2009/grammar/pnmlcoremodel.rng"/>
+	
+	<define name="nettype.uri" combine="choice">
+		<a:documentation>
+			The URI value for the net type attribute, 
+			declaring the type of P/T nets.
+		</a:documentation>
+		<attribute name="type">    
+			<value>http://www.pnml.org/version-2009/grammar/ptnet</value>   
+		</attribute>
+	</define>
+
+	
+	<define name="PTMarking">
+		<a:documentation>
+			Label definition for initial marking in nets like P/T-nets.
+			<contributed>Michael Weber</contributed>
+			<date>2003-06-16</date>
+			<reference>
+				W. Reisig: Place/transition systems. In: LNCS 254. 1987.
+			</reference>
+		</a:documentation>
+		<element name="initialMarking">
+			<ref name="nonnegativeintegerlabel.content"/>
+		</element>
+	</define>
+
+	<define name="PTArcAnnotation">
+		<a:documentation>
+			Label definition for arc inscriptions in P/T-nets.
+			<contributed>Michael Weber, AFNOR</contributed>
+			<date>2003-06-16</date>
+			<reference>
+				W. Reisig: Place/transition systems. In: LNCS 254. 1987.
+			</reference>
+		</a:documentation>
+		<element name="inscription">
+			<ref name="positiveintegerlabel.content"/>
+		</element>
+	</define>
+
+	<define name="place.labels" combine="interleave">
+		<a:documentation>
+			A place of a P/T net may have an initial marking.
+		</a:documentation> 
+		<optional><ref name="PTMarking"/></optional>
+	</define>
+
+	<define name="arc.labels" combine="interleave">
+		<a:documentation>
+			An arc of a P/T net may have an inscription.
+		</a:documentation>
+		<optional><ref name="PTArcAnnotation"/></optional>
+	</define>
+
+</grammar>
+
+

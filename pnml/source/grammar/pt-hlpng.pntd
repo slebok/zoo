@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar ns="http://www.pnml.org/version-2009/grammar/pnml"
+	xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+
+	<a:documentation>
+		RELAX NG implementation of P/T nets defined as a restricted
+		form of High-Level Petri Net Graphs.
+		This type allows the use of the built-in sorts Dots and Bool only.
+		
+		File name: pt-hlpng.pntd
+		Version: 2009  
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+	
+	<a:documentation>
+			The HL Core Structure grammar must be used to replace the definition
+			of the Type of a place. The other constraints are captured in the UML
+			diagram which models this new Petri net type.
+			Basically, all transition condition must be set to the constant 'true'
+			and arc annotations and initial markings are ground terms of the multiset
+			sort over Dot (See Dot and Terms grammar).
+	</a:documentation>
+	
+	<include href="http://www.pnml.org/version-2009/grammar/booleans.rng"/>
+	<include href="http://www.pnml.org/version-2009/grammar/dots.rng"/>
+	<include href="http://www.pnml.org/version-2009/grammar/multisets.rng"/>
+	<include href="http://www.pnml.org/version-2009/grammar/terms.rng"/>
+	<include href="http://www.pnml.org/version-2009/grammar/pnmlcoremodel.rng"/>
+	
+	<define name="nettype.uri" combine="choice">
+		<a:documentation>
+			The URI value for the net type attribute, 
+			declaring the type (and subsequently the namespace) of 
+			P/T nets as a restricted form of HLPNGs.
+		</a:documentation>
+		<attribute name="type">    
+			<value>http://www.pnml.org/version-2009/grammar/pt-hlpng</value>   
+		</attribute>
+	</define>
+
+
+	<include href="http://www.pnml.org/version-2009/grammar/hlcorestructure.rng">
+		<define name="Type">
+			<a:documentation>
+				Re-defining the 'Type' label for a place.
+				It must refer to the built-in sort Dot if mentioned.
+				Since it is optional, it must be assumed that the type
+				is Dot if not mentioned. This is possible because of the
+				declared named space.
+			</a:documentation>
+			<element name="type">
+				<ref name="simpletextlabel.content"/>
+				<optional>
+					<ref name="Dot"/>
+				</optional>
+			</element>
+		</define>
+	</include>
+	
+</grammar>

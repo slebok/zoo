@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" 
+   xmlns="http://relaxng.org/ns/structure/1.0" 
+   xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0">
+   
+	<a:documentation>
+		RELAX NG implementation of High-level Petri Nets Terms grammar.
+		This schema implements the core signature shared by High-level Petri Nets.
+
+		File name: terms.rng
+		Version: 2009    
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+	
+	<!-- Definition of signature and variable -->
+	<define name="Declarations">
+		<a:documentation>
+			A core signature starts by zero or more declarations
+		</a:documentation>
+		<element name="declarations">
+			<zeroOrMore>
+				<ref name="Declaration"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	
+	<define name="Declaration.content">
+		<a:documentation>
+			A declaration may be a Sort, Variable or Operator declaration.
+			It has a name and an id.
+			It is extended by each definition of Sort, Variable and Operator.
+		</a:documentation>
+		<attribute name="id">
+			<data type="ID"/>
+		</attribute>
+		<attribute name="name">
+			<data type="string"/>
+		</attribute>
+	</define>
+	
+	<define name="Declaration">
+		<a:documentation>
+		 A declaration is part of a group of declarations.
+		 It defines known concrete declarations
+		</a:documentation>
+		<choice>
+		    <ref name="SortDeclaration"/>
+		    <ref name="VariableDeclaration"/>
+		    <ref name="OperatorDeclaration"/>
+		</choice>
+	</define>
+	
+	<define name="VariableDeclaration">
+		<a:documentation>
+			A variable declaration is a user-declared variable.
+			It refers to a Sort.
+		</a:documentation>
+		<element name="variabledecl">
+			<ref name="Declaration.content"/>
+			<ref name="Sort"/>
+		</element>
+	</define>
+	
+	<define name="SortDeclaration.content">
+		<a:documentation>
+			A Sort declaration content is derived from Declaration.content
+		</a:documentation>
+		<ref name="Declaration.content"/>
+	</define>
+	
+	<define name="SortDeclaration">
+		<a:documentation>
+			A Sort declaration is a user-declared sort, using built-in sorts.
+			It defines known concrete sort declarations.
+		</a:documentation>
+		<ref name="NamedSort"/>
+	</define>
+	
+	<define name="OperatorDeclaration.content">
+		<a:documentation>
+			The content of OperatorDeclaration is the one of Declaration
+			constructs.
+		</a:documentation>
+		<ref name="Declaration.content"/>
+	</define>
+
+	<define name="OperatorDeclaration">
+		<a:documentation>
+			An Operator declaration is a user-declared operator using built-in.
+			constructs.
+		</a:documentation>
+		<ref name="NamedOperator"/>
+	</define>
+	
+	<define name="Variable">
+		<a:documentation>
+			A simple variable refers to a VariableDeclaration.
+			As a Term, a variable also refers to a Sort, which is derived.
+			See Term definition in the corresponding section of this grammar.
+		</a:documentation>
+		<element name="variable">
+			<attribute name="refvariable">
+				<data type="IDREF"/>
+			</attribute>
+		</element>
+	</define>
+	
+	<define name="NamedSort">
+		<a:documentation>
+			A named sort is the concrete definition of a SortDeclaration.
+			It contains a Sort definition.
+		</a:documentation>
+		<element name="namedsort">
+			<ref name="SortDeclaration.content"/>
+			<ref name="Sort"/>
+		</element>
+	</define>
+	
+	<define name="NamedOperator">
+		<a:documentation>
+			A named operator is the concrete definition of and OperatorDeclaration.
+			User-defined operators typically use this construct.
+			VariableDeclaration is used as the construct for its parameters
+			(ordered), and Term for its body definition.
+		</a:documentation>
+		<element name="namedoperator">
+			<ref name="OperatorDeclaration.content"/>
+			<element name="parameter">
+				<zeroOrMore>
+					<ref name="VariableDeclaration"/>
+				</zeroOrMore>
+			</element>
+			<element name="def">
+				<ref name="Term"/>
+			</element>
+		</element>
+	</define>
+	
+	<define name="Term.content">
+		<empty/>
+	</define>
+	
+	<define name="Term">
+		<a:documentation>
+			A Term involves operators and variables. It refers to a Sort,
+			which is usually derived
+		</a:documentation>
+		<!-- Derived Attribute sort is not externalized (made transient) 
+		in the PNML file -->
+		<choice>
+			<ref name="Variable"/>
+			<ref name="Operator"/>
+		</choice>
+	</define>
+
+	<define name="Sort.content">
+		<empty/>
+	</define>
+	
+	<!-- Generic definition for sorts and related classes -->
+	<define name="Sort">
+		<a:documentation>
+			A sort is not specified. Its is extended by common or high-level
+			specific sorts.
+			A sort may be a basis for a MultisetSort.
+			Actually we don't need to export the "multi" attribute, since it is most
+			important to have the relation from the opposite direction, i.e., from
+			MultiSet. This attribute can thus be made transient (not exported) in
+			the PNML tool.
+			Sorts don't seem to need an ID since their definition is always included
+			as sub-element of Declaration.
+		</a:documentation>
+		<choice>
+			<ref name="BuiltInSort"/>
+			<ref name="MultisetSort"/>
+			<ref name="ProductSort"/>
+			<ref name="UserSort"/>
+		</choice>
+	</define>
+	<!-- NB: we could have defined BuiltInSort.content which would basically extend
+	Sort.content, but it is not necessary here since Sort.content is empty -->
+	
+	<define name="BuiltInSort">
+		<a:documentation>
+			Base definition of a built-in Sort.
+			Further definitions should refine this one using choice 
+			as the value of combine attribute.
+		</a:documentation>
+		<empty/>
+	</define>
+	
+	<define name="MultisetSort">
+		<a:documentation>
+			A multiset sort is built upon a basis sort.
+			There is an issue regarding infinite recursion induced
+			by the fact that a MultisetSort is a Sort.
+			We then have the possibility to define a multiset sort of 
+			multiset sorts.
+			In part 1, set of multiset is allowed, which seems akin to 
+			this definition.
+			So beware of infinite recursion when using this construct.
+		</a:documentation>
+		<element name="multisetsort">
+			<ref name="Sort"/>
+		</element>
+	</define>
+	
+	<define name="ProductSort">
+		<a:documentation>
+			A product sort is a sort. It refers to an ordered list 
+			of members which are sorts.
+		</a:documentation>
+		<element name="productsort">
+			<zeroOrMore>
+				<ref name="Sort"/>
+			</zeroOrMore>
+		</element>
+	</define>
+	
+	<define name="UserSort">
+		<a:documentation>
+			A user sort is used as an abbreviation of 
+			existing users-declared sort. It thus refers to a SortDeclaration.
+			Recursion is forbidden.
+		</a:documentation>
+		<element name="usersort">
+			<attribute name="declaration">
+				<data type="IDREF"/>
+			</attribute>
+		</element>
+	</define>
+	
+	<define name="Operator.content">
+		<a:documentation>
+			The sub-terms of an operator.
+		</a:documentation>
+		<zeroOrMore>
+			<element name="subterm">
+				<ref name="Term"/>
+			</element>
+		</zeroOrMore>
+	</define>
+	
+	<!-- Definition of operators and related classes -->
+	<define name="Operator" combine="choice">
+		<a:documentation>
+			An operator has an ordered list of inputs and an output,
+			which are derived. They are thus not exported in the XML
+			(transient for the tools).
+			All refer to sorts of the arguments over which the operator is applied.
+			It is applied on an ordered set of subterms which are either variables
+			or application of operator on other subterms.
+			The operator is either built-in, or user-declared from built-in.
+		</a:documentation>
+		<choice>
+			<ref name="BuiltInOperator"/>
+			<ref name="BuiltInConstant"/>
+			<ref name="MultisetOperator"/>
+			<ref name="Tuple"/>
+			<ref name="UserOperator"/>
+		</choice>
+	</define>
+	
+	<define name="BuiltInOperator.content">
+		<a:documentation>
+			The content of BuiltInOperator.content is the one of Operator.content
+		</a:documentation>
+		<ref name="Operator.content"/>
+	</define>
+	
+	<define name="BuiltInOperator">
+		<a:documentation>
+			Base definition of a built-in operator.
+			Further definitions should refine this one using choice 
+			as the value of combine attribute.
+		</a:documentation>
+		<empty/>
+	</define>
+
+	<define name="BuiltInConstant.content">
+		<a:documentation>
+			The content of BuiltInConstant.content is the one of Operator.content
+		</a:documentation>
+		<ref name="Operator.content"/>
+	</define>
+	
+	<define name="BuiltInConstant" combine="choice">
+		<a:documentation>
+			Base definitin of a built-in constant.
+			Further definitions should refine this one using choice 
+			as the value of combine attribute.
+		</a:documentation>
+		<empty/>
+	</define>
+	
+	<define name="MultisetOperator.content">
+		<a:documentation>
+			The content of MultisetOperator.content is the one of Operator.content
+		</a:documentation>
+		<ref name="Operator.content"/>
+	</define>
+	
+	<define name="MultisetOperator" combine="choice">
+		<a:documentation>
+			The Multiset Operator base definition.
+			Further definitions should refine this one using choice 
+			as the value of combine attribute.
+		</a:documentation>
+		<empty/>
+	</define>
+	
+	<define name="Tuple">
+		<a:documentation>
+			The 'Tuple' construct. 
+		</a:documentation>
+		<element name="tuple">
+			<ref name="Operator.content"/>
+		</element>
+	</define>
+	
+	<define name="UserOperator">
+		<a:documentation>
+			A user operator is used as an abbreviation of existing 
+			user-declared operators. 
+			It thus refers to an OperatorDeclaration.
+			Recursion is forbidden.
+		</a:documentation>
+		<element name="useroperator">	
+			<attribute name="declaration">
+				<data type="IDREF"/>
+			</attribute>
+			<ref name="Operator.content"/>
+		</element>
+	</define>
+	
+</grammar>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grammar xmlns="http://relaxng.org/ns/structure/1.0"
+	xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+	datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+
+	<a:documentation>
+		RELAX NG implementation of Cyclic Enumerations grammar.
+		Cyclic enumerations are part of high-level common sorts.
+		They define any cyclic enumeration sort and related operators 
+		over elements of that sort.
+		
+		File name: cyclicenumerations.rng
+		Version: 2009  
+		(c) 2007-2009
+		Lom Hillah (AFNOR)
+		Revision:
+		July 2008 - L.H
+	</a:documentation>
+
+	<define name="BuiltInSort" combine="choice">
+		<a:documentation>
+			CyclicEnumeration is a built-in sort.
+		</a:documentation>
+		<ref name="CyclicEnumeration"/>	
+	</define>
+	
+	<define name="BuiltInOperator" combine="choice">
+		<a:documentation>
+			CyclicEnumOperator is a built-in operator.
+		</a:documentation>
+		<ref name="CyclicEnumOperator"/>	
+	</define>
+	
+	<define name="CyclicEnumeration">
+		<a:documentation>
+			A Cyclic Enumeration is a Finite Enumeration.
+		</a:documentation>
+		<element name="cyclicenumeration">
+			<ref name="FiniteEnumeration.content"/>
+		</element>
+	</define>
+
+	<define name="CyclicEnumOperator.content">
+		<a:documentation>
+			A finite enumeration operator is a built-in operator.
+		</a:documentation>
+		<ref name="BuiltInOperator.content"/>
+	</define>
+
+	<define name="CyclicEnumOperator">
+		<a:documentation>
+			A finite enumeration operator defines known concrete operators.
+		</a:documentation>
+		<choice>
+			<ref name="Successor"/>
+			<ref name="Predecessor"/>
+		</choice>
+	</define>
+
+	<!-- Declaration of standard cyclic enumeration operators -->
+
+	<define name="Successor">
+		<a:documentation>
+			Defines the 'successor' operator.
+		</a:documentation>
+		<element name="successor">
+			<ref name="CyclicEnumOperator.content"/>
+		</element>
+	</define>
+
+	<define name="Predecessor">
+		<a:documentation>
+			Defines the 'predecessor' operator.
+		</a:documentation>
+		<element name="predecessor">
+			<ref name="CyclicEnumOperator.content"/>
+		</element>
+	</define>
+
+</grammar>
