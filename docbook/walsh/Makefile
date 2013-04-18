@@ -7,4 +7,10 @@ extract:
 	${tooldir}/rng2bgf docbook-rng-1.0b1/calstbl.rng ext.calstbl.bgf
 	${tooldir}/mergebgf ext.*.bgf grammar.bgf
 
+get:
+	rm -rf docbook-rng-*
+	wget http://www.oasis-open.org/docbook/relaxng/1.0b1/docbook-rng-1.0b1.zip
+	unzip docbook-rng-1.0b1.zip
+	rm docbook-rng-1.0b1.zip
+
 include ../../Makefile.grammar
