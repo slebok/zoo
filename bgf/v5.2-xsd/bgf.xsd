@@ -1,0 +1,173 @@
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:bgf="http://planet-sl.org/bgf"
+  targetNamespace="http://planet-sl.org/bgf">
+  
+  <xsd:annotation>
+    <xsd:documentation>
+      BNF-like Grammar Format.
+      As usual, the small difference matter.
+    </xsd:documentation>
+  </xsd:annotation>
+  
+  <xsd:element name="grammar">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="root" type="bgf:nonterminal" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="bgf:production" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+  <xsd:element name="production">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="label" type="bgf:label" minOccurs="0"/>
+        <xsd:element name="nonterminal" type="bgf:nonterminal"/>
+        <xsd:element ref="bgf:expression"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="expression">
+    <xsd:complexType>
+      <xsd:choice>
+        <xsd:element name="epsilon">
+          <xsd:annotation>
+            <xsd:documentation>
+              epsilon denotes the language of the empty sequence.
+              Algebraically, it is the unit of sequence operator of BGF.
+              In fact, we can represent epsilon as the sequence without any kids.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType/>
+        </xsd:element>
+        <xsd:element name="empty">
+          <xsd:annotation>
+            <xsd:documentation>
+              empty denotes the empty language (an empty set).
+              Algebraically, it is the unit of choice operator of BGF.
+              In fact, we can represent epsilon as the choice without any kids.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType/>
+        </xsd:element>
+        <xsd:element name="value" type="bgf:value"/>
+        <xsd:element name="any">
+          <xsd:annotation>
+            <xsd:documentation>
+              any is the universal type of BGF.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:complexType/>
+        </xsd:element>
+        <xsd:element name="terminal" type="bgf:terminal"/>
+        <xsd:element name="nonterminal" type="bgf:nonterminal"/>
+        <xsd:element name="selectable">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="selector" type="bgf:selector"/>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="marked">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="sequence">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="choice">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="allof">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="not">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="optional">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="plus">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="star">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="seplistplus">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="sepliststar">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+              <xsd:element ref="bgf:expression"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:simpleType name="value">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="int"/>
+      <xsd:enumeration value="string"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="label">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="nonterminal">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="selector">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="terminal">
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+
+</xsd:schema>
