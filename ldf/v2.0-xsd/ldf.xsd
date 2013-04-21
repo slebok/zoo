@@ -1,0 +1,162 @@
+<xsd:schema
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:ldf="http://planet-sl.org/ldf"
+     xmlns:bgf="http://planet-sl.org/bgf"
+     xmlns:xhtml="http://www.w3.org/1999/xhtml/datatypes/"
+     targetNamespace="http://planet-sl.org/ldf">
+
+
+  <xsd:annotation>
+    <xsd:documentation>
+      Language Document Format.
+      This is basically a metamodel for language documents or documentations.
+
+      Sample program tags:
+      - External reference (with XPath-like subprogram selection)
+      - Verbatim text + claim about corresponding grammar and nontermninal (and perhaps version)
+      - Generation request for given grammar and nontermninal (and perhaps version, more control)
+      - Sample suite extraction request (what are the constraints on the requested sample?)
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="document">
+    <xsd:annotation>
+      <xsd:documentation>
+        A document is essentially a section; see below.
+        It may contain some distinguished constituents of the kind of title information.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="title" type="xsd:string"/>
+        <xsd:element name="author" type="xsd:string"/>
+        <xsd:element name="abstract" type="xsd:string"/>
+        <xsd:element name="content" type="ldf:contentType"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="contentType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A sections content is a list of different kinds of portions.
+        Text is one kind of portion.
+        A grammar fragment is another kind of portion.
+        A sample is yet another kind of portion.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="text" type="ldf:mixedType"/>
+        <xsd:element name="grammar">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any namespace="http://planet-sl.org/bgf" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="language" type="xsd:anyURI" use="required"/>
+            <xsd:attribute name="version" type="xsd:token" use="optional"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="sample" type="ldf:sampleType"/>
+        <xsd:element name="runnable" type="ldf:runnableType"/>
+      </xsd:choice>
+      <xsd:element name="section" type="ldf:sectionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="sampleType">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="language" type="xsd:anyURI" use="required"/>
+        <xsd:attribute name="version" type="xsd:token" use="optional"/>
+        <xsd:attribute name="sort" type="xsd:Name" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>
+              The sort (aka nonterminal) of the sample at hand.
+              If it is missing, it's implicitely defined.
+              The language's grammar must defined a root sort to this end.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="id" type="xsd:ID" use="optional">
+          <xsd:annotation>
+            <xsd:documentation>
+              The means to refer to this particular sample later in the same document.
+              For example, this sample introduces a function that is used in one of the next samples.
+              It can also be a full text of a program that is run with different set of attributes later.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="runnableType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Related to the sample, this element shows a way to run a sample.
+        In FL, it is always just a name of one of the functions and the list of its parameters.
+        Generally, while keeping the internal structure of this element as such,
+        one might want to represent it in the resulting language document differently
+        (i.e. "java Test a b c" instead of "main(a,b,c);" ).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="context" type="xsd:IDREF">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reference to another sample that must be used
+            as a context while evaluating this one
+            The means to refer to this particular sample later in the same document.
+            For example, this sample introduces a function that is used in one of the next samples.
+            It can also be a full text of a program that is run with different set of attributes later.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="main" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The main function that is applied to the arguments.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="argument" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            These arguments are passed to the function during execution.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="yields" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The value that the sample should yield if parsed and
+            evalutated in the specified language.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="language" type="xsd:anyURI" use="required"/>
+    <xsd:attribute name="version" type="xsd:token" use="optional"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="sectionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A section has a title, some content, and possibly a list of subsections.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="title" type="xsd:string"/>
+      <xsd:element name="content" type="ldf:contentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="mixedType" mixed="true">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:any processContents="lax"/>
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" processContents="lax"/>
+  </xsd:complexType>
+
+</xsd:schema>

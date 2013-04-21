@@ -1,0 +1,494 @@
+<xsd:schema
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+     xmlns:ldf="http://planet-sl.org/ldf"
+     xmlns:bgf="http://planet-sl.org/bgf"
+     xmlns:xhtml="http://www.w3.org/1999/xhtml/datatypes/"
+     targetNamespace="http://planet-sl.org/ldf">
+
+
+  <!-- types of content -->
+  <xsd:complexType name="ListOfTerms">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:ID" minOccurs="0"/>
+      <xsd:element name="title" type="xsd:string" minOccurs="0"/>
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="author" type="xsd:string" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:element name="term" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="definition" type="ldf:SimpleText"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ListOfInternalLinks">
+    <xsd:sequence>
+      <xsd:element name="link" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="text" type="xsd:string"/>
+            <xsd:element name="linktext" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="reference" type="xsd:IDREF"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SimpleList">
+    <xsd:sequence>
+      <xsd:element name="item" type="xsd:string" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SimpleText">
+    <xsd:sequence>
+      <xsd:group ref="ldf:insideSimpleText" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:group name="insideSimpleText">
+    <xsd:choice>
+      <xsd:element name="p" type="xsd:string"/>
+      <xsd:element name="list" type="ldf:SimpleList"/>
+      <xsd:element name="formula" type="xsd:string"/>
+      <!-- 	later redo with MathML -->
+      <!--<xsd:element ref="mml:math"/>-->
+    </xsd:choice>  
+  </xsd:group>
+
+  <xsd:complexType name="SimpleSection">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:ID" minOccurs="0"/>
+      <xsd:element name="title" type="xsd:string" minOccurs="0"/>
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="author" type="xsd:string" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:element name="content" type="ldf:SimpleText"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="StructuredSection">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:ID" minOccurs="0"/>
+      <xsd:element name="title" type="xsd:string"/>
+      <xsd:sequence minOccurs="0">
+        <xsd:element name="author" type="xsd:string" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:choice maxOccurs="unbounded">
+        <xsd:element name="placeholder" type="ldf:generated"/>
+        <xsd:group ref="ldf:normative"/>
+        <xsd:group ref="ldf:informative"/>
+        <xsd:element ref="ldf:production"/>
+        <xsd:element name="relationship" type="ldf:ListOfInternalLinks"/>
+        <!-- <xsd:group ref="ldf:top-section"/> -->
+        <xsd:element name="subtopic" type="ldf:StructuredSection"/>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- tokens -->
+
+  <xsd:group name="normative">
+    <xsd:choice>
+      <xsd:element name="purpose" type="ldf:SimpleSection"/>
+      <xsd:element name="description" type="ldf:SimpleSection"/>
+      <xsd:element name="location" type="ldf:SimpleSection"/>
+      <xsd:element name="considerations" type="ldf:SimpleSection"/>
+      <xsd:element name="defaults" type="ldf:SimpleSection"/>
+      <!-- none of the above -->
+      <xsd:element name="normative" type="ldf:SimpleSection"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:group name="informative">
+    <xsd:choice>
+      <xsd:element name="note" type="ldf:SimpleSection"/>
+      <xsd:element name="example" type="ldf:SimpleSection"/>
+      <!-- none of the above -->
+      <xsd:element name="informative" type="ldf:SimpleSection"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:group name="lexicalGroup">
+    <xsd:annotation>
+      <xsd:documentation>
+        Sections describing lexical structure tend to be shorter, less structured inside,
+        and very limited in scope: there is usually one on whitespace, one on tokens,
+        one on literals, one on comments, etc.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element name="lineContinuations" type="ldf:SimpleSection"/>
+      <xsd:element name="whitespace" type="ldf:SimpleSection"/>
+      <xsd:element name="tokens" type="ldf:SimpleSection"/>
+      <xsd:element name="preprocessor" type="ldf:SimpleSection"/>
+      <xsd:element name="literals" type="ldf:SimpleSection"/>
+      <!-- none of the above -->
+      <xsd:element name="lexical" type="ldf:SimpleSection"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:simpleType name="status">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="unknown"/>
+      <xsd:enumeration value="draft"/>
+      <xsd:enumeration value="committee draft"/>
+      <xsd:enumeration value="recommendation"/>
+      <xsd:enumeration value="international standard"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+  <xsd:simpleType name="generated">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="index"/>
+      <xsd:enumeration value="fullgrammar"/>
+      <xsd:enumeration value="listoftables"/>
+      <xsd:enumeration value="listofauthors"/>
+      <xsd:enumeration value="listofcontents"/>
+      <xsd:enumeration value="listofreferences"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="body">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="ansi"/>
+      <xsd:enumeration value="ecma"/>
+      <xsd:enumeration value="ieee"/>
+      <xsd:enumeration value="iec"/>
+      <xsd:enumeration value="iso"/>
+      <xsd:enumeration value="iso/iet"/>
+      <xsd:enumeration value="itu"/>
+      <xsd:enumeration value="ietf"/>
+      <xsd:enumeration value="iec"/>
+      <xsd:enumeration value="oasis"/>
+      <xsd:enumeration value="wsa"/>
+      <xsd:enumeration value="w3c"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+
+
+  <!-- info -->
+  <xsd:annotation>
+    <xsd:documentation>
+      Language Document Format
+    </xsd:documentation>
+    <xsd:documentation>
+      This is basically a metamodel for language documents or documentations.
+
+      Sample program tags:
+      - External reference (with XPath-like subprogram selection)
+      - Verbatim text + claim about corresponding grammar and nontermninal (and perhaps version)
+      - Generation request for given grammar and nontermninal (and perhaps version, more control)
+      - Sample suite extraction request (what are the constraints on the requested sample?)
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <!-- elements -->
+
+  <xsd:element name="document">
+    <xsd:annotation>
+      <xsd:documentation>
+        A document is essentially a section; see below.
+        It may contain some distinguished constituents of the kind of title information.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="titlePage" type="ldf:titlePage"/>
+        <xsd:element name="placeholder" type="ldf:generated" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="frontMatter" type="ldf:frontMatter"/>
+        <xsd:element name="lists" type="ldf:frontLists" minOccurs="0"/>
+        
+        <xsd:element name="lexicalPart" type="ldf:lexical" minOccurs="0"/>
+        
+        <xsd:element name="core" type="ldf:StructuredSection" maxOccurs="unbounded"/>
+        <xsd:element name="annex" type="ldf:StructuredSection" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="titlePage">
+    <xsd:sequence>
+      <xsd:choice>
+        <xsd:sequence>
+          <xsd:element name="body" type="ldf:body"/>
+          <xsd:element name="number" type="xsd:int"/>
+        </xsd:sequence>
+        <xsd:sequence>
+          <xsd:element name="author" type="xsd:string" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:choice>
+      <xsd:element name="topic" type="xsd:string"/>
+      <xsd:choice>
+        <xsd:element name="version" type="xsd:string" default="1.0"/>
+        <xsd:element name="edition" type="xsd:string"/>
+      </xsd:choice>
+      <xsd:element name="status" type="ldf:status"/>
+      <xsd:element name="date" type="xsd:string"/>
+      <!-- xsd:date -->
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="frontMatter">
+    <xsd:sequence>
+      <xsd:choice maxOccurs="unbounded">
+        <xsd:element name="foreword" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Whatever the authors deem to be important enough to be put on one of the first
+              pages. For example, in C# specifications Foreword is about the differences brought
+              to the language by the current standard, while in the Scheme specification
+              Foreword discusses programming languages design and demonstrates its principles
+              applied to the forthcoming document.
+            </xsd:documentation>
+            <xsd:documentation>
+              Technically speaking, Foreword is not a part of the specification. Instead, it
+              precedes the specification and introduces it by putting in the proper context.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="designGoals" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              The goals of language design are sometimes encounted being explicitly
+              stated in the language document in one of the informative sections
+              of the front matter part.
+            </xsd:documentation>
+            <xsd:documentation>
+              For example:
+              "C# is intended to be a simple, modern, general-purpose, object-oriented
+              programming language."
+              (from ECMA 334 3rd edition, page xvii)
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="scope" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Scope section explains the context for the language document.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="conformance" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Conformance section defines several levels of compliance by
+              explaining what is a conforming program and a conforming
+              implementation with respect to this standard.
+            </xsd:documentation>
+            <xsd:documentation>
+              Definitions for meta-terms like "shall" and "should"
+              and their relation to the compliance issue explained above.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="compliance" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Same as conformance
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="compatibility" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              While conformance/compliance define how external artifacts should
+              conform to this standard, this section defines how this standard
+              complies with previously existing ones.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="notation" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Notation section defines grammar definition formalism used in the document:
+              mostly it is about the EBNF dialect.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="normativeReferences" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              Formally lined up references to all other standards that are used or referenced to
+              from within the document.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="documentStructure" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              This section informally describes how the document is organised, divided
+              into parts and chapters. Sometimes it explicitly states which sections are
+              normative and which are informative.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="whatsnew" type="ldf:SimpleSection">
+          <xsd:annotation>
+            <xsd:documentation>
+              A list of changes brought to the language by the current specification
+              replacing the previous one.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="clause" type="ldf:SimpleSection"/>
+        <xsd:element name="field" type="ldf:SimpleSection"/>
+        <!-- none of the above 
+      <xsd:element name="core" type="ldf:SimpleSection"/>
+      -->
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="frontLists">
+    <xsd:sequence minOccurs="0">
+      <xsd:choice maxOccurs="unbounded">
+        <xsd:element name="definitions" type="ldf:ListOfTerms">
+          <xsd:annotation>
+            <xsd:documentation>
+              This is a list of definitions for all basic terms needed to understand the document,
+              but not especially introduced in it. Typical examples include explaining what is
+              a "program", what is a "namespace", what is a "library", what is "behaviour".
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="abbreviations" type="ldf:ListOfTerms">
+          <xsd:annotation>
+            <xsd:documentation>
+              Acronyms like IEEE, ISO or like CLI, BCL are frequently defined here in a separate definition list.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="languageOverview" type="ldf:ListOfTerms">
+          <xsd:annotation>
+            <xsd:documentation>
+              Such an informal introduction to the language is not present in all standards.
+              However, some specifications contain a not claimed to be complete list of
+              language concepts with their definitions and perhaps even some examples.
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="lexical">
+    <xsd:sequence>
+      <xsd:group ref="ldf:lexicalGroup" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+  <!--xsd:complexType name="contentType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A sections content is a list of different kinds of portions.
+        Text is one kind of portion.
+        A grammar fragment is another kind of portion.
+        A sample is yet another kind of portion.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="text" type="ldf:mixedType"/>
+        <xsd:element name="grammar">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any namespace="http://planet-sl.org/bgf" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name="language" type="xsd:anyURI" use="required"/>
+            <xsd:attribute name="version" type="xsd:token" use="optional"/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="sample" type="ldf:informative"/>
+        <xsd:element name="runnable" type="ldf:runnableType"/>
+      </xsd:choice>
+      <xsd:element name="section" type="ldf:section" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType-->
+
+  <xsd:complexType name="runnableType">
+    <xsd:annotation>
+      <xsd:documentation>
+        Related to the sample, this element shows a way to run a sample.
+        In FL, it is always just a name of one of the functions and the list of its parameters.
+        Generally, while keeping the internal structure of this element as such,
+        one might want to represent it in the resulting language document differently
+        (i.e. "java Test a b c" instead of "main(a,b,c);" ).
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="context" type="xsd:IDREF">
+        <xsd:annotation>
+          <xsd:documentation>
+            The reference to another sample that must be used
+            as a context while evaluating this one
+            The means to refer to this particular sample later in the same document.
+            For example, this sample introduces a function that is used in one of the next samples.
+            It can also be a full text of a program that is run with different set of attributes later.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="main" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The main function that is applied to the arguments.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="argument" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>
+            These arguments are passed to the function during execution.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="yields" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            The value that the sample should yield if parsed and
+            evalutated in the specified language.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="language" type="xsd:anyURI" use="required"/>
+    <xsd:attribute name="version" type="xsd:token" use="optional"/>
+    <xsd:attribute name="id" type="xsd:ID" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>
+          The means to refer to this particular sample later in the same document.
+          For example, this sample introduces a function that is used in one of the next samples.
+          It can also be a full text of a program that is run with different set of attributes later.
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+
+  <!--xsd:complexType name="sectionTypeodl">
+    <xsd:annotation>
+      <xsd:documentation>
+        A section has a title, some content, and possibly a list of subsections.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="title" type="xsd:string"/>
+      <xsd:element name="content" type="ldf:contentType"/>
+    </xsd:sequence>
+  </xsd:complexType-->
+
+  <xsd:complexType name="mixedType" mixed="true">
+    <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+      <xsd:any processContents="lax"/>
+    </xsd:sequence>
+    <xsd:anyAttribute namespace="##other" processContents="lax"/>
+  </xsd:complexType>
+
+</xsd:schema>

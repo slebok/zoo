@@ -1,0 +1,57 @@
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:ldx="http://planet-sl.org/ldx"
+  xmlns:ldf="http://planet-sl.org/ldf"
+  xmlns:bgf="http://planet-sl.org/bgf"
+  targetNamespace="http://planet-sl.org/ldx">
+
+  <xsd:import namespace="http://planet-sl.org/ldf" schemaLocation="ldf.xsd"/>
+
+  <xsd:annotation>
+    <xsd:documentation>
+      Language Document eXtensions.
+      
+      This is the schema collecting additional features available for language documents.
+      It re-uses content types defined by LDF.
+      By relying on a separate schema, it is possible to include LDX elements in XSD documents.
+      That, in turn, enables generation of LDF (not just BGF) documents from XSD documents.
+    </xsd:documentation>
+  </xsd:annotation>
+  
+  <xsd:element name="reference" type="xsd:string">
+    <xsd:annotation>
+      <xsd:documentation>
+        A reference to a nonterminal
+        Generally, (reference)alpha(/reference) should mean something like
+        (a href="#alpha")alpha(/a)
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="sample" type="ldf:sampleType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A sample inside documentation is a sample defined by ldf.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="runnable" type="ldf:runnableType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A runnable inside documentation is a runnable defined by ldf.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:element name="tail" type="ldf:mixedType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A documentation part that comes after the grammar in the resulting document,
+        yet precedes the grammar in the language document due to some idiosyncrasy.
+        This definition reuses the one from ldf, but this is not critical.
+      </xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+
+</xsd:schema>

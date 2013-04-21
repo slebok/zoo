@@ -5,8 +5,8 @@ get: ldf.xsd
 
 ldf.xsd:
 	rm -f *.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/f6a5076465d63e25ab40db03af9bec49cf11f2ea/shared/xsd/ldf.xsd -O raw.ldf.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/f6a5076465d63e25ab40db03af9bec49cf11f2ea/shared/xsd/ldx.xsd -O ldx.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/c094e4591f60cdf54b3698892800042de24897da/shared/xsd/ldf.xsd -O raw.ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/c094e4591f60cdf54b3698892800042de24897da/shared/xsd/ldx.xsd -O ldx.xsd
 	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
 	perl -pi -w -e 's/bgf:/ldf:/g;' ldf.xsd
 

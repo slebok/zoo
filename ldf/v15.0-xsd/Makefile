@@ -5,9 +5,10 @@ get: ldf.xsd
 
 ldf.xsd:
 	rm -f *.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/5196b8adbe1251ec2bf0b0b88702691cc8cf20d9/shared/xsd/ldf.xsd -O raw.ldf.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/5196b8adbe1251ec2bf0b0b88702691cc8cf20d9/shared/xsd/ldx.xsd -O ldx.xsd
-	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/f19ca1b8d95bade382ca068f4642c27f46035126/shared/xsd/ldf.xsd -O raw.ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/f19ca1b8d95bade382ca068f4642c27f46035126/shared/xsd/ldx.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/9a4a5f4704331c2bcdff904eb5a32b92ce84f6fc/shared/xsd/fakemathml.xsd
+	cat raw.ldf.xsd | grep -v 'bgf.xsd' > ldf.xsd
 	perl -pi -w -e 's/bgf:/ldf:/g;' ldf.xsd
 
 diff:

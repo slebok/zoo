@@ -1,133 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xns1:grammar xmlns:xns1="http://planet-sl.org/bgf">
-  <root>reference</root>
-  <root>sample</root>
-  <root>runnable</root>
-  <root>tail</root>
   <root>document</root>
+  <root>formula</root>
   <root>keyword</root>
-  <xns1:production>
-    <nonterminal>reference</nonterminal>
-    <xns1:expression>
-      <value>string</value>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>sample</nonterminal>
-    <xns1:expression>
-      <nonterminal>sampleType</nonterminal>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>runnable</nonterminal>
-    <xns1:expression>
-      <nonterminal>runnableType</nonterminal>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>tail</nonterminal>
-    <xns1:expression>
-      <nonterminal>mixedType</nonterminal>
-    </xns1:expression>
-  </xns1:production>
+  <root>code</root>
+  <root>link</root>
+  <root>math</root>
+  <root>mfenced</root>
+  <root>mtext</root>
+  <root>msub</root>
+  <root>msup</root>
+  <root>mrow</root>
+  <root>mi</root>
+  <root>mo</root>
+  <root>varepsilon</root>
   <xns1:production>
     <nonterminal>document</nonterminal>
     <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
-	    <selector>titlePage</selector>
+	    <selector>document-metainfo</selector>
 	    <xns1:expression>
-	      <nonterminal>titlePage</nonterminal>
+	      <nonterminal>document-metainfo</nonterminal>
 	    </xns1:expression>
 	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <star>
-	    <xns1:expression>
-	      <selectable>
-		<selector>placeholder</selector>
-		<xns1:expression>
-		  <nonterminal>generated</nonterminal>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </star>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>frontMatter</selector>
-	    <xns1:expression>
-	      <plus>
-		<xns1:expression>
-		  <nonterminal>frontSection</nonterminal>
-		</xns1:expression>
-	      </plus>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>lists</selector>
-		<xns1:expression>
-		  <plus>
-		    <xns1:expression>
-		      <nonterminal>frontList</nonterminal>
-		    </xns1:expression>
-		  </plus>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
-	</xns1:expression>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>lexicalPart</selector>
-		<xns1:expression>
-		  <plus>
-		    <xns1:expression>
-		      <nonterminal>lexicalSection</nonterminal>
-		    </xns1:expression>
-		  </plus>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
 	</xns1:expression>
 	<xns1:expression>
 	  <plus>
 	    <xns1:expression>
 	      <selectable>
-		<selector>core</selector>
+		<selector>part</selector>
 		<xns1:expression>
-		  <nonterminal>structuredSection</nonterminal>
+		  <nonterminal>part</nonterminal>
 		</xns1:expression>
 	      </selectable>
 	    </xns1:expression>
 	  </plus>
 	</xns1:expression>
-	<xns1:expression>
-	  <star>
-	    <xns1:expression>
-	      <selectable>
-		<selector>annex</selector>
-		<xns1:expression>
-		  <nonterminal>structuredSection</nonterminal>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </star>
-	</xns1:expression>
       </sequence>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>titlePage</nonterminal>
+    <nonterminal>document-metainfo</nonterminal>
     <xns1:expression>
       <sequence>
 	<xns1:expression>
@@ -146,7 +62,7 @@
 		  <selectable>
 		    <selector>number</selector>
 		    <xns1:expression>
-		      <value>int</value>
+		      <value>string</value>
 		    </xns1:expression>
 		  </selectable>
 		</xns1:expression>
@@ -175,6 +91,14 @@
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
+	  <selectable>
+	    <selector>status</selector>
+	    <xns1:expression>
+	      <nonterminal>status</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
 	  <choice>
 	    <xns1:expression>
 	      <selectable>
@@ -195,12 +119,16 @@
 	  </choice>
 	</xns1:expression>
 	<xns1:expression>
-	  <selectable>
-	    <selector>status</selector>
+	  <star>
 	    <xns1:expression>
-	      <nonterminal>status</nonterminal>
+	      <selectable>
+		<selector>previous</selector>
+		<xns1:expression>
+		  <nonterminal>previous</nonterminal>
+		</xns1:expression>
+	      </selectable>
 	    </xns1:expression>
-	  </selectable>
+	  </star>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
@@ -267,14 +195,6 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>ietf</selector>
-	    <xns1:expression>
-	      <epsilon/>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
 	    <selector>iec</selector>
 	    <xns1:expression>
 	      <epsilon/>
@@ -283,7 +203,23 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
+	    <selector>ietf</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
 	    <selector>oasis</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>omg</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -412,7 +348,231 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>generated</nonterminal>
+    <nonterminal>previous</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>title</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <choice>
+	    <xns1:expression>
+	      <selectable>
+		<selector>version</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	    <xns1:expression>
+	      <selectable>
+		<selector>edition</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </choice>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>uri</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>part</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>part-metainfo</selector>
+	    <xns1:expression>
+	      <nonterminal>part-metainfo</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <nonterminal>section</nonterminal>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>part-metainfo</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>part-role</selector>
+	    <xns1:expression>
+	      <nonterminal>part-role</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>title</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>author</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>id</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>part-role</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>front-matter</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>core-part</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>back-matter</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>annex</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>section</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>placeholder</selector>
+	    <xns1:expression>
+	      <nonterminal>placeholder</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>simple-section</selector>
+	    <xns1:expression>
+	      <nonterminal>simple-section</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>lexical-section</selector>
+	    <xns1:expression>
+	      <nonterminal>lexical-section</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>structured-section</selector>
+	    <xns1:expression>
+	      <nonterminal>structured-section</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>composite-section</selector>
+	    <xns1:expression>
+	      <nonterminal>composite-section</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list-section</selector>
+	    <xns1:expression>
+	      <nonterminal>list-section</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>composite-section</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <nonterminal>section</nonterminal>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>placeholder</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
@@ -425,7 +585,7 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>fullgrammar</selector>
+	    <selector>full-grammar</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -433,7 +593,7 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>listoftables</selector>
+	    <selector>list-of-tables</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -441,7 +601,7 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>listofauthors</selector>
+	    <selector>list-of-authors</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -449,7 +609,7 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>listofcontents</selector>
+	    <selector>list-of-contents</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -457,7 +617,7 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>listofreferences</selector>
+	    <selector>list-of-references</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -467,30 +627,88 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>frontSection</nonterminal>
+    <nonterminal>simple-section</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>simple-section-metainfo</selector>
+	    <xns1:expression>
+	      <nonterminal>simple-section-metainfo</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>simple-section-content</selector>
+	    <xns1:expression>
+	      <nonterminal>textual-content</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>simple-section-metainfo</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>simple-section-role</selector>
+	    <xns1:expression>
+	      <nonterminal>simple-section-role</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>title</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>author</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>id</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>simple-section-role</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <selectable>
-	    <selector>foreword</selector>
+	    <selector>abstract</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>designGoals</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>scope</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -498,15 +716,7 @@
 	  <selectable>
 	    <selector>conformance</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>compliance</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -514,306 +724,13 @@
 	  <selectable>
 	    <selector>compatibility</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>notation</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>normativeReferences</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>documentStructure</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>whatsnew</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>clause</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>field</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-      </choice>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>simpleSection</nonterminal>
-    <xns1:expression>
-      <sequence>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>title</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
-	</xns1:expression>
-	<xns1:expression>
-	  <star>
-	    <xns1:expression>
-	      <selectable>
-		<selector>author</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </star>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>content</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleText</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>id</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
-	</xns1:expression>
-      </sequence>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>listOfTerms</nonterminal>
-    <xns1:expression>
-      <sequence>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>title</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
-	</xns1:expression>
-	<xns1:expression>
-	  <star>
-	    <xns1:expression>
-	      <selectable>
-		<selector>author</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </star>
-	</xns1:expression>
-	<xns1:expression>
-	  <plus>
-	    <xns1:expression>
-	      <selectable>
-		<selector>term</selector>
-		<xns1:expression>
-		  <sequence>
-		    <xns1:expression>
-		      <selectable>
-			<selector>name</selector>
-			<xns1:expression>
-			  <value>string</value>
-			</xns1:expression>
-		      </selectable>
-		    </xns1:expression>
-		    <xns1:expression>
-		      <selectable>
-			<selector>definition</selector>
-			<xns1:expression>
-			  <nonterminal>simpleText</nonterminal>
-			</xns1:expression>
-		      </selectable>
-		    </xns1:expression>
-		  </sequence>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </plus>
-	</xns1:expression>
-	<xns1:expression>
-	  <optional>
-	    <xns1:expression>
-	      <selectable>
-		<selector>id</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </optional>
-	</xns1:expression>
-      </sequence>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>listOfInternalLinks</nonterminal>
-    <xns1:expression>
-      <plus>
-	<xns1:expression>
-	  <selectable>
-	    <selector>link</selector>
-	    <xns1:expression>
-	      <sequence>
-		<xns1:expression>
-		  <selectable>
-		    <selector>text</selector>
-		    <xns1:expression>
-		      <value>string</value>
-		    </xns1:expression>
-		  </selectable>
-		</xns1:expression>
-		<xns1:expression>
-		  <optional>
-		    <xns1:expression>
-		      <selectable>
-			<selector>linkText</selector>
-			<xns1:expression>
-			  <value>string</value>
-			</xns1:expression>
-		      </selectable>
-		    </xns1:expression>
-		  </optional>
-		</xns1:expression>
-		<xns1:expression>
-		  <selectable>
-		    <selector>reference</selector>
-		    <xns1:expression>
-		      <value>string</value>
-		    </xns1:expression>
-		  </selectable>
-		</xns1:expression>
-	      </sequence>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-      </plus>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>simpleList</nonterminal>
-    <xns1:expression>
-      <plus>
-	<xns1:expression>
-	  <selectable>
-	    <selector>item</selector>
-	    <xns1:expression>
-	      <nonterminal>mixedType</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-      </plus>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>simpleText</nonterminal>
-    <xns1:expression>
-      <plus>
-	<xns1:expression>
-	  <nonterminal>simpleTextElement</nonterminal>
-	</xns1:expression>
-      </plus>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>tableRow</nonterminal>
-    <xns1:expression>
-      <plus>
-	<xns1:expression>
-	  <selectable>
-	    <selector>cell</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleText</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-      </plus>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>simpleTable</nonterminal>
-    <xns1:expression>
-      <sequence>
-	<xns1:expression>
-	  <star>
-	    <xns1:expression>
-	      <selectable>
-		<selector>header</selector>
-		<xns1:expression>
-		  <nonterminal>tableRow</nonterminal>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </star>
-	</xns1:expression>
-	<xns1:expression>
-	  <plus>
-	    <xns1:expression>
-	      <selectable>
-		<selector>row</selector>
-		<xns1:expression>
-		  <nonterminal>tableRow</nonterminal>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </plus>
-	</xns1:expression>
-      </sequence>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>simpleTextElement</nonterminal>
-    <xns1:expression>
-      <choice>
-	<xns1:expression>
-	  <selectable>
-	    <selector>empty</selector>
+	    <selector>design-goals</selector>
 	    <xns1:expression>
 	      <epsilon/>
 	    </xns1:expression>
@@ -821,85 +738,113 @@
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>text</selector>
+	    <selector>document-structure</selector>
 	    <xns1:expression>
-	      <nonterminal>mixedType</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>figure</selector>
+	    <selector>foreword</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleFigure</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>table</selector>
+	    <selector>normative-references</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleTable</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>list</selector>
+	    <selector>notation</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleList</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>formula</selector>
+	    <selector>scope</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>sample</selector>
+	    <selector>what-is-new</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <nonterminal>production</nonterminal>
 	</xns1:expression>
       </choice>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>simpleFigure</nonterminal>
+    <nonterminal>lexical-section</nonterminal>
     <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
-	    <selector>caption</selector>
+	    <selector>lexical-section-metainfo</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <nonterminal>lexical-section-metainfo</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>type</selector>
+	    <selector>lexical-section-content</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <nonterminal>textual-content</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>lexical-section-metainfo</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>lexical-section-role</selector>
+	    <xns1:expression>
+	      <nonterminal>lexical-section-role</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
-	  <selectable>
-	    <selector>file</selector>
+	  <optional>
 	    <xns1:expression>
-	      <value>string</value>
+	      <selectable>
+		<selector>title</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
 	    </xns1:expression>
-	  </selectable>
+	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>author</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
 	</xns1:expression>
 	<xns1:expression>
 	  <optional>
@@ -917,7 +862,234 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>structuredSection</nonterminal>
+    <nonterminal>lexical-section-role</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>lexical-issue</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>line-continuations</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>literals</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>preprocessor</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>tokens</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>whitespace</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>list-section</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list-section-metainfo</selector>
+	    <xns1:expression>
+	      <nonterminal>list-section-metainfo</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list-section-content</selector>
+	    <xns1:expression>
+	      <plus>
+		<xns1:expression>
+		  <selectable>
+		    <selector>term</selector>
+		    <xns1:expression>
+		      <nonterminal>term</nonterminal>
+		    </xns1:expression>
+		  </selectable>
+		</xns1:expression>
+	      </plus>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>list-section-metainfo</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list-section-role</selector>
+	    <xns1:expression>
+	      <nonterminal>list-section-role</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>title</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>author</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
+	</xns1:expression>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>id</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>list-section-role</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>abbreviations</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>definitions</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>language-overview</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>normative-references</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>term</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>name</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>definition</selector>
+	    <xns1:expression>
+	      <nonterminal>textual-content</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>structured-section</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>structured-section-metainfo</selector>
+	    <xns1:expression>
+	      <nonterminal>structured-section-metainfo</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>structured-section-content</selector>
+	    <xns1:expression>
+	      <plus>
+		<xns1:expression>
+		  <nonterminal>structured-section-element</nonterminal>
+		</xns1:expression>
+	      </plus>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>structured-section-metainfo</nonterminal>
     <xns1:expression>
       <sequence>
 	<xns1:expression>
@@ -941,13 +1113,6 @@
 	  </star>
 	</xns1:expression>
 	<xns1:expression>
-	  <plus>
-	    <xns1:expression>
-	      <nonterminal>structuredSectionElement</nonterminal>
-	    </xns1:expression>
-	  </plus>
-	</xns1:expression>
-	<xns1:expression>
 	  <optional>
 	    <xns1:expression>
 	      <selectable>
@@ -963,117 +1128,85 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>structuredSectionElement</nonterminal>
+    <nonterminal>structured-section-element</nonterminal>
     <xns1:expression>
       <choice>
-	<xns1:expression>
-	  <selectable>
-	    <selector>placeholder</selector>
-	    <xns1:expression>
-	      <nonterminal>generated</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <nonterminal>normative</nonterminal>
-	</xns1:expression>
-	<xns1:expression>
-	  <nonterminal>informative</nonterminal>
-	</xns1:expression>
-	<xns1:expression>
-	  <nonterminal>production</nonterminal>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>relationship</selector>
-	    <xns1:expression>
-	      <nonterminal>listOfInternalLinks</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
 	    <selector>subtopic</selector>
 	    <xns1:expression>
-	      <nonterminal>structuredSection</nonterminal>
+	      <nonterminal>structured-section</nonterminal>
 	    </xns1:expression>
 	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>references</selector>
+	    <xns1:expression>
+	      <nonterminal>list</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>placeholder</selector>
+	    <xns1:expression>
+	      <nonterminal>placeholder</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>value</selector>
+	    <xns1:expression>
+	      <sequence>
+		<xns1:expression>
+		  <selectable>
+		    <selector>key</selector>
+		    <xns1:expression>
+		      <value>string</value>
+		    </xns1:expression>
+		  </selectable>
+		</xns1:expression>
+		<xns1:expression>
+		  <selectable>
+		    <selector>data</selector>
+		    <xns1:expression>
+		      <value>string</value>
+		    </xns1:expression>
+		  </selectable>
+		</xns1:expression>
+	      </sequence>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <sequence>
+	    <xns1:expression>
+	      <nonterminal>element-role</nonterminal>
+	    </xns1:expression>
+	    <xns1:expression>
+	      <selectable>
+		<selector>simple-section</selector>
+		<xns1:expression>
+		  <nonterminal>simple-section</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </sequence>
 	</xns1:expression>
       </choice>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>normative</nonterminal>
+    <nonterminal>element-role</nonterminal>
     <xns1:expression>
       <choice>
-	<xns1:expression>
-	  <selectable>
-	    <selector>purpose</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>description</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>location</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>considerations</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>defaults</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
 	    <selector>normative</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-      </choice>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>informative</nonterminal>
-    <xns1:expression>
-      <choice>
-	<xns1:expression>
-	  <selectable>
-	    <selector>note</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>example</selector>
-	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <nonterminal>normative-role</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -1081,7 +1214,15 @@
 	  <selectable>
 	    <selector>informative</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <nonterminal>informative-role</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>specific-section</selector>
+	    <xns1:expression>
+	      <nonterminal>simple-section</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -1089,54 +1230,62 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>lexicalSection</nonterminal>
+    <nonterminal>normative-role</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <selectable>
-	    <selector>lineContinuations</selector>
+	    <selector>synopsis</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>whitespace</selector>
+	    <selector>description</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>tokens</selector>
+	    <selector>syntax</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>preprocessor</selector>
+	    <selector>constraints</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>literals</selector>
+	    <selector>relationship</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>lexical</selector>
+	    <selector>semantics</selector>
 	    <xns1:expression>
-	      <nonterminal>simpleSection</nonterminal>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>default</selector>
+	    <xns1:expression>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -1144,30 +1293,30 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>frontList</nonterminal>
+    <nonterminal>informative-role</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <selectable>
-	    <selector>definitions</selector>
+	    <selector>example</selector>
 	    <xns1:expression>
-	      <nonterminal>listOfTerms</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>abbreviations</selector>
+	    <selector>rationale</selector>
 	    <xns1:expression>
-	      <nonterminal>listOfTerms</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <selectable>
-	    <selector>languageOverview</selector>
+	    <selector>update</selector>
 	    <xns1:expression>
-	      <nonterminal>listOfTerms</nonterminal>
+	      <epsilon/>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -1175,64 +1324,239 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>runnableType</nonterminal>
+    <nonterminal>textual-content</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <nonterminal>text-element</nonterminal>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>text-element</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>empty</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>code</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>text</selector>
+	    <xns1:expression>
+	      <nonterminal>mixed-type</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>figure</selector>
+	    <xns1:expression>
+	      <nonterminal>figure</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>table</selector>
+	    <xns1:expression>
+	      <nonterminal>table</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list</selector>
+	    <xns1:expression>
+	      <nonterminal>list</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>formula</selector>
+	    <xns1:expression>
+	      <plus>
+		<xns1:expression>
+		  <choice>
+		    <xns1:expression>
+		      <selectable>
+			<selector>math</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>mfenced</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>mtext</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>msub</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>msup</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>mrow</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>mi</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>mo</selector>
+			<xns1:expression>
+			  <nonterminal>anyMath</nonterminal>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		    <xns1:expression>
+		      <selectable>
+			<selector>varepsilon</selector>
+			<xns1:expression>
+			  <any/>
+			</xns1:expression>
+		      </selectable>
+		    </xns1:expression>
+		  </choice>
+		</xns1:expression>
+	      </plus>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sample</selector>
+	    <xns1:expression>
+	      <sequence>
+		<xns1:expression>
+		  <star>
+		    <xns1:expression>
+		      <choice>
+			<xns1:expression>
+			  <any/>
+			</xns1:expression>
+			<xns1:expression>
+			  <value>string</value>
+			</xns1:expression>
+		      </choice>
+		    </xns1:expression>
+		  </star>
+		</xns1:expression>
+		<xns1:expression>
+		  <selectable>
+		    <selector>source</selector>
+		    <xns1:expression>
+		      <value>string</value>
+		    </xns1:expression>
+		  </selectable>
+		</xns1:expression>
+	      </sequence>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <nonterminal>production</nonterminal>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>figure</nonterminal>
     <xns1:expression>
       <sequence>
 	<xns1:expression>
 	  <selectable>
-	    <selector>context</selector>
+	    <selector>figure-metainfo</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <nonterminal>figure-metainfo</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
-	  <selectable>
-	    <selector>main</selector>
-	    <xns1:expression>
-	      <value>string</value>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <star>
+	  <plus>
 	    <xns1:expression>
 	      <selectable>
-		<selector>argument</selector>
+		<selector>figure-source</selector>
 		<xns1:expression>
-		  <value>string</value>
+		  <nonterminal>figure-source</nonterminal>
 		</xns1:expression>
 	      </selectable>
 	    </xns1:expression>
-	  </star>
+	  </plus>
 	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>yields</selector>
-	    <xns1:expression>
-	      <value>string</value>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
-	<xns1:expression>
-	  <selectable>
-	    <selector>language</selector>
-	    <xns1:expression>
-	      <value>string</value>
-	    </xns1:expression>
-	  </selectable>
-	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>figure-metainfo</nonterminal>
+    <xns1:expression>
+      <sequence>
 	<xns1:expression>
 	  <optional>
 	    <xns1:expression>
 	      <selectable>
-		<selector>version</selector>
+		<selector>short-caption</selector>
 		<xns1:expression>
 		  <value>string</value>
 		</xns1:expression>
 	      </selectable>
 	    </xns1:expression>
 	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>caption</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
 	  <optional>
@@ -1250,7 +1574,158 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>mixedType</nonterminal>
+    <nonterminal>figure-source</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <selectable>
+	    <selector>type</selector>
+	    <xns1:expression>
+	      <nonterminal>figure-type</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <choice>
+	    <xns1:expression>
+	      <selectable>
+		<selector>local-file</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	    <xns1:expression>
+	      <selectable>
+		<selector>uri</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </choice>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>figure-type</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>PDF</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>PostScript</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>SVG</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>PNG</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>GIF</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>JPEG</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>table</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>header</selector>
+		<xns1:expression>
+		  <nonterminal>table-row</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>row</selector>
+		<xns1:expression>
+		  <nonterminal>table-row</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>table-row</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>table-cell</selector>
+	    <xns1:expression>
+	      <nonterminal>textual-content</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>list</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>item</selector>
+	    <xns1:expression>
+	      <nonterminal>mixed-type</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mixed-type</nonterminal>
     <xns1:expression>
       <star>
 	<xns1:expression>
@@ -1267,9 +1742,135 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
+    <nonterminal>formula</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <any/>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>keyword</nonterminal>
     <xns1:expression>
       <value>string</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>code</nonterminal>
+    <xns1:expression>
+      <value>string</value>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>link</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <optional>
+	    <xns1:expression>
+	      <selectable>
+		<selector>text</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </optional>
+	</xns1:expression>
+	<xns1:expression>
+	  <choice>
+	    <xns1:expression>
+	      <selectable>
+		<selector>reference</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	    <xns1:expression>
+	      <selectable>
+		<selector>external</selector>
+		<xns1:expression>
+		  <value>string</value>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </choice>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>math</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mfenced</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mtext</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>msub</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>msup</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mrow</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mi</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>mo</nonterminal>
+    <xns1:expression>
+      <nonterminal>anyMath</nonterminal>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>varepsilon</nonterminal>
+    <xns1:expression>
+      <epsilon/>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>anyMath</nonterminal>
+    <xns1:expression>
+      <star>
+	<xns1:expression>
+	  <choice>
+	    <xns1:expression>
+	      <any/>
+	    </xns1:expression>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </choice>
+	</xns1:expression>
+      </star>
     </xns1:expression>
   </xns1:production>
 </xns1:grammar>

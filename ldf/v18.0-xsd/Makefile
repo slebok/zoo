@@ -1,13 +1,13 @@
 extract: ldf.xsd
-	${tooldir}/xsd2bgf ldx.xsd grammar.bgf
+	${tooldir}/xsd2bgf ldf.xsd grammar.bgf
 
 get: ldf.xsd
 
 ldf.xsd:
 	rm -f *.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/e60e3943a62ec592f6bd623d234730409ceabfb3/shared/xsd/ldf.xsd -O raw.ldf.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/e60e3943a62ec592f6bd623d234730409ceabfb3/shared/xsd/ldx.xsd -O ldx.xsd
-	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/9a4a5f4704331c2bcdff904eb5a32b92ce84f6fc/shared/xsd/ldf.xsd -O raw.ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/9a4a5f4704331c2bcdff904eb5a32b92ce84f6fc/shared/xsd/fakemathml.xsd
+	cat raw.ldf.xsd | grep -v 'bgf.xsd' > ldf.xsd
 	perl -pi -w -e 's/bgf:/ldf:/g;' ldf.xsd
 
 diff:

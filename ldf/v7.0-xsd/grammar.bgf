@@ -170,26 +170,40 @@
     <xns1:expression>
       <plus>
 	<xns1:expression>
-	  <choice>
-	    <xns1:expression>
-	      <selectable>
-		<selector>p</selector>
-		<xns1:expression>
-		  <value>string</value>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	    <xns1:expression>
-	      <selectable>
-		<selector>list</selector>
-		<xns1:expression>
-		  <nonterminal>SimpleList</nonterminal>
-		</xns1:expression>
-	      </selectable>
-	    </xns1:expression>
-	  </choice>
+	  <nonterminal>insideSimpleText</nonterminal>
 	</xns1:expression>
       </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>insideSimpleText</nonterminal>
+    <xns1:expression>
+      <choice>
+	<xns1:expression>
+	  <selectable>
+	    <selector>p</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>list</selector>
+	    <xns1:expression>
+	      <nonterminal>SimpleList</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>formula</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -478,6 +492,14 @@
       <choice>
 	<xns1:expression>
 	  <selectable>
+	    <selector>unknown</selector>
+	    <xns1:expression>
+	      <epsilon/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
 	    <selector>draft</selector>
 	    <xns1:expression>
 	      <epsilon/>
@@ -667,7 +689,7 @@
       <sequence>
 	<xns1:expression>
 	  <selectable>
-	    <selector>title</selector>
+	    <selector>titlePage</selector>
 	    <xns1:expression>
 	      <nonterminal>titlePage</nonterminal>
 	    </xns1:expression>
@@ -694,20 +716,28 @@
 	  </selectable>
 	</xns1:expression>
 	<xns1:expression>
-	  <selectable>
-	    <selector>lists</selector>
+	  <optional>
 	    <xns1:expression>
-	      <nonterminal>frontLists</nonterminal>
+	      <selectable>
+		<selector>lists</selector>
+		<xns1:expression>
+		  <nonterminal>frontLists</nonterminal>
+		</xns1:expression>
+	      </selectable>
 	    </xns1:expression>
-	  </selectable>
+	  </optional>
 	</xns1:expression>
 	<xns1:expression>
-	  <selectable>
-	    <selector>lexicalPart</selector>
+	  <optional>
 	    <xns1:expression>
-	      <nonterminal>lexical</nonterminal>
+	      <selectable>
+		<selector>lexicalPart</selector>
+		<xns1:expression>
+		  <nonterminal>lexical</nonterminal>
+		</xns1:expression>
+	      </selectable>
 	    </xns1:expression>
-	  </selectable>
+	  </optional>
 	</xns1:expression>
 	<xns1:expression>
 	  <plus>

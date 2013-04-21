@@ -6,6 +6,7 @@
   <root>runnable</root>
   <root>tail</root>
   <root>document</root>
+  <root>keyword</root>
   <xns1:production>
     <nonterminal>reference</nonterminal>
     <xns1:expression>
@@ -176,14 +177,76 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
+    <nonterminal>TableRow</nonterminal>
+    <xns1:expression>
+      <plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>cell</selector>
+	    <xns1:expression>
+	      <nonterminal>SimpleText</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </plus>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>SimpleTable</nonterminal>
+    <xns1:expression>
+      <sequence>
+	<xns1:expression>
+	  <star>
+	    <xns1:expression>
+	      <selectable>
+		<selector>header</selector>
+		<xns1:expression>
+		  <nonterminal>TableRow</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </star>
+	</xns1:expression>
+	<xns1:expression>
+	  <plus>
+	    <xns1:expression>
+	      <selectable>
+		<selector>row</selector>
+		<xns1:expression>
+		  <nonterminal>TableRow</nonterminal>
+		</xns1:expression>
+	      </selectable>
+	    </xns1:expression>
+	  </plus>
+	</xns1:expression>
+      </sequence>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
     <nonterminal>insideSimpleText</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
 	  <selectable>
-	    <selector>p</selector>
+	    <selector>empty</selector>
 	    <xns1:expression>
-	      <value>string</value>
+	      <any/>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>text</selector>
+	    <xns1:expression>
+	      <nonterminal>mixedType</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>table</selector>
+	    <xns1:expression>
+	      <nonterminal>SimpleTable</nonterminal>
 	    </xns1:expression>
 	  </selectable>
 	</xns1:expression>
@@ -198,6 +261,14 @@
 	<xns1:expression>
 	  <selectable>
 	    <selector>formula</selector>
+	    <xns1:expression>
+	      <value>string</value>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+	<xns1:expression>
+	  <selectable>
+	    <selector>sample</selector>
 	    <xns1:expression>
 	      <value>string</value>
 	    </xns1:expression>
@@ -435,7 +506,7 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>lexicalGroup</nonterminal>
+    <nonterminal>lexical</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
@@ -716,7 +787,7 @@
 	    <xns1:expression>
 	      <plus>
 		<xns1:expression>
-		  <nonterminal>front-simple-sections</nonterminal>
+		  <nonterminal>front-simple-section</nonterminal>
 		</xns1:expression>
 	      </plus>
 	    </xns1:expression>
@@ -728,7 +799,11 @@
 	      <selectable>
 		<selector>lists</selector>
 		<xns1:expression>
-		  <nonterminal>frontLists</nonterminal>
+		  <plus>
+		    <xns1:expression>
+		      <nonterminal>front-list</nonterminal>
+		    </xns1:expression>
+		  </plus>
 		</xns1:expression>
 	      </selectable>
 	    </xns1:expression>
@@ -740,7 +815,11 @@
 	      <selectable>
 		<selector>lexicalPart</selector>
 		<xns1:expression>
-		  <nonterminal>lexical</nonterminal>
+		  <plus>
+		    <xns1:expression>
+		      <nonterminal>lexical</nonterminal>
+		    </xns1:expression>
+		  </plus>
 		</xns1:expression>
 	      </selectable>
 	    </xns1:expression>
@@ -861,7 +940,7 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>front-simple-sections</nonterminal>
+    <nonterminal>front-simple-section</nonterminal>
     <xns1:expression>
       <choice>
 	<xns1:expression>
@@ -964,52 +1043,34 @@
     </xns1:expression>
   </xns1:production>
   <xns1:production>
-    <nonterminal>frontLists</nonterminal>
+    <nonterminal>front-list</nonterminal>
     <xns1:expression>
-      <optional>
+      <choice>
 	<xns1:expression>
-	  <plus>
+	  <selectable>
+	    <selector>definitions</selector>
 	    <xns1:expression>
-	      <choice>
-		<xns1:expression>
-		  <selectable>
-		    <selector>definitions</selector>
-		    <xns1:expression>
-		      <nonterminal>ListOfTerms</nonterminal>
-		    </xns1:expression>
-		  </selectable>
-		</xns1:expression>
-		<xns1:expression>
-		  <selectable>
-		    <selector>abbreviations</selector>
-		    <xns1:expression>
-		      <nonterminal>ListOfTerms</nonterminal>
-		    </xns1:expression>
-		  </selectable>
-		</xns1:expression>
-		<xns1:expression>
-		  <selectable>
-		    <selector>languageOverview</selector>
-		    <xns1:expression>
-		      <nonterminal>ListOfTerms</nonterminal>
-		    </xns1:expression>
-		  </selectable>
-		</xns1:expression>
-	      </choice>
+	      <nonterminal>ListOfTerms</nonterminal>
 	    </xns1:expression>
-	  </plus>
+	  </selectable>
 	</xns1:expression>
-      </optional>
-    </xns1:expression>
-  </xns1:production>
-  <xns1:production>
-    <nonterminal>lexical</nonterminal>
-    <xns1:expression>
-      <plus>
 	<xns1:expression>
-	  <nonterminal>lexicalGroup</nonterminal>
+	  <selectable>
+	    <selector>abbreviations</selector>
+	    <xns1:expression>
+	      <nonterminal>ListOfTerms</nonterminal>
+	    </xns1:expression>
+	  </selectable>
 	</xns1:expression>
-      </plus>
+	<xns1:expression>
+	  <selectable>
+	    <selector>languageOverview</selector>
+	    <xns1:expression>
+	      <nonterminal>ListOfTerms</nonterminal>
+	    </xns1:expression>
+	  </selectable>
+	</xns1:expression>
+      </choice>
     </xns1:expression>
   </xns1:production>
   <xns1:production>
@@ -1102,6 +1163,12 @@
 	  </choice>
 	</xns1:expression>
       </star>
+    </xns1:expression>
+  </xns1:production>
+  <xns1:production>
+    <nonterminal>keyword</nonterminal>
+    <xns1:expression>
+      <value>string</value>
     </xns1:expression>
   </xns1:production>
 </xns1:grammar>
