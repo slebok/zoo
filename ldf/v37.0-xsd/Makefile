@@ -4,11 +4,11 @@ extract: ldf.xsd
 get: ldf.xsd
 
 ldf.xsd:
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/ca2a84475de299a1ec84b69f3d967848071eb72a/shared/xsd/ldf.xsd -O raw.ldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/615a60dbf28c6fa5ca1d0af2cde78daa13c9af96/shared/xsd/ldf.xsd -O raw.ldf.xsd
 	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
 	perl -pi -w -e 's/bgf:/ldf:/g;' ldf.xsd
 
 diff:
-	${tooldir}/gdts ../36/grammar.bgf grammar.bgf
+	${tooldir}/gdts ../v36.0-xsd/grammar.bgf grammar.bgf
 
 include ../../Makefile.grammar

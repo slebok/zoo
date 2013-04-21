@@ -1,6 +1,6 @@
 https://github.com/grammarware/slps/blob/master/shared/xsd/ldf.xsd
   ↳  https://github.com/grammarware/slps/commits/master/shared/xsd/ldf.xsd
-    ↳  https://github.com/grammarware/slps/blob/ca2a84475de299a1ec84b69f3d967848071eb72a/shared/xsd/ldf.xsd
+    ↳  https://github.com/grammarware/slps/blob/615a60dbf28c6fa5ca1d0af2cde78daa13c9af96/shared/xsd/ldf.xsd
 
 This is version 37 of the LDF schema committed to SLPS.
 

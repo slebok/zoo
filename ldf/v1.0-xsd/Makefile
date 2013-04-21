@@ -8,7 +8,4 @@ ldf.xsd:
 	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
 	perl -pi -w -e 's/bgf:/ldf:/g;' ldf.xsd
 
-diff:
-	${tooldir}/gdts ../0/grammar.bgf grammar.bgf
-
 include ../../Makefile.grammar
