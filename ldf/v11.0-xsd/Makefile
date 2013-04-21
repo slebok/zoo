@@ -4,6 +4,7 @@ extract: ldf.xsd
 get: ldf.xsd
 
 ldf.xsd:
+	rm -f *.xsd
 	wget --no-check-certificate http://raw.github.com/grammarware/slps/8f5ff87a8c11dedbeb5179fb36a783127d545459/shared/xsd/ldf.xsd -O raw.ldf.xsd
 	wget --no-check-certificate http://raw.github.com/grammarware/slps/8f5ff87a8c11dedbeb5179fb36a783127d545459/shared/xsd/ldx.xsd -O ldx.xsd
 	cat raw.ldf.xsd | grep -v 'xsd:import' > ldf.xsd
