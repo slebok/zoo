@@ -1,0 +1,152 @@
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:bgf="http://planet-sl.org/bgf"
+  xmlns:xbgf="http://planet-sl.org/xbgf"
+  xmlns:ldf="http://planet-sl.org/ldf"
+  xmlns:xldf="http://planet-sl.org/xldf"
+  targetNamespace="http://planet-sl.org/xldf">
+
+  <xsd:annotation>
+    <xsd:documentation>
+      LDF transformations
+    </xsd:documentation>
+  </xsd:annotation>
+
+
+  <xsd:element name="sequence">
+    <xsd:annotation>
+      <xsd:documentation>
+        Sequential composition of multiple transformations.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:group ref="xldf:transformation" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:group name="transformation">
+    <xsd:annotation>
+      <xsd:documentation>
+        Here is a grouped list of all the XLDF transformations.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element ref="xldf:insert"/>
+      <xsd:element ref="xldf:move"/>
+      <xsd:element ref="xldf:rename"/>
+      <xsd:element ref="xldf:append"/>
+      <xsd:element ref="xldf:add-section"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:element name="insert">
+    <xsd:annotation>
+      <xsd:documentation>
+        TBD
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+       <xsd:choice>
+         <xsd:element name="before">
+           <xsd:complexType>
+             <xsd:group ref="xldf:insideSimpleText"/>
+           </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="after">
+           <xsd:complexType>
+             <xsd:group ref="xldf:insideSimpleText"/>
+           </xsd:complexType>
+         </xsd:element>
+       </xsd:choice>
+       <xsd:element name="content" type="xldf:SimpleText"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="add-section">
+    <xsd:annotation>
+      <xsd:documentation>
+        TBD
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:choice>
+        <xsd:element name="front" type="xldf:frontMatter"/>
+        <xsd:element name="list" type="xldf:frontLists"/>
+        <xsd:element name="lexical" type="xldf:lexical"/>
+        <xsd:element name="core" type="xldf:StructuredSection"/>
+      </xsd:choice>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="move">
+    <xsd:annotation>
+      <xsd:documentation>
+        TBD
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="section" type="xsd:string"/>         <!-- IDREF -->
+        <xsd:element name="inside" type="xsd:string"/>         	<!-- IDREF -->
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="rename">
+    <xsd:annotation>
+      <xsd:documentation>
+        TBD
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="from">
+          <xsd:complexType>
+            <xsd:choice>
+              <xsd:element name="id" type="xsd:string"/>
+              <xsd:element name="title" type="xsd:string"/>
+            </xsd:choice>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="to" type="xsd:string"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="append">
+    <xsd:annotation>
+      <xsd:documentation>
+        TBD
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="where" type="xsd:string"/>			<!-- IDREF -->
+       <xsd:element name="content" type="xldf:SimpleText"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:group name="scope">
+    <xsd:annotation>
+      <xsd:documentation>
+        Several transformation operators are possibly restricted to
+        a specific scope as opposed to their application to the full
+        input grammar. Two major forms of scope can be identified.
+        First, a production can be appointed by its label. Second, a
+        definition (nonterminal) can be appointed by its defined
+        nonterminal. Arguably, one may want to be able to appoint a
+        production even when it is not labeled, but a prior designate
+        transformation can then be used in order to attach a label
+        to the production in question.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element name="label" type="xldf:label"/>
+      <xsd:element name="nonterminal" type="xldf:nonterminal"/>
+    </xsd:choice>
+  </xsd:group>
+
+</xsd:schema>
