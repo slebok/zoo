@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema
+  xmlns:lcf="http://planet-sl.org/lcf"
+  xmlns:ldf="http://planet-sl.org/ldf"
+  targetNamespace="http://planet-sl.org/lcf"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:annotation>
+    <xsd:documentation>
+      LCF Configuration Format, where
+      LCI = Language Convergence Infrastructure
+
+      Part of SLPS = Software Language Processing Suite
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="configuration">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:group ref="lcf:definition" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:group name="definition">
+    <xsd:choice >
+      <xsd:element name="shortcut" type="lcf:shortcutType" />
+      <xsd:element name="generator" type="lcf:generatorType" />
+      <xsd:element name="tool" type="lcf:toolType" />
+      <xsd:element name="source" type="lcf:sourceType" />
+      <xsd:element name="target" type="lcf:targetType" />
+      <xsd:element name="testset" type="lcf:testsetType" />
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:complexType name="shortcutType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A shortcut in LCF is just a simple macro.
+        If binds a longer definition to a concise name.
+        For example, a path with long directory names that is used multiple times in the LCF document is a good shortcut.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element name="expansion" type="lcf:xstring">
+        <xsd:annotation>
+          <xsd:documentation>
+            Shortcuts can be defined on basis of other shortcuts defined before them in the LCF file.
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="generatorType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A method for automated generation of XBGF scripts.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element name="command" type="lcf:xstring">
+        <xsd:annotation>
+          <xsd:documentation>
+            An executable command that takes two more arguments:
+            the input BGF and the output XBGF
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="sourceType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A source in LCF is the starting point for the grammar convergence.
+        A source must have a name by which it will be referenced later.
+        A source must have a defined extractor that provides LCI with a BGF.
+        A source may have a parser and an evaluator defined as commands - if they are present, they will be tested.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element name="grammar">
+        <xsd:complexType>
+          <xsd:annotation>
+            <xsd:documentation>
+              This extractor must take a grammar in its source format and output the corresponding BGF.
+              This parser must take a test case, try to parse it and report through exit status.
+              This evaluator must take a test case, try to evaluate it and report through exit status.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:sequence>
+            <xsd:element name="extraction" type="lcf:xstring" />
+            <xsd:element name="parsing" type="lcf:xstring" minOccurs="0" />
+            <xsd:element name="evaluation" type="lcf:xstring" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="tree" minOccurs="0">
+        <xsd:complexType>
+          <xsd:annotation>
+            <xsd:documentation>
+              This extractor must take a BGF and a source file and output the corresponding BTF.
+              There is no parser since a valid BTF always parses.
+              This evaluator must take a BTF, try to evaluate it and report through exit status.
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:sequence>
+            <xsd:element name="extraction" type="lcf:xstring" />
+            <xsd:element name="evaluation" type="lcf:xstring" minOccurs="0" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="testing" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="set" type="lcf:xstring" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="targetType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A target in LCF is the convergence point.
+        A target must have a name by which it is referenced and displayed on a diagram.
+        A target can have any number of branches.
+        Each branch defines an input that can be either source name or a target name.
+        Each branch also references a sequence of actions that are performed on that source or target to reach this target.
+        Once all branches are made, a diff tool is run to make sure all results converge.
+        If there is one branch, no diffing takes place.
+        If there are three or more branches, diffs occur pairwise.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element maxOccurs="unbounded" name="branch">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="input" type="xsd:string" />
+            <xsd:choice minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="perform" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Perform element in LCF executes a transformation step.
+                    A performed action must reside in an external XBGF file
+                    that contains a sequence of atomic grammar transformations
+                    grouped by one theme.
+                  </xsd:documentation>
+                  <xsd:documentation>
+                    Performing a chain of actions is a way to get from sources
+                    and intermediate targets to one final target.
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element name="automated">
+                <xsd:annotation>
+                  <xsd:documentation>
+                    Same as perform, but the transformation script is not yet ready
+                    at the moment LCI arrives at this point. The script needs to be
+                    generated first, given the result of the previous step, and
+                    executed afterwards.
+                  </xsd:documentation>
+                </xsd:annotation>
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="method" type="xsd:string"/>
+                    <xsd:element name="result" type="xsd:string"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:choice>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="testsetType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A testset in LCF is a set of code samples in the given language.
+        When testing,
+            all .src files are parsed
+            all .run files are evaluated in the context of their .src to yield .val
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string"/>
+      <xsd:element name="command" type="lcf:xstring"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="toolType">
+    <xsd:annotation>
+      <xsd:documentation>
+        A tool in LCF is an external script.
+        At this point there are three tools which output is needed by LCI:
+        The validator makes sure that the BGFs are valid against their schema.
+        This includes extracted BGFs as well as all derived BGFs.
+        If the validator is not defined, LCI works fine without it.
+        The diff tool takes two parameters and returns zero if both BGFs are deemed equal.
+        If the diff tool is not defined, LCI can only work with one-branch targets.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="name" type="lcf:tool"/>
+      <xsd:element name="grammar" type="lcf:xstring"/>
+      <xsd:element name="tree" type="lcf:xstring" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="tool">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="validation"/>
+      <xsd:enumeration value="comparison"/>
+      <xsd:enumeration value="transformation"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="xstring" mixed="true">
+    <xsd:sequence>
+      <xsd:element name="expand" type="xsd:string"  minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+
+</xsd:schema>

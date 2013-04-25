@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema
+  xmlns:lcf="http://planet-sl.org/lcf"
+  targetNamespace="http://planet-sl.org/lcf"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:annotation>
+    <xsd:documentation>
+      LCF Configuration Format, where
+      LCI = Language Convergence Infrastructure
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="configuration">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:element name="shortcut" type="lcf:shortcuttype" />
+          <xsd:element name="comment" type="lcf:mixedType" minOccurs="0"/>
+          <xsd:element name="action" type="lcf:actiontype" />
+          <xsd:element name="source" type="lcf:sourcetype" />
+          <xsd:element name="target" type="lcf:targettype" />
+        </xsd:choice>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:complexType name="actiontype">
+    <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="name" type="xsd:string" maxOccurs="unbounded"/>
+      <xsd:element name="definition">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="command" type="lcf:commandtype" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="shortcuttype">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element name="definition" type="lcf:mixedwithexpands"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="mixedwithexpands" mixed="true">
+    <xsd:sequence>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="expand" type="xsd:string" />
+        <xsd:element name="expand-type" type="lcf:emptytype" />
+        <xsd:element name="expand-arguments" type="lcf:emptytype" />
+        <xsd:element name="expand-source" type="lcf:emptytype" />
+        <xsd:element name="expand-action" type="lcf:emptytype" />
+        <xsd:element name="expand-first" type="lcf:emptytype" />
+        <xsd:element name="expand-second" type="lcf:emptytype" />
+        <xsd:element name="expand-context" type="lcf:emptytype" />
+        <xsd:element name="expand-sample" type="lcf:emptytype" />
+        <xsd:element name="expand-parsed" type="lcf:emptytype" />
+        <xsd:element name="expand-yields" type="lcf:emptytype" />
+      </xsd:choice>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="commandtype" mixed="true">
+    <xsd:complexContent>
+      <xsd:extension base="lcf:mixedwithexpands">
+        <xsd:attribute name="err" type="xsd:string" use="optional" />
+        <xsd:attribute name="out" type="xsd:string" use="optional" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+  <xsd:complexType name="sourcetype">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element name="type" type="xsd:string" />
+      <xsd:element name="arguments">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element maxOccurs="unbounded" name="argument" type="lcf:mixedwithexpands"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="parser" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="command" type="lcf:commandtype" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="evaluator" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="command" type="lcf:commandtype" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="targettype">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:string" />
+      <xsd:element maxOccurs="unbounded" name="branch">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="take" type="xsd:string" />
+            <xsd:element name="perform" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="emptytype">
+    <xsd:complexContent>
+      <xsd:restriction base="xsd:anyType">
+      </xsd:restriction>
+    </xsd:complexContent>
+  </xsd:complexType>
+
+</xsd:schema>
