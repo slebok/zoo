@@ -12,18 +12,18 @@
   </xsd:annotation>
 
 
-  <xsd:element name="evolution-sequence">
+  <xsd:element name="evolutionSequence">
     <xsd:annotation>
       <xsd:documentation>
         Sequential composition of multiple transformations.
       </xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
-      <xsd:group ref="xldf:document-transformation" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:group ref="xldf:documentTransformation" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:group name="document-transformation">
+  <xsd:group name="documentTransformation">
     <xsd:annotation>
       <xsd:documentation>
         XLDF transformation suite does not include any sophisticated grammar
@@ -33,25 +33,27 @@
       </xsd:documentation>
     </xsd:annotation>
     <xsd:choice>
-      <xsd:element ref="xldf:add-figure"/>
-      <xsd:element ref="xldf:add-section"/>
-      <xsd:element ref="xldf:add-subsection"/>
+      <xsd:element ref="xldf:addFigure"/>
+      <xsd:element ref="xldf:addSection"/>
+      <xsd:element ref="xldf:addSubsection"/>
       <xsd:element ref="xldf:append"/>
+      <xsd:element ref="xldf:changeRole"/>
       <xsd:element ref="xldf:combine"/>
       <xsd:element ref="xldf:drop"/>
-      <xsd:element ref="xldf:extract-subsection"/>
+      <xsd:element ref="xldf:extractSubsection"/>
+      <xsd:element ref="xldf:hyperlinkify"/>
       <xsd:element ref="xldf:insert"/>
-      <xsd:element ref="xldf:import-grammar"/>
-      <xsd:element ref="xldf:import-sample"/>
+      <xsd:element ref="xldf:importGrammar"/>
+      <xsd:element ref="xldf:importSample"/>
       <xsd:element ref="xldf:place"/>
       <xsd:element ref="xldf:retitle"/>
-      <xsd:element ref="xldf:remove-section"/>
-      <xsd:element ref="xldf:transform-document"/>
-      <xsd:element ref="xldf:transform-grammar"/>
+      <xsd:element ref="xldf:removeSection"/>
+      <xsd:element ref="xldf:transformDocument"/>
+      <xsd:element ref="xldf:transformGrammar"/>
     </xsd:choice>
   </xsd:group>
 
-  <xsd:element name="add-figure">
+  <xsd:element name="addFigure">
     <xsd:annotation>
       <xsd:documentation>
         Adds a figure to the designated section or subsection.
@@ -65,7 +67,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="add-section">
+  <xsd:element name="addSection">
     <xsd:annotation>
       <xsd:documentation>
         Completes the language document with a top-level section.
@@ -85,7 +87,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="add-subsection">
+  <xsd:element name="addSubsection">
     <xsd:annotation>
       <xsd:documentation>
         Adds an inner section to the document. All front matter sections go
@@ -95,7 +97,7 @@
     </xsd:annotation>
     <xsd:complexType>
       <xsd:choice>
-        <xsd:group ref="xldf:frontSection"/>
+        <xsd:group ref="xldf:topSection"/>
         <xsd:sequence>
           <xsd:choice>
             <xsd:group ref="xldf:normative"/>
@@ -139,6 +141,24 @@
     </xsd:complexType>
   </xsd:element>
 
+  <xsd:element name="changeRole">
+    <xsd:annotation>
+      <xsd:documentation>
+        Changes the role of a section (i.e., syntax section can become description).
+        If there is no section of the same role in scope, the original section becomes one.
+        If there was already a section with the same role in scope, the new section is
+        appended to it instead.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="scope" type="xsd:string"/>    <!-- IDREF -->
+        <xsd:element name="from" type="xldf:sectionRole"/>
+        <xsd:element name="to" type="xldf:sectionRole"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
   <xsd:element name="drop">
     <xsd:annotation>
       <xsd:documentation>
@@ -153,7 +173,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="extract-subsection">
+  <xsd:element name="extractSubsection">
     <xsd:annotation>
       <xsd:documentation>
         Cuts out a part of an existing inner section and promotes it to a separate inner section.
@@ -169,11 +189,26 @@
         <xsd:element name="id" type="xsd:string"/>
         <!--<xsd:element name="section" type="xldf:StructuredSection"/>-->
         <xsd:element name="to" type="xsd:string" minOccurs="0"/>
+        <xsd:element name="role" type="xldf:sectionRole" minOccurs="0" default="synopsis"/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="import-grammar">
+<xsd:element name="hyperlinkify">
+    <xsd:annotation>
+      <xsd:documentation>
+        Turns a document part referenced by an XPath expression into a hyperlink.
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="goal" type="xsd:string"/>
+        <xsd:element name="uri" type="xsd:anyURI"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="importGrammar">
     <xsd:annotation>
       <xsd:documentation>
         Includes a piece of grammar taken from an external BGF file.
@@ -187,7 +222,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="import-sample">
+  <xsd:element name="importSample">
     <xsd:annotation>
       <xsd:documentation>
         Includes a sample taken from an external file. It is possible to
@@ -198,7 +233,8 @@
         For instance, in the XBGF document the samples were originally in XBGF,
         but were pretty-printed with an external universal pretty-printer to get
         the nice EBNF-ish look (otherwise the reader would be overwhelmed with XML
-        listings).
+        listings). There were two different pretty-printers: one for the \TeX\ version
+        inlined in the thesis, and one for browsable HTML version available as \cite{XBGFManual}.
       </xsd:documentation>
     </xsd:annotation>
     <xsd:complexType>
@@ -270,7 +306,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="remove-section">
+  <xsd:element name="removeSection">
     <xsd:annotation>
       <xsd:documentation>
         Excludes one subsection from a specified section.
@@ -284,7 +320,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="transform-document">
+  <xsd:element name="transformDocument">
     <xsd:annotation>
       <xsd:documentation>
         Modularisation support: we allow to put an evolution sequence in a separate file
@@ -298,7 +334,7 @@
     </xsd:complexType>
   </xsd:element>
 
-  <xsd:element name="transform-grammar">
+  <xsd:element name="transformGrammar">
     <xsd:annotation>
       <xsd:documentation>
         This is an interface between XLDF and XBGF: all the grammar productions are gathered
@@ -339,5 +375,24 @@
       <xsd:element name="to" type="xsd:string"/>
     </xsd:choice>
   </xsd:group>
+
+  <xsd:simpleType name="sectionRole">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="frontMatter"/>
+      <xsd:enumeration value="backMatter"/>
+      
+      <xsd:enumeration value="synopsis"/>
+      <xsd:enumeration value="description"/>
+      <xsd:enumeration value="syntax"/>
+      <xsd:enumeration value="constraints"/>
+      <xsd:enumeration value="relationship"/>
+      <xsd:enumeration value="semantics"/>
+      <xsd:enumeration value="default"/>
+      <xsd:enumeration value="rationale"/>
+      <xsd:enumeration value="example"/>
+      <xsd:enumeration value="update"/>
+      <xsd:enumeration value="section"/>
+    </xsd:restriction>
+  </xsd:simpleType>
 
 </xsd:schema>

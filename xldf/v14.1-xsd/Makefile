@@ -5,13 +5,13 @@ get: xldf.xsd
 
 xldf.xsd:
 	rm -f *.xsd
-	wget --no-check-certificate http://raw.github.com/grammarware/slps/80255d5e855e4627d3704bd1f33ec4a3d8c7f8d8/shared/xsd/xldf.xsd -O raw.xldf.xsd
+	wget --no-check-certificate http://raw.github.com/grammarware/slps/cbd11df201daa2bdf4a8bd0c7c7df574f83758b8/shared/xsd/xldf.xsd -O raw.xldf.xsd
 	cat raw.xldf.xsd | grep -v 'xsd:import' > xldf.xsd
 	perl -pi -w -e 's/"bgf:/"xldf:/g;' xldf.xsd
 	perl -pi -w -e 's/"xbgf:/"xldf:/g;' xldf.xsd
 	perl -pi -w -e 's/"ldf:/"xldf:/g;' xldf.xsd
 
 diff:
-	${tooldir}/gdts ../v19.0-xsd/grammar.bgf grammar.bgf
+	${tooldir}/gdts ../v14.0-xsd/grammar.bgf grammar.bgf
 
 include ../../Makefile.grammar
