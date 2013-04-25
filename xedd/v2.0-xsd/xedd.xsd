@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:edd="http://planet-sl.org/edd" xmlns:xedd="http://planet-sl.org/xedd" targetNamespace="http://planet-sl.org/xedd">
+	<xsd:annotation>
+		<xsd:documentation>
+			EBNF Dialect Definition Transformation operator suite
+			(Notation Specification Transformation)
+	    </xsd:documentation>
+	</xsd:annotation>
+	<!--
+		TODO: edd.xsd contains some legacy for now; needs major refactoring to be included here
+		<xsd:import namespace="http://planet-sl.org/edd" schemaLocation="edd.xsd"/>
+	-->
+	<xsd:element name="evolution">
+		<xsd:annotation>
+			<xsd:documentation>
+		        Sequential composition of multiple transformations.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:group ref="xedd:step" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:group name="step">
+		<xsd:choice>
+			<xsd:element ref="xedd:rename"/>
+			<xsd:element ref="xedd:introduce"/>
+			<xsd:element ref="xedd:eliminate"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:element name="rename">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="metasymbol" type="xedd:metasymbols"/>
+				<xsd:element name="from" type="xsd:string"/>
+				<xsd:element name="to" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="introduce">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="metasymbol" type="xedd:confixMetasymbols"/>
+				<xsd:element name="start" type="xsd:string"/>
+				<xsd:element name="end" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="eliminate">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="metasymbol" type="xedd:metasymbols"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:simpleType name="metasymbols">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="terminator"/>
+			<xsd:enumeration value="defining"/>
+			<xsd:enumeration value="definition-separator"/>
+			<xsd:enumeration value="group"/>
+			<xsd:enumeration value="seplist-plus"/>
+			<xsd:enumeration value="seplist-star"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="confixMetasymbols">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="group"/>
+			<xsd:enumeration value="seplist-plus"/>
+			<xsd:enumeration value="seplist-star"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
