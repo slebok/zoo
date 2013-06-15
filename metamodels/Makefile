@@ -1,4 +1,4 @@
 include ../Makefile.language
 
-get:
+down:
 	curl http://www.emn.fr/z-info/atlanmod/index.php/Ecore > Ecore.html
