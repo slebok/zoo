@@ -4,6 +4,7 @@ extract:
 	${tooldir}/rng2bgf modules/datatypes.rng ext.datatypes.bgf
 	${tooldir}/rng2bgf modules/attribs.rng ext.attribs.bgf
 	${tooldir}/rng2bgf modules/frames.rng ext.frames.bgf
+	${tooldir}/rng2bgf modules/struct.rng ext.struct.bgf
 	${tooldir}/rng2bgf modules/text.rng ext.text.bgf
 	${tooldir}/rng2bgf modules/hypertext.rng ext.hypertext.bgf
 	${tooldir}/rng2bgf modules/list.rng ext.list.bgf
@@ -19,9 +20,11 @@ extract:
 	${tooldir}/rng2bgf modules/edit.rng ext.edit.bgf
 	${tooldir}/rng2bgf modules/applet.rng ext.applet.bgf
 	${tooldir}/rng2bgf modules/form.rng ext.form.bgf
+	${tooldir}/rng2bgf modules/basic-form.rng ext.form2.bgf
 	${tooldir}/rng2bgf modules/style.rng ext.style.bgf
 	${tooldir}/rng2bgf modules/script.rng ext.script.bgf
 	${tooldir}/rng2bgf modules/table.rng ext.table.bgf
+	${tooldir}/rng2bgf modules/basic-table.rng ext.table2.bgf
 	${tooldir}/rng2bgf modules/csismap.rng ext.csismap.bgf
 	${tooldir}/rng2bgf modules/events.rng ext.events.bgf
 	${tooldir}/rng2bgf modules/inlstyle.rng ext.inlstyle.bgf
