@@ -1,8 +1,13 @@
 @contributor{Vadim Zaytsev - vadim@grammarware.net - SWAT, CWI}
-module \syntax::BGF
+@wiki{BGF}
+module language::BGF
+
+alias SGrammar = tuple[set[str] roots, map[str,BGFProdSet] prods];
 
 alias BGFProdList = list[BGFProduction];
+alias BGFProdSet  =  set[BGFProduction];
 alias BGFExprList = list[BGFExpression];
+alias BGFExprSet  =  set[BGFExpression];
 data BGFGrammar =
 	grammar (list[str] roots, BGFProdList prods)
 ;
@@ -21,7 +26,7 @@ data BGFExpression =
 	| selectable(str selector, BGFExpression expr)
 	| sequence(BGFExprList exprs)
 	| choice(BGFExprList exprs)
-	| \all(BGFExprList exprs)                                // to cover conjunctive grammars
+	| allof(BGFExprList exprs)                              // to cover conjunctive grammars
 	| marked(BGFExpression expr)
 	| optional(BGFExpression expr)
 	| not(BGFExpression expr)                               // to cover Boolean grammars
