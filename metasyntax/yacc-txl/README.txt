@@ -17,4 +17,5 @@ and must be tuned to TXL form since Yacc grammars
 are very poor TXL grammars.
 
 See Yacc/README.txt for the original unchanged read me file.
-Grammar extracted and added to the Grammar Zoo on 1 April 2013 by Vadim Zaytsev.
+Grammar extracted on 1 April 2013 by Vadim Zaytsev.
+Added to the Grammar Zoo on 22 June 2013 by Vadim Zaytsev.
