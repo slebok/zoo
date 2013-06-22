@@ -1,7 +1,7 @@
 http://www.dartlang.org/docs/spec/index.html
 http://www.dartlang.org/docs/spec/dartLangSpec.html
 The following link was used to download the textual version of the spec:
-https://docs.google.com/document/d/12QYA9m3PbotzgPcEVf5K7n7YBv3VhM4U54Dy8TP1Qvc/export?format=txt&id=12QYA9m3PbotzgPcEVf5K7n7YBv3VhM4U54Dy8TP1Qvc&token=AC4w5ViscdISFR2ppBEVbbUixAo0It8Ftw%3A1322569540000&tfe=ed_13
+http://docs.google.com/document/d/12QYA9m3PbotzgPcEVf5K7n7YBv3VhM4U54Dy8TP1Qvc/export?format=txt&id=12QYA9m3PbotzgPcEVf5K7n7YBv3VhM4U54Dy8TP1Qvc&token=AC4w5ViscdISFR2ppBEVbbUixAo0It8Ftw%3A1322569540000&tfe=ed_13
 
 The Dart Programming Language Specification
 Draft Version 0.05

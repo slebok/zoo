@@ -1,6 +1,6 @@
-https://github.com/grammarware/slps/blob/master/shared/xsd/ldf.xsd
-  ↳  https://github.com/grammarware/slps/commits/master/shared/xsd/ldf.xsd
-    ↳  https://github.com/grammarware/slps/blob/8f5ff87a8c11dedbeb5179fb36a783127d545459/shared/xsd/ldf.xsd
+http://github.com/grammarware/slps/blob/master/shared/xsd/ldf.xsd
+  ↳  http://github.com/grammarware/slps/commits/master/shared/xsd/ldf.xsd
+    ↳  http://github.com/grammarware/slps/blob/8f5ff87a8c11dedbeb5179fb36a783127d545459/shared/xsd/ldf.xsd
 
 This is version 11 of the LDF schema committed to SLPS.
 

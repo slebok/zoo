@@ -1,6 +1,6 @@
-https://github.com/grammarware/slps/blob/master/shared/xsd/xedd.xsd
-  ↳  https://github.com/grammarware/slps/commits/master/shared/xsd/xedd.xsd
-    ↳  https://github.com/grammarware/slps/blob/5ec2a7520b89bd70cb3a9eb6d5c32d1688b7f04b/shared/xsd/xedd.xsd
+http://github.com/grammarware/slps/blob/master/shared/xsd/xedd.xsd
+  ↳  http://github.com/grammarware/slps/commits/master/shared/xsd/xedd.xsd
+    ↳  http://github.com/grammarware/slps/blob/5ec2a7520b89bd70cb3a9eb6d5c32d1688b7f04b/shared/xsd/xedd.xsd
 
 This is version 2 of the XEDD schema committed to SLPS.
 

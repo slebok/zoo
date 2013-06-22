@@ -1,6 +1,6 @@
-https://github.com/grammarware/slps/blob/master/shared/xsd/lcf.xsd
-  ↳  https://github.com/grammarware/slps/commits/master/shared/xsd/lcf.xsd
-    ↳  https://github.com/grammarware/slps/blob/a9f327598babe798699bc7d6cf2246d5ca4f72a0/shared/xsd/lcf.xsd
+http://github.com/grammarware/slps/blob/master/shared/xsd/lcf.xsd
+  ↳  http://github.com/grammarware/slps/commits/master/shared/xsd/lcf.xsd
+    ↳  http://github.com/grammarware/slps/blob/a9f327598babe798699bc7d6cf2246d5ca4f72a0/shared/xsd/lcf.xsd
 
 This is version 3 of the LCF schema committed to SLPS.
 

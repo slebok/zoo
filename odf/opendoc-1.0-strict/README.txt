@@ -1,5 +1,5 @@
 http://relaxng.org/#schemas
-  ↳  https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=office
+  ↳  http://www.oasis-open.org/committees/tc_home.php?wg_abbrev=office
 
 OASIS Open Document Format for Office Applications (OpenDocument) TC
 Developing an XML-based file format specification for office applications

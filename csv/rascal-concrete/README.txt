@@ -1,6 +1,6 @@
 http://www.rascal-mpl.org/:
- ↳  https://github.com/cwi-swat/rascal
-   ↳  https://github.com/cwi-swat/rascal/tree/master/src/org/rascalmpl/library/lang
+ ↳  http://github.com/cwi-swat/rascal
+   ↳  http://github.com/cwi-swat/rascal/tree/master/src/org/rascalmpl/library/lang
      ↳  csv/syntax/CSV.rsc
 
 CSV from the Rascal language workbench standard library.

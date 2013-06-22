@@ -5,7 +5,7 @@ M 1.0
 date : 2009
 Domain : Microsoft SQL Server Modeling
 Description :  a metamodel for the Microsoft SQL Server Modeling M language (oslo). 
-See : <a href="https://connect.microsoft.com/sqlmodeling" class="external free" title="https://connect.microsoft.com/sqlmodeling" rel="nofollow">https://connect.microsoft.com/sqlmodeling</a>
+See : <a href="http://connect.microsoft.com/sqlmodeling" class="external free" title="http://connect.microsoft.com/sqlmodeling" rel="nofollow">http://connect.microsoft.com/sqlmodeling</a>
 Authors : Hugo Brunelière
 
 Grammar in a broad sense extracted automatically on 8 April 2013 by Vadim Zaytsev, http://grammarware.net

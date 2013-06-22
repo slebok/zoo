@@ -1,6 +1,6 @@
-https://github.com/grammarware/slps/blob/master/shared/xsd/xldf.xsd
-  ↳  https://github.com/grammarware/slps/commits/master/shared/xsd/xldf.xsd
-    ↳  https://github.com/grammarware/slps/blob/ebadc1a65bb081ee380ba55e8cb786552add57c4/shared/xsd/xldf.xsd
+http://github.com/grammarware/slps/blob/master/shared/xsd/xldf.xsd
+  ↳  http://github.com/grammarware/slps/commits/master/shared/xsd/xldf.xsd
+    ↳  http://github.com/grammarware/slps/blob/ebadc1a65bb081ee380ba55e8cb786552add57c4/shared/xsd/xldf.xsd
 
 This is version 13 of the XLDF schema committed to SLPS.
 

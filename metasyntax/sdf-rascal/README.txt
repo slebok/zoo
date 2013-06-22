@@ -1,6 +1,6 @@
 http://www.rascal-mpl.org/:
- ↳  https://github.com/cwi-swat/rascal
-   ↳  https://github.com/cwi-swat/rascal/tree/master/src/org/rascalmpl/library/lang
+ ↳  http://github.com/cwi-swat/rascal
+   ↳  http://github.com/cwi-swat/rascal/tree/master/src/org/rascalmpl/library/lang
      ↳  sdf2/syntax/Sdf2.rsc
 
 SDF2 as defined in Rascal, extracted from the Rascal language workbench standard library.
