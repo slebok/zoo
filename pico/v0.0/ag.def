@@ -1,0 +1,228 @@
+;-----------------------------------;
+;           >>>Pico-ag<<<           ;
+;            Theo D'Hondt           ;
+;   Lab voor Programmeerkunde VUB   ;
+;               ©1995               ;
+;-----------------------------------;
+
+;----------------------------------------------------------------------------;
+; <void>                -> [_VOI_TAG_]                                       ;
+; <number>              -> [_NBR_TAG_,NbrSet]                                ;
+; <symbol>              -> [_SYM_TAG_,SymSet]                                ;
+; <function>            -> [_FUN_TAG_,ArgSet,ExpSet,EnvSet]                  ;
+; <table>               -> [_TAB_TAG_,TabSet]                                ;
+; <native function>     -> [_NAT_TAG_,NatSet]                                ;
+; <variable definition> -> [_DFN_TAG_,IdfSet,ExpSet]                         ;
+; <variable reference>  -> [_RFN_TAG_,IdfSet]                                ;
+; <variable assignment> -> [_STN_TAG_,IdfSet,ExpSet]                         ;
+; <function definition> -> [_DFF_TAG_,IdfSet,ArgSet,ExpSet]                  ;
+; <function reference>  -> [_RFF_TAG_,IdfSet,ArgSet]                         ;
+; <function assignment> -> [_STF_TAG_,IdfSet,ArgSet,ExpSet]                  ;
+; <table definition>    -> [_DFT_TAG_,IdfSet,NbrSet,ExpSet]                  ;
+; <table reference>     -> [_RFT_TAG_,IdfSet,NbrSet]                         ;
+; <table assignment>    -> [_STT_TAG_,IdfSet,NbrSet,ExpSet]                  ;
+;                                                                            ;
+;  NbrSet       = {#nbr#}                                                    ;
+;  SymSet       = {#sym#}                                                    ;
+;  NatSet       = {#nat#}                                                    ;
+;  TabSet       = {#tab#}                                                    ;
+;  EnvSet       = {#env#}                                                    ;
+;  IdfSet       = {#idf#}                                                    ;
+;  ArgSet       = IdfSet + {<table>}                                         ;
+;  ExpSet       = NbrSet + SymSet + {<variable definition>,                  ;
+;                                    <variable reference>,                   ;
+;                                    <variable assignment>,                  ;
+;                                    <function definition>,                  ;
+;                                    <function reference>,                   ;
+;                                    <function assignment>,                  ;
+;                                    <table definition>,                     ;
+;                                    <table reference>,                      ;
+;                                    <table assignment>}                     ;
+;----------------------------------------------------------------------------;
+
+(define _VOI_TAG_  0)
+(define _NBR_TAG_  1)
+(define _SYM_TAG_  2)
+(define _FUN_TAG_  3)
+(define _TAB_TAG_  4)
+(define _NAT_TAG_  5)
+(define _DFN_TAG_  6)
+(define _RFN_TAG_  7)
+(define _STN_TAG_  8)
+(define _DFF_TAG_  9)
+(define _RFF_TAG_ 10)
+(define _STF_TAG_ 11)
+(define _DFT_TAG_ 12)
+(define _RFT_TAG_ 13)
+(define _STT_TAG_ 14)
+
+(define-macro _AG_ASSERT_ 
+  (lambda (ag . tags)
+    `(if (member (car ,ag) ',tags)
+         ,ag
+         (_error_ "abstract grammar violation"))))
+
+(define-macro _AG_MAKE_NBR_ 
+  (lambda (nbr)
+    `(list ,_NBR_TAG_ ,nbr)))
+
+(define-macro _AG_MAKE_VOI_ 
+  (lambda ()
+    `(list ,_VOI_TAG_)))
+
+(define-macro _AG_MAKE_SYM_ 
+  (lambda (sym)
+    `(list ,_SYM_TAG_ ,sym)))
+
+(define-macro _AG_MAKE_FUN_ 
+  (lambda (par bod env)
+    `(list ,_FUN_TAG_ ,par ,bod ,env)))
+
+(define-macro _AG_MAKE_TAB_ 
+  (lambda (siz ini)
+    `(list ,_TAB_TAG_ (make-vector ,siz ,ini))))
+
+(define-macro _AG_MAKE_TAB_aux_ 
+  (lambda (lst)
+    `(list ,_TAB_TAG_ (list->vector ,lst))))
+
+(define-macro _AG_MAKE_NAT_ 
+  (lambda (nat)
+    `(list ,_NAT_TAG_ ,nat)))
+
+(define-macro _AG_MAKE_DFN_ 
+  (lambda (nam val)
+    `(list ,_DFN_TAG_ ,nam ,val)))
+
+(define-macro _AG_MAKE_RFN_ 
+  (lambda (nam)
+    `(list ,_RFN_TAG_ ,nam)))
+
+(define-macro _AG_MAKE_STN_ 
+  (lambda (nam val)
+    `(list ,_STN_TAG_ ,nam ,val)))
+
+(define-macro _AG_MAKE_DFF_ 
+  (lambda (nam arg exp)
+    `(list ,_DFF_TAG_ ,nam ,arg ,exp)))
+
+(define-macro _AG_MAKE_RFF_ 
+  (lambda (nam arg)
+    `(list ,_RFF_TAG_ ,nam ,arg)))
+
+(define-macro _AG_MAKE_STF_ 
+  (lambda (nam arg exp)
+    `(list ,_STF_TAG_ ,nam ,arg ,exp)))
+
+(define-macro _AG_MAKE_DFT_ 
+  (lambda (nam idx cmp)
+    `(list ,_DFT_TAG_ ,nam ,idx ,cmp)))
+
+(define-macro _AG_MAKE_RFT_ 
+  (lambda (nam idx)
+    `(list ,_RFT_TAG_ ,nam ,idx)))
+
+(define-macro _AG_MAKE_STT_ 
+  (lambda (nam idx cmp)
+    `(list ,_STT_TAG_ ,nam ,idx ,cmp)))
+
+(define-macro _AG_TAG_ 
+  (lambda (ag)
+    `(car ,ag)))
+
+(define-macro _AG_GET_nbr_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_NBR_TAG_))))
+
+(define-macro _AG_GET_sym_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_SYM_TAG_))))
+
+(define-macro _AG_GET_fun_ 
+  (lambda (ag)
+    `(cdr (_AG_ASSERT_ ,ag ,_FUN_TAG_))))
+
+(define-macro _AG_GET_par_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_FUN_TAG_))))
+
+(define-macro _AG_GET_bod_ 
+  (lambda (ag)
+    `(caddr (_AG_ASSERT_ ,ag ,_FUN_TAG_))))
+
+(define-macro _AG_GET_env_ 
+  (lambda (ag)
+    `(cadddr (_AG_ASSERT_ ,ag ,_FUN_TAG_))))
+
+(define-macro _AG_GET_siz_ 
+  (lambda (ag)
+    `(vector-length (cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_)))))
+
+(define-macro _AG_GET_tab_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_))))
+
+(define-macro _AG_GET_elt_ 
+  (lambda (ag idx)
+    `(let* ((vec (cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_)))
+            (siz (vector-length vec)))
+       (if (and (positive? ,idx) (<= ,idx siz) (integer? ,idx))
+           (vector-ref vec (- ,idx 1))
+           (_error_ "index out of range")))))
+
+(define-macro _AG_SET_elt_ 
+  (lambda (ag idx val)
+    `(let* ((vec (cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_)))
+            (siz (vector-length vec)))
+       (if (and (positive? ,idx) (<= ,idx siz) (integer? ,idx))
+           (vector-set! vec (- ,idx 1) ,val)
+           (_error_ "index out of range")))))
+
+(define-macro _AG_MAP_TAB_ 
+  (lambda (ag proc)
+    `(let* ((vec (cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_)))
+            (siz (vector-length vec))
+            (new-vec (make-vector siz)))
+       (do ((idx 0 (+ idx 1)))
+         ((= idx siz))
+         (vector-set! new-vec idx (,proc (vector-ref vec idx))))
+       (list ,_TAB_TAG_ new-vec))))
+
+(define-macro _AG_FOR_EACH_TAB_ 
+  (lambda (ag proc default)
+    `(let* ((vec (cadr (_AG_ASSERT_ ,ag ,_TAB_TAG_)))
+            (siz (vector-length vec)))
+       (do ((result ,default)
+            (idx 0 (+ idx 1)))
+         ((= idx siz) result)
+         (set! result (,proc (vector-ref vec idx)))))))
+
+(define-macro _AG_GET_nat_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_NAT_TAG_))))
+
+(define-macro _AG_GET_nam_ 
+  (lambda (ag)
+    `(cadr (_AG_ASSERT_ ,ag ,_DFN_TAG_ ,_RFN_TAG_ ,_STN_TAG_ 
+                        ,_DFF_TAG_ ,_RFF_TAG_ ,_STF_TAG_ 
+                        ,_DFT_TAG_ ,_RFT_TAG_ ,_STT_TAG_))))
+
+(define-macro _AG_GET_val_ 
+  (lambda (ag)
+    `(caddr (_AG_ASSERT_ ,ag ,_DFN_TAG_ ,_STN_TAG_))))
+
+(define-macro _AG_GET_arg_ 
+  (lambda (ag)
+    `(caddr (_AG_ASSERT_ ,ag ,_DFF_TAG_ ,_RFF_TAG_ ,_STF_TAG_))))
+
+(define-macro _AG_GET_exp_ 
+  (lambda (ag)
+    `(cadddr (_AG_ASSERT_ ,ag ,_DFF_TAG_ ,_STF_TAG_))))
+
+(define-macro _AG_GET_idx_ 
+  (lambda (ag)
+    `(caddr (_AG_ASSERT_ ,ag ,_DFT_TAG_ ,_RFT_TAG_ ,_STT_TAG_))))
+
+(define-macro _AG_GET_cmp_ 
+  (lambda (ag)
+    `(cadddr (_AG_ASSERT_ ,ag ,_DFT_TAG_ ,_STT_TAG_))))
