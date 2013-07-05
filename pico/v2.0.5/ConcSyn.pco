@@ -1,0 +1,123 @@
+`*-----------------------------------*`
+`*           >>>Pico 2.0<<<          *`
+`*            Theo D'Hondt           *`
+`*  VUB Programming Technology Lab   *`
+`*               ©2002               *`
+`*-----------------------------------*`
+`*          concrete syntax          *`
+`*      (METACIRCULAR VERSION)       *`
+`*-----------------------------------*` 
+
+`---------------------------------------------------------------------`
+` program       ::= expression                                        `
+`                                                                     `
+` expression    ::= operation [ definition  |                         `
+`                               declaration |                         `
+`                               assignment  ]                         `
+`                                                                     `
+` definition    ::= :  expression                                     `
+`                                                                     `
+` declaration   ::= :: expression                                     `
+`                                                                     `
+` assignment    ::= := expression                                     `
+`                                                                     `
+` operation     ::= comparand { comparator comparand }                `
+`                                                                     `
+` comparand     ::= term { adder term }                               `
+`                                                                     `
+` term          ::= factor { multiplier factor }                      `
+`                                                                     `
+` factor        ::= operand { power operand }                         `
+`                                                                     `
+` operand       ::= reference | table | subexpression                 `
+`                                                                     `
+` reference     ::= number | fraction | text | quotation              `
+`                   begin  | prefix   | variable                      `
+`                                                                     `
+` table         ::= [ [ commalist ] ] invocation                      `
+`                                                                     `
+` subexpression ::= ( expression ) invocation                         `
+`                                                                     `
+` number        ::= number                                            `
+`                                                                     `
+` fraction      ::= fraction                                          `
+`                                                                     `
+` text          ::= text                                              `
+`                                                                     `
+` quotation     ::= ' expression                                      `
+`                                                                     `
+` begin         ::= { semicolonlist } invocation                      `
+`                                                                     `
+` prefix        ::= operator ( [ reference ] | invocation )           `
+`                                                                     `
+` variable      ::= name invocation                                   `
+`                                                                     `
+` invocation    ::= [ ( application   |                               `
+`                       apply         |                               `
+`                       tabulation    |                               `
+`                       qualification ) invocation ]                  `
+`                                                                     `
+` application   ::= ( [ commalist ] )                                 `
+`                                                                     `
+` apply         ::= @ operand                                         `
+`                                                                     `
+` tabulation    ::= [ commalist ]                                     `
+`                                                                     `
+` qualification ::= . qualifier                                       `
+`                          [ application | apply | tabulation ]       `
+`                                                                     `
+` semicolonlist ::= expression { ; expression }                       `
+`                                                                     `
+` commalist     ::= expression { , expression }                       `
+`                                                                     `
+` qualifier     ::=  name | operator                                  `
+`                                                                     `
+` name          ::= name                                              `
+`                                                                     `
+` operator      ::= operator                                          `
+`                                                                     `
+`---------------------------------------------------------------------`
+`                                                                     `
+` comparator    ::= #comparator# { #operator# }                       `
+`                                                                     `
+` adder         ::= #adder# { #operator# }                            `
+`                                                                     `
+` multiplier    ::= #multiplier# { #operator# }                       `
+`                                                                     `
+` power         ::= #power# { #operator# }                            `
+`                                                                     `
+` operator      ::= #operator# { #operator# }                         `
+`                                                                     `
+` number        ::= #digit# { #digit# }                               `
+`                                                                     `
+` fraction      ::= number ( . number [ scale ] | scale )             `
+`                                                                     `
+` scale         ::= #exponent# [ + | - ] number                       `
+`                                                                     `
+` text          ::= " { #noquo# } "                                   `
+`                                                                     `
+` name          ::= #letter#  { #letter# | #digit# }                  `
+`                                                                     `
+`---------------------------------------------------------------------`
+`                                                                     `
+` #end#         = { <0> }                                             `
+` #eoln#        = { <13> }                                            `
+` #tab#         = { <9> }                                             `
+` #space#       = { <32> }                                            `
+` #quote#       = { " }                                               `
+` #backquote#   = { ` }                                               `
+` #printable#   = { <32> ,..., <255> }                                `
+` #letter#      = { a ,..., z , A ,..., Z , _ }                       `
+` #digit#       = { 0 ,..., 9 }                                       `
+` #exponent#    = { e , E }                                           `
+` #comparator#  = { < , = , > , # , ~ }                               `
+` #adder#       = { $ , % , + , - , | }                               `
+` #multiplier#  = { & , * , / , \ }                                   `
+` #power#       = { ! , ? , ^ }                                       `
+` #comment#     = #backquote# #nobackquo# * #backquote#               `
+` #whitespace#  = #space# + #comment# + #tab# + #eoln# + #end#        `
+` #operator#    = #comparator# + #adder# + #multiplier# + #power#     `
+` #noquo#       = #printable# - #quote#                               `
+` #nobackquo#   = #printable# - #backquote#                           `
+`                                                                     `
+`---------------------------------------------------------------------`
