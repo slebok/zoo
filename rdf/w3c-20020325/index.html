@@ -1,0 +1,4336 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta name="generator" content="HTML Tidy, see www.w3.org" />
+    <meta name="rcsid"
+    content="$Id: Overview.html,v 1.4 2002/03/25 15:14:55 em Exp $" />
+
+    <title>RDF/XML Syntax Specification (Revised)</title>
+<style type="text/css">
+.added {
+   color: green;
+   text-decoration: underline;
+   background: white;
+}
+.removed {
+   color: red;
+   background: white;
+   text-decoration: line-through;
+}
+
+.actionLabel {
+   font-weight: bold
+}
+
+.actionDecision {
+   color: black;
+   background: #99ffff;
+}
+
+div.issue,
+div.block,
+div.note  { margin-left: 2em; }
+
+
+
+div.productionOuter {
+/*
+   border: 4px double gray;
+*/
+   margin: 0em;
+   padding: 0em;
+}
+
+div.productionInner {
+   color: black;
+   /* tan */
+   /* background-color: #d2b48c; */
+   /* cyan */
+   /* background-color: #99ffff; */
+   /* mauve */
+   background-color: #efeff8;
+/*
+   border-top-style: double;
+   border-top-color: #d3d3d3;
+   border-bottom-width: 4px;
+   border-bottom-style: double;
+   border-bottom-color: #d3d3d3;
+*/
+   padding: 0.5em;
+   margin: 0em;
+}
+
+div.productionInner p {
+   margin-left: 0em;
+   margin-top: 0em;
+   margin-bottom: 0em
+}
+
+div.ntripleOuter {
+/*
+   border: 4px double gray;
+*/
+   margin: 0em;
+   padding: 0em;
+}
+
+div.ntripleInner {
+   color: black;
+   /* tan */
+   /* background-color: #d2b48c; */
+   /* cyan */
+   /* background-color: #99ffff; */
+   /* mauve */
+   /* background-color: #efeff8; */
+   /* LightGoldenrod1 */
+   background-color: #ffec8b;
+/*
+   border-top-style: double;
+   border-top-color: #d3d3d3;
+   border-bottom-width: 4px;
+   border-bottom-style: double;
+   border-bottom-color: #d3d3d3;
+*/
+   padding: 0.5em;
+   margin: 0em;
+}
+
+div.ntripleInner p {
+   margin-left: 0em;
+   margin-top: 0em;
+   margin-bottom: 0em
+}
+
+div.exampleOuter {
+   border: 4px double gray;
+   margin: 0em;
+   padding: 0em;
+}
+
+div.exampleInner {
+   color: black;
+   /* tan */
+   /* background-color: #d2b48c; */
+   /* cyan */
+   /* background-color: #99ffff; */
+   /* mauve */
+   background-color: #efeff8;
+   border-top-style: double;
+   border-top-color: #d3d3d3;
+   border-bottom-width: 4px;
+   border-bottom-style: double;
+   border-bottom-color: #d3d3d3;
+   padding: 4px;
+   margin: 0em;
+}
+
+div.exampleInner pre {
+  margin-left: 0em;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  font-family: monospace;
+  /* font-size: smaller */
+}
+
+div.preExample {
+  margin-left: 0em;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  font-family: monospace;
+  /* font-size: smaller */
+}
+
+span.nodeStripe {
+  color: #ff0000;
+}
+
+/*
+span.arcStripe {
+  color: #ff0000;
+}
+*/
+
+span.termdef {
+  color: #850021;
+}
+
+a.termref:visited, a.termref:link {
+  font-family: sans-serif;
+  font-style: normal;
+  color: black;
+  text-decoration: none
+}
+
+span.arrow {
+  font-style: normal;
+  font-weight: bold
+}
+
+.figure {
+         font-weight: bold;
+         text-align: center;
+}
+
+
+</style>
+    <link rel="stylesheet" type="text/css"
+    href="http://www.w3.org/StyleSheets/TR/W3C-WD" />
+  </head>
+
+  <body>
+    <div class="head">
+      <a href="http://www.w3.org/"><img height="48" width="72"
+      alt="W3C" src="http://www.w3.org/Icons/w3c_home" /></a> 
+
+      <h1 id="title">RDF/XML Syntax Specification (Revised)</h1>
+
+      <h2 id="doctype">W3C Working Draft 25 March 2002</h2>
+
+      <dl>
+        <dt>This version:</dt>
+
+        <dd><a
+        href="http://www.w3.org/TR/2002/WD-rdf-syntax-grammar-20020325">
+        http://www.w3.org/TR/2002/WD-rdf-syntax-grammar-20020325</a><br />
+        </dd>
+
+        <dt>Latest version:</dt>
+
+        <dd><a
+        href="http://www.w3.org/TR/rdf-syntax-grammar">http://www.w3.org/TR/rdf-syntax-grammar</a><br />
+        </dd>
+
+        <dt>Previous version:</dt>
+
+        <dd><a
+        href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218">
+        http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218</a><br />
+        </dd>
+
+        <dt>Editor:</dt>
+
+        <dd>Dave Beckett (University of Bristol)</dd>
+      </dl>
+
+      <p class="copyright"><a
+      href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#Copyright">
+      Copyright</a> &copy;2002 <a href="http://www.w3.org/"><abbr
+      title="World Wide Web Consortium">W3C</abbr></a><sup>&reg;</sup>
+      (<a href="http://www.lcs.mit.edu/"><abbr
+      title="Massachusetts Institute of Technology">MIT</abbr></a>,
+      <a href="http://www.inria.fr/"><abbr lang="fr"
+      title="Institut National de Recherche en Informatique et Automatique">
+      INRIA</abbr></a>, <a href="http://www.keio.ac.jp/">Keio</a>),
+      All Rights Reserved. W3C <a
+      href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#Legal_Disclaimer">
+      liability</a>, <a
+      href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#W3C_Trademarks">
+      trademark</a>, <a
+      href="http://www.w3.org/Consortium/Legal/copyright-documents-19990405">
+      document use</a> and <a
+      href="http://www.w3.org/Consortium/Legal/copyright-software-19980720">
+      software licensing</a> rules apply.</p>
+      <hr title="Separator for header" />
+    </div>
+
+    <h2 class="nonum"><a id="abstract"
+    name="abstract">Abstract</a></h2>
+
+    <p>This specification defines an XML syntax for the Resource
+    Description Framework (<abbr
+    title="Resource Description Framework">RDF</abbr>) as amended
+    and clarified by the <a
+    href="http://www.w3.org/2001/sw/RDFCore/">RDF Core Working
+    Group</a> from that originally described in <a
+    href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/">RDF
+    Model &amp; Syntax</a>. The syntax is updated to be specified
+    in terms of the <a
+    href="http://www.w3.org/TR/2001/REC-xml-infoset-20011024">XML
+    Information Set</a> with new support for <a
+    href="http://www.w3.org/TR/2001/REC-xmlbase-20010627/">XML
+    Base</a>. For each part of the syntax, it defines the mapping
+    rules for generating the RDF graph as defined in the <a
+    href="http://www.w3.org/TR/2002/WD-rdf-mt-20020214/">RDF Model
+    Theory</a>. This is done using the <a
+    href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+    graph serializing test format which enables more precise
+    recording of the mapping in a machine processable and testable
+    form. These tests are gathered and published in the <a
+    href="http://www.w3.org/TR/rdf-testcases/">RDF Test
+    Cases</a>.</p>
+
+    <h2 class="nonum"><a id="status" name="status">Status of this
+    Document</a></h2>
+
+    <p>This is a W3C <a
+    href="http://www.w3.org/2001/sw/RDFCore/">RDF Core Working
+    Group</a> Working Draft produced as part of the W3C <a
+    href="http://www.w3.org/2001/sw/">Semantic Web Activity</a> (<a
+    href="http://www.w3.org/2001/sw/Activity">Activity
+    Statement</a>). It incorporates decisions made by the Working
+    Group updating the XML syntax for RDF from the original <a
+    href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222">RDF
+    Model &amp; Syntax</a> <a href="#ref-rdfms">[RDF-MS]</a>
+    document in terms of the <a
+    href="http://www.w3.org/TR/2001/REC-xml-infoset-20011024">XML
+    Information Set</a> <a href="#ref-xml-infoset">[INFOSET]</a>
+    including new support in this draft for <a
+    href="http://www.w3.org/TR/2001/REC-xmlbase-20010627/">XML
+    Base</a> <a href="#ref-xml-base">[XML-BASE]</a>.</p>
+
+    <p>This document is being released for review by W3C Members
+    and other interested parties to encourage feedback and
+    comments, especially with regard to how the changes affect
+    existing implementations and content. The current state is that
+    it represents the majority of the syntax as described in the <a
+    href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#grammar">
+    grammar section</a> of the original document, with some removed
+    parts (see <a href="#rdfms-abouteach">rdfms-abouteach</a>) and
+    the mapping to the RDF graph is considered complete. The
+    detailed changes from the previous <a
+    href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218">
+    18 December 2001 draft</a> are described in the <a
+    href="#section-Changes">Changes section</a> however the main
+    changes are as follows: the completion of the rules for
+    generating the graph for rdf:bagID, handling <tt>xml:lang</tt>
+    with literals, handling XML Literals (not yet complete), the
+    addition of <a href="#section-baseURIs">XML Base</a> support,
+    an updated introduction with new examples and other changes
+    after RDF Core Working Group <a
+    href="#section-Decided-Issues">decisions</a> made since the
+    last draft.</p>
+
+    <p>This is a public W3C Working Draft and may be updated,
+    replaced, or obsoleted by other documents at any time. It is
+    inappropriate to use W3C Working Drafts as reference material
+    or to cite as other than "work in progress". A list of current
+    W3C Recommendations and other technical documents can be found
+    at <a href="/TR/">http://www.w3.org/TR/</a>.</p>
+
+    <p>Comments on this document are invited and should be sent to
+    the public mailing list <a
+    href="mailto:www-rdf-comments@w3.org">www-rdf-comments@w3.org</a>.
+    An archive of comments is available at <a
+    href="http://lists.w3.org/Archives/Public/www-rdf-comments/">http://lists.w3.org/Archives/Public/www-rdf-comments/</a>.</p>
+
+    <div class="toc">
+      <h2 class="nonum"><a id="contents" name="contents">Table of
+      contents</a></h2>
+
+      <p class="toc">1 <a
+      href="#section-Introduction">Introduction</a><br />
+       2 <a href="#section-Syntax">An XML syntax for RDF</a><br />
+       3 <a href="#section-Data-Model">Data Model</a><br />
+       &nbsp;&nbsp;3.1 <a href="#section-Nodes">Nodes</a><br />
+       &nbsp;&nbsp;3.2 <a
+      href="#section-Infoset-Mapping">Information Set
+      Mapping</a><br />
+       &nbsp;&nbsp;3.3 <a href="#section-MIME-Type">RDF MIME type,
+      file extension and Macintosh file type</a><br />
+       &nbsp;&nbsp;3.4 <a href="#section-Namespace">The RDF
+      Namespace</a><br />
+       &nbsp;&nbsp;3.5 <a
+      href="#section-Identifiers">Identifiers</a><br />
+       &nbsp;&nbsp;3.6 <a href="#section-baseURIs">Base
+      URIs</a><br />
+       4 <a href="#section-Notation">Notation</a><br />
+       &nbsp;&nbsp;4.1 <a
+      href="#section-Terminology">Terminology</a><br />
+       &nbsp;&nbsp;4.2 <a
+      href="#section-Infoset-Grammar-Notation">Grammar
+      Notation</a><br />
+       5 <a href="#section-Infoset-Grammar">RDF/XML
+      Grammar</a><br />
+       &nbsp;&nbsp;5.0 <a href="#section-grammar-summary">Grammar
+      Summary</a><br />
+       &nbsp;&nbsp;5.1 <a href="#start">Grammar start</a> ... 5.25
+      <a href="#rdf-id">rdf-id</a><br />
+       &nbsp;&nbsp;5.26 <a href="#section-Reification">Reification
+      Rules</a><br />
+       &nbsp;&nbsp;5.27 <a href="#section-List-Expand">List
+      Expansion Rules</a><br />
+       &nbsp;&nbsp;5.28 <a href="#section-Bag-Expand">Bag Expansion
+      Rules</a><br />
+       6 <a href="#section-Serialising">Serializing an RDF Graph to
+      RDF/XML</a><br />
+       7 <a
+      href="#section-Acknowledgments">Acknowledgments</a><br />
+       8 <a href="#section-References">References</a></p>
+
+      <h3><a id="section-Appendices-TOC"
+      name="section-Appendices-TOC">Appendices</a></h3>
+
+      <p class="toc">A <a
+      href="#section-Updated-Grammar-changes">Issues affecting
+      RDF/XML Syntax</a> (Non-Normative)<br />
+       &nbsp;&nbsp;A.1 <a href="#section-Doc-Issues">Document
+      Issues / Tasks</a> (Non-Normative)<br />
+       &nbsp;&nbsp;A.2 <a href="#section-Open-Issues">RDF Core
+      Working Group Open Issues affecting RDF/XML Syntax</a>
+      (Non-Normative)<br />
+       &nbsp;&nbsp;A.3 <a href="#section-Decided-Issues">RDF Core
+      Working Group Decided Issues affecting RDF/XML Syntax</a>
+      (Non-Normative)<br />
+       &nbsp;&nbsp;A.4 <a href="#section-Postponed-Issues">RDF Core
+      Working Group Postponed Issues affecting RDF/XML Syntax</a>
+      (Non-Normative)<br />
+       B <a href="#section-Schemas">Syntax Schemas</a>
+      (Non-Normative)<br />
+       &nbsp;&nbsp;B.1 <a
+      href="#section-RELAXNG-Schema">RELAX&nbsp;NG Syntax
+      Schema</a> (Non-Normative)<br />
+       &nbsp;&nbsp;B.2 <a href="#section-Other-Schemas">Other
+      Syntax Schemas</a> (Non-Normative)<br />
+       C <a href="#section-Changes">Changes</a> (Non-Normative)</p>
+    </div>
+    <hr />
+
+    <h2><a id="section-Introduction" name="section-Introduction">1
+    Introduction</a></h2>
+
+    <p>This document describes the <a
+    href="http://www.w3.org/TR/2000/REC-xml-20001006">XML</a> <a
+    href="#ref-xml">[XML]</a> syntax for RDF as originally defined
+    in the <a
+    href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222">RDF
+    Model &amp; Syntax</a> <a href="#ref-rdfms">[RDF-MS]</a> W3C
+    Recommendation. Subsequent implementations of this syntax and
+    comparison of the resulting RDF graphs have shown that there
+    was ambiguity - implementations generated different graphs and
+    certain syntax forms were not widely implemented. These issues
+    were generally made as either feedback to the <a
+    href="mailto:www-rdf-comments@w3.org">www-rdf-comments@w3.org</a>
+    (<a
+    href="http://lists.w3.org/Archives/Public/www-rdf-comments/">archive</a>)
+    or from discussions on the RDF Interest Group list <a
+    href="mailto:www-rdf-interest@w3.org">www-rdf-interest@w3.org</a>
+    (<a
+    href="http://lists.w3.org/Archives/Public/www-rdf-interest/">archive</a>)
+    .</p>
+
+    <p>The <a href="http://www.w3.org/2001/sw/RDFCore/">RDF Core
+    Working Group</a> is <a
+    href="http://www.w3.org/2001/sw/RDFCoreWGCharter">chartered</a>
+    to respond to the need for a number of fixes, clarifications
+    and improvements to the specification of RDF's abstract graph
+    and XML syntax. The Working Group invites feedback from the
+    developer community on the effects of its proposals on existing
+    implementations and documents.</p>
+
+    <p>Several decisions including amendments and deletions to the
+    grammar are referred to <a
+    href="#section-Updated-Grammar-changes">below</a>. The
+    definitive record of the decisions is the <a
+    href="http://www.w3.org/2000/03/rdf-tracking/">RDF Core Working
+    Group issues list</a>.</p>
+
+    <p>This document re-represents the original EBNF grammar in
+    terms of the <a
+    href="http://www.w3.org/TR/2001/REC-xml-infoset-20011024">XML
+    Information Set</a> <a href="#ref-xml-infoset">[INFOSET]</a>
+    items which moves from the rather low-level details, such as
+    particular forms of empty elements. This allows the grammar to
+    be more precisely recorded and the mapping from the XML syntax
+    to the RDF graph more clearly shown. The mapping to the RDF
+    graph is done by emitting statements in the form defined in the
+    <a
+    href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+    section of <a
+    href="http://www.w3.org/TR/2001/WD-rdf-testcases-20011115/">RDF
+    Test Cases</a> <a href="#ref-test-cases">[RDF-TESTS]</a>
+    Working Draft which creates an RDF graph, that has semantics
+    defined by <a
+    href="http://www.w3.org/TR/2002/WD-rdf-mt-20020214/">RDF Model
+    Theory</a> <a href="#ref-rdf-model">[RDF-MODEL]</a> Working
+    Draft.</p>
+
+    <p>This document illustrates one way to create the N-Triples
+    from the XML - any other method that results in the same
+    N-Triples (RDF graph) may be used.</p>
+
+    <p>In particular:</p>
+
+    <ul>
+      <li>The N-Triples may be generated in any order</li>
+
+      <li>Duplicates may be eliminated at any point</li>
+
+      <li>There is no requirement to support N-Triples in any
+      way</li>
+    </ul>
+
+    <h2><a id="section-Syntax" name="section-Syntax">2 An XML
+    syntax for RDF</a></h2>
+
+    <p>The <a
+    href="http://www.w3.org/TR/2002/WD-rdf-mt-20020214/">RDF Model
+    Theory</a> <a href="#ref-rdf-model">[RDF-MODEL]</a> provides a
+    formal description of RDF. This can be thought of as a graph
+    consisting of <em>nodes</em> and <em>arcs</em>. The
+    <em>nodes</em> can be labeled with URIs, literals or are blank
+    and denote resources. The <em>arcs</em> connect the nodes and
+    are all labeled with URIs. This graph is more precisely called
+    a directed edge-labeled graph; each edge is an arc with a
+    direction (an arrow) connecting two nodes. These edges can be
+    described as triples of <em>subject node</em>, at the blunt end
+    of the arrow/arc, <em>property arc</em> and an <em>object
+    node</em> at the sharp end of the arrow/arc. The property arc
+    can also be also interpreted as either a relationship between
+    two resources or as defining an attribute value (object node)
+    for some resource subject node. .</p>
+
+    <p>In order to encode the graph in XML, the nodes and arcs are
+    turned into XML elements, attributes, element content and
+    attribute values. The URI labels for properties and object
+    nodes are written in XML via <a
+    href="http://www.w3.org/TR/1999/REC-xml-names-19990114">XML
+    Namespaces</a> <a href="#ref-namespaces">[XML-NS]</a> which
+    gives a namespace URI for a short prefix along with
+    namespace-qualified elements and attributes names called local
+    names. The (namespace URI, local name) pair are chosen such
+    that concatenating them forms the original node URI. The URIs
+    labeling subject and object nodes are stored in XML attribute
+    values. The nodes labeled by string literals (which are always
+    object nodes) become element text content or attribute
+    values.</p>
+
+    <p>This transformation turns paths in the graph of the form
+    Node, Arc, Node, Arc, Node, Arc, ... into sequences of elements
+    inside elements. This results in a <em>striping</em> when the
+    elements are written down; alternating between <a
+    href="#nodeElement">node elements</a> and <a
+    href="#propertyElt">property elements</a>. The Node at the
+    start of the sequence is always a subject node and turns into a
+    containing element called an <code>rdf:Description</code> that
+    is written at the top level of RDF/XML, below the XML document
+    element (in this case <code>rdf:RDF</code>). So the chains of
+    stripes start at the top of an RDF/XML document and always
+    begin with nodes.</p>
+
+    <p>For example, <a href="#figure1">Figure 1</a> below a graph
+    written as ASCII saying: there exists a document (this one)
+    with a title, "RDF/XML Syntax Specification (Revised)" and this
+    document has an editor, the editor has a name "Dave Beckett"
+    and a home page http://purl.org/net/dajobe/.</p>
+
+    <div class="figure">
+      <img src="figure1.png" alt="Graph for RDF/XML Example"
+      height="202" width="600" /><br />
+       <a id="figure1" name="figure1">Figure 1: Graph for RDF/XML
+      Example</a> (<a href="figure1.svg">SVG version</a>)
+    </div>
+
+    <p>Where the nodes are represented as ovals and contain their
+    URI if it is known, the properties such as "has an editor" have
+    been given URIs and these have been used to label the
+    appropriate arc, and the strings have been written in
+    rectangles.</p>
+
+    <p>If we take the path through the graph shown in <a
+    href="#figure2">Figure 2</a>:</p>
+
+    <div class="figure">
+      <img src="figure2.png" alt="One Path Through the Graph"
+      height="212" width="600" /><br />
+       <a id="figure2" name="figure2">Figure 2: One Path Through
+      the Graph</a> (<a href="figure2.svg">SVG version</a>)
+    </div>
+
+    <p>This corresponds to the node/arc stripes:</p>
+
+    <ol>
+      <li>Node
+      <code>[http://www.w3.org/TR/rdf-syntax-grammar]</code></li>
+
+      <li>Arc
+      <code>-[http://example.org/stuff/1.0/editor]-&gt;</code></li>
+
+      <li>Node <code>[]</code></li>
+
+      <li>Arc
+      <code>-[http://example.org/stuff/1.0/homePage]-&gt;</code></li>
+
+      <li>Node <code>[http://purl.org/net/dajobe/]</code></li>
+    </ol>
+
+    <p>In RDF/XML this sequence of 5 nodes and arcs corresponds to
+    5 XML elements shown in <a href="#example1">Example 1</a>:</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example1" name="example1">Example 1: Striped RDF/XML
+        (<span class="nodeStripe">nodes</span> and <span
+        class="arcStripe">arcs</span>)</a>
+      </div>
+
+      <div class="exampleInner">
+        <div class="preExample">
+          <tt><span
+          class="nodeStripe">&lt;rdf:Description&gt;</span><br />
+           &nbsp;&nbsp;<span
+          class="arcStripe">&lt;ex:editor&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="nodeStripe">&lt;rdf:Description&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="arcStripe">&lt;ex:homePage&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="nodeStripe">&lt;rdf:Description&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="nodeStripe">&lt;/rdf:Description&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="arcStripe">&lt;/ex:homePage&gt;</span><br />
+           &nbsp;&nbsp;&nbsp;&nbsp;<span
+          class="nodeStripe">&lt;/rdf:Description&gt;</span><br />
+           &nbsp;&nbsp;<span
+          class="arcStripe">&lt;/ex:editor&gt;</span><br />
+           <span
+          class="nodeStripe">&lt;/rdf:Description&gt;</span><br />
+          </tt>
+        </div>
+      </div>
+    </div>
+
+    <p>Which consists of some nodes with known URIs that can be
+    filled in and others that remain blank, as shown in <a
+    href="#example2">Example 2</a>:</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example2" name="example2">Example 2: Striped RDF/XML
+        with known node URIs added</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+&lt;rdf:Description rdf:about="http://www.w3.org/TR/rdf-syntax-grammar"&gt;
+  &lt;ex:editor&gt;
+    &lt;rdf:Description&gt;
+      &lt;ex:homePage&gt;
+        &lt;rdf:Description rdf:about="http://purl.org/net/dajobe/"&gt;
+        &lt;/rdf:Description&gt;
+      &lt;/ex:homePage&gt;
+    &lt;/rdf:Description&gt;
+  &lt;/ex:editor&gt;
+&lt;/rdf:Description&gt;
+</pre>
+      </div>
+    </div>
+
+    <p>There are several abbreviations that can be used to make
+    very common uses more easy to write down. It is typical for the
+    same resource to be described with multiple properties and
+    values at the same time, so multiple child elements can be put
+    inside <code>rdf:Description</code>, all of which are
+    properties of that node as shown in <a href="#example3">Example
+    3</a> (here adding dc:format not shown in the graphs
+    above):</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example3" name="example3">Example 3: Adding more
+        properties to a resource node</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+&lt;rdf:Description rdf:about="http://www.w3.org/TR/rdf-syntax-grammar"&gt;
+  &lt;dc:title&gt;RDF/XML Syntax Specification (Revised)&lt;dc:title&gt;
+  &lt;dc:format&gt;text/html&lt;dc:format&gt;
+    ...
+&lt;/rdf:Description&gt;
+</pre>
+      </div>
+    </div>
+
+    <p>When the property value is a string it can be encoded more
+    simply as an XML attribute and value, as an attribute of the
+    node element. This is known as a <a
+    href="#propertyAttr">property attribute</a> and shown in <a
+    href="#example4">Example 4</a>:</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example4" name="example4">Example 4: Turning
+        string-valued properties from child elements to
+        attributes</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+&lt;rdf:Description rdf:about="http://www.w3.org/TR/rdf-syntax-grammar"
+                 dc:title="RDF/XML Syntax Specification (Revised)"
+                 dc:format="text/html"&gt;
+  ...
+&lt;/rdf:Description&gt;
+</pre>
+      </div>
+    </div>
+
+    <p>Another very common use is when a node is an instance of a
+    class with <code>rdf:type</code> relationship, usually called a
+    <em>typed node</em>. This shorthand is done by removing the
+    rdf:type property and value and replacing the
+    <code>rdf:Description</code> element name with the
+    namespaced-element corresponding to the URI of the value of the
+    type relationship as shown in <a href="#example5">Example 5</a>
+    (using a different graph to those above):</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example5" name="example5">Example 5: Replacing
+        rdf:type property with a typed node</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+&lt;rdf:Description rdf:about="http://example.org/thing"&gt;
+  &lt;rdf:type rdf:resource="http://example.org/stuff/1.0/document"/ &gt;
+  ...
+&lt;/rdf:Description&gt;
+
+&lt;ex:document rdf:about="http://example.org/thing"&gt;
+  ...
+&lt;/ex:document&gt;
+</pre>
+      </div>
+    </div>
+
+    <p>The above forms the basis of the RDF/XML syntax and although
+    there are some other abbreviated forms not covered here at this
+    time includes generating the RDF list properties and for
+    skipping having to write down a blank element node. The latter
+    breaks the striping but is useful for, amongst other uses,
+    encoding properties with multiple-values.</p>
+
+    <p>The original example above filled out and completed, using
+    some abbreviations gives <a href="#example6">Example 6</a>:</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a id="example6" name="example6">Example 6: Full RDF/XML
+        example</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:ex="http://example.org/stuff/1.0/"&gt;
+  &lt;rdf:Description rdf:about="http://www.w3.org/TR/rdf-syntax-grammar"&gt;
+    &lt;dc:title&gt;RDF/XML Syntax Specification (Revised)&lt;/dc:title&gt;
+    &lt;ex:editor rdf:parseType="Resource"&gt;
+      &lt;ex:fullName&gt;Dave Beckett&lt;/ex:fullName&gt;
+      &lt;ex:homePage rdf:resource="http://purl.org/net/dajobe/" /&gt;
+    &lt;/ex:editor&gt;
+  &lt;/rdf:Description&gt;
+&lt;/rdf:RDF&gt;
+</pre>
+      </div>
+    </div>
+
+    <p>For a longer introduction to the RDF/XML <em>striped</em>
+    syntax with a historical perspective, see <a
+    href="http://www.w3.org/2001/10/stripes/">RDF: Understanding
+    the Striped RDF/XML Syntax</a> <a
+    href="#ref-stripedrdf">[STRIPEDRDF]</a>.</p>
+
+    <div class="note">
+      <p><strong>Note:</strong> This section is still under
+      development and the Working Group has developed an <a
+      href="http://www.w3.org/TR/2002/WD-rdf-primer-20020319/">RDF
+      Primer</a> <a href="#ref-rdfprimer">[RDF-PRIMER]</a> that
+      goes into more detail of introducing RDF.</p>
+    </div>
+
+    <h2><a id="section-Data-Model" name="section-Data-Model">3 Data
+    Model</a></h2>
+
+    <p>This syntax operates on an XML document as a sequence of
+    nodes in document order in the style of <a
+    href="#ref-xpath">[XPATH]</a>&nbsp; <a
+    href="http://www.w3.org/TR/xpath#infoset">Information Set
+    Mapping</a> serialized into a sequence called <em>document
+    order</em> which is defined in <a
+    href="#section-Infoset-Mapping">Section 3.2 Information Set
+    Mapping</a>. The resulting nodes are intended to be similar to
+    the events that are produced by the <a
+    href="#ref-sax">[SAX2]</a> XML API. This model is conceptual
+    only and does not mandate any implementation method; in
+    particular the use of <a href="#ref-xpath">[XPATH]</a> or <a
+    href="#ref-sax">[SAX2]</a> is not required.</p>
+
+    <p>The syntax does not support non-well-formed XML documents,
+    nor documents that otherwise don't have an XML Information Set;
+    for example, that don't conform to <a
+    href="http://www.w3.org/TR/1999/REC-xml-names-19990114">XML
+    Namespaces</a> <a href="#ref-namespaces">[XML-NS]</a>.</p>
+
+    <p>The Infoset requires supports for <a
+    href="http://www.w3.org/TR/2001/REC-xmlbase-20010627/">XML
+    Base</a> <a href="#ref-xml-base">[XML-BASE]</a> which generates
+    information item properties [base URI] below. The use this
+    property in RDF/XML is discussed in <a
+    href="#section-baseURIs">section 3.10</a></p>
+
+    <p>This specification requires an information set as defined in
+    <a href="#ref-xml-infoset">[INFOSET]</a> which supports at
+    least the following information items and properties for
+    RDF/XML:</p>
+
+    <dl>
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.document">Document
+      Information Item</a></dt>
+
+      <dd>[document element], [children], [base URI]</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.element">Element
+      Information Item</a></dt>
+
+      <dd>[local name], [namespace name], [children], [attributes],
+      [parent], [base URI]</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">Attribute
+      Information Item</a></dt>
+
+      <dd>[local name], [namespace name], [normalized value],
+      [owner element]</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.character">Character
+      Information Item</a></dt>
+
+      <dd>[character code]</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.pi">Processing
+      Instruction Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.rse">Unexpanded
+      Entity Reference Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.comment">Comment
+      Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.doctype">Document
+      Type Declaration Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.entity.unparsed">
+      Unparsed Entity Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.notation">Notation
+      Information Item</a></dt>
+
+      <dd>Not used</dd>
+
+      <dt><a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.namespace">Namespace
+      Information Item</a></dt>
+
+      <dd>Not used</dd>
+    </dl>
+
+    <div class="note">
+      <p><strong>Open Issue</strong>: The handling of XML content
+      inside <a
+      href="#parseTypeLiteralPropertyElt">parseTypeLiteralPropertyElt</a>
+      requires some other <a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem">Information
+      Items</a>, yet to be determined but based on the requirements
+      for <a href="http://www.w3.org/TR/xml-exc-c14n">Exclusive XML
+      Canonicalization W3C Candidate Recommendation</a>.</p>
+
+      <p>This section is intended to satisfy the requirements for
+      <a
+      href="http://www.w3.org/TR/xml-infoset/#conformance">Conformance</a>
+      in the <a href="#ref-xml-infoset">[INFOSET]</a>
+      specification.</p>
+    </div>
+
+    <h3><a id="section-Nodes" name="section-Nodes">3.1
+    Nodes</a></h3>
+
+    <p>There are six types of node defined in the following
+    subsections. Most nodes are constructed from an Infoset
+    information item (except for <a
+    href="#section-identifier-node">Identifier</a>). The effect of
+    a node constructor is to create a new node with a unique
+    identity, distinct from all other nodes. Nodes have properties,
+    and all have the <em>string-value</em> property that may be
+    part of the node or computed from the <em>string-value</em> of
+    contained nodes.</p>
+
+    <h3><a id="section-root-node" name="section-root-node">3.1.1
+    Root Node</a></h3>
+
+    <p>Created from an <a
+    href="http://www.w3.org/TR/xml-infoset/#infoitem.document">Document
+    Information Item</a> and takes the following properties and
+    their values from the element information item: <span
+    class="termdef"><a id="nodeterm-document-element"
+    name="nodeterm-document-element">document-element</a></span>,
+    <span class="termdef"><a id="nodeterm-children"
+    name="nodeterm-children">children</a></span> and <span
+    class="termdef"><a id="nodeterm-base-uri"
+    name="nodeterm-base-uri">base-uri</a></span>. The property
+    <span class="termdef"><a id="nodeterm-language"
+    name="nodeterm-language">language</a></span> is set to the
+    empty string.</p>
+
+    <h3><a id="section-element-node"
+    name="section-element-node">3.1.2 Element Node</a></h3>
+
+    <p>Created from an <a
+    href="http://www.w3.org/TR/xml-infoset/#infoitem.element">Element
+    Information Item</a> and takes the following properties and
+    their values from the element information item: local-name,
+    namespace-name, children, <span class="termdef"><a
+    id="nodeterm-attributes"
+    name="nodeterm-attributes">attributes</a></span>, parent and
+    base-uri. When this node is created from such values, the <span
+    class="termdef"><a id="nodeterm-URI"
+    name="nodeterm-URI">URI</a></span> property is defined with a
+    string value of the concatenation of the value of the
+    namespace-name property and the value of the local-name
+    property. On creation the <span class="termdef"><a
+    id="nodeterm-liCounter"
+    name="nodeterm-liCounter">li-counter</a></span> and <span
+    class="termdef"><a id="nodeterm-bag-li-counter"
+    name="nodeterm-bag-li-counter">bag-li-counter</a></span>
+    properties are added with initial integer values 1.</p>
+
+    <p>On creation, if the <a href="#nodeterm-URI"
+    class="termref"><span
+    class="arrow">&middot;</span>attributes<span
+    class="arrow">&middot;</span></a> property contains an
+    attribute node <tt>xml:lang</tt> (that is, the local-name
+    property of the attribute has value "lang" and the
+    namespace-name property of the attribute has value
+    "http://www.w3.org/XML/1998/namespace") then that attribute is
+    removed from the list of attributes and the property <a
+    href="#nodeterm-language" class="termref"><span
+    class="arrow">&middot;</span>language<span
+    class="arrow">&middot;</span></a> on the element node is set to
+    the string-value of the attribute. If no such attribute is
+    present, the language property on the element node is set to
+    the value of the language property on the parent node. All
+    other attributes beginning with <tt>xml</tt> are removed (that
+    is, with namespace-name properties values beginning with
+    "http://www.w3.org/XML/1998/namespace"). Note: this does not
+    include xml:base which is already present in the Infoset as the
+    base-uri property.</p>
+
+    <p>The <span class="termdef"><a id="nodeterm-subject"
+    name="nodeterm-subject">subject</a></span> property may be
+    added and takes the value of an <a
+    href="#section-identifier-node">Identifier</a> node. This is
+    used on elements that deal with one node in the RDF graph, this
+    generally being the subject of a statement.</p>
+
+    <h3><a id="section-end-element-node"
+    name="section-end-element-node">3.1.3 End Element Node</a></h3>
+
+    <p>Takes no properties but marks the end of the containing
+    element in the sequence.</p>
+
+    <h3><a id="section-attribute-node"
+    name="section-attribute-node">3.1.4 Attribute Node</a></h3>
+
+    <p>Created from an <a
+    href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">Attribute
+    Information Item</a> and takes the properties local-name,
+    namespace-name and owner element and their values from
+    respective element information item properties. When this node
+    is created from such values, two properties and values are
+    defined. Firstly the <span class="termdef"><a
+    id="nodeterm-string-value"
+    name="nodeterm-string-value">string-value</a></span> property
+    is defined with the normalized value as specified by <a
+    href="#ref-xml">[XML]</a>. An attribute whose normalized value
+    is a zero-length string is not treated specially: it results in
+    an attribute node whose string-value is a zero-length string.
+    Secondly the <a href="#nodeterm-URI" class="termref"><span
+    class="arrow">&middot;</span>URI<span
+    class="arrow">&middot;</span></a> property is defined with a
+    string value of the concatenation of the value of the
+    namespace-name property and the value of the local-name
+    property.</p>
+
+    <h3><a id="section-text-node" name="section-text-node">3.1.5
+    Text Node</a></h3>
+
+    <p>Created from a sequence of one or more consecutive <a
+    href="http://www.w3.org/TR/xml-infoset/#infoitem.character">Character
+    Information Items</a>. Has the single property <a
+    href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a> which has the value of the
+    string made from concatenating the <a
+    href="http://www.w3.org/TR/xml-infoset/#infoitem.character">character
+    code</a> property of each of the character information items.
+    [NOTE: Identical to XPath.]</p>
+
+    <h3><a id="section-identifier-node"
+    name="section-identifier-node">3.1.6 Identifier Node</a></h3>
+
+    <p>A node for a typed identifier which can have the following
+    three properties: <a href="#nodeterm-identifier"
+    class="termref"><span
+    class="arrow">&middot;</span>identifier<span
+    class="arrow">&middot;</span></a>, <a
+    id="nodeterm-identifier-type" name="nodeterm-identifier-type"
+    class="termref"><span
+    class="arrow">&middot;</span>identifier-type<span
+    class="arrow">&middot;</span></a> and <a
+    href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a>. These nodes are created by
+    giving two values for the <a href="#nodeterm-identifier"
+    class="termref"><span
+    class="arrow">&middot;</span>identifier<span
+    class="arrow">&middot;</span></a> and <a
+    href="#nodeterm-identifier-type" class="termref"><span
+    class="arrow">&middot;</span>identifier-type<span
+    class="arrow">&middot;</span></a> properties. The <span
+    class="termdef"><a id="nodeterm-identifier"
+    name="nodeterm-identifier">identifier</a></span> property takes
+    a string value and the <span class="termdef"><a
+    id="nodeterm-identifierType"
+    name="nodeterm-identifierType">identifier-type</a></span>
+    property can take values "URI" or "bnodeID".</p>
+
+    <p>The <a href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a> property is defined from the
+    other properties as follows: If <a
+    href="#nodeterm-identifier-type" class="termref"><span
+    class="arrow">&middot;</span>identifier-type<span
+    class="arrow">&middot;</span></a> is "URI" then the value is
+    the concatenation of "&lt;", the value of the <a
+    href="#nodeterm-identifier-type" class="termref"><span
+    class="arrow">&middot;</span>identifier<span
+    class="arrow">&middot;</span></a> property and "&gt;". If <a
+    href="#nodeterm-identifier-type" class="termref"><span
+    class="arrow">&middot;</span>identifier-type<span
+    class="arrow">&middot;</span></a> is "bnodeID" then the value
+    is the concatenation of "_:" and the value of the <a
+    href="#nodeterm-identifier-type" class="termref"><span
+    class="arrow">&middot;</span>identifier<span
+    class="arrow">&middot;</span></a> property.</p>
+
+    <p>For further information on identifiers in the RDF graph, see
+    <a href="#section-Identifiers">section 3.5</a>.</p>
+
+    <h3><a id="section-literal-node"
+    name="section-literal-node">3.1.7 Literal Node</a></h3>
+
+    <p>A node for a literal which can have the following three
+    properties: <span class="termdef"><a
+    id="nodeterm-literal-value"
+    name="nodeterm-literal-value">literal-value</a></span>, <span
+    class="termdef"><a id="nodeterm-literal-language"
+    name="nodeterm-literal-language">literal-language</a></span>
+    and <a href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a>. These nodes are created by
+    giving two values for the <a href="#nodeterm-literal-value"
+    class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> and <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> properties which both take
+    string values.</p>
+
+    <p>The <a href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a> property is defined from the
+    other properties as follows: If <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> is empty then the value is
+    the concatenation of """ (1 double quote), the value of the <a
+    href="#nodeterm-literal-value" class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> property and """ (1 double
+    quote). Otherwise the value is the concatenation of """ (1
+    double quote), the value of the <a
+    href="#nodeterm-literal-value" class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> property ""-" (1 double quote
+    and a '-'), and the value of the <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> property. Note that the
+    double-quoted literal-value string must use the N-Triples <a
+    href="http://www.w3.org/TR/rdf-testcases/#ntrip_strings">string
+    escapes</a> for escaping certain characters such as ".</p>
+
+    <div class="issue">
+      <p><strong>Warning:</strong> The RDF Core Working Group has
+      generally decided the outline of how to handle string
+      literals but all the cases have not been entirely resolved at
+      this time. See in particular the following issue: <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-charmod-literals">
+      rdf-charmod-uris</a>.</p>
+    </div>
+
+    <h3><a id="section-xml-literal-node"
+    name="section-xml-literal-node">3.1.8 XML Literal Node</a></h3>
+
+    <p>A node for an XML literal which can have the following three
+    properties: <a href="#nodeterm-literal-value"
+    class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a>, <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> and <a
+    href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a>. These nodes are created by
+    giving two values for the <a href="#nodeterm-literal-value"
+    class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> and <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> properties which both take
+    string values.</p>
+
+    <p>The <a href="#nodeterm-string-value" class="termref"><span
+    class="arrow">&middot;</span>string-value<span
+    class="arrow">&middot;</span></a> property is defined from the
+    other properties as follows: If <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> is empty then the value is
+    the concatenation of "xml"" ('x', 'm', 'l', and 1 double
+    quote), the value of the <a href="#nodeterm-literal-value"
+    class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> property and """ (1 double
+    quote). Otherwise the value is the concatenation of "xml""
+    ('x', 'm', 'l', and 1 double quote), the value of the <a
+    href="#nodeterm-literal-value" class="termref"><span
+    class="arrow">&middot;</span>literal-value<span
+    class="arrow">&middot;</span></a> property ""-" (1 double quote
+    and a '-'), and the value of the <a
+    href="#nodeterm-literal-language" class="termref"><span
+    class="arrow">&middot;</span>literal-language<span
+    class="arrow">&middot;</span></a> property. Note that the
+    double-quoted literal-value string must use the N-Triples <a
+    href="http://www.w3.org/TR/rdf-testcases/#ntrip_strings">string
+    escapes</a> for escaping certain characters such as ".</p>
+
+    <div class="issue">
+      <p><strong>Warning:</strong> The RDF Core Working Group has
+      generally decided the outline of how to handle XML literals
+      but all the cases have not been entirely resolved at this
+      time. See in particular the following issues: <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-charmod-literals">
+      rdf-charmod-literals</a>, <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-literal-namespaces">
+      rdfms-xml-literal-namespaces</a> and <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base">
+      rdfms-xml-base</a>.</p>
+    </div>
+
+    <h3><a id="section-Infoset-Conformance"
+    name="section-Infoset-Conformance"></a> <a
+    id="section-Infoset-Mapping" name="section-Infoset-Mapping">3.2
+    Information Set Mapping</a></h3>
+
+    <p>To transform the Infoset into the sequence of nodes in
+    <em>document order</em>, each information item is transformed
+    as described above to generate a tree of nodes with properties
+    and values. Each element node is then replaced as described
+    below to turn the tree of nodes into a sequence in document
+    order.</p>
+
+    <ol>
+      <li>The original <a href="#section-element-node">element
+      node</a></li>
+
+      <li>The value of the <a
+      href="http://www.w3.org/TR/xml-infoset/#infoitem.element">children</a>
+      property, a possibly empty ordered list of nodes.</li>
+
+      <li>An <a href="#section-end-element-node">end element
+      node</a></li>
+    </ol>
+
+    <h3><a id="section-MIME-Type" name="section-MIME-Type">3.3 RDF
+    MIME type, file extension and Macintosh file type</a></h3>
+
+    <p>The Internet Media Type / MIME type for RDF is
+    "<tt>application/rdf+xml</tt>" - see <a
+    href="http://www.ietf.org/rfc/rfc3023.txt">RFC 3032</a> (<a
+    href="#ref-rfc3023">RFC-3023</a>) section 8.18. The W3C will
+    register this type when this working draft is more stable.</p>
+
+    <p>It is recommended that RDF files have the extension
+    <code>".rdf"</code> (all lowercase) on all platforms.</p>
+
+    <p>It is recommended that RDF files stored on Macintosh HFS
+    file systems be given a file type of <code>"rdf&nbsp;"</code>
+    (all lowercase, with a space character as the fourth
+    letter).</p>
+
+    <h3><a id="section-Namespace" name="section-Namespace">3.4 The
+    RDF Namespace</a></h3>
+
+    <p>The RDF Namespace URI is <a id="rdf-ns-uri"
+    name="rdf-ns-uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#</a>
+    and is typically used in XML with the prefix <code>rdf</code>
+    although other prefix strings may be used. The namespace
+    contains the following names only:</p>
+
+    <blockquote>
+      <p><code>RDF Description</code><br />
+       <code>ID about bagID parseType resource</code><br />
+       <code>li</code></p>
+    </blockquote>
+
+    <p>The above terms are only used in the syntax and are not
+    concepts in the graph.</p>
+
+    <blockquote>
+      <p><code>Seq Bag Alt Statement Property</code><br />
+       <code>subject predicate object</code><br />
+       <code>type value</code><br />
+       <code>_</code><em>n</em><br />
+      </p>
+    </blockquote>
+
+    <p>where <em>n</em> is a non-negative integer. These are either
+    RDF Classes (first 5) or Properties (remainder) in the
+    graph.</p>
+
+    <p>Any other names are not defined and SHOULD generate a
+    warning when encountered in an application, but should
+    otherwise behave normally, and treated as properties and/or
+    classes as appropriate for their use.</p>
+
+    <p>Throughout this document the terminology rdf:<em>name</em>
+    will be used to indicate <em>name</em> is from the RDF
+    namespace and it has a URI of the concatenation of the <a
+    href="#rdf-ns-uri">RDF Namespace URI</a> and <em>name</em>. For
+    example, rdf:type has the URI
+    http://www.w3.org/1999/02/22-rdf-syntax-ns#type</p>
+
+    <div class="note">
+      <p><strong>Note:</strong> In the <a
+      href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218/">
+      18 December 2001</a> Working Draft the names aboutEach and
+      aboutEachPrefix were removed from the language and the RDF
+      namespace by the RDF Core Working Group. See the resolution
+      of issues <a href="#rdfms-abouteach">rdfms-abouteach</a> and
+      <a href="#rdfms-abouteachprefix">rdfms-abouteachprefix</a>
+      for further information. The Working Group invites feedback
+      from the community on the effects of this on existing
+      implementations and documents and on the costs and benefits
+      of adopting a new namespace URI to reflect this change
+      (currently not proposed by the Working Group).</p>
+    </div>
+
+    <h3><a id="section-Identifiers" name="section-Identifiers">3.5
+    Identifiers</a></h3>
+
+    <p>The RDF graph uses three types of identifiers (or labels)
+    for nodes and arcs:</p>
+
+    <dl>
+      <dt>URI references (labeling nodes and arcs)</dt>
+
+      <dd>
+        <p>The URI references can be either given as absolute URIs,
+        relative URIs that have to be resolved to the in-scope base
+        URI as described in section <a
+        href="#section-baseURIs">section 3.6</a>, constructed from
+        XML Namespace-qualified element and attributes names
+        (QNames) or from rdf:ID and rdf:bagID attribute values.</p>
+
+        <p>XML QNames give URIs by concatenating the namespace URI
+        and the XML local name. For example, if the XML Namespace
+        prefix <code>foo</code> has URI
+        http://example.org/somewhere/ then the QName
+        <code>foo:bar</code> would correspond to the URI
+        http://example.org/somewhere/bar. Note that this restricts
+        which URIs can be made and the same URI can be given in
+        multiple ways.</p>
+
+        <p>The <a href="#idAttr"><tt>rdf:ID</tt></a> and <a
+        href="#bagIdAttr"><tt>rdf:bagID</tt></a> values generate
+        URIs by considering them as equivalent to the relative URI
+        "#" concatenated with the attribute value. This can then be
+        resolved relative to the in-scope base URI as described in
+        section <a href="#section-baseURIs">section 3.6</a>.</p>
+      </dd>
+
+      <dt>Literals (labeling object arcs)</dt>
+
+      <dd>
+        <p>These are Unicode strings or XML content.</p>
+
+        <div class="issue">
+          <p><strong>Warning:</strong> The RDF Core Working Group
+          has generally decided the outline of RDF literals but all
+          the cases have not been entirely resolved at this time.
+          See in particular the following issues: <a
+          href="http://www.w3.org/2000/03/rdf-tracking/#rdf-charmod-literals">
+          rdf-charmod-literals</a>, <a
+          href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-literal-namespaces">
+          rdfms-xml-literal-namespaces</a></p>
+        </div>
+      </dd>
+
+      <dt>Blank node Identifiers (labeling nodes)</dt>
+
+      <dd>
+        These are given local identifiers in the N-Triples
+        serialization which must match the <a
+        href="http://www.w3.org/TR/rdf-testcases/#name">name</a>
+        production in <a
+        href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>.
+        
+
+        <div class="note">
+          <p><strong>Note:</strong> In the past, some RDF
+          applications have handled these nodes (then called
+          anonymous nodes) by generating arbitrary URIs. This MUST
+          NOT be done - applications MUST be able to distinguish
+          URI references from blank nodes.</p>
+        </div>
+      </dd>
+    </dl>
+
+    <h3><a id="section-baseURIs" name="section-baseURIs">3.6 Base
+    URIs</a></h3>
+
+    <p>RDF/XML supports <a
+    href="http://www.w3.org/TR/2001/REC-xmlbase-20010627/">XML
+    Base</a> <a href="#ref-xml-base">[XML-BASE]</a> by being based
+    on the <a
+    href="http://www.w3.org/TR/2001/REC-xml-infoset-20011024">XML
+    Information Set</a> <a href="#ref-xml-infoset">[INFOSET]</a>.
+    This defines a <a href="#nodeterm-base-uri"
+    class="termref"><span
+    class="arrow">&middot;</span>base-uri<span
+    class="arrow">&middot;</span></a> property for each <a
+    href="#section-root-node"><span
+    class="arrow">&middot;</span>root node<span
+    class="arrow">&middot;</span></a> and <a
+    href="#section-element-node"><span
+    class="arrow">&middot;</span>element node<span
+    class="arrow">&middot;</span></a>.</p>
+
+    <p>RDF/XML uses URI-references throughout and applies the
+    in-scope Base URI to resolve both URI document references of
+    the form <tt>"#frag"</tt> and self document references of the
+    form <tt>""</tt>.</p>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test001.rdf">
+      test001.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test001.nt">
+      test001.nt</a></p>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test004.rdf">
+      test004.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test004.nt">
+      test004.nt</a></p>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test008.rdf">
+      test008.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test008.nt">
+      test008.nt</a></p>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test013.rdf">
+      test013.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test013.nt">
+      test013.nt</a></p>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test016.rdf">
+      test016.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test016.nt">
+      test016.nt</a></p>
+    </div>
+
+    <p>An empty same document reference "" resolves against the URI
+    part of the Base URI; any fragment part is ignored. See <a
+    href="http://www.isi.edu/in-notes/rfc2396.txt">Uniform Resource
+    Identifiers (URI)</a> <a href="#ref-uri">[URIS]</a> section
+    4.2</p>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test013.rdf">
+      test013.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test013.nt">
+      test013.nt</a></p>
+    </div>
+
+    <div class="note">
+      <p><strong>Implementor Note:</strong> When using a
+      hierarchical base URI that has no path component (/), it must
+      be added before using as a base URI for resolving.</p>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test011.rdf">
+      test011.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test011.nt">
+      test011.nt</a></p>
+    </div>
+
+    <h2><a id="section-Notation" name="section-Notation">4
+    Notation</a></h2>
+
+    <h3><a id="section-Terminology" name="section-Terminology">4.1
+    Terminology</a></h3>
+
+    <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+    "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and
+    "OPTIONAL" in this document are to be interpreted as described
+    in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>
+    <a href="#ref-keywords">[KEYWORDS]</a>.</p>
+
+    <h3><a id="section-Notation-Forms"
+    name="section-Notation-Forms"></a> <a
+    id="section-Infoset-Grammar-Notation"
+    name="section-Infoset-Grammar-Notation">4.2 Grammar
+    Notation</a></h3>
+
+    <p>The following notation is used for describing the nodes and
+    grammar EBNF. The RDF/XML grammar is defined here in terms of
+    its information set nodes, using statements of the form:</p>
+
+    <blockquote>
+      <div class="productionOuter">
+        <div class="productionInner">
+          <p>number <em>node-type</em> <em>node-content</em></p>
+        </div>
+      </div>
+
+      <div>
+        <em>action</em>... 
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><a
+            href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a></tt></p>
+          </div>
+        </div>
+      </div>
+    </blockquote>
+
+    <p>where the <em>node-content</em> is an expression, which may
+    refer to other <em>node-types</em> (as defined in <a
+    href="#section-Nodes">Section 3.1</a>), using constructs of the
+    form given in the following table. The number is used for
+    reference purposes. The <em>action</em> may include generating
+    <a
+    href="http://www.w3.org/TR/rdf-testcases/#ntriples">N-Triples</a>
+    into the model.</p>
+
+    <table border="1"
+    summary="This table describes the notation used in the following sections to describe the grammar in nodes along with the meaning of that notation.">
+      <caption>
+        Notation for nodes and grammar EBNF.
+      </caption>
+
+      <tr>
+        <th>Notation</th>
+
+        <th>Meaning</th>
+      </tr>
+
+      <tr>
+        <td>A = B</td>
+
+        <td>A is equal to B</td>
+      </tr>
+
+      <tr>
+        <td>A != B</td>
+
+        <td>A is not equal to B</td>
+      </tr>
+
+      <tr>
+        <td>A := B</td>
+
+        <td>Assigns A the value B</td>
+      </tr>
+
+      <tr>
+        <td><em>node</em>.<em>property</em></td>
+
+        <td>Returns the value of the given node property</td>
+      </tr>
+
+      <tr>
+        <td>root(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)</td>
+
+        <td>A <a href="#section-root-node">root node</a> with
+        properties</td>
+      </tr>
+
+      <tr>
+        <td>start_element(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)<br />
+         <em>children</em><br />
+         end_element()</td>
+
+        <td>A sequence of <a href="#section-element-node">element
+        node</a> with properties, a possibly empty list of nodes as
+        element content and an <a
+        href="#section-end-element-node">end element node</a> </td>
+      </tr>
+
+      <tr>
+        <td>attribute(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)</td>
+
+        <td>An <a href="#section-attribute-node">attribute node</a>
+        with properties</td>
+      </tr>
+
+      <tr>
+        <td>identifier(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)</td>
+
+        <td>An <a href="#section-identifier-node">identifier
+        node</a> with properties</td>
+      </tr>
+
+      <tr>
+        <td>text()</td>
+
+        <td>A <a href="#section-text-node">text node</a></td>
+      </tr>
+
+      <tr>
+        <td>literal(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)</td>
+
+        <td>A <a href="#section-literal-node">literal node</a> with
+        properties</td>
+      </tr>
+
+      <tr>
+        <td>xml(prop1=value1,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;prop2=value2, ...)</td>
+
+        <td>An <a href="#section-xml-literal-node">XML literal
+        node</a> with properties</td>
+      </tr>
+
+      <tr>
+        <td>list(item1, item2, ...); list()</td>
+
+        <td>An ordered list of items in document order; an empty
+        list</td>
+      </tr>
+
+      <tr>
+        <td>set(item1, item2, ...); set()</td>
+
+        <td>An unordered set of items; an empty set</td>
+      </tr>
+
+      <tr>
+        <td>*</td>
+
+        <td>Zero or more of preceding term</td>
+      </tr>
+
+      <tr>
+        <td>?</td>
+
+        <td>Zero or one of preceding term</td>
+      </tr>
+
+      <tr>
+        <td>+</td>
+
+        <td>One or more of preceding term</td>
+      </tr>
+
+      <tr>
+        <td>A | B | ...</td>
+
+        <td>The A, B, ... terms are alternatives.</td>
+      </tr>
+
+      <tr>
+        <td>A - B</td>
+
+        <td>The term A but not the term B</td>
+      </tr>
+
+      <tr>
+        <td>"ABC"</td>
+
+        <td>A string of characters A, B, C in order.</td>
+      </tr>
+
+      <tr>
+        <td>concat(A, B, ..)</td>
+
+        <td>A string created by concatenating the terms in
+        order.</td>
+      </tr>
+
+      <tr>
+        <td><a id="anyURI" name="anyURI">anyURI</a></td>
+
+        <td>Any legal URI.</td>
+      </tr>
+
+      <tr>
+        <td><a id="anyString" name="anyString">anyString</a></td>
+
+        <td>Any string.</td>
+      </tr>
+
+      <tr>
+        <td>rdf:<em>X</em></td>
+
+        <td>See <a href="#section-Namespace">section 3.4</a></td>
+      </tr>
+    </table>
+
+    <h2><a id="section-Infoset-Grammar"
+    name="section-Infoset-Grammar">5 RDF/XML Grammar</a></h2>
+
+    <h3><a id="section-grammar-summary"
+    name="section-grammar-summary">5.0 Grammar summary</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <table>
+          <tr valign="top">
+            <td><a href="#doc">5.2 doc</a></td>
+
+            <td>root(<a
+            href="#nodeterm-document-element">document-element</a>=<a
+             href="#RDF">RDF</a>, <a
+            href="#nodeterm-children">children</a>=list(<a
+            href="#RDF">RDF</a>))</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#RDF">5.3 RDF</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a> =
+            rdf:RDF, <a
+            href="#nodeterm-attributes">attributes</a>=set())<br />
+             <a href="#nodeElementList">nodeElementList</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#nodeElementList">5.4
+            nodeElementList</a></td>
+
+            <td><a href="#ws">ws</a>* (<a
+            href="#nodeElement">nodeElement</a> <a
+            href="#ws">ws</a>* )*</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#nodeElement">5.5 nodeElement</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:ID |
+            rdf:about | rdf:bagID | rdf:parseType | rdf:resource |
+            rdf:li )<br />
+             &nbsp;&nbsp;&nbsp;&nbsp;<a
+            href="#nodeterm-attributes">attributes</a>=set((<a
+            href="#idAttr">idAttr</a> | <a
+            href="#aboutAttr">aboutAttr</a>&nbsp;)?, <a
+            href="#bagIdAttr">bagIdAttr</a>?, <a
+            href="#propertyAttr">propertyAttr</a>*))<br />
+             <a href="#propertyEltList">propertyEltList</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#ws">5.6 ws</a></td>
+
+            <td>White space as defined by <a
+            href="#ref-xml">[XML]</a> definition <em>White
+            Space</em> Rule [3] <a
+            href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-S">S</a>
+            in section <a
+            href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-common-syn">
+            Common Syntactic Constructs</a></td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#propertyEltList">5.7
+            propertyEltList</a></td>
+
+            <td><a href="#ws">ws</a>* (<a
+            href="#propertyElt">propertyElt</a> <a
+            href="#ws">ws</a>* ) *</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#propertyElt">5.8 propertyElt</a></td>
+
+            <td><a
+            href="#resourcePropertyElt">resourcePropertyElt</a> |
+            <a href="#literalPropertyElt">literalPropertyElt</a> |
+            <a
+            href="#parseTypeLiteralPropertyElt">parseTypeLiteralPropertyElt</a>
+            | <a
+            href="#parseTypeResourcePropertyElt">parseTypeResourcePropertyElt</a>
+            | <a
+            href="#parseTypeOtherPropertyElt">parseTypeOtherPropertyElt</a>
+            | <a href="#emptyPropertyElt">emptyPropertyElt</a></td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#resourcePropertyElt">5.9
+            resourcePropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>?))<br />
+             <a href="#ws">ws</a>* <a
+            href="#nodeElement">nodeElement</a> <a
+            href="#ws">ws</a>*<br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#literalPropertyElt">5.10
+            literalPropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>?))<br />
+             <a href="#section-text-node">text()</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseTypeLiteralPropertyElt">5.11
+            parseTypeLiteralPropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>?, <a
+            href="#parseLiteral">parseLiteral</a>))<br />
+             <a href="#literal">literal</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseTypeResourcePropertyElt">5.12
+            parseTypeResourcePropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>?, <a
+            href="#parseResource">parseResource</a>))<br />
+             <a href="#propertyEltList">propertyEltList</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseTypeOtherPropertyElt">5.13
+            parseTypeOtherPropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>?, <a
+            href="#parseOther">parseOther</a>))<br />
+             <a href="#propertyEltList">propertyEltList</a><br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#emptyPropertyElt">5.14
+            emptyPropertyElt</a></td>
+
+            <td>start_element(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource ), <a
+            href="#nodeterm-attributes">attributes</a>=set(<a
+            href="#idAttr">idAttr</a>? <a
+            href="#resourceAttr">resourceAttr</a>?, <a
+            href="#bagIdAttr">bagIdAttr</a>?, <a
+            href="#propertyAttr">propertyAttr</a>*))<br />
+             end_element()</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#idAttr">5.15 idAttr</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> = rdf:ID,
+            <a href="#nodeterm-string-value">string-value</a>=<a
+            href="#rdf-id">rdf-id</a>)</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#aboutAttr">5.16 aboutAttr</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:about, <a
+            href="#nodeterm-string-value">string-value</a>=<a
+            href="#URI-reference">URI-reference</a>)</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#bagIdAttr">5.17 bagIdAttr</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:bagID, <a
+            href="#nodeterm-string-value">string-value</a>=<a
+            href="#rdf-id">rdf-id</a>)</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#propertyAttr">5.18 propertyAttr</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a>=<a
+            href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description
+            | rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+            rdf:resource | rdf:li ), <a
+            href="#nodeterm-string-value">string-value</a>=<a
+            href="#anyString">anyString</a>)</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#resourceAttr">5.19 resourceAttr</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:resource, <a
+            href="#nodeterm-string-value">string-value</a>=<a
+            href="#URI-reference">URI-reference</a>)</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseLiteral">5.20 parseLiteral</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:parseType, <a
+            href="#nodeterm-string-value">string-value</a>="Literal")</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseResource">5.21
+            parseResource</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:parseType, <a
+            href="#nodeterm-string-value">string-value</a>="Resource")</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#parseOther">5.22 parseOther</a></td>
+
+            <td>attribute(<a href="#nodeterm-URI">URI</a> =
+            rdf:parseType, <a
+            href="#nodeterm-string-value">string-value</a>=<a
+            href="#anyString">anyString</a> - ("Resource" |
+            "Literal") )</td>
+          </tr>
+
+          <tr valign="top">
+            <td><a href="#literal">5.24 literal</a></td>
+
+            <td>Any XML element content that is allowed according
+            to <a href="#ref-xml">[XML]</a> definition <em>Content
+            of Elements</em> Rule [43] <a
+            href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-content">
+            content</a>. in section <a
+            href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-starttags">
+            3.1 Start-Tags, End-Tags, and Empty-Element
+            Tags</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <h3><a id="start" name="start">5.1 Grammar start</a></h3>
+
+    <p>If the RDF/XML is a standalone XML content, then the grammar
+    starts with <a href="#section-root-node">Root Node</a>&nbsp; <a
+    href="#doc">doc</a>.</p>
+
+    <p>If the content is known to be RDF/XML by context, such as
+    when RDF/XML is embedded inside other XML content, then the
+    grammar can either start at <a
+    href="#section-element-node">Element Node</a>&nbsp; <a
+    href="#RDF">RDF</a> (only when an element is legal at that
+    point in the XML) or at production <a
+    href="#nodeElementList">nodeElementList</a> (only when element
+    content is legal, since this is a list of elements). For such
+    embedded RDF/XML, the <a href="#nodeterm-base-uri"
+    class="termref"><span
+    class="arrow">&middot;</span>base-uri<span
+    class="arrow">&middot;</span></a> value on the outermost
+    element must be initialized from the containing XML since no <a
+    href="#section-root-node">Root Node</a>&nbsp; will be
+    available. Note that if such embedding occurs, the grammar may
+    be entered several times but no state is expected to be
+    preserved.</p>
+
+    <h3><a id="doc" name="doc">5.2 Production doc</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>root(<a
+        href="#nodeterm-document-element">document-element</a>=<a
+        href="#RDF">RDF</a>,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-children">children</a>=list(<a
+        href="#RDF">RDF</a>))</p>
+      </div>
+    </div>
+
+    <h3><a id="RDF" name="RDF">5.3 Production RDF</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a> =
+        rdf:RDF,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set())<br />
+         <a href="#nodeElementList">nodeElementList</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <h3><a id="nodeElementList" name="nodeElementList">5.4
+    Production nodeElementList</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p><a href="#ws">ws</a>* (<a
+        href="#nodeElement">nodeElement</a> <a href="#ws">ws</a>*
+        )*</p>
+      </div>
+    </div>
+
+    <h3><a id="description" name="description"></a><a
+    id="typedNode" name="typedNode"></a> <a id="nodeElement"
+    name="nodeElement">5.5 Production nodeElement</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:ID | rdf:about
+        | rdf:bagID | rdf:parseType | rdf:resource | rdf:li )<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set((<a
+        href="#idAttr">idAttr</a> | <a
+        href="#aboutAttr">aboutAttr</a>&nbsp;)?, <a
+        href="#bagIdAttr">bagIdAttr</a>?, <a
+        href="#propertyAttr">propertyAttr</a>*))<br />
+         <a href="#propertyEltList">propertyEltList</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>For element <em>e</em>, the processing of some of the
+    attributes have to be done before other work such as dealing
+    with children nodes or other attributes. These can be processed
+    in any order:</p>
+
+    <ul>
+      <li>If there is an attribute <em>a</em> with <em>a</em>.<a
+      href="#nodeterm-URI">URI</a> = rdf:ID, then <em>e</em>.<a
+      href="#nodeterm-subject">subject</a> := identifier(<a
+      href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+       href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+      href="#nodeterm-string-value">string-value</a>), <a
+      href="#nodeterm-identifier-type">identifier-type</a>="URI").</li>
+
+      <li>If there is an attribute <em>a</em> with <em>a</em>.<a
+      href="#nodeterm-URI">URI</a> = rdf:about then <em>e</em>.<a
+      href="#nodeterm-subject">subject</a> := identifier(<a
+      href="#nodeterm-identifier">identifier</a>=<em>a</em>.<a
+      href="#nodeterm-string-value">string-value</a>, <a
+      href="#nodeterm-identifier-type">identifier-type</a>="URI").</li>
+
+      <li>If <em>e</em>.<a href="#nodeterm-subject">subject</a> is
+      empty, generate a local blank node identifier <em>i</em> and
+      <em>n</em> := identifier(<a
+      href="#nodeterm-identifier">identifier</a>=<em>i</em>, <a
+      href="#nodeterm-identifier-type">identifier-type</a>="bnodeID").
+      <em>e</em>.<a href="#nodeterm-subject">subject</a> :=
+      <em>n</em>.</li>
+    </ul>
+
+    <p>The following can then be performed in any order:</p>
+
+    <ul>
+      <li>
+        <a id="nodeElementStatement1"
+        name="nodeElementStatement1">S1</a> If <em>e</em>.<a
+        href="#nodeterm-URI">URI</a> != rdf:Description then the
+        following statement is added to the model: 
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>e</em>.<a
+            href="#nodeterm-subject">subject</a>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
+            &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+            .</tt></p>
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <a id="nodeElementStatement2"
+        name="nodeElementStatement2">S2</a> If there is an
+        attribute <em>a</em> in <a
+        href="#propertyAttr">propertyAttr</a> with <em>a</em>.<a
+        href="#nodeterm-URI">URI</a> = rdf:type then the following
+        statement is added to the model: 
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>e</em>.<a
+            href="#nodeterm-subject">subject</a>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;<em>a</em>.<a href="#nodeterm-URI">URI</a>&gt;
+            &lt;<em>a</em>.<a
+            href="#nodeterm-string-value">string-value</a>&gt;
+            .</tt></p>
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <a id="nodeElementStatement3"
+        name="nodeElementStatement3">S3</a> For each attribute
+        <em>a</em> matching <a
+        href="#propertyAttr">propertyAttr</a> (and not rdf:type)
+        then <em>o</em> := literal(<a
+        href="#nodeterm-literal-value">literal-value</a>=<em>a</em>.<a
+         href="#nodeterm-string-value">string-value</a>, <a
+        href="#nodeterm-literal-language">literal-language</a>=<em>e</em>.<a
+         href="#nodeterm-language">language</a>) and the following
+        statement is added to the model: 
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>e</em>.<a
+            href="#nodeterm-subject">subject</a>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;<em>a</em>.<a href="#nodeterm-URI">URI</a>&gt;
+            <em>o</em>.<a
+            href="#nodeterm-string-value">string-value</a>
+            .</tt></p>
+          </div>
+        </div>
+      </li>
+
+      <li><a id="nodeElementStatement4"
+      name="nodeElementStatement4">S4</a> Handle the <a
+      href="#propertyEltList">propertyEltList</a> children nodes in
+      document order.</li>
+    </ul>
+
+    <p>If an attribute <em>a</em> with <em>a</em>.<a
+    href="#nodeterm-URI">URI</a> = rdf:bagID is present, <em>n</em>
+    := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+    href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+    href="#nodeterm-string-value">string-value</a>), <a
+    href="#nodeterm-identifier-type">identifier-type</a>="URI")
+    then in any order:</p>
+
+    <ul>
+      <li>
+        <p><a id="nodeElementStatement5"
+        name="nodeElementStatement5">S5</a> Add the following
+        statement to the model:</p>
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>n</em>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
+            &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag&gt;
+            .</tt></p>
+          </div>
+        </div>
+      </li>
+
+      <li>
+        <p>For the generated statements above (excluding <a
+        href="#nodeElementStatement5">S5</a>) in the following
+        order</p>
+
+        <ol>
+          <li><a href="#nodeElementStatement1">S1</a></li>
+
+          <li>Statements from <a
+          href="#nodeElementStatement2">S2</a> and <a
+          href="#nodeElementStatement3">S3</a> in any order</li>
+
+          <li>Statements generated by the <a
+          href="#propertyEltList">propertyEltList</a> children by
+          <a href="#nodeElementStatement4">S4</a> in document
+          order</li>
+        </ol>
+
+        <p>If the statement was generated by <a
+        href="#nodeElementStatement4">S4</a> from a <a
+        href="#propertyElt">propertyElt</a> and has an existing
+        identifier <em>e</em>.<a
+        href="#nodeterm-subject">subject</a> then <em>s</em> :=
+        <em>e</em>.<a href="#nodeterm-subject">subject</a>.
+        Otherwise generate a local blank node identifier <em>i</em>
+        and <em>s</em> := identifier(<a
+        href="#nodeterm-identifier">identifier</a>=<em>i</em>, <a
+        href="#nodeterm-identifier-type">identifier-type</a>="bnodeID")</p>
+
+        <p>Then reify the statement with node <em>s</em> using the
+        reification rules in <a href="#section-Reification">section
+        5.26</a> and apply the bag expansion rules in <a
+        href="#section-Bag-Expand">section 5.28</a> on node
+        <em>n</em> to give a URI <em>u</em>. Then the following
+        statement is added to the model:</p>
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>n</em>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;<em>u</em>.<a
+            href="#nodeterm-string-value">string-value</a>&gt;
+            <em>s</em>.<a
+            href="#nodeterm-string-value">string-value</a>
+            .</tt></p>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <h3><a id="ws" name="ws">5.6 Production ws</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>White space as defined by <a href="#ref-xml">[XML]</a>
+        definition <em>White Space</em> Rule [3] <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-S">S</a>
+        in section <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-common-syn">
+        Common Syntactic Constructs</a></p>
+      </div>
+    </div>
+
+    <h3><a id="propertyEltList" name="propertyEltList">5.7
+    Production propertyEltList</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p><a href="#ws">ws</a>* (<a
+        href="#propertyElt">propertyElt</a> <a href="#ws">ws</a>* )
+        *</p>
+      </div>
+    </div>
+
+    <h3><a id="propertyElt" name="propertyElt">5.8 Production
+    propertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p><a href="#resourcePropertyElt">resourcePropertyElt</a> |
+        <a href="#literalPropertyElt">literalPropertyElt</a> | <a
+        href="#parseTypeLiteralPropertyElt">parseTypeLiteralPropertyElt</a>
+        | <a
+        href="#parseTypeResourcePropertyElt">parseTypeResourcePropertyElt</a>
+        | <a
+        href="#parseTypeOtherPropertyElt">parseTypeOtherPropertyElt</a>
+        | <a href="#emptyPropertyElt">emptyPropertyElt</a></p>
+      </div>
+    </div>
+
+    <p>If element <em>e</em> has <em>e</em>.<a
+    href="#nodeterm-URI">URI</a> = rdf:li then apply the list
+    expansion rules on element <em>e</em>.parent in <a
+    href="#section-List-Expand">section 5.27</a> to give a new URI
+    <em>u</em> and <em>e</em>.<a href="#nodeterm-URI">URI</a> :=
+    <em>u</em>.</p>
+
+    <h3><a id="resourcePropertyElt" name="resourcePropertyElt">5.9
+    Production resourcePropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>?))<br />
+         <a href="#ws">ws</a>* <a
+        href="#nodeElement">nodeElement</a> <a
+        href="#ws">ws</a>*<br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>For element <em>e</em>, and the single contained nodeElement
+    <em>n</em> the following statement is added to the model:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p>&nbsp;&nbsp; <tt><em>e</em>.parent.<a
+        href="#nodeterm-subject">subject</a>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+        <em>n</em>.<a href="#nodeterm-subject">subject</a>.<a
+        href="#nodeterm-string-value">string-value</a> .</tt></p>
+      </div>
+    </div>
+
+    <p>If the rdf:ID attribute <em>a</em> is given, the above
+    statement is reified with <em>i</em> := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+    href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+    href="#nodeterm-string-value">string-value</a>), <a
+    href="#nodeterm-identifier-type">identifier-type</a>="URI")
+    using the reification rules in <a
+    href="#section-Reification">section 5.26</a> and <em>e</em>.<a
+    href="#nodeterm-subject">subject</a> := <em>i</em></p>
+
+    <h3><a id="literalPropertyElt" name="literalPropertyElt">5.10
+    Production literalPropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>?))<br />
+         <a href="#section-text-node">text()</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Note:</strong> The empty literal case is defined
+      in production <a
+      href="#emptyPropertyElt">emptyPropertyElt</a></p>
+    </div>
+
+    <p>For element <em>e</em>, and the text node <em>t</em> then
+    <em>o</em> := literal(<a
+    href="#nodeterm-literal-value">literal-value</a>=<em>t</em>.<a
+    href="#nodeterm-string-value">string-value</a>, <a
+    href="#nodeterm-literal-language">literal-language</a>=<em>e</em>.<a
+     href="#nodeterm-language">language</a>) and the following
+    statement is added to the model:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p><tt><em>e</em>.parent.<a
+        href="#nodeterm-subject">subject</a>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+        <em>o</em>.<a
+        href="#nodeterm-string-value">string-value</a> .</tt></p>
+      </div>
+    </div>
+
+    <p>If the rdf:ID attribute <em>a</em> is given, the above
+    statement is reified with <em>i</em> := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+    href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+    href="#nodeterm-string-value">string-value</a>), <a
+    href="#nodeterm-identifier-type">identifier-type</a>="URI")
+    using the reification rules in <a
+    href="#section-Reification">section 5.26</a> and <em>e</em>.<a
+    href="#nodeterm-subject">subject</a> := <em>i</em>.</p>
+
+    <h3><a id="parseTypeLiteralPropertyElt"
+    name="parseTypeLiteralPropertyElt">5.11 Production
+    parseTypeLiteralPropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>?, <a
+        href="#parseLiteral">parseLiteral</a>))<br />
+         <a href="#literal">literal</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>For element <em>e</em> and the literal <em>l</em>, then
+    <em>o</em> := xml(<a
+    href="#nodeterm-literal-value">literal-value</a>=<em>l</em>.<a
+    href="#nodeterm-string-value">string-value</a>, <a
+    href="#nodeterm-literal-language">literal-language</a>=<em>e</em>.<a
+     href="#nodeterm-language">language</a>) and the following
+    statement is added to the model:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p><tt><em>e</em>.parent.<a
+        href="#nodeterm-subject">subject</a>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+        <em>o</em>.<a
+        href="#nodeterm-string-value">string-value</a> .</tt></p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Empty literal case indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test009.rdf">
+      test009.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test009.nt">
+      test009.nt</a></p>
+    </div>
+
+    <p>If the rdf:ID attribute <em>a</em> is given, the above
+    statement is reified with <em>i</em> := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+    href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+    href="#nodeterm-string-value">string-value</a>), <a
+    href="#nodeterm-identifier-type">identifier-type</a>="URI")
+    using the reification rules in <a
+    href="#section-Reification">section 5.26</a> and <em>e</em>.<a
+    href="#nodeterm-subject">subject</a> := <em>i</em>.</p>
+
+    <div class="issue">
+      <p><strong>Open Issue:</strong> The result of a <a
+      href="#literal">literal</a> from rdf:parseType="Literal"
+      content has been generally decided by the RDF Core Working
+      Group but all the cases have not been entirely resolved at
+      this time. The solution will be based on serializing the XML
+      element content in <em>l</em> to a string in a form defined
+      by <a href="http://www.w3.org/TR/xml-exc-c14n">Exclusive XML
+      Canonicalization W3C Candidate Recommendation</a>.</p>
+    </div>
+
+    <h3><a id="parseTypeResourcePropertyElt"
+    name="parseTypeResourcePropertyElt">5.12 Production
+    parseTypeResourcePropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>?, <a
+        href="#parseResource">parseResource</a>))<br />
+         <a href="#propertyEltList">propertyEltList</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>For element <em>e</em> with possibly empty element content
+    <em>c</em>.</p>
+
+    <p>Generate a local blank node identifier <em>i</em> and
+    <em>n</em> := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=<em>i</em>, <a
+    href="#nodeterm-identifier-type">identifier-type</a>="bnodeID").</p>
+
+    <p>Add the following statement to the model:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p><tt><em>e</em>.parent.<a
+        href="#nodeterm-subject">subject</a>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+        <em>n</em>.<a
+        href="#nodeterm-string-value">string-value</a> .</tt></p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Test:</strong> Indicated by <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test004.rdf">
+      test004.rdf</a> and <a
+      href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test004.nt">
+      test004.nt</a></p>
+    </div>
+
+    <p>If the rdf:ID attribute <em>a</em> is given, the statement
+    above is reified with <em>i</em> := identifier(<a
+    href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+    href="#nodeterm-base-uri">base-uri</a>, "#", <em>a</em>.<a
+    href="#nodeterm-string-value">string-value</a>), <a
+    href="#nodeterm-identifier-type">identifier-type</a>="URI")
+    using the reification rules in <a
+    href="#section-Reification">section 5.26</a> and <em>e</em>.<a
+    href="#nodeterm-subject">subject</a> := <em>i</em>.</p>
+
+    <p>If the element content <em>c</em> is not an empty, then use
+    node <em>n</em> to create a new sequence of nodes as
+    follows:</p>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a
+        href="#nodeterm-URI">URI</a>=rdf:Description,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-subject">subject</a>=<em>n</em>,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set())<br />
+         <em>c</em><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>Then process the resulting sequence using production <a
+    href="#nodeElementList">nodeElement</a>.</p>
+
+    <h3><a id="parseTypeOtherPropertyElt"
+    name="parseTypeOtherPropertyElt">5.13 Production
+    parseTypeOtherPropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>?, <a
+        href="#parseOther">parseOther</a>))<br />
+         <a href="#propertyEltList">propertyEltList</a><br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <p>All rdf:parseType attribute values other than the strings
+    "Resource" or "Literal" are treated as if the value was
+    "Literal". Processing MUST continue at production <a
+    href="#parseTypeLiteralPropertyElt">parseTypeLiteralPropertyElt</a>.
+    No extra triples are generated for other rdf:parseType
+    values.</p>
+
+    <h3><a id="emptyPropertyElt" name="emptyPropertyElt">5.14
+    Production emptyPropertyElt</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>start_element(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-attributes">attributes</a>=set(<a
+        href="#idAttr">idAttr</a>? <a
+        href="#resourceAttr">resourceAttr</a>?, <a
+        href="#bagIdAttr">bagIdAttr</a>?, <a
+        href="#propertyAttr">propertyAttr</a>*))<br />
+         end_element()</p>
+      </div>
+    </div>
+
+    <ul>
+      <li>
+        <p>If there are no attributes <strong>or</strong> only the
+        optional rdf:ID attribute <em>i</em> then <em>o</em> :=
+        literal(<a
+        href="#nodeterm-literal-value">literal-value</a>="", <a
+        href="#nodeterm-literal-language">literal-language</a>=<em>e</em>.<a
+         href="#nodeterm-language">language</a>) and the following
+        statement is added to the model:</p>
+
+        <div class="ntripleOuter">
+          <div class="ntripleInner">
+            <p><tt><em>e</em>.parent.<a
+            href="#nodeterm-subject">subject</a>.<a
+            href="#nodeterm-string-value">string-value</a>
+            &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+            <em>o</em>.<a
+            href="#nodeterm-string-value">string-value</a>
+            .</tt></p>
+          </div>
+        </div>
+
+        <p>and then if <em>i</em> is given, the above statement is
+        reified with identifier(<a
+        href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+         href="#nodeterm-base-uri">base-uri</a>, "#", <em>i</em>.<a
+        href="#nodeterm-string-value">string-value</a>), <a
+        href="#nodeterm-identifier-type">identifier-type</a>="URI")
+        using the reification rules in <a
+        href="#section-Reification">section 5.26</a>.</p>
+
+        <div class="note">
+          <p><strong>Test:</strong> Indicated by <a
+          href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test002.rdf">
+          test002.rdf</a> and <a
+          href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test002.nt">
+          test002.nt</a></p>
+        </div>
+
+        <div class="note">
+          <p><strong>Test:</strong> Indicated by <a
+          href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.rdf">
+          test005.rdf</a> and <a
+          href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.nt">
+          test005.nt</a></p>
+        </div>
+      </li>
+
+      <li>
+        <p>Otherwise</p>
+
+        <ul>
+          <li>If rdf:resource attribute <em>i</em> is present, then
+          <em>r</em> := identifier(<a
+          href="#nodeterm-identifier">identifier</a>=<em>i</em>.<a
+          href="#nodeterm-string-value">string-value</a>, <a
+          href="#nodeterm-identifier-type">identifier-type</a>="URI")</li>
+
+          <li>Otherwise, generate a local blank node identifier
+          <em>i</em> and <em>r</em> := identifier(<a
+          href="#nodeterm-identifier">identifier</a>=<em>i</em>, <a
+          href="#nodeterm-identifier-type">identifier-type</a>="bnodeID")</li>
+        </ul>
+
+        <p>If optional rdf:bagID attribute <em>b</em> is given,
+        <em>n</em> := identifier(<a
+        href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+         href="#nodeterm-base-uri">base-uri</a>, "#", <em>b</em>.<a
+        href="#nodeterm-string-value">string-value</a>), <a
+        href="#nodeterm-identifier-type">identifier-type</a>="URI")</p>
+
+        <p>The following can then be done in any order:</p>
+
+        <ul>
+          <li>
+            <p>Add the following statement to the model:</p>
+
+            <div class="ntripleOuter">
+              <div class="ntripleInner">
+                <p><tt><em>e</em>.parent.<a
+                href="#nodeterm-subject">subject</a>.<a
+                href="#nodeterm-string-value">string-value</a>
+                &lt;<em>e</em>.<a href="#nodeterm-URI">URI</a>&gt;
+                <em>r</em>.<a
+                href="#nodeterm-string-value">string-value</a>
+                .</tt></p>
+              </div>
+            </div>
+
+            <p>and then if rdf:ID attribute <em>i</em> is given,
+            the above statement is reified with identifier(<a
+            href="#nodeterm-identifier">identifier</a>=concat(<em>e</em>.<a
+             href="#nodeterm-base-uri">base-uri</a>, "#",
+            <em>i</em>.<a
+            href="#nodeterm-string-value">string-value</a>), <a
+            href="#nodeterm-identifier-type">identifier-type</a>="URI")
+            using the reification rules in <a
+            href="#section-Reification">section 5.26</a>.</p>
+          </li>
+
+          <li>
+            <p>For all propertyAttr <em>a</em> (in any order)</p>
+
+            <ul>
+              <li>
+                <p>If <em>a</em>.<a href="#nodeterm-URI">URI</a> =
+                rdf:type then the following statement is added to
+                the model:</p>
+
+                <div class="ntripleOuter">
+                  <div class="ntripleInner">
+                    <p><tt><em>r</em>.<a
+                    href="#nodeterm-string-value">string-value</a>
+                    &lt;<em>a</em>.<a
+                    href="#nodeterm-URI">URI</a>&gt;
+                    &lt;<em>a</em>.<a
+                    href="#nodeterm-string-value">string-value</a>&gt;
+                    .</tt></p>
+                  </div>
+                </div>
+              </li>
+
+              <li>
+                <p>Otherwise <em>o</em> := literal(<a
+                href="#nodeterm-literal-value">literal-value</a>=
+                <em>a</em>.<a
+                href="#nodeterm-string-value">string-value</a>, <a
+                href="#nodeterm-literal-language">literal-language</a>=
+                <em>e</em>.<a
+                href="#nodeterm-language">language</a>) and the
+                following statement is added to the model:</p>
+
+                <div class="ntripleOuter">
+                  <div class="ntripleInner">
+                    <p><tt><em>r</em>.<a
+                    href="#nodeterm-string-value">string-value</a>
+                    &lt;<em>a</em>.<a
+                    href="#nodeterm-URI">URI</a>&gt; <em>o</em>.<a
+                    href="#nodeterm-string-value">string-value</a>
+                    .</tt></p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+
+            <p>If node <em>n</em> is given then generate a local
+            blank node identifier <em>i</em> and <em>s</em> :=
+            identifier(<a
+            href="#nodeterm-identifier">identifier</a>=<em>i</em>,
+            <a
+            href="#nodeterm-identifier-type">identifier-type</a>="bnodeID").
+            Each statement above is then reified with node
+            <em>s</em> using the reification rules in <a
+            href="#section-Reification">section 5.26</a> and the
+            bag expansion rules in <a
+            href="#section-Bag-Expand">section 5.28</a> is applied
+            on node <em>n</em> to give URI <em>u</em>. Then the
+            following statement is added to the model:</p>
+
+            <div class="ntripleOuter">
+              <div class="ntripleInner">
+                <p><tt><em>n</em>.<a
+                href="#nodeterm-string-value">string-value</a>
+                &lt;<em>u</em>.<a
+                href="#nodeterm-string-value">string-value</a>&gt;
+                <em>s</em>.<a
+                href="#nodeterm-string-value">string-value</a>;
+                .</tt></p>
+              </div>
+            </div>
+
+            <div class="note">
+              <p><strong>Test:</strong> Indicated by <a
+              href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test013.rdf">
+              test013.rdf</a> and <a
+              href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test013.nt">
+              test013.nt</a></p>
+            </div>
+
+            <div class="note">
+              <p><strong>Test:</strong> Indicated by <a
+              href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test014.rdf">
+              test014.rdf</a> and <a
+              href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test014.nt">
+              test014.nt</a></p>
+            </div>
+          </li>
+
+          <li>
+            <p>If node <em>n</em> was created, add the following
+            statement to the model:</p>
+
+            <div class="ntripleOuter">
+              <div class="ntripleInner">
+                <p><tt><em>n</em>.<a
+                href="#nodeterm-string-value">string-value</a>
+                &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
+                &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag&gt;
+                .</tt></p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <!-- idAboutAttr one has gone; id is closest thing replacing it -->
+
+    <h3><a id="idAboutAttr" name="idAboutAttr"></a> <a id="idAttr"
+    name="idAttr">5.15 Production idAttr</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:ID,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#rdf-id">rdf-id</a>)</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong><a id="constraint-id"
+      name="constraint-id">Constraint:</a></strong> The names used
+      as values of rdf:ID and rdf:bagID attributes must be unique
+      in a single RDF/XML document since they come from the same
+      set of names. This applies with respect to the in-scope
+      base-uri property of the current element; so the same value
+      <em>can</em> appear on different elements in the same
+      document but <em>only if</em> the in-scope base-uri values
+      were different.</p>
+
+      <div class="note">
+        <p><strong>Test:</strong> Indicated by <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test014.rdf">
+        test014.rdf</a> and <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test014.nt">
+        test014.nt</a></p>
+      </div>
+    </div>
+
+    <h3><a id="aboutAttr" name="aboutAttr">5.16 Production
+    aboutAttr</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:about,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#URI-reference">URI-reference</a>)</p>
+      </div>
+    </div>
+
+    <h3><a id="bagIdAttr" name="bagIdAttr">5.17 Production
+    bagIdAttr</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:bagID,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#rdf-id">rdf-id</a>)</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <p><strong>Constraint:</strong> See the <a
+      href="#constraint-id">constraint on rdf:ID values</a> which
+      also applies to rdf:bagID values.</p>
+    </div>
+
+    <h3><a id="propAttr" name="propAttr"></a><a id="typeAttr"
+    name="typeAttr"></a> <a id="propertyAttr"
+    name="propertyAttr">5.18 Production propertyAttr</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a>=<a
+        href="#anyURI">anyURI</a> - ( rdf:RDF | rdf:Description |
+        rdf:ID | rdf:about | rdf:bagID | rdf:parseType |
+        rdf:resource | rdf:li ),<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#anyString">anyString</a>)</p>
+      </div>
+    </div>
+
+    <h3><a id="resourceAttr" name="resourceAttr">5.19 Production
+    resourceAttr</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:resource,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#URI-reference">URI-reference</a>)</p>
+      </div>
+    </div>
+
+    <h3><a id="parseLiteral" name="parseLiteral">5.20 Production
+    parseLiteral</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:parseType,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>="Literal")</p>
+      </div>
+    </div>
+
+    <h3><a id="parseResource" name="parseResource">5.21 Production
+    parseResource</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:parseType,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>="Resource")</p>
+      </div>
+    </div>
+
+    <h3><a id="parseOther" name="parseOther">5.22 Production
+    parseOther</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>attribute(<a href="#nodeterm-URI">URI</a> =
+        rdf:parseType,<br />
+         &nbsp;&nbsp;&nbsp;&nbsp;<a
+        href="#nodeterm-string-value">string-value</a>=<a
+        href="#anyString">anyString</a> - ("Resource" | "Literal")
+        )</p>
+      </div>
+    </div>
+
+    <h3><a id="URI-reference" name="URI-reference">5.23 Production
+    URI-reference</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>An attribute <a href="#nodeterm-string-value"
+        class="termref"><span
+        class="arrow">&middot;</span>string-value<span
+        class="arrow">&middot;</span></a> interpreted as a URI
+        reference defined in <a
+        href="http://www.isi.edu/in-notes/rfc2396.txt">Uniform
+        Resource Identifiers (URI)</a> <a
+        href="#ref-uri">[URIS]</a> BNF production
+        URI-reference.</p>
+      </div>
+    </div>
+
+    <h3><a id="literal" name="literal">5.24 Production
+    literal</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>Any XML element content that is allowed according to <a
+        href="#ref-xml">[XML]</a> definition <em>Content of
+        Elements</em> Rule [43] <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-content">
+        content</a>. in section <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-starttags">
+        3.1 Start-Tags, End-Tags, and Empty-Element Tags</a></p>
+      </div>
+    </div>
+
+    <h3><a id="rdf-id" name="rdf-id">5.25 Production
+    rdf-id</a></h3>
+
+    <div class="productionOuter">
+      <div class="productionInner">
+        <p>An attribute <a href="#nodeterm-string-value"
+        class="termref"><span
+        class="arrow">&middot;</span>string-value<span
+        class="arrow">&middot;</span></a> matching any legal <a
+        href="#ref-xml">[XML]</a> token <a
+        href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">Nmtoken</a></p>
+      </div>
+    </div>
+
+    <h3><a id="section-Reification" name="section-Reification">5.26
+    Reification Rules</a></h3>
+
+    <p>For a statement with terms <em>s</em>, <em>p</em> and
+    <em>o</em> corresponding to the N-Triples:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p><tt><em>s</em> <em>p</em> <em>o</em> .</tt></p>
+      </div>
+    </div>
+
+    <p>add the following statements to the model using the given <a
+    href="#section-identifier-node">Identifier Node</a>
+    <em>r</em>:</p>
+
+    <div class="ntripleOuter">
+      <div class="ntripleInner">
+        <p><tt><em>r</em>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#subject&gt;
+        <em>s</em> .</tt><br />
+         <tt><em>r</em>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate&gt;
+        <em>p</em> .</tt><br />
+         <tt><em>r</em>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#object&gt;
+        <em>o</em> .</tt><br />
+         <tt><em>r</em>.<a
+        href="#nodeterm-string-value">string-value</a>
+        &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
+        &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement&gt;
+        .</tt><br />
+        </p>
+      </div>
+    </div>
+
+    <h3><a id="section-List-Expand" name="section-List-Expand">5.27
+    List Expansion Rules</a></h3>
+
+    <p>For the given element <em>e</em>, generate a new URI
+    <em>u</em> :=
+    concat("http://www.w3.org/1999/02/22-rdf-syntax-ns#_",
+    <em>e</em>.<a href="#nodeterm-liCounter">li-counter</a>),
+    increment the <em>e</em>.<a
+    href="#nodeterm-liCounter">li-counter</a> property by 1 and
+    return <em>u</em>.</p>
+
+    <h3><a id="section-Bag-Expand" name="section-Bag-Expand">5.28
+    Bag Expansion Rules</a></h3>
+
+    <p>For the given element <em>e</em>, generate a new URI
+    <em>u</em> :=
+    concat("http://www.w3.org/1999/02/22-rdf-syntax-ns#_",
+    <em>e</em>.<a
+    href="#nodeterm-bag-li-counter">bag-li-counter</a>), increment
+    the <em>e</em>.<a
+    href="#nodeterm-bag-li-counter">bag-li-counter</a> property by
+    1 and return <em>u</em>.</p>
+
+    <h2><a id="section-Serialising" name="section-Serialising">6
+    Serializing an RDF Graph to RDF/XML</a></h2>
+
+    <p>It is not possible for all graphs that can be expressed in
+    the <a href="http://www.w3.org/TR/2002/WD-rdf-mt-20020214/">RDF
+    Model Theory</a> <a href="#ref-rdf-model">[RDF-MODEL]</a> to be
+    encoded in this syntax. If you do a round trip from RDF/XML to
+    RDF graph and then back to RDF/XML the meaning will be the same
+    (the graphs) but the RDF/XML that comes out may not be exactly
+    the same.</p>
+
+    <p>There are two different approaches to serializing RDF.</p>
+
+    <p>The basic approach uses the basic RDF syntax from <a
+    href="#ref-rdfms">[RDF-MS]</a>. In this:</p>
+
+    <ul>
+      <li>All blank nodes are assigned arbitrary URIs.</li>
+
+      <li>Each resource is listed in turn as the subject of a
+      top-level <code>rdf:Description</code> element, using an
+      <code>rdf:about</code> attribute.<br />
+       For each triple, with this resource as subject, an
+      appropriate property element production is used, with either
+      string content (possibly empty) or an
+      <code>rdf:resource</code> attribute specifying the object of
+      the triple.</li>
+    </ul>
+
+    <p>The basic serialization is recommended for applications in
+    which the output RDF/XML is to be used only in further RDF
+    processing. Where the intent is for the output RDF/XML file to
+    be read by people, the basic serialization proves
+    unsatisfactory. The basic serialization does not conform to
+    more restricted sub-dialects of RDF, such as <a
+    href="#ref-rss">[RSS]</a> or <a href="#ref-ccpp">[CC/PP]</a>.
+    Hence, it is not appropriate for such applications, for which
+    dialect specific serializers are needed.</p>
+
+    <p>If more human readable output is needed the following
+    factors should be considered:</p>
+
+    <ul>
+      <li>There are many choices, with many RDF/XML documents
+      corresponding to identical RDF graphs. Individual triples can
+      be represented in numerous ways. High quality RDF
+      serialization requires that these choices are considered by
+      the serializing code. Some are more appropriate than others
+      in an application dependent fashion.</li>
+
+      <li>The triples in the graph need to be considered in an
+      appropriate order. There are many choices of order, some
+      being more appropriate than others in an application
+      dependent fashion.</li>
+    </ul>
+
+    <p>It is not possible to use the RDF/XML serialization for
+    serializing an RDF graph in which any triple has a property
+    label which cannot be expressed as a XML namespace-qualified
+    name (<a
+    href="http://www.w3.org/TR/REC-xml-names/#dt-qname">QName</a>).
+    It is recommended that implementors of RDF serializers in order
+    to break a URI into a namespace name and a local name, split it
+    after the last XML non-<a
+    href="http://www.w3.org/TR/REC-xml-names/#NT-NCName">Name</a>
+    character. If the URI ends in a non-<a
+    href="http://www.w3.org/TR/REC-xml-names/#NT-NCName">Name</a>
+    character then throw a "this graph cannot be serialized in RDF
+    1.0" exception or error.</p>
+
+    <p>An approach to serializing RDF/XML using the full grammar in
+    a top-down recursive descent fashion is discussed in <a
+    href="#ref-unparsing">[UNPARSING]</a>.</p>
+
+    <h2 class="nonum"><a id="section-Acknowledgments"
+    name="section-Acknowledgments"></a>7 Acknowledgments
+    (Informative)</h2>
+
+    <p>The following people provided valuable contributions to the
+    document:</p>
+
+    <ul>
+      <li>Dan Brickley, W3C/ILRT</li>
+
+      <li>Jeremy Carroll, HP Labs Bristol</li>
+    </ul>
+
+    <h2 class="nonum"><a id="section-References"
+    name="section-References"></a>8 References</h2>
+
+    <h3><a id="section-Normative-References"
+    name="section-Normative-References"></a>Normative
+    References</h3>
+
+    <dl>
+      <dt><a id="ref-rdfms" name="ref-rdfms">[RDF-MS]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222">Resource
+      Description Framework (RDF) Model and Syntax
+      Specification</a></cite>, O. Lassila and R. Swick, Editors.
+      World Wide Web Consortium. 22 February 1999. This version is
+      http://www.w3.org/TR/1999/REC-rdf-syntax-19990222. The <a
+      href="http://www.w3.org/TR/REC-rdf-syntax">latest version of
+      RDF M&amp;S</a> is available at
+      http://www.w3.org/TR/REC-rdf-syntax.</dd>
+
+      <dt><a id="ref-xml" name="ref-xml">[XML]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2000/REC-xml-20001006">Extensible
+      Markup Language (XML) 1.0, Second Edition</a></cite>, T.
+      Bray, J. Paoli, C.M. Sperberg-McQueen and E. Maler, Editors.
+      World Wide Web Consortium. 6 October 2000. This version is
+      http://www.w3.org/TR/2000/REC-xml-20001006. <a
+      href="http://www.w3.org/TR/REC-xml">latest version of XML</a>
+      is available at http://www.w3.org/TR/REC-xml.</dd>
+
+      <dt><a id="ref-namespaces"
+      name="ref-namespaces">[XML-NS]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/1999/REC-xml-names-19990114">Namespaces
+      in XML</a></cite>, T. Bray, D. Hollander and A. Layman,
+      Editors. World Wide Web Consortium. 14 January 1999. This
+      version is http://www.w3.org/TR/1999/REC-xml-names-19990114.
+      The <a href="http://www.w3.org/TR/REC-xml-names">latest
+      version of Namespaces in XML</a> is available at
+      http://www.w3.org/TR/REC-xml-names.</dd>
+
+      <dt><a id="ref-xml-infoset"
+      name="ref-xml-infoset">[INFOSET]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2001/REC-xml-infoset-20011024">XML
+      Information Set</a></cite>, J. Cowan and R. Tobin, Editors.
+      World Wide Web Consortium. 24 October 2001. This version is
+      http://www.w3.org/TR/2001/REC-xml-infoset-20011024. The <a
+      href="http://www.w3.org/TR/xml-infoset">latest version of XML
+      Information set</a> is available at
+      http://www.w3.org/TR/xml-infoset.</dd>
+
+      <dt><a id="ref-uri" name="ref-uri">[URIS]</a></dt>
+
+      <dd><cite><a
+      href="http://www.isi.edu/in-notes/rfc2396.txt">RFC 2396 -
+      Uniform Resource Identifiers (URI): Generic
+      Syntax</a></cite>, T. Berners-Lee, R. Fielding and L.
+      Masinter, IETF, August 1998. This document is
+      http://www.isi.edu/in-notes/rfc2396.txt.</dd>
+
+      <dt><a id="ref-test-cases"
+      name="ref-test-cases">[RDF-TESTS]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2001/WD-rdf-testcases-20011115/">RDF
+      Test Cases</a></cite>, A. Barstow and D. Beckett, Editors.
+      Work in progress. World Wide Web Consortium, 15 November
+      2001. This version of the RDF Test Cases is
+      http://www.w3.org/TR/2001/WD-rdf-testcases-20011115/. The <a
+      href="http://www.w3.org/TR/rdf-testcases/">latest version of
+      the RDF Test Cases</a> is at
+      http://www.w3.org/TR/rdf-testcases.</dd>
+
+      <dt><a id="ref-keywords"
+      name="ref-keywords">[KEYWORDS]</a></dt>
+
+      <dd><cite><a href="http://www.ietf.org/rfc/rfc2119.txt">RFC
+      2119 - Key words for use in RFCs to Indicate Requirement
+      Levels</a></cite>, S. Bradner, IETF. March 1997. This
+      document is http://www.ietf.org/rfc/rfc2119.txt.</dd>
+
+      <dt><a id="ref-rfc3023"
+      name="ref-rfc3023">[RFC-3023]</a></dt>
+
+      <dd><cite><a href="http://www.ietf.org/rfc/rfc3023.txt">RFC
+      3032 - XML Media Types</a></cite>, M. Murata, S. St.Laurent,
+      D.Kohn, IETF. January 2001. This document is
+      http://www.ietf.org/rfc/rfc3023.txt.</dd>
+
+      <dt><a id="ref-xml-base"
+      name="ref-xml-base">[XML-BASE]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2001/REC-xmlbase-20010627/">XML
+      Base</a></cite>, J. Marsh, Editor, W3C Recommendation. World
+      Wide Web Consortium, 27 June 2001. This version of XML Base
+      is http://www.w3.org/TR/2001/REC-xmlbase-20010627/. The <a
+      href="http://www.w3.org/TR/xmlbase/">latest version of XML
+      Base</a> is at http://www.w3.org/TR/xmlbase/.</dd>
+    </dl>
+
+    <h3><a id="section-Informative-References"
+    name="section-Informative-References"></a>Informational
+    References</h3>
+
+    <dl>
+      <dt><a id="ref-charmod" name="ref-charmod">[CHARMOD]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2002/WD-charmod-20020220/">Character
+      Model for the World Wide Web 1.0</a></cite>, M. D&uuml;rst,
+      F. Yergeau, R. Ishida, M. Wolf, A. Freytag, T Texin, Editors,
+      World Wide Web Consortium Working Draft, work in progress, 20
+      February 2002. This version of the Character Model is
+      http://www.w3.org/TR/2002/WD-charmod-20020220/. The <a
+      href="http://www.w3.org/TR/charmod/">latest version of the
+      Character Model</a> is at http://www.w3.org/TR/charmod/.</dd>
+
+      <dt><a id="ref-rdf-model"
+      name="ref-rdf-model">[RDF-MODEL]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2002/WD-rdf-mt-20020214/">RDF
+      Model Theory</a></cite>, P. Hayes, Editor. Work in progress.
+      World Wide Web Consortium, 14 February 2002. This version of
+      the RDF Model Theory is
+      http://www.w3.org/TR/2002/WD-rdf-mt-20020214. The <a
+      href="http://www.w3.org/TR/rdf-mt/">latest version of the RDF
+      Model Theory</a> is at http://www.w3.org/TR/rdf-mt/.</dd>
+
+      <dt><a id="ref-rdfprimer"
+      name="ref-rdfprimer">[RDF-PRIMER]</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2002/WD-rdf-primer-20020319/">RDF
+      Primer</a></cite>, F. Manola, E. Miller, Editors, World Wide
+      Web Consortium W3C Working Draft, work in progress, 19 March
+      2002. This version of the RDF Primer is
+      http://www.w3.org/TR/2002/WD-rdf-primer-20020319/. The <a
+      href="http://www.w3.org/TR/rdf-primer/">latest version of the
+      RDF Primer</a> is at http://www.w3.org/TR/rdf-primer/.</dd>
+
+      <dt><a id="ref-stripedrdf"
+      name="ref-stripedrdf">STRIPEDRDF</a></dt>
+
+      <dd><cite><a href="http://www.w3.org/2001/10/stripes/">RDF:
+      Understanding the Striped RDF/XML Syntax</a></cite>, D.
+      Brickley, W3C, 2001. This document is
+      http://www.w3.org/2001/10/stripes/.</dd>
+
+      <dt><a id="ref-xpath" name="ref-xpath">XPATH</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/1999/REC-xpath-19991116">XML Path
+      Language (XPath) Version 1.0</a></cite>, J. Clark and S.
+      DeRose, Editors. World Wide Web Consortium, 16 November 1999.
+      This version of XPath is
+      http://www.w3.org/TR/1999/REC-xpath-19991116. The <a
+      href="http://www.w3.org/TR/xpath">latest version of XPath</a>
+      is at http://www.w3.org/TR/xpath.</dd>
+
+      <dt><a id="ref-sax" name="ref-sax">SAX2</a></dt>
+
+      <dd><cite><a href="http://sax.sourceforge.net/">SAX Simple
+      API for XML, version 2</a></cite>, D. Megginson, SourceForge,
+      5 May 2000. This document is
+      http://sax.sourceforge.net/.</dd>
+
+      <dt><a id="ref-rss" name="ref-rss">RSS</a></dt>
+
+      <dd><cite><a href="http://purl.org/rss/1.0/spec">RDF Site
+      Summary (RSS) 1.0</a></cite>, G. Beged-Dov, D. Brickley, R.
+      Dornfest, I. Davis, L. Dodds, J. Eisenzopf, D. Galbraith,
+      R.V. Guha, K. MacLeod, E. Miller, A. Swartz, E. van der
+      Vlist, 2000. This document is
+      http://purl.org/rss/1.0/spec.</dd>
+
+      <dt><a id="ref-ccpp" name="ref-ccpp">CC/PP</a></dt>
+
+      <dd><cite><a
+      href="http://www.w3.org/TR/2001/WD-CCPP-struct-vocab-20010315/">
+      Composite Capability/Preference Profiles (CC/PP): Structure
+      and Vocabularies</a></cite>, G. Klyne, F. Reynolds, C.
+      Woodrow, H. Ohto, World Wide Web Consortium Working Draft,
+      work in progress, 15 March 2001. This version is
+      http://www.w3.org/TR/2001/WD-CCPP-struct-vocab-20010315/. The
+      <a href="http://www.w3.org/TR/CCPP-struct-vocab">latest
+      version of CC/PP structure and Vocabularies</a> is available
+      at http://www.w3.org/TR/CCPP-struct-vocab.</dd>
+
+      <dt><a id="ref-unparsing"
+      name="ref-unparsing">UNPARSING</a></dt>
+
+      <dd><cite><a
+      href="http://www.hpl.hp.com/techreports/2001/HPL-2001-294.html">
+      Unparsing RDF/XML</a></cite>, J. J. Carroll, HP Labs
+      Technical Report, HPL-2001-294, 2001. This document is
+      available at
+      http://www.hpl.hp.com/techreports/2001/HPL-2001-294.html.</dd>
+
+      <dt><a id="ref-relaxng" name="ref-relaxng">RELAXNG</a></dt>
+
+      <dd><cite><a
+      href="http://www.oasis-open.org/committees/relax-ng/spec-20011203.html">
+      RELAX NG Specification</a></cite>, James Clark and MURATA
+      Makoto, editors, OASIS, 3 December 2001. This version of
+      RELAX&nbsp;NG is
+      http://www.oasis-open.org/committees/relax-ng/spec-20011203.html.
+      The <a href="http://relaxng.org/">latest</a> is at
+      http://relaxng.org/.</dd>
+
+      <dt><a id="ref-relaxng-nx"
+      name="ref-relaxng-nx">RELAXNG-NX</a></dt>
+
+      <dd><cite><a
+      href="http://www.thaiopensource.com/relaxng/nonxml/">RELAX NG
+      Non-XML Syntax</a></cite>, James Clark, 3 December 2001. This
+      document is
+      http://www.thaiopensource.com/relaxng/nonxml/.</dd>
+
+      <dt><a id="ref-xmlschema0" name="ref-xmlschema0">XML Schema
+      Part 0: Primer</a></dt>
+
+      <dd><cite><a href="http://www.w3.org/TR/xmlschema-0/">XML
+      Schema Part 0: Primer - W3C Recommendation</a></cite>, World
+      Wide Web Consortium, 2 May 2001.</dd>
+
+      <dt><a id="ref-xmlschema1" name="ref-xmlschema1">XML Schema
+      Part 1: Structures</a></dt>
+
+      <dd><cite><a href="http://www.w3.org/TR/xmlschema-1/">XML
+      Schema Part 1: Structures - W3C Recommendation</a></cite>,
+      World Wide Web Consortium, 2 May 2001.</dd>
+
+      <dt><a id="ref-xmlschema2" name="ref-xmlschema2">XML Schema
+      Part 2: Datatypes</a></dt>
+
+      <dd><cite><a href="http://www.w3.org/TR/xmlschema-2/">XML
+      Schema Part 2: Datatypes - W3C Recommendation</a></cite>,
+      World Wide Web Consortium, 2 May 2001.</dd>
+
+      <dt><a id="ref-schematron"
+      name="ref-schematron">Schematron</a></dt>
+
+      <dd><cite><a
+      href="http://xml.ascc.net/xml/resource/schematron/schematron.html">
+      Schematron</a></cite>, Rick Jelliffe, Academia Sinica
+      Computing Centre, Taibei.</dd>
+    </dl>
+    <hr />
+
+    <h2><a id="section-Updated-Grammar-changes"
+    name="section-Updated-Grammar-changes">Appendix A: Issues
+    affecting RDF/XML Syntax (Non-Normative)</a></h2>
+
+    <p>This section records local issues to be resolved and issues
+    that were reported to the RDF Core Working Group related to the
+    XML syntax and their disposition. This section is not the
+    definitive list or description of the latter - see the <a
+    href="http://www.w3.org/2000/03/rdf-tracking/">RDF Core Working
+    Group issues list</a>. Decided issues may also have associated
+    test cases which can be found in the <a
+    href="#ref-test-cases">RDF Test Cases</a> W3C Working
+    Draft.</p>
+
+    <h3><a id="section-Doc-Issues" name="section-Doc-Issues">A.1:
+    Document Issues / Tasks (Non-Normative)</a></h3>
+
+    <dl>
+      <dt><a id="task-infoset"
+      name="task-infoset">task-infoset</a><br />
+      </dt>
+
+      <dd>
+        <p><em>(Feedback on 2001-12-18 draft): Consider basing on
+        Infoset rather than SAX</em></p>
+      </dd>
+
+      <dt><a id="task-renaming"
+      name="task-renaming">task-renaming</a><br />
+      </dt>
+
+      <dd>
+        <p><em>(Feedback on 2001-12-18 draft): Consider changing
+        nodeset terms to be, for example, events to prevent
+        confusion with RDF graph nodes.</em></p>
+      </dd>
+
+      <dt><a id="task-intro" name="task-intro">task-intro</a><br />
+      </dt>
+
+      <dd>
+        <p><em>(Feedback on 2001-12-18 draft): Better introduction
+        text with respect to RDF model, graph, model theory,
+        N-Triples.</em></p>
+      </dd>
+    </dl>
+
+    <h3><a id="section-Open-Issues" name="section-Open-Issues">A.2:
+    RDF Core Working Group Open Issues affecting RDF/XML Syntax
+    (Non-Normative)</a></h3>
+
+    <dl>
+      <dt><a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-charmod-literals">
+      rdf-charmod-literals</a><br />
+      </dt>
+
+      <dd>
+        <p><em>Does the treatment of literals conform to charmod ?
+        <a href="#ref-charmod">[CHARMOD]</a></em></p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">?</span></p>
+      </dd>
+
+      <dt><a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-charmod-uris">
+      rdf-charmod-uris</a><br />
+      </dt>
+
+      <dd>
+        <p><em>Does the treatment of uri-references conform with
+        charmod? <a href="#ref-charmod">[CHARMOD]</a></em></p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">?</span></p>
+      </dd>
+    </dl>
+
+    <h3><a id="section-Decided-Issues"
+    name="section-Decided-Issues">A.3: RDF Core Workign Group
+    Decided Issues affecting RDF/XML Syntax
+    (Non-Normative)</a></h3>
+
+    <dl>
+      <dt><a id="rdf-ns-prefix-confusion"
+      name="rdf-ns-prefix-confusion"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion">
+      rdf-ns-prefix-confusion</a><br />
+      </dt>
+
+      <dd>
+        <p>On 25th May 2001, the WG decided that ALL attributes
+        must be namespace qualified. There is a <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001May/0278.html">
+        description</a> of the decision, including detail on the
+        grammar productions affected and a collection of <a
+        href="http://ilrt.org/people/cmdjb/2001/05/rdf-ns-prefix-confusion/">
+        test cases</a></p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Removal of original grammar
+        productions 6.6, 6.7, 6.8, 6.9, 6.11, 6.18, 6.32,
+        6.33</span></p>
+      </dd>
+
+      <dt><a id="rdfms-abouteachprefix"
+      name="rdfms-abouteachprefix"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-abouteachprefix">
+      rdfms-abouteachprefix</a><br />
+      </dt>
+
+      <dd>
+        <p>On 1st June 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jun/0008.html">
+        decided</a> that aboutEachPrefix would be removed from the
+        RDF Model and Syntax Recommendation on the grounds that
+        there is a lack of implementation experience, and it
+        therefore should not be in the recommendation. A future
+        version of RDF may consider support for this feature.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Removal of original grammar
+        production 6.8</span></p>
+      </dd>
+
+      <dt><a id="rdf-containers-syntax-ambiguity"
+      name="rdf-containers-syntax-ambiguity"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-ambiguity">
+      rdf-containers-syntax-ambiguity</a><br />
+       <a id="containers-syntax-vs-schema"
+      name="containers-syntax-vs-schema"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema">
+      rdf-containers-syntax-vs-schema</a><br />
+      </dt>
+
+      <dd>
+        <p>On 29th June 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html">
+        decided</a> that containers will match the typed node
+        production in the grammar (production 6.13) and that the
+        container specific productions (productions 6.25 to 6.31)
+        and any references to them be removed from the grammar.
+        rdf:li elements will be translated to rdf:_nnn elements
+        when they are found matching either a propertyElt
+        (production 6.12) or a a typedNode (production 6.13). The
+        decision includes a set of <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/">
+        test cases</a>.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Removal of original grammar
+        productions 6.25, 6.26, 6.27, 6.28, 6.29, 6.30,
+        6.31</span></p>
+      </dd>
+
+      <dt><a id="rdfms-empty-property-elements"
+      name="rdfms-empty-property-elements"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements">
+      rdfms-empty-property-elements</a><br />
+      </dt>
+
+      <dd>
+        <p>On 8th June 2001 the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jun/0109.html">
+        decided</a> how empty property elements should be
+        interpreted. The decision is fully represented by the <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/">
+        test cases</a>.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Inserted pointers to the the test
+        cases into the grammar at the places where empty property
+        elements are recognized.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-aboutEach-on-object"
+      name="rdfms-aboutEach-on-object"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-aboutEach-on-object">
+      rdfms-aboutEach-on-object</a><br />
+      </dt>
+
+      <dd>
+        <p>On 29th June 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html">
+        decided</a> that rdf:aboutEach attributes are not allowed
+        on an rdf:Description (or typed node) element which is the
+        object of a statement.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None needed - rdf:aboutEach <a
+        href="#rdfms-abouteach">removed</a> from the language on
+        7th December 2001.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-syntax-desc-clarity"
+      name="rdfms-syntax-desc-clarity"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-syntax-desc-clarity">
+      rdfms-syntax-desc-clarity</a><br />
+      </dt>
+
+      <dd>
+        <p><em>The language describing the syntax is unclear</em>
+        [in section 6]</p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue is closed by the new approach
+        to defining the syntax in this document.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">A main goal of this document is to
+        make the syntax clearer and more precise. In particular the
+        <a href="#section-Infoset-Grammar">grammar section</a> and
+        the <a href="#section-Schemas">pointers to schemas for XML
+        validation</a> help address this.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-formal-grammar"
+      name="rdfms-formal-grammar"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-formal-grammar">
+      rdfms-formal-grammar</a><br />
+      </dt>
+
+      <dd>
+        <p><em>A formal grammar for RDF.</em></p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue is closed by the new approach
+        to defining the syntax in this document.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">A main goal of this document is to
+        make the syntax clearer and more precise. In particular the
+        <a href="#section-Infoset-Grammar">grammar section</a> and
+        the <a href="#section-Schemas">pointers to schemas for XML
+        validation</a> help address this.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-validating-embedded-rdf"
+      name="rdfms-validating-embedded-rdf"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-validating-embedded-rdf">
+      rdfms-validating-embedded-rdf</a><br />
+      </dt>
+
+      <dd>
+        <p>On 9th November 2001, the RDFCore WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0294.html">
+        resolved</a> to postpone the issue "for later consideration
+        on the grounds that it is out of scope of its current
+        charter to change the current RDF/XML syntax to the extent
+        necessary to address it."</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None required.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-rdf-names-use"
+      name="rdfms-rdf-names-use"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use">
+      rdfms-rdf-names-use</a><br />
+      </dt>
+
+      <dd>
+        <p>On 30th November 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html">
+        decided</a> that this issue was closed by the following
+        resolution.</p>
+
+        <p>The use of rdf:RDF, rdf:ID, rdf:about, rdf:resource,
+        rdf:bagID, rdf:parseType, rdf:aboutEach and rdf:li except
+        as reserved names as specified in the grammar is an error.
+        [Later rdf:aboutEach was <a
+        href="#rdfms-abouteach">removed</a> from the language on
+        7th December 2001]</p>
+
+        <p>On 25th February 2002, the WG further <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-3">
+        resolved</a> that:.</p>
+
+        <p>The WG reaffirmed its decision not to restrict names in
+        the RDF namespaces which are not syntactic. The WG decided
+        that an RDF processor SHOULD emit a warning when
+        encountering names in the RDF namespace which are not
+        defined, but should otherwise behave normally.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Added note to <a
+        href="#section-Namespace">section 3.4 RDF
+        Namespace</a></span></p>
+      </dd>
+
+      <dt><a id="rdfms-abouteach" name="rdfms-abouteach"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-abouteach">
+      rdfms-abouteach</a><br />
+      </dt>
+
+      <dd>
+        <p><em>processing rdf:aboutEach requires a processing of
+        sub-property relations.</em></p>
+
+        <p>On 7th December 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Dec/0089.html">
+        resolved</a> to remove rdf:aboutEach from the language.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Removed from the grammar.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-propElt-id-with-dr"
+      name="rdfms-propElt-id-with-dr"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-propElt-id-with-dr">
+      rdfms-propElt-id-with-dr</a><br />
+      </dt>
+
+      <dd>
+        <p>On 7th December 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Dec/0020.html">
+        decided</a> to remove rdf:aboutEach from the language and
+        consequently this issue was closed.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None needed.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-difference-between-ID-and-about"
+      name="rdfms-difference-between-ID-and-about"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-difference-between-ID-and-about">
+      rdfms-difference-between-ID-and-about</a><br />
+      </dt>
+
+      <dd>
+        <p><em>What is the difference between using and ID
+        attribute to 'create' a new resource and an about attribute
+        to refer to it?</em></p>
+
+        <p>On 14th December 2001, the WG <a
+        href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-difference-between-ID-and-about">
+        decided</a> that this document resolves the issue.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">See <a
+        href="#section-Identifiers">section on Identifiers</a> for
+        details.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-qname-uri-mapping"
+      name="rdfms-qname-uri-mapping"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-qname-uri-mapping">
+      rdfms-qname-uri-mapping</a><br />
+      </dt>
+
+      <dd>
+        <p>On 11th January 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0048.html">
+        resolved</a> ( <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0097.html">
+        revised</a>) "to not change the algorithm for mapping
+        qnames to uris and close this issue on the grounds:</p>
+
+        <ol>
+          <li>Such a change would be a major change to the mapping
+          of RDF/XML syntax to the model and would be beyond our
+          charter.</li>
+
+          <li>It would cause the same RDF/XML to generate a
+          different graph from existing versus revised
+          implementations</li>
+
+          <li>Existing code may generate wrong (illegal) graphs for
+          some RDF/XML."</li>
+        </ol>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None needed.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-reification-required"
+      name="rdfms-reification-required"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-reification-required">
+      rdfms-reification-required</a><br />
+      </dt>
+
+      <dd>
+        <p>On 11th January 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0048.html">
+        resolved</a> ( <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0097.html">
+        revised</a>) "that a parser is not required to create bags
+        of reified statements for all rdf:Description elements,
+        only those which are explicitly reified using an rdf:ID on
+        a propertyElt or by an rdf:bagID on the
+        rdf:Description.</p>
+
+        <p>Existing test cases such as rdf-ns-prefix-confusion
+        test0001 ( <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0001.rdf">
+        test0001.rdf</a>, <a
+        href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0001.rdf">
+        test0001.nt</a>) demonstrate this resolution."</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None needed - matches the existing
+        syntax description.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-replace-value"
+      name="rdfms-replace-value"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-replace-value">
+      rdfms-replace-value</a><br />
+      </dt>
+
+      <dd>
+        <p>On 11th January 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0048.html">
+        resolved</a> ( <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0097.html">
+        revised</a>) "to not change the name of this property at
+        this time on the grounds:</p>
+
+        <ul>
+          <li>insufficient reasons to make this change</li>
+
+          <li>will cause existing uses to be illegal - such as
+          examples in M&amp;S.</li>
+        </ul>
+
+        <p>and resolves to recast the issue as a need to clarify
+        the semantics of rdf:value."</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None needed.</span></p>
+      </dd>
+
+      <dt><a id="mime-types-for-rdf-docs"
+      name="mime-types-for-rdf-docs"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#mime-types-for-rdf-docs">
+      mime-types-for-rdf-docs</a><br />
+      </dt>
+
+      <dd>
+        <p>On 18th January 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0152.html">
+        authorized</a> the removal of this issue from this document
+        by the adding a new section with the wording <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0114.html">
+        proposed</a> now included in the <a
+        href="#section-MIME-Type">RDF MIME type section</a>.</p>
+
+        <p>When the WG is ready (documents are stable), the MIME
+        content-type registration for application/rdf+xml will
+        proceed.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Added <a
+        href="#section-MIME-Type">RDF MIME type
+        section</a>.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-xml-base" name="rdfms-xml-base"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base">
+      rdfms-xml-base</a><br />
+      </dt>
+
+      <dd>
+        <p>On 18th January 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0152.html">
+        decided</a> that "xml:base be allowed, and honored,
+        anywhere in an RDF document".</p>
+
+        <p>On 25th February 2002, the WG decided <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-4">
+        (1)</a> that xml:base applies to RDF's use of document
+        references (fragments)<br />
+         <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-5">
+        (2)</a> that xml:base hierarchical URIs without a path
+        component shall have it set to /.<br />
+         <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-5">
+        (3)</a> the scope of xml:base attributes should be taken
+        into account when checking for duplicate rdf:ID values</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Added details in <a
+        href="#section-Data-Model">Section 3 Data Model</a> near
+        introduction of Infoset and added new <a
+        href="#section-baseURIs">Section 3.6 Base
+        URIs</a></span></p>
+      </dd>
+
+      <dt><a id="rdfms-nested-bagIDs"
+      name="rdfms-nested-bagIDs"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs">
+      rdfms-nested-bagIDs</a><br />
+      </dt>
+
+      <dd>
+        <p><em>What triples are generated for nested description
+        elements with bagIDs?</em></p>
+
+        <p>On 25th February 2002, the WG <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-2">
+        decided</a> that this issue was closed by the following
+        resolution.</p>
+
+        <p>A bagID reifies the property attributes on the same
+        element as the bagid, the type node and statements
+        immediately arising from property elements that are
+        immediate children of the element containing the bagId. In
+        particular a property element whose statement is part of
+        the bag, which has property attributes, those statements
+        are not part of the bag.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">bagID algorithm added to <a
+        href="#nodeElement">nodeElement</a> <a
+        href="#emptyPropertyElt">emptyPropertyElt</a>.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-not-id-and-resource-attr"
+      name="rdfms-not-id-and-resource-attr"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr">
+      rdfms-not-id-and-resource-attr</a><br />
+      </dt>
+
+      <dd>
+        <p><em>The propertyElt production 6.12 of the grammar does
+        not allow both an ID attribute and a resource attribute to
+        be specified.</em></p>
+
+        <p>On 25th February 2002, the WG <a
+        href="http://www.w3.org/2001/sw/RDFCore/20020225-f2f/#d-2002-02-25-1">
+        decide</a> that this issue was closed by making rdf:ID
+        always specify the ID of the reified statement (parent
+        node, property element, node).</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">Updated <a
+        href="#emptyPropertyElt">5.14 Production
+        emptyPropertyElt</a> and <a
+        href="#section-RELAXNG-Schema">Relax NG schema</a> to
+        reflect decision.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-xml-literal-namespaces"
+      name="rdfms-xml-literal-namespaces"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-literal-namespaces">
+      rdfms-xml-literal-namespaces</a><br />
+      </dt>
+
+      <dd>
+        <p><em>How should a parser process namespaces in a literal
+        which is XML markup?</em></p>
+
+        <p>On 15th March 2002, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html">
+        decided</a> that this issue was closed by the following
+        resolution.</p>
+
+        <ul>
+          <li>The exact form of the string value corresponding to
+          any given XML Literal within RDF/XML is implementation
+          dependent.</li>
+
+          <li>the string value is well-balanced XML</li>
+
+          <li>taking the exclusive canonicalization of both the
+          original XML Literal in its containing document, and the
+          string value of the literal produce the same character
+          string. This will be used as the basis for test
+          cases.</li>
+
+          <li>The canonicalization above is without comments</li>
+
+          <li>CONFORMANCE should be tested without comments;
+          dropping comments was NOT mandatory.</li>
+        </ul>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">FIXME - This resolution is not yet
+        folded into the document.</span></p>
+      </dd>
+    </dl>
+
+    <h3><a id="section-Postponed-Issues"
+    name="section-Postponed-Issues">A.4: RDF Core Working Group
+    Postponed Issues affecting RDF/XML Syntax
+    (Non-Normative)</a></h3>
+
+    <dl>
+      <dt><a id="rdfms-quoting" name="rdfms-quoting"></a><a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-quoting">rdfms-quoting</a><br />
+      </dt>
+
+      <dd>
+        <p><em>The syntax needs a more convenient way to express
+        the reification of a statement.</em></p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue was postponed for consideration
+        by a future Working Group.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None required.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-qnames-cant-represent-all-uris"
+      name="rdfms-qnames-cant-represent-all-uris"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-qnames-cant-represent-all-uris">
+      rdfms-qnames-cant-represent-all-uris</a><br />
+      </dt>
+
+      <dd>
+        <p><em>The RDF XML syntax cannot represent all possible
+        Property URI's.</em></p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue was postponed for consideration
+        by a future Working Group.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None required.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-qnames-as-attrib-values"
+      name="rdfms-qnames-as-attrib-values"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-qnames-as-attrib-values">
+      rdfms-qnames-as-attrib-values</a><br />
+      </dt>
+
+      <dd>
+        <p><em>Suggestion that Qnames should be allowed as values
+        for attributes such as rdf:about.</em></p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue was postponed for consideration
+        by a future Working Group.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None required.</span></p>
+      </dd>
+
+      <dt><a id="rdfms-syntax-incomplete"
+      name="rdfms-syntax-incomplete"></a> <a
+      href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-syntax-incomplete">
+      rdfms-syntax-incomplete</a><br />
+      </dt>
+
+      <dd>
+        <p><em>The RDF/XML syntax can't represent an an arbritary
+        graph structure.</em></p>
+
+        <p>On 26th October 2001, the WG <a
+        href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0581.html">
+        decided</a> that this issue was postponed for consideration
+        by a future Working Group.</p>
+
+        <p><span class="actionLabel">Action</span>: <span
+        class="actionDecision">None required.</span></p>
+      </dd>
+    </dl>
+
+    <h2><a id="section-Schemas" name="section-Schemas"></a>B Syntax
+    Schemas (Non-Normative)</h2>
+
+    <p>Two schema language authors submitted schemas for RDF/XML
+    based on the revised grammar in the previous version of this
+    draft. We include pointers to these schemas for information
+    purposes and an example schema; they are not part of this
+    specification.</p>
+
+    <h3><a id="section-RELAXNG-Schema"
+    name="section-RELAXNG-Schema"></a>B.1 RELAX&nbsp;NG Schema -
+    Non XML (Non-Normative)</h3>
+
+    <p>This is an example schema in RELAX&nbsp;NG's non-XML format
+    (for ease of reading) but applications should use the <a
+    href="rdfxml.xml">standard XML version</a>. These formats are
+    described in <a
+    href="http://www.oasis-open.org/committees/relax-ng/spec-20011203.html">
+    RELAX&nbsp;NG</a> (<a href="#ref-relaxng">[RELAXNG]</a>) and <a
+    href="http://www.thaiopensource.com/relaxng/nonxml/">RELAX&nbsp;NG
+    Non-XML Syntax</a> (<a
+    href="#ref-relaxng-nx">[RELAXNG-NX]</a>).</p>
+
+    <div class="exampleOuter">
+      <div style="align:center">
+        <a href="rdfxml.rng">RELAX NG Schema (Non-XML) for
+        RDF/XML</a>
+      </div>
+
+      <div class="exampleInner">
+<pre>
+#
+# RELAX NG Schema (non-XML) for RDF/XML Syntax
+#
+# This schema is for information only and NON-NORMATIVE
+#
+# It is based on one originally written by James Clark in
+# http://lists.w3.org/Archives/Public/www-rdf-comments/2001JulSep/0248.html
+# and updated with later changes.
+#
+
+namespace local = ""
+namespace rdf = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+start = doc
+doc = 
+  RDF
+
+RDF =
+  element rdf:RDF { nodeElementList }
+
+nodeElementList = 
+  nodeElement*
+
+  # Should be something like:
+  #  ws* , (  nodeElement , ws* )*
+  # but RELAXNG does this by default, ignoring whitespace separating tags.
+
+nodeElement =
+  element * - (local:*
+               |rdf:RDF
+           |rdf:ID|rdf:about
+           |rdf:bagID|rdf:parseType|rdf:resource
+               |rdf:li ) {
+      (idAttr | aboutAttr )?, bagIdAttr?, propertyAttr*, propertyEltList
+  }
+
+  # It is not possible to say "and not things
+  # beginning with _ in the rdf: namespace" in RELAX NG.
+
+ws = 
+  " "
+
+  # Not used in this RELAX NG schema; but should be any legal XML
+  # whitespace defined by http://www.w3.org/TR/2000/REC-xml-20001006#NT-S
+
+
+propertyEltList = 
+  propertyElt*
+
+  # Should be something like:
+  #  ws* , ( propertyElt , ws* )*
+  # but RELAXNG does this by default, ignoring whitespace separating tags.
+
+propertyElt = 
+  resourcePropertyElt | 
+  literalPropertyElt | 
+  parseTypeLiteralPropertyElt |
+  parseTypeResourcePropertyElt |
+  parseTypeOtherPropertyElt |
+  emptyPropertyElt
+
+resourcePropertyElt = 
+  element * - (local:*
+           |rdf:RDF|rdf:Description
+           |rdf:ID|rdf:about
+           |rdf:bagID|rdf:parseType|rdf:resource) {
+      idAttr?, nodeElement
+  }
+
+literalPropertyElt =
+  element * - (local:*
+               |rdf:RDF|rdf:Description
+           |rdf:ID|rdf:about
+           |rdf:bagID|rdf:parseType|rdf:resource) {
+      idAttr?, text 
+  }
+
+parseTypeLiteralPropertyElt = 
+  element * - (local:*
+               |rdf:RDF|rdf:Description
+               |rdf:ID|rdf:about
+               |rdf:bagID|rdf:parseType|rdf:resource) {
+      idAttr?, parseLiteral, literal 
+  }
+
+parseTypeResourcePropertyElt = 
+  element * - (local:*
+               |rdf:RDF|rdf:Description
+               |rdf:ID|rdf:about
+               |rdf:bagID|rdf:parseType|rdf:resource) {
+      idAttr?, parseResource, propertyEltList
+  }
+
+parseTypeOtherPropertyElt = 
+  element * - (local:*
+               |rdf:RDF|rdf:Description
+               |rdf:ID|rdf:about
+               |rdf:bagID|rdf:parseType|rdf:resource) {
+      idAttr?, parseOther, any
+  }
+
+emptyPropertyElt =
+   element * - (local:*
+                |rdf:RDF|rdf:Description
+                |rdf:ID|rdf:about
+        |rdf:bagID|rdf:parseType|rdf:resource) {
+       idAttr?, resourceAttr?, bagIdAttr?, propertyAttr* 
+   }
+
+idAttr = 
+  attribute rdf:ID { 
+      IDsymbol 
+  }
+
+aboutAttr = 
+  attribute rdf:about { 
+      URI-reference 
+  }
+
+bagIdAttr = 
+  attribute rdf:bagID {
+      IDsymbol
+  }
+
+propertyAttr = 
+  attribute * - (local:* 
+                 |rdf:RDF|rdf:Description
+                 |rdf:ID|rdf:about
+         |rdf:bagID|rdf:parseType|rdf:resource
+         |rdf:li) {
+      string
+  }
+
+resourceAttr = 
+  attribute rdf:resource {
+      URI-reference 
+  }
+
+parseLiteral = 
+  attribute rdf:parseType {
+      "Literal" 
+  }
+
+parseResource = 
+  attribute rdf:parseType {
+      "Resource" 
+  }
+
+parseOther = 
+  attribute rdf:parseType {
+      text
+  }
+
+URI-reference = 
+  string
+
+literal =
+  any
+
+IDsymbol = 
+  xsd:NMTOKEN
+
+any =
+  mixed { element * { attribute * { text }*, any }* }
+
+
+</pre>
+      </div>
+    </div>
+
+    <h3><a id="section-Other-Schemas"
+    name="section-Other-Schemas"></a>B.2 Other Syntax Schemas
+    (Non-Normative)</h3>
+
+    <p>Two schema language authors submitted schemas for RDF/XML
+    based on the new grammar in the previous version of this draft.
+    We include pointers to these schemas for information purposes;
+    they are not part of this specification.</p>
+
+    <ul>
+      <li><a
+      href="http://lists.w3.org/Archives/Public/www-rdf-comments/2001JulSep/0248.html">
+      Non-XML Relax&nbsp;NG</a> schema by James Clark - see <a
+      href="#ref-relaxng">[RELAXNG]</a> and <a
+      href="#section-RELAXNG-Schema">section B.1</a></li>
+
+      <li><a
+      href="http://lists.w3.org/Archives/Public/www-rdf-comments/2001JulSep/0237.html">
+      Schematron</a> schema by Rick Jellife - see <a
+      href="#ref-schematron">[Schematron]</a></li>
+
+      <li><a
+      href="http://ilrt.org/discovery/2001/09/rdf-xml-schema/">XML
+      Schema</a> by the editor of this spec (not working yet) - see
+      <a href="#ref-xmlschema0">[XML Schema Part 0: Primer]</a>, <a
+      href="#ref-xmlschema1">[XML Schema Part 1: Structures]</a>
+      and <a href="#ref-xmlschema2">[XML Schema Part 2:
+      Datatypes]</a>.</li>
+    </ul>
+
+    <h2><a id="section-Changes" name="section-Changes">C
+    Changes</a></h2>
+
+    <p>Changes since the <a
+    href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218">
+    18 December 2001</a> working draft</p>
+
+    <p>(Newest at top)</p>
+
+    <ul>
+      <li>Updated status and abstract for this WD</li>
+
+      <li>Updated table of contents to include substructure of <a
+      href="#section-Infoset-Grammar">section 5</a></li>
+
+      <li>Require that URIs MUST NOT be generated for blank
+      identifiers</li>
+
+      <li>Specify syntax/non-syntax parts of RDF namespace</li>
+
+      <li>Use RDF graph rather than RDF model throughout</li>
+
+      <li>Sections <a href="#section-literal-node">Literal
+      Node</a>, and <a href="#section-xml-literal-node">XML Literal
+      Node</a> that <a
+      href="http://www.w3.org/TR/rdf-testcases/#ntrip_strings">N-Triple
+      string escape rules</a> are required when generating N-Triple
+      strings</li>
+
+      <li>Remove <tt>xml</tt>* attributes that are not used (we use
+      xml:lang, Infoset uses xml:base)</li>
+
+      <li>Added references to <a
+      href="http://www.w3.org/TR/2002/WD-rdf-primer-20020319/">RDF
+      Primer</a> <a href="#ref-rdfprimer">[RDF-PRIMER]</a> working
+      draft</li>
+
+      <li><a href="#section-Syntax">Section 2</a>: Added more
+      examples to illustrate some (not all) syntax
+      abbreviations</li>
+
+      <li>Added xml:lang support by adding a new element property,
+      using it throughout to generate literal() or xml()
+      literals</li>
+
+      <li>Added a <a href="#section-grammar-summary">grammar
+      summary section</a> (experimental)</li>
+
+      <li>Added an explicit <a href="#constraint-id">constraint</a>
+      on rdf:ID and rdf:bagID values, and with respect to the base
+      URI</li>
+
+      <li>Updated notation for A:=B assignment, string literal and
+      xml literals</li>
+
+      <li>Removed note on <a href="#propertyElt">propertyElt</a>
+      about potential future parseTypes values</li>
+
+      <li>Correct the illegal rdf:* names on node and property
+      elements</li>
+
+      <li><a href="#section-Data-Model">List</a> all infoitems
+      indicating ones that are not used; and note that all
+      infoitems must be preserved inside parseTypeLiteral</li>
+
+      <li>In <a href="#rdf-id">rdf-id</a> production, kept rdf:ID
+      as XML Nmtoken</li>
+
+      <li>Added style from XSD for term definition and
+      reference</li>
+
+      <li>Introduction gained pictures taken from draft primer</li>
+
+      <li>Added <a href="#section-Nodes">Nodes</a> for all SAX-like
+      nodes</li>
+
+      <li>Added rdf:bagID rules in <a
+      href="#nodeElement">nodeElement</a> and <a
+      href="#emptyPropertyElt">emptyPropertyElt</a></li>
+
+      <li>Added <a href="#section-baseURIs">Section 3.6 Base
+      URIs</a> for XML Base support, updated other sections and
+      added to references</li>
+
+      <li><a href="#emptyPropertyElt">emptyPropertyElt</a>: Allow
+      rdf:ID and rdf:resource together; updated Relax NG schema to
+      match</li>
+
+      <li><a href="#section-Namespace">Section 3.4</a>: Noted
+      unknown rdf: names generate a warning</li>
+
+      <li><a href="#parseTypeOtherPropertyElt">Section 5.3</a>:
+      Made parseType only take "Resource", "Literal" and other
+      values are always the same as "Literal"</li>
+
+      <li>Added <a href="#section-MIME-Type">Section 3.75 RDF MIME
+      Type</a> to note proposed mime type</li>
+
+      <li>Updated issues list to record closed and postponed
+      issues</li>
+
+      <li>Removed original grammar ( <a
+      href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218/#section-Grammar">
+      Appendix C</a>), updated grammar ( <a
+      href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20011218/#section-Updated-Grammar">
+      Appendix D</a>) sections</li>
+    </ul>
+
+    <p>Changes since the <a
+    href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20010906/">
+    06 September 2001</a> working draft</p>
+
+    <ul>
+      <li>Most of the document is new</li>
+
+      <li>Original document grammar sections moved to
+      appendices</li>
+
+      <li>Expressed in more detail the use of the XML Infoset as
+      used here in a SAX-like manner</li>
+
+      <li>Grammar updated to remove rdf:aboutEach - see <a
+      href="#rdfms-abouteach">rdfms-abouteach</a> for details.</li>
+
+      <li>Added the mapping to the RDF Model as expressed by
+      N-Triples</li>
+
+      <li>Added the non-normative RELAX NG schema</li>
+
+      <li>Added Issue sections</li>
+
+      <li>Added serialization section</li>
+
+      <li>Added introduction to the RDF/XML syntax</li>
+    </ul>
+    <hr />
+
+    <div class="metadata">
+      <p><a href="metadata.rdf"><img border="0"
+      src="http://www.w3.org/RDF/icons/rdf_metadata_button.40"
+      alt="RDF/XML Metadata" /></a></p>
+    </div>
+  </body>
+</html>
+

@@ -1,0 +1,1183 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta name="rcsid" content="$Id: Overview.html,v 1.8 2001/09/06 17:54:29 gerald Exp $"/>
+  <title>Refactoring RDF/XML Syntax</title>
+  <style type="text/css">
+.added {
+   color: green;
+   text-decoration: underline;
+   background: white;
+}
+.removed {
+   color: red;
+   background: white;
+   text-decoration: line-through;
+}
+
+div.productionOuter {
+/*
+   border: 4px double gray;
+*/
+   margin: 0em;
+   padding: 0em;
+}
+
+div.productionInner {
+   color: black;
+   /* tan */
+   /* background-color: #d2b48c; */
+   /* cyan */
+   /* background-color: #99ffff; */
+   /* mauve */
+   background-color: #efeff8;
+/*
+   border-top-style: double;
+   border-top-color: #d3d3d3;
+   border-bottom-width: 4px;
+   border-bottom-style: double;
+   border-bottom-color: #d3d3d3;
+*/
+   padding: 0.5em;
+   margin: 0em;
+}
+
+div.productionInner p {
+   margin-left: 0em;
+   margin-top: 0em;
+   margin-bottom: 0em
+}
+
+p.footer {
+   text-align: right
+}  
+
+</style>
+  <link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/W3C-WD" />
+</head>
+<body>
+
+
+<div class="head"><a href="http://www.w3.org/"><img height="48"
+width="72" alt="W3C" src="http://www.w3.org/Icons/w3c_home" /></a> 
+
+<h1 id="title">Refactoring RDF/XML Syntax</h1>
+
+<h2 id="doctype">W3C Working Draft 06 September 2001</h2>
+
+<dl>
+<dt>This version:</dt>
+<dd><a href="http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20010906/">http://www.w3.org/TR/2001/WD-rdf-syntax-grammar-20010906/</a>
+</dd>
+
+<dt>Latest version:</dt>
+<dd><a href="http://www.w3.org/TR/rdf-syntax-grammar/">http://www.w3.org/TR/rdf-syntax-grammar/</a><br />
+</dd>
+
+<dt>Previous version:</dt>
+<dd>None.
+</dd>
+
+<dt>Editor:</dt>
+<dd>Dave Beckett (University of Bristol)</dd>
+</dl>
+
+<p class="copyright">
+<a href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#Copyright"> 
+Copyright</a> &copy;2001 <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>&reg;</sup>
+(<a href="http://www.lcs.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>, 
+<a href="http://www.inria.fr/"><abbr lang="fr" title="Institut National de Recherche en Informatique et Automatique">INRIA</abbr></a>, 
+<a href="http://www.keio.ac.jp/">Keio</a>), All Rights Reserved. 
+W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#Legal_Disclaimer">liability</a>, 
+<a href="http://www.w3.org/Consortium/Legal/ipr-notice-20000612#W3C_Trademarks">trademark</a>, 
+<a href="http://www.w3.org/Consortium/Legal/copyright-documents-19990405">document use</a> and 
+<a href="http://www.w3.org/Consortium/Legal/copyright-software-19980720">software licensing</a> rules apply.</p>
+
+<hr title="Separator for header" />
+</div>
+
+
+<h2 class="nonum">
+<a id="abstract" name="abstract">Abstract</a>
+</h2>
+
+<p>This RDF Core WG Working Draft describes the updates to the
+grammar for the XML syntax of the RDF model as described in
+<a href="#ref-rdfms">RDF Model &amp; Syntax</a>
+after amendments and clarifications from the
+<a href="http://www.w3.org/2001/sw/RDFCore/">RDF Core WG</a>.
+</p>
+
+
+<h2 class="nonum">
+<a id="status" name="status">Status of this Document</a>
+</h2>
+
+<p><em>This section describes the status of this document at the time
+of its publication. Other documents may supersede this document. The
+latest status of this document series is maintained at the W3C.</em></p>
+
+<p>This is a W3C RDF Core WG Working Draft of the
+<a href="http://www.w3.org/2001/sw/RDFCore/">RDF Core Working Group</a>
+produced as part of the W3C
+<a href="http://www.w3.org/2001/sw/">Semantic Web Activity</a>.
+It incorporates decisions made by the Working Group
+updating the XML syntax for RDF from the original 
+<a href="#ref-rdfms">RDF Model &amp; Syntax</a> document.
+</p>
+
+<p>This document is being released for review by W3C members and
+other interested parties to encourage feedback and comments,
+especially with regard to how the changes affect existing
+implementations, and how the grammar can be formalized with schema
+languages.  This is the current state of an ongoing work on the
+syntax and does not yet record all the related decisions or include
+the descriptive text from the
+<a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#grammar">grammar section</a>
+of the original document.
+</p>
+
+<p>
+This is a draft document and may be updated, replaced, or obsoleted by
+other documents at any time. It is inappropriate to use it as reference
+material or to cite as other than "work in progress".  A list of current
+W3C Recommendations and other technical documents can be found at <a
+href="/TR/">http://www.w3.org/TR/</a>.
+</p>
+
+<p>Comments on this document are invited and should be sent to the
+public mailing list
+<a href="mailto:www-rdf-comments@w3.org">www-rdf-comments@w3.org</a>.
+An archive of comments is available at
+<a href="http://lists.w3.org/Archives/Public/www-rdf-comments/">http://lists.w3.org/Archives/Public/www-rdf-comments/</a>.
+</p>
+
+
+<div>
+<h2 class="nonum">
+<a id="contents" name="contents">Table of contents</a></h2>
+<p>
+<a href="#section-Introduction">1. Introduction</a><br />
+<a href="#section-Grammar">2. Original Grammar</a><br />
+<a href="#section-Updated-Grammar">3. Updated Grammar after RDF Core decisions</a><br />
+&nbsp;&nbsp;<a href="#section-Updated-Grammar-grammar">3.1. Updated Grammar</a><br />
+&nbsp;&nbsp;<a href="#section-Updated-Grammar-changes">3.2. Grammar Changes by Issue</a><br />
+<a href="#section-Infoset-Grammar">4. Grammar Using XML Infoset Terms</a><br />
+&nbsp;&nbsp;<a href="#section-Infoset-Grammar-Notation">4.1. Infoset Notation</a><br />
+&nbsp;&nbsp;<a href="#RDF">4.2</a> - <a href="#rdf-ns">4.22</a> Infoset Grammar<br />
+&nbsp;&nbsp;<a href="#section-Transform-Notes">4.23 Transformation Notes</a><br />
+<a href="#section-Infoset-Conformance">5. Infoset Conformance</a><br />
+<a href="#section-Normative-References">Appendix A: References</a>
+</p>
+</div>
+
+<hr />
+
+<h2>
+<a id="section-Introduction" name="section-Introduction">1. Introduction</a>
+</h2>
+
+<p><a href="#ref-rdfms">RDF Model &amp; Syntax</a> used an
+EBNF form plus explanatory text to explain the
+<a href="#ref-xml">XML</a> syntax.
+Subsequent implementations of this syntax and comparison of the
+resulting RDF models have shown that there was ambiguity -
+implementations generated different models and certain
+syntax forms were not widely implemented.  These issues were
+generally made as either feedback to
+the <a href="mailto:www-rdf-comments@w3.org">www-rdf-comments@w3.org</a>
+(<a href="http://lists.w3.org/Archives/Public/www-rdf-comments/">archive</a>)
+or from discussions on the RDF Interest Group list
+<a href="mailto:www-rdf-interest@w3.org">www-rdf-interest@w3.org</a>
+(<a href="http://lists.w3.org/Archives/Public/www-rdf-interest/">archive</a>)
+.</p>
+
+<p>The 
+<a href="http://www.w3.org/2001/sw/RDFCore/">RDF Core Working Group</a>
+is <a href="http://www.w3.org/2001/sw/RDFCoreWGCharter">chartered</a>
+to respond to the need for a number of fixes, clarifications and
+improvements to the specification of RDF's abstract model and XML
+syntax.  The working group invites feedback from the developer
+community on the effects of its proposals on existing implementations
+and documents.</p>
+
+<p>Several decisions including amendments and deletions to the
+grammar are refered to below.  The definitive record of
+the decisions is the
+<a href="http://www.w3.org/2000/03/rdf-tracking/">RDF Core WG issues list</a>.
+</p>
+
+<p>This document records the process of updating the existing
+grammar showing the changes made step-by-step.
+The original grammar uses EBNF in terms of characters such as '&lt;'.
+This was then transformed to be represented in terms of
+<a href="#ref-xml-infoset">XML Information Set</a> items
+which moves from the rather low-level details, such as particular
+forms of empty elements.  This allows the grammar to be more
+precisely recorded and the mapping from the XML syntax to the RDF
+model more clearly shown.
+</p>
+
+<p>This process is not yet complete, in that the final step is
+defining for each syntax production which RDF statements are added
+to the resulting model (if any).  It is required that this be a more
+precise process than before in preferably a machine checkable language,
+mapping from the XML syntax to the RDF model.  For this to happen
+means formalizing using one or more of various technologies such as
+XML Schema (<a href="#ref-xmlschema0">Primer</a>, 
+<a href="#ref-xmlschema1">Structures</a>,
+<a href="#ref-xmlschema2">Datatypes</a>),
+<a href="#ref-relax">RELAX</a>,
+<a href="#ref-trex">TREX</a>, 
+<a href="#ref-relaxng">Relax NG</a> and
+<a href="#ref-schematron">Schematron</a>
+(not an exclusive list).</p>
+
+<p>At present we are evaluating which of these technologies are
+sufficient and appropriate for this formalization but would
+appreciate feedback on this approach and suggestions for other
+formalisms that could be used.</p>
+
+
+<h2>
+<a id="section-Grammar" name="section-Grammar">2. Original Grammar</a>
+</h2>
+
+<p>This section contains the EBNF grammar of the RDF/XML syntax
+from <a href="#ref-rdfms">RDF Model &amp; Syntax</a>
+<a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#grammar">Formal Grammar for RDF section</a>.  The only changes made here were to
+make it legal XHTML via
+<a href="http://www.w3.org/People/Raggett/tidy/">tidy</a>
+and to change the links to the productions to point to those in
+the original document.
+</p>
+
+<pre>
+  [6.1] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#RDF">RDF</a>            ::= ['&lt;<em>rdf</em>:RDF&gt;'] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a>* ['&lt;/<em>rdf</em>:RDF&gt;']
+  [6.2] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a>            ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a>
+  [6.3] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a>    ::= '&lt;<em>rdf</em>:Description' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* '/&gt;'
+                         | '&lt;<em>rdf</em>:Description' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* '&gt;'
+                                <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* '&lt;/<em>rdf</em>:Description&gt;'
+                         | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typedNode">typedNode</a>
+  [6.4] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a>      ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#sequence">sequence</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bag">bag</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#alternative">alternative</a>
+  [6.5] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>    ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutAttr">aboutAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutEachAttr">aboutEachAttr</a>
+  [6.6] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>         ::= ' ID="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a> '"'
+  [6.7] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutAttr">aboutAttr</a>      ::= ' about="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> '"'
+  [6.8] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutEachAttr">aboutEachAttr</a>  ::= ' aboutEach="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> '"'
+                         | ' aboutEachPrefix="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> '"'
+  [6.9] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>      ::= ' bagID="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a> '"'
+ [6.10] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>       ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeAttr">typeAttr</a>
+                         | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> '="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> '"' (with embedded quotes escaped)
+ [6.11] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeAttr">typeAttr</a>       ::= ' type="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> '"'
+ [6.12] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>    ::= '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a> '&lt;/' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> '&gt;'
+                         | '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a> '&gt;'
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a> '&lt;/' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> '&gt;'
+                         | '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a> '&gt;'
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* '&lt;/' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> '&gt;'
+                         | '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idRefAttr">idRefAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* '/&gt;'
+ [6.13] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typedNode">typedNode</a>      ::= '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* '/&gt;'
+                         | '&lt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* '&gt;'
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* '&lt;/' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> '&gt;'
+ [6.14] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a>       ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a>
+ [6.15] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a>       ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a>
+ [6.16] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idRefAttr">idRefAttr</a>      ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a>
+ [6.17] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a>          ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a>
+ [6.18] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a>   ::= ' resource="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> '"'
+ [6.19] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a>          ::= [ <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#NSprefix">NSprefix</a> ':' ] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#name">name</a>
+ [6.20] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a>  ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a>, interpreted per [<a href="http://www.isi.edu/in-notes/rfc2396.txt">URI</a>]
+ [6.21] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a>       ::= (any legal <a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">XML name symbol</a>)
+ [6.22] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#name">name</a>           ::= (any legal <a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">XML name symbol</a>)
+ [6.23] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#NSprefix">NSprefix</a>       ::= (any legal XML namespace prefix)
+ [6.24] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a>         ::= (any XML text, with "&lt;", "&gt;", and "&amp;" escaped)
+ [6.25] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#sequence">sequence</a>       ::= '&lt;<em>rdf</em>:Seq' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>* '&lt;/<em>rdf</em>:Seq&gt;'
+                         | '&lt;<em>rdf</em>:Seq' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>* '/&gt;'
+ [6.26] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bag">bag</a>            ::= '&lt;<em>rdf</em>:Bag' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>* '&lt;/<em>rdf</em>:Bag&gt;'
+                         | '&lt;<em>rdf</em>:Bag' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>* '/&gt;'
+ [6.27] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#alternative">alternative</a>    ::= '&lt;<em>rdf</em>:Alt' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>+ '&lt;/<em>rdf</em>:Alt&gt;'
+                         | '&lt;<em>rdf</em>:Alt' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>? '/&gt;'
+ [6.28] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>         ::= <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#referencedItem">referencedItem</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#inlineItem">inlineItem</a>
+ [6.29] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#referencedItem">referencedItem</a> ::= '&lt;<em>rdf</em>:li' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a> '/&gt;'
+ [6.30] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#inlineItem">inlineItem</a>     ::= '&lt;<em>rdf</em>:li' '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a> &lt;/<em>rdf</em>:li&gt;'
+                         | '&lt;<em>rdf</em>:li' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a> '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a> &lt;/<em>rdf</em>:li&gt;'
+                         | '&lt;<em>rdf</em>:li' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a> '&gt;' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* &lt;/<em>rdf</em>:li&gt;'
+ [6.31] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>     ::= ' <em>rdf</em>:_<em>n</em>="' <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> '"' (where <em>n</em> is an integer)
+ [6.32] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a>   ::= ' parseType="Literal"'
+ [6.33] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a>  ::= ' parseType="Resource"'
+ [6.34] <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a>        ::= (any well-formed XML)
+</pre>
+
+<p>(Note: there are EBNF bugs in the 6.30 production where the
+<tt>&lt;/rdf:li&gt;</tt> tags are not fully enclosed in quotes as
+<tt>'&lt;/rdf:li&gt;'</tt>)</p>
+
+
+<h2>
+<a id="section-Updated-Grammar" name="section-Updated-Grammar">3. Updated Grammar after RDF Core decisions</a>
+</h2>
+
+<p>This section updates the original grammar in
+<a href="#section-Grammar">Section 2</a>
+by amending and deleting various productions according to
+the recorded
+<a href="http://www.w3.org/2001/sw/RDFCore/">RDF Core WG</a> decisions.
+Some productions are also removed since they are no longer needed,
+once the above changes are made.</p>
+
+<h3>
+<a id="section-Updated-Grammar-grammar" name="section-Updated-Grammar-grammar">3.1. Updated Grammar</a>
+</h3>
+
+<p>Key:<br /><span class="added"><ins>This text should be added  If it is not, your
+browser will not display this section properly.</ins></span><br />
+<span class="removed"><del>This text should be deleted.  If it is not, your
+browser will not display this section properly.</del></span></p>
+
+
+
+<table border="1" width="100%" summary="This table contains the updated grammar production name, number and definitions">
+<caption>Updated RDF/XML grammar productions</caption>
+<tr>
+<th>Production<br />Number</th>
+<th>Production<br />Name</th>
+<th>Definition</th>
+</tr>
+<tr>
+<td>6.1</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#RDF">RDF</a></td>
+<td>"&lt;<em>rdf</em>:RDF&gt;" <span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a></del></span>&nbsp;<span class="added"><ins><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a></ins></span>* "&lt;/<em>rdf</em>:RDF&gt;"<br />
+| <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.2</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a></del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a></del></span></td>
+</tr>
+<tr>
+<td>6.3</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a></td>
+<td>"&lt;<em>rdf</em>:Description" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* "/&gt;"<br />
+                         | "&lt;<em>rdf</em>:Description" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* "&gt;"<br />
+                                <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* "&lt;/<em>rdf</em>:Description&gt;"<br />
+                         | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typedNode">typedNode</a></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.4</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a></del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#sequence">sequence</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bag">bag</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#alternative">alternative</a></del></span></td>
+</tr>
+<tr>
+<td>6.5</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutAttr">aboutAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutEachAttr">aboutEachAttr</a></td>
+</tr>
+<tr>
+<td>6.6</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>ID=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a> "\""</td>
+</tr>
+<tr>
+<td>6.7</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutAttr">aboutAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>about=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> "\""</td>
+</tr>
+<tr>
+<td>6.8</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#aboutEachAttr">aboutEachAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>aboutEach=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> "\""<br />
+                         <span class="removed"><del>| " aboutEachPrefix=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> "\""</del></span></td>
+</tr>
+<tr>
+<td>6.9</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>bagID=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a> "\""</td>
+</tr>
+<tr>
+<td>6.10</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeAttr">typeAttr</a><br />
+                         | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> "=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> "\"" (with embedded quotes escaped)</td>
+</tr>
+<tr>
+<td>6.11</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeAttr">typeAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>type=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> "\""</td>
+</tr>
+<tr>
+<td>6.12</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a></td>
+<td>"&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a> "&lt;/" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> "&gt;"<br />
+                         | "&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a> "&gt;"<br />
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a> "&lt;/" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> "&gt;"<br />
+                         | "&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a> "&gt;"<br />
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* "&lt;/" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> "&gt;"<br />
+                         | "&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idRefAttr">idRefAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* "/&gt;"</td>
+</tr>
+<tr>
+<td>6.13</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typedNode">typedNode</a></td>
+<td>"&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* "/&gt;"<br />
+                         | "&lt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAboutAttr">idAboutAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bagIdAttr">bagIdAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propAttr">propAttr</a>* "&gt;"<br />
+                               <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* "&lt;/" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a> "&gt;"</td>
+</tr>
+<tr>
+<td>6.14</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propName">propName</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a></td>
+</tr>
+<tr>
+<td>6.15</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#typeName">typeName</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a></td>
+</tr>
+<tr>
+<td>6.16</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idRefAttr">idRefAttr</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a></td>
+</tr>
+<tr>
+<td>6.17</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a></del></span>&nbsp;<span class="added"><ins><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#description">description</a></ins></span> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a></td>
+</tr>
+<tr>
+<td>6.18</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>resource=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a> "\""</td>
+</tr>
+<tr>
+<td>6.19</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#Qname">Qname</a></td>
+<td><span class="removed"><del>[</del></span> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#NSprefix">NSprefix</a> ":" <span class="removed"><del>]</del></span> <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#name">name</a></td>
+</tr>
+<tr>
+<td>6.20</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#URI-reference">URI-reference</a></td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a>, interpreted per [<a href="http://www.isi.edu/in-notes/rfc2396.txt">URI</a>]</td>
+</tr>
+<tr>
+<td>6.21</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#IDsymbol">IDsymbol</a></td>
+<td>any legal <a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">XML name symbol</a></td>
+</tr>
+<tr>
+<td>6.22</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#name">name</a></td>
+<td>any legal <a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">XML name symbol</a></td>
+</tr>
+<tr>
+<td>6.23</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#NSprefix">NSprefix</a></td>
+<td>any legal XML namespace prefix</td>
+</tr>
+<tr>
+<td>6.24</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a></td>
+<td>any XML text, with "&lt;", "&gt;", and "&amp;" escaped</td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.25</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#sequence">sequence</a></del></span></td>
+<td><span class="removed"><del>"&lt;<em>rdf</em>:Seq" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>* "&lt;/<em>rdf</em>:Seq&gt;"<br />
+                         | "&lt;<em>rdf</em>:Seq" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>* "/&gt;"</del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.26</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#bag">bag</a></del></span></td>
+<td><span class="removed"><del>"&lt;<em>rdf</em>:Bag" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>* "&lt;/<em>rdf</em>:Bag&gt;"<br />
+                         | "&lt;<em>rdf</em>:Bag" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>* "/&gt;"</del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.27</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#alternative">alternative</a></del></span></td>
+<td><span class="removed"><del>"&lt;<em>rdf</em>:Alt" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a>+ "&lt;/<em>rdf</em>:Alt&gt;"<br />
+                         | "&lt;<em>rdf</em>:Alt" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#idAttr">idAttr</a>? <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a>? "/&gt;"</del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.28</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#member">member</a></del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#referencedItem">referencedItem</a> | <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#inlineItem">inlineItem</a></del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.29</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#referencedItem">referencedItem</a></del></span></td>
+<td><span class="removed"><del>"&lt;<em>rdf</em>:li" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#resourceAttr">resourceAttr</a> "/&gt;"</del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.30</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#inlineItem">inlineItem</a></del></span></td>
+<td><span class="removed"><del>"&lt;<em>rdf</em>:li" "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#value">value</a> &lt;/<em>rdf</em>:li&gt;"<br />
+                         | "&lt;<em>rdf</em>:li" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a> "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a> &lt;/<em>rdf</em>:li&gt;"<br />
+                         | "&lt;<em>rdf</em>:li" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a> "&gt;" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#propertyElt">propertyElt</a>* &lt;/<em>rdf</em>:li&gt;"</del></span></td>
+</tr>
+<tr>
+<td><span class="removed"><del>6.31</del></span></td>
+<td><span class="removed"><del><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#memberAttr">memberAttr</a></del></span></td>
+<td><span class="removed"><del>" <em>rdf</em>:_<em>n</em>=\"" <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#string">string</a> "\"" (where <em>n</em> is an integer)</del></span></td>
+</tr>
+<tr>
+<td>6.32</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseLiteral">parseLiteral</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>parseType=\"Literal\""</td>
+</tr>
+<tr>
+<td>6.33</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#parseResource">parseResource</a></td>
+<td>" <span class="added"><ins>rdf:</ins></span>parseType=\"Resource\""</td>
+</tr>
+<tr>
+<td>6.34</td>
+<td><a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#literal">literal</a></td>
+<td>any well-formed XML</td>
+</tr>
+</table>
+
+
+<h3>
+<a id="section-Updated-Grammar-changes" name="section-Updated-Grammar-changes">3.2. Grammar Changes by Issue</a>
+</h3>
+
+<p>The decided issues that changed the grammar are recorded here
+but this is not the definitive list or description - see the
+<a href="http://www.w3.org/2000/03/rdf-tracking/">RDF Core WG issues list</a>.
+There are other decided issues that did not affect the EBNF grammar but do
+affect the syntax by amending the descriptive text in the original
+grammar.  These issues are not recorded here at this time.
+Decided issues may also have associated test cases which can be
+found in the <a href="#ref-test-cases">RDF Test Cases document</a>
+(work in progess at this date).
+</p>
+
+
+<table border="1" width="100%" summary="This table contains the changes made to the productions along with the issues (if any) that caused them, and a description of the issue or change.">
+<caption>Changes to the RDF/XML grammar listed by RDF Core WG Issue</caption>
+<tr>
+<th>Productions</th>
+<th>Issue</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td>6.6, 6.7, 6.8, 6.9, 6.11, 6.18, 6.32, 6.33</td>
+<td><a href="http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion">rdf-ns-prefix-confusion</a></td>
+<td>On 25th May 2001, the WG decided that ALL attributes must be namespace qualified. There is a <a href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001May/0278.html">description</a> of the decision, including detail on the grammar productions affected and a collection of <a href="http://ilrt.org/people/cmdjb/2001/05/rdf-ns-prefix-confusion/">test cases</a></td>
+</tr>
+
+<tr>
+<td>6.8</td>
+<td><a href="http://www.w3.org/2000/03/rdf-tracking/#rdfms-abouteachprefix">rdfms-abouteachprefix</a></td>
+<td>On 1st June 2001, the WG <a href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jun/0008.html">decided</a> that aboutEachPrefix would be
+removed from the RDF Model and Syntax Recommendation on the grounds
+that there is a lack of implementation experience, and it therefore
+should not be in the recommendation. A future version of RDF may
+consider support for this feature.</td>
+</tr>
+
+<tr>
+<td>6.25, 6.26, 6.27, 6.28, 6.29, 6.30, 6.31</td>
+<td><a href="http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-ambiguity">rdf-containers-syntax-ambiguity</a><br />
+<a href="http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema">rdf-containers-syntax-vs-schema</a></td>
+<td>
+On 29th June 2001, the WG <a href="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html">decided</a> that containers will match the typed node production in the grammar (production 6.13) and that the container specific productions (productions 6.25 to 6.31) and any references to them be removed from the grammar. rdf:li elements will be translated to rdf:_nnn elements when they are found matching either a propertyElt (production 6.12) or a a typedNode (production 6.13).  The decision includes a set of <a href="http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/">test cases</a>.
+</td>
+</tr>
+
+<tr>
+<td>6.4 (definition)</td>
+<td>-</td>
+<td>
+<a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a> is no longer needed after all its sub-productions 6.25, 6.26 and 6.27 are removed.
+</td>
+</tr>
+
+<tr>
+<td>6.2 (definition), 6.1 (use)</td>
+<td>-</td>
+<td>
+<a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#obj">obj</a> is no longer needed after the <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/#container">container</a> production is removed.
+</td>
+</tr>
+</table>
+
+
+
+
+
+<h2>
+<a id="section-Infoset-Grammar" name="section-Infoset-Grammar">4. Grammar Using XML Infoset Terms</a>
+</h2>
+
+<p>This section takes the updated EBNF grammer in 
+<a href="#section-Updated-Grammar-grammar">Section 3.1</a>
+and removes the low-level XML syntax characters, replacing them
+with description in terms of
+<a href="#ref-xml-infoset">XML Infoset</a> information items.</p>
+
+
+<h3>
+<a id="section-Infoset-Grammar-Notation" name="section-Infoset-Grammar-Notation">4.1. Infoset Notation</a>
+</h3>
+
+<p>The following notation is used for
+<a href="#ref-xml-infoset">XML Infoset</a>
+information items and EBNF.</p>
+
+<table border="1" summary="This table describes the notation used in the following sections to describe the grammar in XML Infoset form along with the meaning of that notation.">
+<caption>Notation for <a href="#ref-xml-infoset">XML Infoset</a> information items and EBNF.</caption>
+<tr>
+<th>Notation</th>
+<th>Meaning</th>
+</tr>
+<tr>
+<td>[property]=value</td>
+<td><a href="#ref-xml-infoset">XML Infoset</a> information item property and value</td>
+</tr>
+<tr>
+<td>element([prop1]=value1,<br />
+&nbsp;&nbsp;[prop2]=value2, ...)</td>
+<td><a href="#ref-xml-infoset">XML Infoset</a> <a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">Element Information Item</a> with properties</td>
+</tr>
+<tr>
+<td>attribute([prop1]=value1, [prop1]=value2, ...)</td>
+<td><a href="#ref-xml-infoset">XML Infoset</a> <a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">Attribute Information Item</a> with properties</td>
+</tr>
+<tr>
+<td>character()</td>
+<td>An <a href="#ref-xml-infoset">XML Infoset</a> <a href="http://www.w3.org/TR/xml-infoset/#infoitem.character">Character Information Item</a> with any allowed code.</td>
+</tr>
+<!--
+<tr>
+<td>[prop]=<em>unknown</em></td>
+<td><a href="#ref-xml-infoset">XML Infoset</a> property with <a href="http://www.w3.org/TR/xml-infoset/#intro.null">unknown value</a></td>
+</tr>
+<tr>
+<td>[prop]=<em>no value</em></td>
+<td><a href="#ref-xml-infoset">XML Infoset</a> property with <a href="http://www.w3.org/TR/xml-infoset/#intro.null">no value</a></td>
+</tr>
+-->
+<tr>
+<td>list(item1, item2, ...); list()</td>
+<td>An ordered list of items in document order; an empty list</td>
+</tr>
+<tr>
+<td>set(item1, item2, ...); set()</td>
+<td>An unordered set of items; an empty set</td>
+</tr>
+<tr>
+<td>*</td>
+<td>Zero or more of preceding term</td>
+</tr>
+<tr>
+<td>?</td>
+<td>Zero or one of preceding term</td>
+</tr>
+<tr>
+<td>+</td>
+<td>One or more of preceding term</td>
+</tr>
+<tr>
+<td>A | B | ...</td>
+<td>The A, B, ... terms are alternatives, with left-to-right
+priority.  For example if term A matches, it is chosen even if
+term B also matches.</td>
+</tr>
+<tr>
+<td>"ABC"</td>
+<td>A string used for value of <a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a> property.</td>
+</tr>
+<tr>
+<td>any</td>
+<td>Any legal property value.</td>
+</tr>
+</table>
+
+
+<h3><a id="RDF" name="RDF">4.2 Production RDF (was 6.1 RDF)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="RDF",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#node">node</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set())<br />
+| <a href="#node">node</a></p></div></div>
+
+
+<h3><a id="node" name="node">4.3 Production node (new)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p><a href="#description">description</a> | <a href="#typedNode">typedNode</a></p></div></div>
+
+
+<h3><a id="description" name="description">4.4 Production description (was 6.3 description)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="Description",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAboutAttr">idAboutAttr</a>?, <a href="#bagIdAttr">bagIdAttr</a>?, <a href="#propertyAttr">propertyAttr</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list())<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="Description",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAboutAttr">idAboutAttr</a>?, <a href="#bagIdAttr">bagIdAttr</a>?, <a href="#propertyAttr">propertyAttr</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#propertyElt">propertyElt</a>+))</p></div></div>
+
+
+<h3><a id="typedNode" name="typedNode">4.5 Production typedNode (was 6.13 typedNode)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAboutAttr">idAboutAttr</a>?, <a href="#bagIdAttr">bagIdAttr</a>?, <a href="#propertyAttr">propertyAttr</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list())<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAboutAttr">idAboutAttr</a>?, <a href="#bagIdAttr">bagIdAttr</a>?, <a href="#propertyAttr">propertyAttr</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#propertyElt">propertyElt</a>+))</p></div></div>
+
+
+<h3><a id="propertyElt" name="propertyElt">4.6 Production propertyElt (was 6.12 propertyElt)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#node">node</a>))<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(character()+))<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?), <a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list())<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?, <a href="#parseLiteral">parseLiteral</a>),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#literal">literal</a>))<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?, <a href="#parseLiteral">parseLiteral</a>),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list())<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?, <a href="#parseResource">parseResource</a>),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list(<a href="#propertyElt">propertyElt</a>*))<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set(<a href="#idAttr">idAttr</a>?, <a href="#parseOther">parseOther</a>),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=any)<br />
+| element(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[attributes]</a>=set((<a href="#idAttr">idAttr</a> | <a href="#resourceAttr">resourceAttr</a>)?, <a href="#bagIdAttr">bagIdAttr</a>?, <a href="#propertyAttr">propertyAttr</a>*),<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[children]</a>=list())</p></div></div>
+
+
+<h3><a id="idAboutAttr" name="idAboutAttr">4.7 Production idAboutAttr (was 6.5 idAboutAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p><a href="#idAttr">idAttr</a> | <a href="#aboutAttr">aboutAttr</a> | <a href="#aboutEachAttr">aboutEachAttr</a></p></div></div>
+
+
+<h3><a id="idAttr" name="idAttr">4.8 Production idAttr (was 6.6 idAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="ID",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#rdf-id">rdf-id</a>)</p></div></div>
+
+
+<h3><a id="aboutAttr" name="aboutAttr">4.9 Production aboutAttr (was 6.7 aboutAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="about",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#URI-reference">URI-reference</a>)</p></div></div>
+
+
+<h3><a id="aboutEachAttr" name="aboutEachAttr">4.10 Production aboutEachAttr (was 6.8 aboutEachAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="aboutEach",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#URI-reference">URI-reference</a>)</p></div></div>
+
+
+<h3><a id="bagIdAttr" name="bagIdAttr">4.11 Production bagIdAttr (was 6.9 bagIdAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="bagID",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#rdf-id">rdf-id</a>)</p></div></div>
+
+
+<h3><a id="propertyAttr" name="propertyAttr">4.12 Production propertyAttr (new)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p><a href="#typeAttr">typeAttr</a> | <a href="#propAttr">propAttr</a></p></div></div>
+
+
+<h3><a id="propAttr" name="propAttr">4.13 Production propAttr (was 6.10 propAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>=any,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=CDATA)</p></div></div>
+
+
+<h3><a id="typeAttr" name="typeAttr">4.14 Production typeAttr (was 6.11 typeAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="type",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#URI-reference">URI-reference</a>)</p></div></div>
+
+
+<h3><a id="resourceAttr" name="resourceAttr">4.15 Production resourceAttr (was 6.18 resourceAttr)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="resource",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=<a href="#URI-reference">URI-reference</a>)</p></div></div>
+
+
+<h3><a id="parseLiteral" name="parseLiteral">4.16 Production parseLiteral (was 6.32 parseLiteral)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="parseType",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>="Literal")</p></div></div>
+
+
+<h3><a id="parseResource" name="parseResource">4.17 Production parseResource (was 6.33 parseResource)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="parseType",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>="Resource")</p></div></div>
+
+
+<h3><a id="parseOther" name="parseOther">4.18 Production parseOther (new)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>attribute(<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[namespace name]</a>=<a href="#rdf-ns">rdf-ns</a>,<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">[local name]</a>="parseType",<br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">[normalized value]</a>=CDATA)</p></div></div>
+
+
+<h3><a id="URI-reference" name="URI-reference">4.19 Production URI-reference (was 6.20 URI-reference)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>CDATA interpreted as a URI reference defined in <a href="#ref-uri">RFC2396</a> BNF production URI-reference.</p></div></div>
+
+<p>ISSUE: is this the best way to specify this?</p>
+
+<h3><a id="literal" name="literal">4.20 Production literal (was 6.34 literal)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>Any non-empty well-formed XML.</p></div></div>
+
+<p>ISSUE: This is not precise enough. What to do here?  Need to link
+to Infoset terms including character().</p>
+
+
+<h3><a id="rdf-ns" name="rdf-ns">4.21 Production rdf-ns (new)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>The URI http://www.w3.org/1999/02/22-rdf-syntax-ns#</p></div></div>
+
+
+<h3><a id="rdf-id" name="rdf-id">4.22 Production rdf-id (new)</a></h3>
+
+<div class="productionOuter"><div class="productionInner"><p>CDATA
+matching any legal
+<a href="#ref-xml">XML</a> token
+<a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">Nmtoken</a>
+</p></div></div>
+
+<p>ISSUE: Should this be changed from any legal
+<a href="http://www.w3.org/TR/REC-xml#NT-Nmtoken">XML Nmtoken</a>
+to be the same as that for XML IDs?  In
+<a href="#ref-xml">XML 1.0 (Second Edition)</a>
+XML IDs must match
+<a href="http://www.w3.org/TR/2000/REC-xml-20001006#id">Validity constraint: ID</a>
+which requires the identifiers to match the
+<a href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-Name">Name</a>
+production - a more restricted identifier than Nmtoken.</p>
+
+
+
+
+<h3>
+<a id="section-Transform-Notes" name="section-Transform-Notes">4.23 Transformation Notes</a>
+</h3>
+
+<ol>
+
+<li><p>6.17 <em>value</em> was removed and merged into the remaining
+single use in
+<a href="#propertyElt">propertyElt</a> as
+<a href="#description">description</a> | <em>string</em>.
+</p></li>
+
+<li><p>6.24 <em>string</em> was removed and merged into the remaining
+single use in <a href="#propertyElt">propertyElt</a> as two
+expanded terms - list(character()+) and list() .
+</p></li>
+
+<li><p>6.34 <a href="#literal">literal</a> was modified to be non-empty
+XML (although this isn't very precise) and the empty/non-empty
+distinction preserved in the single case where it was used in
+<a href="#propertyElt">propertyElt</a> as an expansion to
+list(<a href="#literal">literal</a>) and list()
+</p></li>
+
+<li><p>In 6.13 <a href="#typedNode">typedNode</a> and 
+6.3 <a href="#description">description</a>, the
+<a href="#propertyElt">propertyElt</a>*
+were replaced with <a href="#propertyElt">propertyElt</a>+
+so that there was no ambiguity with which part was handled when there
+were no contained <a href="#propertyElt">propertyElt</a>.</p></li>
+
+<li><p>The production numbers were removed and the productions reordered
+into approximate elements, attributes and terminal terms order.</p></li>
+
+<li><p><a href="#node">node</a> added to distinguish
+<a href="#description">description</a> and
+<a href="#typedNode">typedNode</a>.  Replaces
+<a href="#description">description</a>.</p></li>
+
+<li><p><a href="#propertyAttr">propertyAttr</a> added to make
+clear alternatives - 
+<a href="#propAttr">propAttr</a> and
+<a href="#typeAttr">typeAttr</a>. Replaces
+<a href="#propAttr">propAttr</a>.</p></li>
+
+<li><p><em>idRefAttr</em> removed and replaced inline into the
+single place used in 
+<a href="#propertyElt">propertyElt</a>
+</p></li>
+
+<li><p>A | B was redefined to have left-to-right priority so, for
+example, <a href="#typeAttr">typeAttr</a> matches before
+<a href="#propAttr">propAttr</a>.
+</p></li>
+
+<li><p><a href="#parseOther">parseOther</a> added to provide a
+place to later define what happens with non-<tt>Literal</tt>,
+non-<tt>Resource</tt> parseTypes.</p></li>
+
+</ol>
+
+
+<h2>
+<a id="section-Infoset-Conformance" name="section-Infoset-Conformance">5. Infoset Conformance</a>
+</h2>
+
+<p>This specification requires an information set as defined in
+<a href="#ref-xml-infoset">XML Infoset</a>
+which supports at least the following information items and
+properties:</p>
+
+<dl>
+<dt><a href="http://www.w3.org/TR/xml-infoset/#infoitem.attribute">Attribute Information Item</a></dt>
+<dd>[local name], [namespace name], [normalized value]</dd>
+
+<dt><a href="http://www.w3.org/TR/xml-infoset/#infoitem.character">Character Information Item</a></dt>
+<dd>[character code]</dd>
+
+<dt><a href="http://www.w3.org/TR/xml-infoset/#infoitem.element">Element Information Item</a></dt>
+<dd>[local name], [namespace name], [children], [attributes]</dd>
+
+</dl>
+
+
+<p>This specification does not require any destructive alterations to
+the input information set; no items are added or removed.</p>
+
+<p>This section is intended to satisfy the requirements for
+<a href="http://www.w3.org/TR/xml-infoset/#conformance">Conformance</a>
+to the <a href="#ref-xml-infoset">XML Infoset</a> specification.
+</p>
+
+
+<h2>
+<a id="section-References" name="section-References"></a>Appendix A: References
+</h2>
+
+<h3>
+<a id="section-Normative-References" name="section-Normative-References"></a>Normative References
+</h3>
+
+<dl>
+  <dt>
+  <a name="ref-rdfms">RDF Model &amp; Syntax</a>
+  </dt>
+  <dd>
+World Wide Web Consortium. <a href="http://www.w3.org/TR/1999/REC-rdf-syntax-19990222/">Resource Description Framework (RDF) Model and Syntax Specification</a>, 22 February 1999.
+  </dd>
+
+  <dt>
+  <a name="ref-xml">XML 1.0 Recommendation (Second Edition)</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium. <a href="http://www.w3.org/TR/2000/REC-xml-20001006">Extensible Markup Language (XML) 1.0, Second Edition</a>.
+  </dd>
+
+  <dt>
+  <a name="ref-namespaces">Namespaces in XML</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium. <a href="http://www.w3.org/TR/1999/REC-xml-names-19990114/">Namespaces in XML</a>.
+  </dd>
+
+  <dt>
+  <a name="ref-xml-infoset">XML Information Set</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium, <a href="http://www.w3.org/TR/xml-infoset/">XML Information Set - W3C Proposed Recommendation</a>, 10 August 2001.
+  </dd>
+
+  <dt>
+  <a name="ref-uri">RFC 2396 - URIs</a>
+  </dt>
+  <dd>
+  T. Berners-Lee, Fielding and Masinter, <a href="http://www.isi.edu/in-notes/rfc2396.txt">RFC 2396 - Uniform Resource Identifiers (URI): Generic Syntax</a>, August 1998.
+   </dd>
+
+  <dt>
+    <a name="ref-xmlschema0">XML Schema Part 0: Primer</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium, <a href="http://www.w3.org/TR/xmlschema-0/">XML Schema Part 0: Primer - W3C Recommendation</a>, 2 May 2001.
+  </dd>
+
+  <dt>
+    <a name="ref-xmlschema1">XML Schema Part 1: Structures</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium, <a href="http://www.w3.org/TR/xmlschema-1/">XML Schema Part 1: Structures - W3C Recommendation</a>, 2 May 2001.
+  </dd>
+
+  <dt>
+    <a name="ref-xmlschema2">XML Schema Part 2: Datatypes</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium, <a href="http://www.w3.org/TR/xmlschema-2/">XML Schema Part 2: Datatypes - W3C Recommendation</a>, 2 May 2001.
+  </dd>
+
+  <dt>
+    <a name="ref-relaxng">RELAX NG</a>
+  </dt>
+  <dd><a href="http://www.oasis-open.org/committees/relax-ng/spec-20010811.html">Relax NG Specification</a>, James Clark and MURATA Makoto, editors, OASIS, 11 August 2001.</dd>
+
+  <dt>
+    <a name="ref-test-cases">RDF Test Cases</a>
+  </dt>
+  <dd>
+    <a href="http://www.w3.org/2001/08/rdf-test/">RDF Test Cases</a>,
+    RDF Core WG Internal Draft, work in progress.
+  </dd>
+
+  <dt>
+    <a name="ref-trex">TREX</a>
+  </dt>
+  <dd>
+    <a href="http://www.thaiopensource.com/trex/">TREX - Tree Regular Expressions for XML</a>, James Clark, Thai Open Source Software Center, 2001.
+  </dd>
+
+  <dt>
+    <a name="ref-relax">RELAX</a>
+  </dt>
+  <dd>
+    <a href="http://www.xml.gr.jp/relax/">RELAX (Regular Language description for XML)</a>, MURATA Makoto, INSTAC (Information Technology Research and Standardization Center), 2001
+  </dd>
+
+  <dt>
+    <a name="ref-schematron">Schematron</a>
+  </dt>
+  <dd>
+    <a href="http://xml.ascc.net/xml/resource/schematron/schematron.html">Schematron</a>, Rick Jelliffe, Academia Sinica Computing Centre, Taibei.
+  </dd>
+
+</dl>
+
+
+<h3>
+<a id="section-Informative-References" name="section-Informative-References"></a>Informational References
+</h3>
+
+<p>Other ways to express the existing grammar, new syntaxes and
+grammars and other new ideas.</p>
+
+<dl>
+
+  <dt>
+  <a name="ref-ntriples">N-Triples</a>
+  </dt>
+  <dd>
+  World Wide Web Consortium. <a href="http://www.w3.org/2001/sw/RDFCore/ntriples/">N-Triples</a>, RDF Core Work Group Internal Working Draft.
+  </dd>
+
+  <dt>
+     <a name="ref-datamodel-strawman">RDF Data Model strawman</a>
+  </dt>
+  <dd><a href="http://www.w3.org/2000/09/rdfmodel/">Resource Description Framework: Data Model Summary</a>, 
+RDF Interest Group Discussion Document, Dan Brickley.
+  </dd>
+
+  <dt>
+     <a name="ref-trex-borden">Formal Grammar for RDF 1.0</a>
+  </dt>
+  <dd><a href="http://www.openhealth.org/RDF/RDFSyntaxFormal">Forest grammar/tree regular expression for RDF 1.0</a>, 
+Proposal and
+<a href="http://www.openhealth.org/RDF/RDF1.rng">RELAXNG schema</a>
+by Jonathan Borden, 
+<a href="mailto:jonathan@openhealth.org">Open Healthcare Group</a>,
+20 June 2001, announced on the <a href="http://lists.w3.org/Archives/Public/www-rdf-interest/2001Jun/0234.html">RDF Interest list</a>.
+  </dd>
+
+<dt>
+     <a name="ref-bswl-palmer">Basic Semantic Web Language</a>
+  </dt>
+  <dd><a href="http://purl.org/net/bswl">Basic Semantic Web Language</a>, 
+Proposal by 
+<a href="http://purl.org/net/sbp/">Sean B. Palmer</a>,
+16 July 2001.
+  </dd>
+
+
+<dt>
+     <a name="ref-reforming-rdf">Reforming RDF</a>
+  </dt>
+  <dd><a href="http://www.cs.yale.edu/homes/dvm/daml/proposal.html">A modest proposal for reforming RDF Version 0.1</a>, 
+Proposal by 
+<a href="http://www.cs.yale.edu/~dvm">Drew McDermott</a>,
+13 Dec 2000, announced on <a href="http://lists.w3.org/Archives/Public/www-rdf-logic/2000Dec/0044.html">www-rdf-logic</a>.
+  </dd>
+
+  <dt>
+     <a name="ref-rdf-abs-syntax-bhm">RDF Abstract Syntax</a>
+  </dt>
+  <dd><a href="http://www.openhealth.org/RDF/RDFAbstractSyntax">Formal Grammar for RDF 1.0</a>, Proposal by Jonathan Borden, Pat Hayes and Drew McDermott, 26 June 2001.
+  </dd>
+
+  <dt>
+     <a name="ref-proposal-jelliffe">Proposal for clarification of RDF</a>
+  </dt>
+  <dd><a href="http://lists.w3.org/Archives/Public/www-rdf-comments/2001AprJun/0150.html">Proposal for clarification of RDF</a> by Rick Jelliffe, 20 June 2001.
+   </dd>
+
+  <dt>
+    <a name="ref-blindfold">Blindfold</a>
+  </dt>
+  <dd><a href="http://www.w3.org/2001/06/blindfold/grammar">Blindfold Grammar System</a> - allows the defining of annotated grammars for XML and non-XML documents that can extract RDF statements, Sandro Hawke, 30 August 2001.
+  </dd>
+
+  <dt>
+     <a name="ref-arp">ARP</a>
+  </dt>
+  <dd><a href="http://www-uk.hpl.hp.com/people/jjc/arp/index.html">ARP: Another RDF Parser</a> - a parser written in Java by Jeremy Carroll, 27 July 2001.
+  </dd>
+
+
+  <dt>
+     <a name="ref-meta-bfn">Meta-BNF</a>
+  </dt>
+  <dd><a href="http://www.w3.org/People/Bos/meta-bnf">A meta-grammar for describing XML-based formats</a> by Bert Bos, 8 Feb 1999.
+  </dd>
+
+  <dt>
+     <a name="ref-rdfs-xml-infoset">RDFS for XML Infoset</a>
+  </dt>
+  <dd><a href="http://www.w3.org/TR/xml-infoset-rdfs">An RDF Schema for the XML Information Set</a>, W3C Note, Richard Tobin, 6 April 2001.
+  </dd>
+
+  <dt>
+    <a name="ref-rxp">RXP XML Parser</a>
+  </dt>
+  <dd><a href="http://www.cogsci.ed.ac.uk/~richard/rxp.html">RXP XML Parser</a> which can emit the XML infoset as XML suitable for transforming, Richard Tobin.
+  </dd>
+
+</dl>
+
+
+</body>
+</html>
