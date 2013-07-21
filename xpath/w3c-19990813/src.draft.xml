@@ -1,0 +1,2264 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- $Id: WD-xpath-19990813.xml,v 1.2 1999/08/13 18:15:13 hugo Exp $ -->
+<!DOCTYPE spec PUBLIC "-//W3C//DTD Specification V2.0//EN"
+                      "/XML/1998/06/xmlspec-v20.dtd" [
+<!ENTITY XML "http://www.w3.org/TR/REC-xml">
+<!ENTITY XMLNames "http://www.w3.org/TR/REC-xml-names">
+<!ENTITY year "1999">
+<!ENTITY month "August">
+<!ENTITY day "13">
+<!ENTITY MM "08">
+<!ENTITY DD "13">
+<!ENTITY YYYYMMDD "&year;&MM;&DD;">
+<!ENTITY LEV "WD">
+<!-- DTD customizations -->
+<!ELEMENT proto (arg*)>
+<!ATTLIST proto
+  name NMTOKEN #REQUIRED
+  return-type (number|string|boolean|node-set|object) #REQUIRED
+>
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg
+  type (number|string|boolean|node-set|object) #REQUIRED
+  occur (opt|rep) #IMPLIED
+>
+<!ELEMENT function (#PCDATA)>
+<!ENTITY % local.illus.class "|proto">
+<!ENTITY % local.tech.class "|function">
+]>
+<spec>
+<header>
+<title>XML Path Language (XPath)</title>
+<version>Version 1.0</version>
+<w3c-designation>&LEV;-xpath-&YYYYMMDD;</w3c-designation>
+<w3c-doctype>W3C Working Draft</w3c-doctype>
+<pubdate><day>&day;</day><month>&month;</month><year>&year;</year></pubdate>
+<publoc>
+<loc href="http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;"
+          >http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;</loc>
+<loc href="http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.xml"
+          >http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.xml</loc>
+<loc href="http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.html"
+          >http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.html</loc>
+<!--
+<loc href="http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.pdf"
+          >http://www.w3.org/&year;/&MM;/&LEV;-xpath-&YYYYMMDD;.pdf</loc>
+-->
+</publoc>
+<latestloc>
+<loc href="http://www.w3.org/TR/xpath"
+          >http://www.w3.org/TR/xpath</loc>
+</latestloc>
+<prevlocs>
+<loc href="http://www.w3.org/1999/07/WD-xpath-19990709"
+          >http://www.w3.org/1999/07/WD-xpath-19990709</loc>
+<loc href="http://www.w3.org/TR/1999/WD-xslt-19990421"
+          >http://www.w3.org/TR/1999/WD-xslt-19990421</loc>
+</prevlocs>
+<authlist>
+<author>
+<name>James Clark</name>
+<email href="mailto:jjc@jclark.com">jjc@jclark.com</email>
+</author>
+<author>
+<name>Steve DeRose</name>
+<affiliation>Inso Corp. and Brown University</affiliation>
+<email href="mailto:Steven_DeRose@Brown.edu">Steven_DeRose@Brown.edu</email>
+</author>
+</authlist>
+
+<status>
+
+<p>This is a W3C Working Draft for review by W3C members and other
+interested parties.  The XML Linking Working Group and the XSL Working
+Group consider that this draft is stable and ready to move to Proposed
+Recommendation status. This is therefore the last call for comments on
+this Working Draft. Please send detailed comments to <loc
+href="mailto:www-xpath-comments@w3.org"
+>www-xpath-comments@w3.org</loc> before 2 September 1999; <loc
+href="http://lists.w3.org/Archives/Public/www-xpath-comments">archives</loc>
+of the comments are available.</p>
+
+<p>This draft is joint work of the XSL Working Group and the XML
+Linking Working Group and so is part of the <loc
+href="http://www.w3.org/Style/Activity">Style activity</loc> and of
+the <loc href="http://www.w3.org/XML/Activity">XML activity</loc>.</p>
+
+<p>This is a draft document and may be updated, replaced, or obsoleted
+by other documents at any time. It is inappropriate to use W3C Working
+Drafts as reference material or to cite them as other than <quote>work
+in progress</quote>. A list of current W3C working drafts can be found
+at <loc href="http://www.w3.org/TR">http://www.w3.org/TR</loc>.</p>
+
+</status>
+
+<abstract><p>XPath is a language for addressing parts of an XML
+document, designed to be used by both XSLT and
+XPointer.</p></abstract>
+
+<langusage>
+<language id="EN">English</language>
+<language id="ebnf">EBNF</language>
+</langusage>
+<revisiondesc>
+<slist>
+<sitem>See RCS log for revision history.</sitem>
+</slist>
+</revisiondesc>
+</header>
+<body>
+
+<div1>
+<head>Introduction</head>
+
+<p>XPath is the result of an effort to provide a common syntax and
+semantics for functionality shared between XSL Transformations <bibref
+ref="XSLT"/> and XPointer <bibref ref="XPTR"/>.  The primary purpose
+of XPath is to address parts of an XML <bibref ref="XML"/> document.
+In support of this primary purpose, it also provides basic facilities
+for manipulation of strings, numbers and booleans.  XPath uses a
+compact, non-XML syntax to facilitate use of XPath within URIs and XML
+attribute values.  XPath operates on the abstract, logical structure
+of an XML document, rather than its surface syntax.  XPath gets its
+name from its use of a path notation as in URLs for navigating through
+the hierarchical structure of an XML document.</p>
+
+<p>In addition to its use for addressing, XPath is also designed so
+that it has a natural subset that can be used for matching (testing
+whether or not a node matches a pattern); this use of XPath is
+described in <xspecref href="http://www.w3.org/TR/WD-xslt#patterns"
+>XSLT</xspecref>.</p>
+
+<p>XPath models an XML document as a tree of nodes.  There are
+different types of node, including element nodes, attribute nodes and
+text nodes.  XPath defines a way to compute a <termref
+def="dt-string-value">string-value</termref> for each type of node.
+Some types of nodes also have names.  XPath fully supports XML
+Namespaces <bibref ref="XMLNAMES"/>.  Thus, the name of a node is
+modeled as a pair consisting of a local part and a possibly null
+namespace URI; this is called an <termref
+def="dt-expanded-name">expanded-name</termref>.  The data model is
+described in detail in <specref ref="data-model"/>.</p>
+
+<p>The primary syntactic construct in XPath is the expression.  An
+expression matches the production <nt def="NT-Expr">Expr</nt>.  An
+expression is evaluated to yield an object, which has one of the
+following four basic types:</p>
+
+<slist>
+
+<sitem>node-set (an unordered collection of nodes without duplicates)</sitem>
+
+<sitem>boolean (true or false)</sitem>
+
+<sitem>number (a floating-point number)</sitem>
+
+<sitem>string (a sequence of UCS characters)</sitem>
+
+</slist>
+
+<p>Expression evaluation occurs with respect to a context.  XSLT and
+XPointer specify how the context is determined for XPath expressions
+used in XSLT and XPointer respectively.  The context consists of:</p>
+
+<slist>
+
+<sitem>a node (<termdef id="dt-context-node" term="Context Node">the
+<term>context node</term></termdef>)</sitem>
+
+<sitem>a pair of non-zero positive integers (<termdef
+id="dt-context-position" term="Context Position">the <term>context
+position</term></termdef> and <termdef id="dt-context-size"
+term="Context Size">the <term>context size</term></termdef>)</sitem>
+
+<sitem>a set of variable bindings</sitem>
+
+<sitem>a function library</sitem>
+
+<sitem>the set of namespace declarations in scope for the
+expression</sitem>
+
+</slist>
+
+<p>The context position is always less than or equal to the
+context size.</p>
+
+<p>The variable bindings consist of a mapping from variable names to
+variable values.  The value of a variable is an object, which can be of
+any of the types that are possible for the value of an expression,
+and may also be of additional types not specified here.</p>
+
+<p>The function library consists of a set of named functions.  Each
+function takes zero or more arguments and returns a single result.
+This document defines a core function library that all XPath
+implementations must support (see <specref ref="corelib"/>).  For a
+function in the core function library, arguments and result are of the
+four basic types.  Both XSLT and XPointer extend XPath by defining
+additional functions; some of these functions operate on the four
+basic types; others operate on additional data types defined by XSLT
+and XPointer.</p>
+
+<p>The variable bindings, function library and namespace declarations
+used to evaluate a subexpression are always the same as those used to
+evaluate the containing expression.  The context node, context
+position, and context size used to evaluate a subexpression are
+sometimes different from those used to evaluate the containing
+expression. Several kinds of expressions change the context node; only
+predicates change the context position and context size (see <specref
+ref="predicates"/>).  When the evaluation of a kind of expression is
+described, it will always be explicitly stated if the context node,
+context position, and context size change for the evaluation of
+subexpressions; if nothing is said about the context node, context
+position, and context size, they remain unchanged for the
+evaluation of subexpressions of that kind of expression.</p>
+
+<p>XPath expressions often occur in XML attributes.  The grammar
+specified in this section applies to the attribute value after XML 1.0
+normalization.  So, for example, if the grammar uses the character
+<code>&lt;</code>, this must not appear in the XML source as
+<code>&lt;</code> but must be quoted according to XML 1.0 rules by,
+for example, entering it as <code>&amp;lt;</code>. Within expressions,
+literal strings are delimited by single or double quotation marks,
+which are also used to delimit XML attributes. To avoid a quotation
+mark in an expression being interpreted by the XML processor as
+terminating the attribute value the quotation mark can be entered as a
+character reference (<code>&amp;quot;</code> or
+<code>&amp;apos;</code>).  Alternatively, the expression can use single
+quotation marks if the XML attribute is delimited with double
+quotation marks or vice-versa.</p>
+
+<p>One important kind of expression is a location path.  A location
+path selects a set of nodes relative to the context node.  The result
+of evaluating an expression that is a location path is the node-set
+containing the nodes selected by the location path.  Location paths
+can recursively contain expressions that are used to filter sets of
+nodes.  A location path matches the production <nt
+def="NT-LocationPath">LocationPath</nt>.</p>
+
+<p>In the following grammar, the non-terminals <xnt
+href="&XMLNames;#NT-QName">QName</xnt> and <xnt
+href="&XMLNames;#NT-NCName">NCName</xnt> are defined in <bibref
+ref="XMLNAMES"/>, and <xnt href="&XML;#NT-S">S</xnt> is defined in
+<bibref ref="XML"/>.  The grammar uses the same EBNF notation as
+<bibref ref="XML"/> (except that grammar symbols always have initial
+capital letters).</p>
+
+<p>Expressions are parsed by first dividing the character string to be
+parsed into tokens and then parsing the resulting sequence of tokens.
+Whitespace can be freely used between tokens.  The tokenization
+process is described in <specref ref="exprlex"/>.</p>
+
+</div1>
+
+<div1 id="location-paths">
+<head>Location Paths</head>
+
+<p>Although location paths are not the most general grammatical
+construct in the language (a <nt
+def="NT-LocationPath">LocationPath</nt> is special case of an <nt
+def="NT-Expr">Expr</nt>), they are the most important construct and
+will therefore be described first.</p>
+
+<p>Every location path can be expressed using a straightforward but
+rather verbose syntax.  There are also a number of syntactic
+abbreviations that allow common cases to be expressed concisely.  This
+section will explain the semantics of location paths using the
+unabbreviated syntax.  The abbreviated syntax will then be explained
+by showing how it expands into the unabbreviated syntax (see <specref
+ref="path-abbrev"/>).</p>
+
+<p>Here are some examples of location paths using the unabbreviated
+syntax:</p>
+
+<ulist>
+
+<item><p><code>child::para</code> selects the
+<code>para</code> element children of the context node</p></item>
+
+<item><p><code>child::*</code> selects all element
+children of the context node</p></item>
+
+<item><p><code>child::text()</code> selects all text
+node children of the context node</p></item>
+
+<item><p><code>child::node()</code> selects all the
+children of the context node, whatever their node type</p></item>
+
+<item><p><code>attribute::name</code> selects the
+<code>name</code> attribute of the context node</p></item>
+
+<item><p><code>attribute::*</code> selects all the
+attributes of the context node</p></item>
+
+<item><p><code>descendant::para</code> selects the
+<code>para</code> element descendants of the context node</p></item>
+
+<item><p><code>ancestor::div</code> selects all <code>div</code>
+ancestors of the context node</p></item>
+
+<item><p><code>ancestor-or-self::div</code> selects the
+<code>div</code> ancestors of the context node and, if the context node is a
+<code>div</code> element, the context node as well</p></item>
+
+<item><p><code>descendant-or-self::para</code> selects the
+<code>para</code> element descendants of the context node and, if the context node is
+a <code>para</code> element, the context node as well</p></item>
+
+<item><p><code>self::para</code> selects the context node if it is a
+<code>para</code> element, and otherwise selects nothing</p></item>
+
+<item><p><code>child::chapter/descendant::para</code>
+selects the <code>para</code> element descendants of the
+<code>chapter</code> element children of the context node</p></item>
+
+<item><p><code>child::*/child::para</code> selects
+all <code>para</code> grandchildren of the context node</p></item>
+
+<item><p><code>/</code> selects the document root (which is
+always the parent of the document element)</p></item>
+
+<item><p><code>/descendant::para</code> selects all the
+<code>para</code> elements in the same document as the context node</p></item>
+
+<item><p><code>/descendant::olist/child::item</code>
+selects all the <code>item</code> elements in the same document as the
+context node that have an <code>olist</code> parent</p></item>
+
+<item><p><code>child::para[position()=1]</code> selects the first
+<code>para</code> child of the context node</p></item>
+
+<item><p><code>child::para[position()=last()]</code> selects the last
+<code>para</code> child of the context node</p></item>
+
+<item><p><code>child::para[position()=last()-1]</code> selects
+the last but one <code>para</code> child of the context node</p></item>
+
+<item><p><code>child::para[position()>1]</code> selects all
+the <code>para</code> children of the context node other than the
+first <code>para</code> child of the context node</p></item>
+
+<item><p><code>following-sibling::chapter[position()=1]</code>
+selects the next <code>chapter</code> sibling of the context node</p></item>
+
+<item><p><code>preceding-sibling::chapter[position()=1]</code>
+selects the previous <code>chapter</code> sibling of the context
+node</p></item>
+
+<item><p><code>/descendant::figure[position()=42]</code> selects
+the forty-second <code>figure</code> element in the
+document</p></item>
+
+<item><p><code>/child::doc/child::chapter[position()=5]/child::section[position()=2]</code>
+selects the second <code>section</code> of the fifth
+<code>chapter</code> of the <code>doc</code> document
+element</p></item>
+
+<item><p><code>child::para[attribute::type="warning"]</code>
+selects all <code>para</code> children of the context node that have a
+<code>type</code> attribute with value <code>warning</code></p></item>
+
+<item><p><code>child::para[attribute::type='warning'][position()=5]</code>
+selects the fifth <code>para</code> child of the context node that has
+a <code>type</code> attribute with value
+<code>warning</code></p></item>
+
+<item><p><code>child::para[position()=5][attribute::type="warning"]</code>
+selects the fifth <code>para</code> child of the context node if that
+child has a <code>type</code> attribute with value
+<code>warning</code></p></item>
+
+<item><p><code>child::chapter[child::title='Introduction']</code>
+selects the <code>chapter</code> children of the context node that
+have one or more <code>title</code> children with <termref
+def="dt-string-value">string-value</termref> equal to
+<code>Introduction</code></p></item>
+
+<item><p><code>child::chapter[child::title]</code> selects the
+<code>chapter</code> children of the context node that have one or
+more <code>title</code> children</p></item>
+
+<item><p><code>child::*[self::chapter or self::appendix]</code>
+selects the <code>chapter</code> and <code>appendix</code> children of
+the context node</p></item>
+
+<item><p><code>child::*[self::chapter or
+self::appendix][position()=last()]</code> selects the last
+<code>chapter</code> or <code>appendix</code> child of the context
+node</p></item>
+
+</ulist>
+
+<p>There are two kinds of location path: relative location paths
+and absolute location paths.</p>
+
+<p>A relative location path consists of a sequence of one or more
+location steps separated by <code>/</code>.  The steps in a relative
+location path are composed together from left to right.  Each step in
+turn selects a set of nodes relative to a context node. An initial
+sequence of steps is composed together with a following step as
+follows.  The initial sequence of steps selects a set of nodes
+relative to a context node.  Each node in that set is used as a
+context node for the following step.  The sets of nodes identified by
+the second step are unioned together.  The set of nodes identified by
+the composition of the steps is this union. For example,
+<code>child::div/child::para</code> selects the
+<code>para</code> element children of the <code>div</code> element
+children of the context node, or, in other words, the
+<code>para</code> element grandchildren that have <code>div</code>
+parents.</p>
+
+<p>An absolute location path consists of <code>/</code> optionally
+followed by a relative location path.  A <code>/</code> by itself
+selects the root node of the document containing the context node.  If
+it is followed by a relative location path, then the location path
+selects the set of nodes that would be selected by the relative
+location path relative to the root node of the document containing the
+context node.</p>
+
+<scrap>
+<head>Location Paths</head>
+<prodgroup pcw5="1" pcw2="10" pcw4="18">
+<prod id="NT-LocationPath">
+<lhs>LocationPath</lhs>
+<rhs><nt def="NT-RelativeLocationPath">RelativeLocationPath</nt></rhs>
+<rhs>| <nt def="NT-AbsoluteLocationPath">AbsoluteLocationPath</nt></rhs>
+</prod>
+<prod id="NT-AbsoluteLocationPath">
+<lhs>AbsoluteLocationPath</lhs>
+<rhs>'/' <nt def="NT-RelativeLocationPath">RelativeLocationPath</nt>?</rhs>
+<rhs>| <nt def="NT-AbbreviatedAbsoluteLocationPath">AbbreviatedAbsoluteLocationPath</nt></rhs>
+</prod>
+<prod id="NT-RelativeLocationPath">
+<lhs>RelativeLocationPath</lhs>
+<rhs><nt def="NT-Step">Step</nt></rhs>
+<rhs>| <nt def="NT-RelativeLocationPath">RelativeLocationPath</nt> '/' <nt def="NT-Step">Step</nt></rhs>
+<rhs>| <nt def="NT-AbbreviatedRelativeLocationPath">AbbreviatedRelativeLocationPath</nt></rhs>
+</prod>
+</prodgroup>
+</scrap>
+
+<div2>
+<head>Location Steps</head>
+
+<p>A location step has three parts:</p>
+
+<ulist>
+
+<item><p>an axis, which specifies the tree relationship between the
+nodes selected by the location step and the context node,</p></item>
+
+<item><p>a node test, which specifies the node type and <termref
+def="dt-expanded-name">expanded-name</termref> of the nodes selected
+by the location step, and</p></item>
+
+<item><p>zero or more predicates, which use arbitrary expressions to
+further refine the set of nodes selected by the location
+step.</p></item>
+
+</ulist>
+
+<p>The syntax for a location step is the axis name and node test
+separated by a double colon, followed by zero or more expressions each
+in square brackets. For example, in
+<code>child::para[position()=1]</code>, <code>child</code> is the name
+of the axis, <code>para</code> is the node test and
+<code>[position()=1]</code> is a predicate.</p>
+
+<p>The node-set selected by the location step is the node-set that
+results from generating an initial node-set from the axis and
+node-test, and then filtering that node-set by each of the predicates
+in turn.</p>
+
+<p>The initial node-set consists of the nodes having the relationship
+to the context node specified by the axis, and having the node type
+and <termref def="dt-expanded-name">expanded-name</termref> specified
+by the node test.  For example, a location step
+<code>descendant::para</code> selects the <code>para</code> element
+descendants of the context node: <code>descendant</code> specifies
+that each node in the initial node-set must be a descendant of the
+context; <code>para</code> specifies that each node in the initial
+node-set must be an element named <code>para</code>.  The available
+axes are described in <specref ref="axes"/>.  The available node tests
+are described in <specref ref="node-tests"/>.  The meaning of some
+node tests is dependent on the axis.</p>
+
+<p>The initial node-set is filtered by the first predicate to generate
+a new node-set; this new node-set is then filtered using the second
+predicate, and so on. The final node-set is the node-set selected by
+the location step. The axis affects how the expression in each
+predicate is evaluated and so the semantics of a predicate is defined
+with respect to an axis.  See <specref ref="predicates"/>.</p>
+
+<scrap>
+<head>Location Steps</head>
+<prodgroup pcw5="1" pcw2="10" pcw4="18">
+<prod id="NT-Step">
+<lhs>Step</lhs>
+<rhs><nt def="NT-AxisSpecifier">AxisSpecifier</nt>
+<nt def="NT-NodeTest">NodeTest</nt>
+<nt def="NT-Predicate">Predicate</nt>*</rhs>
+<rhs>| <nt def="NT-AbbreviatedStep">AbbreviatedStep</nt></rhs>
+</prod>
+<prod id="NT-AxisSpecifier">
+<lhs>AxisSpecifier</lhs>
+<rhs><nt def="NT-AxisName">AxisName</nt> '::'</rhs>
+<rhs>| <nt def="NT-AbbreviatedAxisSpecifier">AbbreviatedAxisSpecifier</nt>
+</rhs>
+</prod>
+</prodgroup>
+</scrap>
+
+</div2>
+
+<div2 id="axes">
+<head>Axes</head>
+
+<p>The following axes are available:</p>
+
+<ulist>
+
+<item><p>the <code>child</code> axis contains the children of the
+context node; attribute and namespace nodes are not
+considered to be children of the element that bears them</p></item>
+
+<item><p>the <code>descendant</code> axis contains the descendants of
+the context node; a descendant is a child or a child of a child and so
+on; thus the descendant axis never contains attribute or namespace
+nodes</p></item>
+
+<item><p>the <code>parent</code> axis contains the parent of the
+context node, if there is one; the <code>parent</code> of an attribute
+or namespace node is the element to which the attribute or namespace
+node is attached</p></item>
+
+<item><p>the <code>ancestor</code> axis contains the ancestors of the
+context node; the ancestors of the context node consist of the parent
+of context node and the parent's parent and so on; thus the parent is
+the first node on the axis, and the parent's parent is the second node
+on the axis; parent here is defined the same as with the
+<code>parent</code> axis</p></item>
+
+<item><p>the <code>following-sibling</code> axis contains the
+following siblings of the context node; if the
+context node is an attribute node or namespace node, the
+<code>following-sibling</code> axis is empty</p></item>
+
+<item><p>the <code>preceding-sibling</code> axis contains the
+preceding siblings of the context node; the first preceding sibling is
+first on the axis; the sibling preceding that node is the second on
+the axis and so on; if the context node is an attribute node or
+namespace node, the <code>preceding-sibling</code> axis is
+empty</p></item>
+
+<item><p>the <code>following</code> axis contains all nodes in the
+same document as the context node that are after the context node in
+document order, excluding any descendants and excluding attribute
+nodes and namespace nodes</p></item>
+
+<item><p>the <code>preceding</code> axis contains all nodes in the
+same document as the context node that are before the context node in
+document order, excluding any ancestors and excluding attribute nodes
+and namespace nodes</p></item>
+
+<item><p>the <code>attribute</code> axis contains the attributes of
+the context node; the axis will be empty unless the context node is an
+element</p></item>
+
+<item><p>the <code>namespace</code> axis contains the namespace nodes
+of the context node; the axis will be empty unless the context node
+is an element</p></item>
+
+<item><p>the <code>self</code> axis contains just the context node
+itself</p></item>
+
+<item><p>the <code>descendant-or-self</code> axis contains the context
+node and the descendants of the context node; thus
+the context node is the first node on the axis, and the first child of
+the context node is the second node on the axis</p></item>
+
+<item><p>the <code>ancestor-or-self</code> axis contains the context
+node and ancestors of the context node; thus the context node is the
+first node on the axis, and the context node's parent the second;
+parent here is defined the same as with the <code>parent</code>
+axis</p></item>
+
+</ulist>
+
+<p>Note that the <code>ancestor</code>, <code>descendant</code>,
+<code>following</code>, <code>preceding</code> and <code>self</code>
+axes partition a document (ignoring attribute and namespace nodes):
+they do not overlap and together they contain all the nodes in the
+document.</p>
+
+<scrap>
+<head>Axes</head>
+<prod id="NT-AxisName">
+<lhs>AxisName</lhs>
+<rhs>'ancestor'</rhs>
+<rhs>| 'ancestor-or-self'</rhs>
+<rhs>| 'attribute'</rhs>
+<rhs>| 'child'</rhs>
+<rhs>| 'descendant'</rhs>
+<rhs>| 'descendant-or-self'</rhs>
+<rhs>| 'following'</rhs>
+<rhs>| 'following-sibling'</rhs>
+<rhs>| 'namespace'</rhs>
+<rhs>| 'parent'</rhs>
+<rhs>| 'preceding'</rhs>
+<rhs>| 'preceding-sibling'</rhs>
+<rhs>| 'self'</rhs>
+</prod>
+</scrap>
+
+</div2>
+
+<div2 id="node-tests">
+<head>Node Tests</head>
+
+<p><termdef id="dt-principal-node-type" term="Principal Node
+Type">Every axis has a <term>principal node type</term>.  If an axis
+can contain elements, then the principal node type is element;
+otherwise, it is the type of the nodes that the axis can
+contain.</termdef> Thus,</p>
+
+<slist>
+
+<sitem>For the attribute axis, the principal node type is attribute.</sitem>
+
+<sitem>For the namespace axis, the principal node type is namespace.</sitem>
+
+<sitem>For other axes, the principal node type is element.</sitem>
+
+</slist>
+
+<p>A node test that is a <xnt href="&XMLNames;#NT-QName">QName</xnt>
+tests whether the node is of the principal node type and has the
+specified name.  For example, <code>child::para</code> selects the
+<code>para</code> element children of the context node; if the context
+node has no <code>para</code> children, it will select an empty set of
+nodes.  <code>attribute::href</code> selects the <code>href</code>
+attribute of the context node; if the context node has no
+<code>href</code> attribute, it will select an empty set of nodes.</p>
+
+<p>A <xnt href="&XMLNames;#NT-QName">QName</xnt> in the node test is
+expanded into an <termref
+def="dt-expanded-name">expanded-name</termref> with a local part and a
+possibly null namespace URI.  This expansion is done using the
+namespace declarations from the expression context.  This is the same
+way expansion is done for element type names in start and end-tags
+except that the default namespace declared with <code>xmlns</code> is
+not used: if the <xnt href="&XMLNames;#NT-QName">QName</xnt> does not
+have a prefix, then the namespace URI is null (this is the same way
+attribute names are expanded).  It is an error if the <xnt
+href="&XMLNames;#NT-QName">QName</xnt> has a prefix for which there is
+no namespace declaration in the expression context.  The <termref
+def="dt-expanded-name">expanded-name</termref>s are then compared for
+equality.  Two <termref
+def="dt-expanded-name">expanded-name</termref>s are equal if they have
+the same local part, and either both have a null namespace URI or both
+have the same namespace URI.</p>
+
+<p>A node test <code>*</code> is true for any node of the principal
+node type.  For example, <code>child::*</code> will select all element
+children of the context node, and <code>attribute::*</code> will
+select all attributes of the context node.</p>
+
+<p>A node test can have the form <xnt
+href="&XMLNames;#NT-NCName">NCName</xnt><code>:*</code>.  In this
+case, the prefix is expanded in the same way as with a <xnt
+href="&XMLNames;#NT-QName">QName</xnt> using the context namespace
+declarations.  It is an error if there is no namespace declaration for
+the prefix in the expression context.  The node test will be true for
+any node of the principal type whose <termref
+def="dt-expanded-name">expanded-name</termref> has the namespace URI
+to which the prefix expands, regardless of the local part of the
+name.</p>
+
+<p>The node test <code>text()</code> is true for any text node. For
+example, <code>child::text()</code> will select the text node
+children of the context node.  Similarly, the node test
+<code>comment()</code> is true for any comment node, and the node test
+<code>processing-instruction()</code> is true for any processing
+instruction. The <code>processing-instruction()</code> test may have
+an argument that is <nt def="NT-Literal">Literal</nt>; in this case, it
+is true for any processing instruction that has a name equal to the
+value of the <nt def="NT-Literal">Literal</nt>.</p>
+
+<p>A node test <code>node()</code> is true for any node of any type
+whatsoever.</p>
+
+<scrap>
+<head></head>
+<prod id="NT-NodeTest">
+<lhs>NodeTest</lhs>
+<rhs><nt def="NT-WildcardName">WildcardName</nt></rhs>
+<rhs>| <nt def="NT-NodeType">NodeType</nt> '(' ')'</rhs>
+<rhs>| 'processing-instruction' '(' <nt def="NT-Literal">Literal</nt> ')'</rhs>
+</prod>
+</scrap>
+
+</div2>
+
+<div2 id="predicates">
+<head>Predicates</head>
+
+<p>An axis is either a forward axis or a reverse axis.  An axis that
+only ever contains the context node or nodes that are after the
+context node in <termref def="dt-document-order">document
+order</termref> is a forward axis.  An axis that only ever contains
+the context node or nodes that are before the context node in <termref
+def="dt-document-order">document order</termref> is a reverse axis.
+Thus, the ancestor, ancestor-or-self, preceding, and preceding-sibling
+axes are reverse axes; all other axes are forward axes. Since the
+self axis always contains at most one node, it makes no difference
+whether it is a forward or reverse axis.  <termdef term="Proximity
+Position" id="dt-proximity-position">The <term>proximity
+position</term> of a member of a node-set with respect to an axis is
+defined to be position of the node in the node-set ordered in document
+order if the axis is a forward axis and ordered in reverse document
+order if the axis is a reverse axis. The first position is
+1.</termdef></p>
+
+<p>A predicate filters a node-set with respect to an axis to produce a
+new node-set.  For each node in the node-set to be filtered, the <nt
+def="NT-PredicateExpr">PredicateExpr</nt> is evaluated with that node
+as the context node, with the number of nodes in node-set as the
+context size, and with the <termref
+def="dt-proximity-position">proximity position</termref> of the node in
+the node-set with respect to the axis as the context position; if <nt
+def="NT-PredicateExpr">PredicateExpr</nt> evaluates to true for that
+node, the node is included in the new node-set; otherwise, it is not
+included.</p>
+
+<p>A <nt def="NT-PredicateExpr">PredicateExpr</nt> is evaluated by
+evaluating the <nt def="NT-Expr">Expr</nt> and converting the result
+to a boolean.  If the result is a number, the result will be converted
+to true if the number is equal to the context position and will be
+converted to false otherwise; if the result is not a number, then the
+result will be converted as if by a call to the
+<function>boolean</function> function.  Thus a location path
+<code>para[3]</code> is equivalent to
+<code>para[position()=3]</code>.</p>
+
+<scrap>
+<head>Predicates</head>
+<prod id="NT-Predicate">
+<lhs>Predicate</lhs>
+<rhs>'[' <nt def="NT-PredicateExpr">PredicateExpr</nt> ']'</rhs>
+</prod>
+<prod id="NT-PredicateExpr">
+<lhs>PredicateExpr</lhs>
+<rhs><nt def="NT-Expr">Expr</nt></rhs>
+</prod>
+</scrap>
+
+</div2>
+
+<div2 id="path-abbrev">
+<head>Abbreviated Syntax</head>
+
+<p>Here are some examples of location paths using abbreviated
+syntax:</p>
+
+<ulist>
+
+<item><p><code>para</code> selects the <code>para</code> element children of
+the context node</p></item>
+
+<item><p><code>*</code> selects all element children of the
+context node</p></item>
+
+<item><p><code>text()</code> selects all text node children of the
+context node</p></item>
+
+<item><p><code>@name</code> selects the <code>name</code> attribute of
+the context node</p></item>
+
+<item><p><code>@*</code> selects all the attributes of the
+context node</p></item>
+
+<item><p><code>para[1]</code> selects the first <code>para</code> child of
+the context node</p></item>
+
+<item><p><code>para[last()]</code> selects the last <code>para</code> child
+of the context node</p></item>
+
+<item><p><code>*/para</code> selects all <code>para</code> grandchildren of
+the context node</p></item>
+
+<item><p><code>/doc/chapter[5]/section[2]</code> selects the second
+<code>section</code> of the fifth <code>chapter</code> of the
+<code>doc</code></p></item>
+
+<item><p><code>chapter//para</code> selects the <code>para</code> element
+descendants of the <code>chapter</code> element children of the
+context node</p></item>
+
+<item><p><code>//para</code> selects all the <code>para</code> descendants of
+the document root and thus selects all <code>para</code> elements in the
+same document as the context node</p></item>
+
+<item><p><code>//olist/item</code> selects all the <code>item</code>
+elements in the same document as the context node that have an
+<code>olist</code> parent</p></item>
+
+<item><p><code>.</code> selects the context node</p></item>
+
+<item><p><code>.//para</code> selects the <code>para</code> element
+descendants of the context node</p></item>
+
+<item><p><code>..</code> selects the parent of the context node</p></item>
+
+<item><p><code>../@lang</code> selects the <code>lang</code> attribute
+of the parent of the context node</p></item>
+
+<item><p><code>para[@type="warning"]</code> selects all <code>para</code>
+children of the context node that have a <code>type</code> attribute with
+value <code>warning</code></p></item>
+
+<item><p><code>para[@type="warning"][5]</code> selects the fifth
+<code>para</code> child of the context node that has a <code>type</code>
+attribute with value <code>warning</code></p></item>
+
+<item><p><code>para[5][@type="warning"]</code> selects the fifth
+<code>para</code> child of the context node if that child has a
+<code>type</code> attribute with value <code>warning</code></p></item>
+
+<item><p><code>chapter[title="Introduction"]</code> selects the
+<code>chapter</code> children of the context node that have one or
+more <code>title</code> children with <termref
+def="dt-string-value">string-value</termref> equal to
+<code>Introduction</code></p></item>
+
+<item><p><code>chapter[title]</code> selects the <code>chapter</code>
+children of the context node that have one or more <code>title</code>
+children</p></item>
+
+<item><p><code>employee[@secretary and @assistant]</code> selects all
+the <code>employee</code> children of the context node that have both a
+<code>secretary</code> attribute and an <code>assistant</code>
+attribute</p></item>
+
+</ulist>
+
+<p>The most important abbreviation is that <code>child::</code> can be
+omitted from a location step.  In effect <code>child</code> is the
+default axis.  For example, a location path <code>div/para</code> is
+short for <code>child::div/child::para</code>.</p>
+
+<p>There is also an abbreviation for attributes:
+<code>attribute::</code> can be abbreviated to <code>@</code>. For
+example, a location path <code>para[@type="warning"]</code> is short
+for <code>child::para[attribute::type="warning"]</code> and so selects
+<code>para</code> children with a <code>type</code> attribute with
+value equal to <code>warning</code>.</p>
+
+<p><code>//</code> is short for
+<code>/descendant-or-self::node()/</code>.  For example,
+<code>//para</code> is short for
+<code>/descendant-or-self::node()/child::para</code> and so will
+select any <code>para</code> element in the document (even a
+<code>para</code> element that is a document element will be selected
+by <code>//para</code> since the document element node is a child of
+the root node); <code>div//para</code> is short for
+<code>div/descendant-or-self::node()/child::para</code> and so
+will select all <code>para</code> descendants of <code>div</code>
+children.</p>
+
+<note><p>The location path <code>//para[1]</code> does
+<emph>not</emph> mean the same as the location path
+<code>/descendant::foo[1]</code>.  The latter selects the first
+descendant <code>foo</code> element; the former selects all descendant
+<code>para</code> elements that are the first <code>para</code>
+children of their parents.</p></note>
+
+<p>A location step of <code>.</code> is short for
+<code>self::node()</code>. This is particularly useful in
+conjunction with <code>//</code>. For example, the location path
+<code>.//para</code> is short for</p>
+
+<eg>self::node()/descendant-or-self::node()/child::para</eg>
+
+<p>and so will select all <code>para</code> descendant elements of the
+context node.</p>
+
+<p>Similarly, a location step of <code>..</code> is short for
+<code>parent::node()</code>. For example, <code>../title</code> is
+short for <code>parent::node()/child::title</code> and so will
+select the <code>title</code> children of the parent of the context
+node.</p>
+
+<scrap>
+<head>Abbreviations</head>
+<prodgroup pcw5="1" pcw2="15" pcw4="16">
+<prod id="NT-AbbreviatedAbsoluteLocationPath">
+<lhs>AbbreviatedAbsoluteLocationPath</lhs>
+<rhs>'//' <nt def="NT-RelativeLocationPath">RelativeLocationPath</nt></rhs>
+</prod>
+<prod id="NT-AbbreviatedRelativeLocationPath">
+<lhs>AbbreviatedRelativeLocationPath</lhs>
+<rhs><nt def="NT-RelativeLocationPath">RelativeLocationPath</nt> '//' <nt def="NT-Step">Step</nt></rhs>
+</prod>
+<prod id="NT-AbbreviatedStep">
+<lhs>AbbreviatedStep</lhs>
+<rhs>'.'</rhs>
+<rhs>| '..'</rhs>
+</prod>
+<prod id="NT-AbbreviatedAxisSpecifier">
+<lhs>AbbreviatedAxisSpecifier</lhs>
+<rhs>'@'?</rhs>
+</prod>
+</prodgroup>
+</scrap>
+
+</div2>
+
+</div1>
+
+<div1>
+<head>Expressions</head>
+
+<div2>
+<head>Basics</head>
+
+<p>A <nt def="NT-VariableReference">VariableReference</nt> evaluates
+to the value to which the variable name is bound in the set of
+variable bindings in the context.  It is an error if the variable is
+not bound to any value in the set of variable bindings in the
+expression context.</p>
+
+<p>Parentheses may be used for grouping.</p>
+
+<scrap>
+<head></head>
+<prod id="NT-Expr">
+<lhs>Expr</lhs>
+<rhs><nt def="NT-OrExpr">OrExpr</nt></rhs>
+</prod>
+<prod id="NT-PrimaryExpr">
+<lhs>PrimaryExpr</lhs>
+<rhs><nt def="NT-VariableReference">VariableReference</nt></rhs>
+<rhs>| '(' <nt def="NT-Expr">Expr</nt> ')'</rhs>
+<rhs>| <nt def="NT-Literal">Literal</nt></rhs>
+<rhs>| <nt def="NT-Number">Number</nt></rhs>
+<rhs>| <nt def="NT-FunctionCall">FunctionCall</nt></rhs>
+</prod>
+</scrap>
+
+</div2>
+
+<div2>
+<head>Function Calls</head>
+
+<scrap>
+<head></head>
+<prod id="NT-FunctionCall">
+<lhs>FunctionCall</lhs>
+<rhs><nt def="NT-FunctionName">FunctionName</nt> '(' ( <nt def="NT-Argument">Argument</nt> ( ',' <nt def="NT-Argument">Argument</nt>)*)? ')'</rhs>
+</prod>
+<prod id="NT-Argument">
+<lhs>Argument</lhs>
+<rhs><nt def="NT-Expr">Expr</nt></rhs>
+</prod>
+</scrap>
+
+<p>A <nt def="NT-FunctionCall">FunctionCall</nt> expression is
+evaluated by evaluating each of the <nt
+def="NT-Argument">Argument</nt>s, converting each argument to the type
+required by the function, calling the named function from the function
+library that is part of the expression evaluation context passing it
+the converted arguments.  The result of the <nt
+def="NT-FunctionCall">FunctionCall</nt> expression is the result
+returned by the function.</p>
+
+<p>An argument is converted to type string as if by calling the
+<function>string</function> function.  An argument is converted to
+type number as if by calling the <function>number</function> function.
+An argument is converted to type boolean as if by calling the
+<function>boolean</function> function.  An argument that is not of
+type node-set cannot be converted to a node-set.  It is an error if
+the number or type of arguments is wrong.</p>
+
+</div2>
+
+<div2 id="node-sets">
+<head>Node-sets</head>
+
+<p>A location path can be used as an expression.  The expression
+returns the set of nodes selected by the path.</p>
+
+<p>The <code>|</code> operator computes the union of its operands,
+which must be node-sets.</p>
+
+<p>Square brackets are used to filter expressions in the same way that
+they are used in location paths. It is an error if the expression to
+be filtered does not evaluate to a node-set.  The <nt
+def="NT-Predicate">Predicate</nt> filters the node-set with respect to
+the child axis.</p>
+
+<note><p>The meaning of a <nt def="NT-Predicate">Predicate</nt>
+depends crucially on which axis applies. For example,
+<code>preceding::foo[1]</code> returns the first <code>foo</code>
+element in <emph>reverse document order</emph>, because the axis that
+applies to the <code>[1]</code> predicate is the preceding axis; by
+contrast, <code>(preceding::foo)[1]</code> returns the first
+<code>foo</code> element in <emph>document order</emph>, because the
+axis that applies to the <code>[1]</code> predicate is the child
+axis.</p></note>
+
+<p>The <code>/</code> and <code>//</code> operators compose an
+arbitrary expression and a relative location path.  It is an error if
+the expression does not evaluate to a node-set.  The <code>/</code>
+operator does composition in the same way as when <code>/</code> is
+used in a location path. As in location paths, <code>//</code> is
+short for <code>/descendant-or-self::node()/</code>.</p>
+
+<p>There are no types of objects that can be converted to node-sets.</p>
+
+<scrap>
+<head></head>
+<prod id="NT-UnionExpr">
+<lhs>UnionExpr</lhs>
+<rhs><nt def="NT-PathExpr">PathExpr</nt></rhs>
+<rhs>| <nt def="NT-UnionExpr">UnionExpr</nt> '|' <nt def="NT-PathExpr">PathExpr</nt></rhs>
+</prod>
+<prod id="NT-PathExpr">
+<lhs>PathExpr</lhs>
+<rhs><nt def="NT-LocationPath">LocationPath</nt></rhs>
+<rhs>| <nt def="NT-FilterExpr">FilterExpr</nt></rhs>
+<rhs>| <nt def="NT-FilterExpr">FilterExpr</nt> '/' <nt def="NT-RelativeLocationPath">RelativeLocationPath</nt></rhs>
+<rhs>| <nt def="NT-FilterExpr">FilterExpr</nt> '//' <nt def="NT-RelativeLocationPath">RelativeLocationPath</nt></rhs>
+</prod>
+<prod id="NT-FilterExpr">
+<lhs>FilterExpr</lhs>
+<rhs><nt def="NT-PrimaryExpr">PrimaryExpr</nt></rhs>
+<rhs>| <nt def="NT-FilterExpr">FilterExpr</nt> <nt def="NT-Predicate">Predicate</nt></rhs>
+</prod>
+</scrap>
+
+</div2>
+
+<div2 id="booleans">
+<head>Booleans</head>
+
+<p>An object of type boolean can have two values, true and false.</p>
+
+<p>An <code>or</code> expression is evaluated by evaluating each
+operand and converting its value to a boolean.  The result is true if
+either value is true and false otherwise.</p>
+
+<p>An <code>and</code> expression is evaluated by evaluating each
+operand and converting its value to a boolean.  The result is true if
+both values are true and false otherwise.</p>
+
+<p>A <nt def="NT-RelationalExpr">RelationalExpr</nt> or an <nt
+def="NT-EqualityExpr">EqualityExpr</nt> is evaluated by comparing the
+objects that result from evaluating the two operands.  Comparison of
+the resulting objects is defined in the following three paragraphs.
+First, comparisons that involve node-sets are defined in terms of
+comparisons that do not involve node-sets; this is defined uniformly
+for <code>=</code>, <code>!=</code>, <code>&lt;=</code>,
+<code>&lt;</code>, <code>&gt;=</code> and <code>&gt;</code>.  Second,
+comparisons that do not involve node-sets are defined for
+<code>=</code> and <code>!=</code>.  Third, comparisons that do not
+involve node-sets are defined for <code>&lt;=</code>,
+<code>&lt;</code>, <code>&gt;=</code> and <code>&gt;</code>.</p>
+
+<p>If both objects to be compared are node-sets, then the comparison
+will be true if and only if there is a node in the first node-set and
+a node in the second node-set such that the result of performing the
+comparison on the <termref
+def="dt-string-value">string-value</termref>s of the two nodes is
+true.  If one object to be compared is a node-set and the other is a
+number, then the comparison will be true if and only if there is a
+node in the node-set such that the result of performing the comparison
+on the number to be compared and on the result of converting the
+<termref def="dt-string-value">string-value</termref> of that node to
+a number using the <function>number</function> function is true.  If
+one object to be compared is a node-set and the other is a string,
+then the comparison will be true if and only if there is a node in the
+node-set such that the result of performing the comparison on the
+<termref def="dt-string-value">string-value</termref> of the node and
+the other string is true. If one object to be compared is a node-set
+and the other is a boolean, then the comparison will be true if and
+only if the result of performing the comparison on the boolean and on
+the result of converting the node-set to a boolean using the
+<function>boolean</function> function is true.</p>
+
+<p>When neither object to be compared is a node-set and the operator
+is <code>=</code> or <code>!=</code>, then the objects are compared by
+converting them to a common type as follows and then comparing them.
+If at least one object to be compared is a boolean, then each object
+to be compared is converted to a boolean as if by applying the
+<function>boolean</function> function.  Otherwise, if at least one
+object to be compared is a number, then each object to be compared is
+converted to a number as if by applying the
+<function>number</function> function.  Otherwise, both objects to be
+compared are converted to strings as if by applying the
+<function>string</function> function.  The <code>=</code> comparison
+will be true if and only if the objects are equal; the <code>!=</code>
+comparison will be true if and only if the objects are not equal.
+Numbers are compared for equality according to IEEE 754.  Two booleans
+are equal if either both are true or both are false.  Two strings are
+equal if and only if they both consist of the same sequence of UCS
+characters.</p>
+
+<p>When neither object to be compared is a node-set and the operator
+is <code>&lt;=</code>, <code>&lt;</code>, <code>&gt;=</code>,
+<code>&gt;</code>, then the objects are compared by converted both
+objects to numbers and comparing the numbers according to IEEE 754.
+The <code>&lt;</code> comparison will be true if and only if the first
+number is less than the second number.  The <code>&lt;=</code>
+comparison will be true if and only if the first number is less than
+or equal to the second number.  The <code>&gt;</code> comparison will
+be true if and only if the first number is greater than the second
+number.  The <code>&gt;=</code> comparison will be true if and only if
+the first number is greater than or equal to the second number.</p>
+
+<scrap>
+<head></head>
+<prod id="NT-OrExpr">
+<lhs>OrExpr</lhs>
+<rhs><nt def="NT-AndExpr">AndExpr</nt></rhs>
+<rhs>| <nt def="NT-OrExpr">OrExpr</nt> 'or' <nt def="NT-AndExpr">AndExpr</nt></rhs>
+</prod>
+<prod id="NT-AndExpr">
+<lhs>AndExpr</lhs>
+<rhs><nt def="NT-EqualityExpr">EqualityExpr</nt></rhs>
+<rhs>| <nt def="NT-AndExpr">AndExpr</nt> 'and' <nt def="NT-EqualityExpr">EqualityExpr</nt></rhs>
+</prod>
+<prod id="NT-EqualityExpr">
+<lhs>EqualityExpr</lhs>
+<rhs><nt def="NT-RelationalExpr">RelationalExpr</nt></rhs>
+<rhs>| <nt def="NT-EqualityExpr">EqualityExpr</nt> '=' <nt def="NT-RelationalExpr">RelationalExpr</nt></rhs>
+<rhs>| <nt def="NT-EqualityExpr">EqualityExpr</nt> '!=' <nt def="NT-RelationalExpr">RelationalExpr</nt></rhs>
+</prod>
+<prod id="NT-RelationalExpr">
+<lhs>RelationalExpr</lhs>
+<rhs><nt def="NT-AdditiveExpr">AdditiveExpr</nt></rhs>
+<rhs>| <nt def="NT-RelationalExpr">RelationalExpr</nt> '&lt;' <nt def="NT-AdditiveExpr">AdditiveExpr</nt></rhs>
+<rhs>| <nt def="NT-RelationalExpr">RelationalExpr</nt> '>' <nt def="NT-AdditiveExpr">AdditiveExpr</nt></rhs>
+<rhs>| <nt def="NT-RelationalExpr">RelationalExpr</nt> '&lt;=' <nt def="NT-AdditiveExpr">AdditiveExpr</nt></rhs>
+<rhs>| <nt def="NT-RelationalExpr">RelationalExpr</nt> '>=' <nt def="NT-AdditiveExpr">AdditiveExpr</nt></rhs>
+</prod>
+</scrap>
+
+<note><p>The effect of the above grammar is that the order of
+precedence is (lowest precedence first):</p>
+
+<ulist>
+
+<item><p><code>or</code></p></item>
+
+<item><p><code>and</code></p></item>
+
+<item><p><code>=</code>, <code>!=</code></p></item>
+
+<item><p><code>&lt;=</code>, <code>&lt;</code>, <code>&gt;=</code>,
+<code>&gt;</code></p></item>
+
+</ulist>
+
+<p>and the operators are all left associative.</p>
+
+<p>For example, <code>3 &gt; 2 &gt; 1</code> is equivalent to <code>(3
+&gt; 2) &gt; 1</code>, which evaluates to false.</p>
+
+</note>
+
+</div2>
+
+<div2 id="numbers">
+<head>Numbers</head>
+
+<p>A number represents a floating-point number.  A number can have any
+double-precision 64-bit format IEEE 754 value <bibref ref="IEEE754"/>.
+These include a special <quote>Not-a-Number</quote> (NaN) value,
+positive and negative infinity, and positive and negative zero.  See
+<loc href="http://java.sun.com/docs/books/jls/html/4.doc.html#9208"
+>Section 4.2.3</loc> of <bibref ref="JLS"/> for a summary of the key
+rules of the IEEE 754 standard.</p>
+
+<p>The numeric operators convert their operands to numbers as if by
+calling the <function>number</function> function.</p>
+
+<p>The <code>+</code> operator performs addition.</p>
+
+<p>The <code>-</code> operator performs subtraction.</p>
+
+<note><p>Since XML allows <code>-</code> in names, the <code>-</code>
+operator typically needs to be preceded by whitespace.  For example,
+<code>foo-bar</code> evaluates to a node-set containing the child
+elements named <code>foo-bar</code>; <code>foo - bar</code> evaluates
+to the difference of the result of converting the <termref
+def="dt-string-value">string-value</termref> of the first
+<code>foo</code> child element to a number and the result of
+converting the <termref def="dt-string-value">string-value</termref>
+of the first <code>bar</code> child to a number.</p></note>
+ 
+<p>The <code>div</code> operator performs floating-point division
+according to IEEE 754.</p>
+
+<p>The <code>mod</code> operator returns the remainder from a
+truncating division.  For example,</p>
+
+<ulist>
+<item><p><code>5 mod 2</code> returns <code>1</code></p></item>
+<item><p><code>5 mod -2</code> returns <code>1</code></p></item>
+<item><p><code>-5 mod 2</code> returns <code>-1</code></p></item>
+<item><p><code>-5 mod -2</code> returns <code>-1</code></p></item>
+</ulist>
+
+<note><p>This is the same as the <code>%</code> operator in Java and
+ECMAScript.</p></note>
+
+<note><p>This is not the same as the IEEE remainder operation, which
+returns the remainder from a rounding division.</p></note>
+
+<scrap>
+<head>Numeric Expressions</head>
+<prodgroup pcw5="1" pcw2="10" pcw4="21">
+<prod id="NT-AdditiveExpr">
+<lhs>AdditiveExpr</lhs>
+<rhs><nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt></rhs>
+<rhs>| <nt def="NT-AdditiveExpr">AdditiveExpr</nt> '+' <nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt></rhs>
+<rhs>| <nt def="NT-AdditiveExpr">AdditiveExpr</nt> '-' <nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt></rhs>
+</prod>
+<prod id="NT-MultiplicativeExpr">
+<lhs>MultiplicativeExpr</lhs>
+<rhs><nt def="NT-UnaryExpr">UnaryExpr</nt></rhs>
+<rhs>| <nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt> <nt def="NT-MultiplyOperator">MultiplyOperator</nt> <nt def="NT-UnaryExpr">UnaryExpr</nt></rhs>
+<rhs>| <nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt> 'div' <nt def="NT-UnaryExpr">UnaryExpr</nt></rhs>
+<rhs>| <nt def="NT-MultiplicativeExpr">MultiplicativeExpr</nt> 'mod' <nt def="NT-UnaryExpr">UnaryExpr</nt></rhs>
+</prod>
+<prod id="NT-UnaryExpr">  
+<lhs>UnaryExpr</lhs>
+<rhs><nt def="NT-UnionExpr">UnionExpr</nt></rhs>
+<rhs>| '-' <nt def="NT-UnaryExpr">UnaryExpr</nt></rhs>
+</prod>
+</prodgroup>
+</scrap>
+
+</div2>
+
+<div2 id="strings">
+<head>Strings</head>
+
+<p>Strings consist of a sequence of zero or more characters, where a
+character is defined as in the XML Recommendation <bibref ref="XML"/>.
+A single character in XPath thus corresponds to a single Unicode 2.0
+abstract character with a single corresponding Unicode scalar value;
+this is not the same thing as a 16-bit Unicode code value: the Unicode
+coded character representation for an abstract character with Unicode
+scalar value greater that U+FFFF is a pair of 16-bit Unicode code
+values (a surrogate pair).  In many programming languages, a string is
+represented by a sequence of 16-bit Unicode code values;
+implementations of XPath in such languages must take care to ensure that
+a surrogate pair is correctly treated as a single XPath character.</p>
+
+</div2>
+
+<div2 id="exprlex">
+<head>Lexical Structure</head>
+
+<p>When tokenizing, the longest possible token is always returned.</p>
+
+<p>For readability, whitespace may be used in patterns even though not
+explicitly allowed by the grammar: <nt
+def="NT-ExprWhitespace">ExprWhitespace</nt> may be freely added within
+patterns before or after any <nt
+def="NT-ExprToken">ExprToken</nt>.</p>
+
+<p>The following special tokenization rules must be applied in the
+order specified to disambiguate the grammar:</p>
+
+<ulist>
+
+<item><p>If there is a preceding token and the preceding token is not
+one of <code>@</code>, <code>::</code>, <code>(</code>,
+<code>[</code>, <code>,</code> or an <nt
+def="NT-Operator">Operator</nt>, then a <code>*</code> must be
+recognized as a <nt def="NT-MultiplyOperator">MultiplyOperator</nt>
+and an <xnt href="&XMLNames;#NT-NCName">NCName</xnt> must be
+recognized as an <nt
+def="NT-OperatorName">OperatorName</nt>.</p></item>
+
+<item><p>If the character following an <xnt
+href="&XMLNames;#NT-NCName">NCName</xnt> (possibly after intervening
+<nt def="NT-ExprWhitespace">ExprWhitespace</nt>) is <code>(</code>,
+then the token must be recognized as a <nt
+def="NT-NodeType">NodeType</nt> or a <nt
+def="NT-FunctionName">FunctionName</nt>.</p></item>
+
+<item><p>If the two characters following an <xnt
+href="&XMLNames;#NT-NCName">NCName</xnt> (possibly after intervening
+<nt def="NT-ExprWhitespace">ExprWhitespace</nt>) are <code>::</code>,
+then the token must be recognized as an <nt
+def="NT-AxisName">AxisName</nt>.</p></item>
+
+<item><p>Otherwise, the token must not be recognized as a <nt
+def="NT-MultiplyOperator">MultiplyOperator</nt>, an <nt
+def="NT-OperatorName">OperatorName</nt>, a <nt
+def="NT-NodeType">NodeType</nt>, a <nt
+def="NT-FunctionName">FunctionName</nt>, or an <nt
+def="NT-AxisName">AxisName</nt>.</p></item>
+
+</ulist>
+
+<scrap>
+<head>Expression Lexical Structure</head>
+<prodgroup pcw5="1" pcw2="8" pcw4="21">
+<prod id="NT-ExprToken">
+<lhs>ExprToken</lhs>
+<rhs>'(' | ')' | '[' | ']' | '.' | '..' | '@' | ',' | '::'</rhs>
+<rhs>| <nt def="NT-WildcardName">WildcardName</nt></rhs>
+<rhs>| <nt def="NT-NodeType">NodeType</nt></rhs>
+<rhs>| <nt def="NT-Operator">Operator</nt></rhs>
+<rhs>| <nt def="NT-FunctionName">FunctionName</nt></rhs>
+<rhs>| <nt def="NT-AxisName">AxisName</nt></rhs>
+<rhs>| <nt def="NT-Literal">Literal</nt></rhs>
+<rhs>| <nt def="NT-Number">Number</nt></rhs>
+<rhs>| <nt def="NT-VariableReference">VariableReference</nt></rhs>
+</prod>
+<prod id="NT-Literal">
+<lhs>Literal</lhs>
+<rhs>'"' [^"]* '"'</rhs>
+<rhs>| "'" [^']* "'"</rhs>
+</prod>
+<prod id="NT-Number">
+<lhs>Number</lhs>
+<rhs><nt def="NT-Digits">Digits</nt> ('.' <nt def="NT-Digits">Digits</nt>?)?</rhs>
+<rhs>| '.' <nt def="NT-Digits">Digits</nt></rhs>
+</prod>
+<prod id="NT-Digits">
+<lhs>Digits</lhs>
+<rhs>[0-9]+</rhs>
+</prod>
+<prod id="NT-Operator">
+<lhs>Operator</lhs>
+<rhs><nt def="NT-OperatorName">OperatorName</nt></rhs>
+<rhs>| <nt def="NT-MultiplyOperator">MultiplyOperator</nt></rhs>
+<rhs>| '/' | '//' | '|' | '+' | '-' | '=' | '!=' | '&lt;'| '&lt;=' | '&gt;' | '&gt;='</rhs>
+</prod>
+<prod id="NT-OperatorName">
+<lhs>OperatorName</lhs>
+<rhs>'and' | 'or' | 'mod' | 'div'</rhs>
+</prod>
+<prod id="NT-MultiplyOperator">
+<lhs>MultiplyOperator</lhs>
+<rhs>'*'</rhs>
+</prod>
+<prod id="NT-FunctionName">
+<lhs>FunctionName</lhs>
+<rhs>
+<xnt href="&XMLNames;#NT-QName">QName</xnt>
+- <nt def="NT-NodeType">NodeType</nt>
+</rhs>
+</prod>
+<prod id="NT-VariableReference">
+<lhs>VariableReference</lhs>
+<rhs>'$' <xnt href="&XMLNames;#NT-QName">QName</xnt></rhs>
+</prod>
+<prod id="NT-WildcardName">
+<lhs>WildcardName</lhs>
+<rhs>'*'</rhs>
+<rhs>| <xnt href="&XMLNames;#NT-NCName">NCName</xnt> ':' '*'</rhs>
+<rhs>| <xnt href="&XMLNames;#NT-QName">QName</xnt></rhs>
+</prod>
+<prod id="NT-NodeType">
+<lhs>NodeType</lhs>
+<rhs>'comment'</rhs>
+<rhs>| 'text'</rhs>
+<rhs>| 'processing-instruction'</rhs>
+<rhs>| 'node'</rhs>
+</prod>
+<prod id="NT-ExprWhitespace">
+<lhs>ExprWhitespace</lhs>
+<rhs><xnt href="&XML;#NT-S">S</xnt></rhs>
+</prod>
+</prodgroup>
+</scrap>
+
+</div2>
+
+</div1>
+
+<div1 id="corelib">
+<head>Core Function Library</head>
+
+<p>This section describes functions that XPath implementations must
+always include in the function library that is used to evaluate
+expressions.</p>
+
+<div2>
+<head>Node Set Functions</head>
+
+<proto name="last" return-type="number"></proto>
+
+<p>The <function>last</function> function returns a number equal to
+the <termref def="dt-context-size">context size</termref> from the
+expression evaluation context.</p>
+
+<proto name="position" return-type="number"></proto>
+
+<p>The <function>position</function> function returns a number equal to
+the <termref def="dt-context-position">context position</termref> from
+the expression evaluation context.</p>
+
+<proto name="count" return-type="number"><arg type="node-set"/></proto>
+
+<p>The <function>count</function> function returns the number of nodes in the
+argument node-set.</p>
+
+<proto name="id" return-type="node-set"><arg type="object"/></proto>
+
+<p>The <function>id</function> function selects elements by their
+unique ID (see <specref ref="unique-id"/>).  When the argument to
+<function>id</function> is of type node-set, then the result is the
+union of the result of applying <function>id</function> to the
+<termref def="dt-string-value">string-value</termref> of each of the
+nodes in the argument node-set.  When the argument to
+<function>id</function> is of any other type, the argument is
+converted to a string as if by a call to the
+<function>string</function> function; the string is split into a
+whitespace-separated list of tokens (whitespace is any sequence of
+characters matching the production <xnt href="&XML;#NT-S">S</xnt>);
+the result is a node-set containing the elements in the same document
+as the context node that have a unique ID equal to any of the tokens
+in the list.</p>
+
+<ulist>
+<item><p><code>id("foo")</code> selects the element with unique ID
+<code>foo</code></p></item>
+<item><p><code>id("foo")/child::para[position()=5]</code> selects
+the fifth <code>para</code> child of the element with unique ID
+<code>foo</code></p></item>
+</ulist>
+
+<proto name="local-name" return-type="string"><arg occur="opt" type="node-set"/></proto>
+
+<p>The <function>local-name</function> function returns the local part
+of the <termref def="dt-expanded-name">expanded-name</termref> of the
+node in the argument node-set that is first in <termref
+def="dt-document-order">document order</termref>. If the argument
+node-set is empty or the first node has no <termref
+def="dt-expanded-name">expanded-name</termref>, an empty string is
+returned.  If the argument is omitted, it defaults to a node-set with
+the context node as its only member.</p>
+
+<proto name="namespace-uri" return-type="string"><arg occur="opt"
+type="node-set"/></proto>
+
+<p>The <function>namespace-uri</function> function returns the
+namespace URI of the <termref
+def="dt-expanded-name">expanded-name</termref> of the node in the
+argument node-set that is first in <termref
+def="dt-document-order">document order</termref>. If the argument
+node-set is empty, the first node has no <termref
+def="dt-expanded-name">expanded-name</termref>, or the namespace URI
+of the <termref def="dt-expanded-name">expanded-name</termref> is
+null, an empty string is returned.  If the argument is omitted, it
+defaults to a node-set with the context node as its only member.</p>
+
+<note><p>The string returned by the
+<function>namespace-uri</function> function will be empty except for
+element nodes and attribute nodes.</p></note>
+
+<proto name="name" return-type="string"><arg occur="opt" type="node-set"/></proto>
+
+<p>The <function>name</function> function returns a string containing
+a <xnt href="&XMLNames;#NT-QName">QName</xnt> representing the
+<termref def="dt-expanded-name">expanded-name</termref> of the node in
+the argument node-set that is first in <termref
+def="dt-document-order">document order</termref>. The <xnt
+href="&XMLNames;#NT-QName">QName</xnt> must represent the <termref
+def="dt-expanded-name">expanded-name</termref> with respect to the
+namespace declarations in effect on the node whose <termref
+def="dt-expanded-name">expanded-name</termref> is being represented.
+Typically, this will be the <xnt
+href="&XMLNames;#NT-QName">QName</xnt> that occurred in the XML
+source.  This need not be the case if there are namespace declarations
+in effect on the node that associate multiple prefixes with the same
+namespace.  However, an implementation may include information about
+the original prefix in its representation of nodes; in this case, an
+implementation can ensure that the returned string is always the same
+as the <xnt href="&XMLNames;#NT-QName">QName</xnt> used in the XML
+source. If the argument node-set is empty or the first node has no
+<termref def="dt-expanded-name">expanded-name</termref>, an empty
+string is returned.  If the argument it omitted, it defaults to a
+node-set with the context node as its only member.</p>
+
+<note><p>The string returned by the <function>name</function> function
+will be the same as the string returned by the
+<function>local-name</function> function except for element nodes and
+attribute nodes.</p></note>
+
+</div2>
+
+<div2>
+<head>String Functions</head>
+
+<proto name="string" return-type="string"><arg occur="opt" type="object"/></proto>
+
+<p>The <function>string</function> function converts an object to a string
+as follows:</p>
+
+<ulist>
+
+<item><p>A node-set is converted to a string by returning the <termref
+def="dt-string-value">string-value</termref> of the node in the
+node-set that is first in <termref def="dt-document-order">document
+order</termref>.  If the node-set is empty, an empty string is
+returned.</p></item>
+
+<item><p>A number is converted to a string as follows</p>
+
+<ulist>
+
+<item><p>NaN is converted to the string <code>NaN</code></p></item>
+
+<item><p>positive zero is converted to the string
+<code>0</code></p></item>
+
+<item><p>negative zero is converted to the string
+<code>0</code></p></item>
+
+<item><p>positive infinity is converted to the string
+<code>Infinity</code></p></item>
+
+<item><p>negative infinity is converted to the string
+<code>-Infinity</code></p></item>
+
+<item><p>if the number is an integer, the number is represented in
+decimal form as a <nt def="NT-Number">Number</nt> with no decimal
+point and no leading zeros, preceded by a minus sign (<code>-</code>)
+if the number is negative</p></item>
+
+<item><p>otherwise, the number is represented in decimal form as a <nt
+def="NT-Number">Number</nt> including a decimal point with at least
+one digit before the decimal point and at least one digit after the
+decimal point, preceded by a minus sign (<code>-</code>) if the number
+is negative; there must be no leading zeros before the decimal point
+apart possibly from the one required digit immediately before the
+decimal point; beyond the one required digit after the decimal point
+there must be as many, but only as many, more digits as are needed to
+uniquely distinguish the number from all other IEEE 754 numeric
+values.</p></item>
+
+</ulist>
+</item>
+
+<item><p>The boolean false value is converted to the string
+<code>false</code>.  The boolean true value is converted to the
+string <code>true</code>.</p></item>
+
+<item><p>An object of a type other than the four basic types is
+converted to a string in a way that is dependent on that
+type.</p></item>
+
+</ulist>
+
+<p>If the argument is omitted, it defaults to a node-set with the
+context node as its only member.</p>
+
+<proto name="concat" return-type="string"><arg type="string"/><arg type="string"/><arg occur="rep" type="string"/></proto>
+
+<p>The <function>concat</function> function returns the concatenation of its
+arguments.</p>
+
+<proto name="starts-with" return-type="boolean"><arg type="string"/><arg type="string"/></proto>
+
+<p>The <function>starts-with</function> function returns true if the
+first argument string starts with the second argument string, and
+otherwise returns false.</p>
+
+<proto name="contains" return-type="boolean"><arg type="string"/><arg type="string"/></proto>
+
+<p>The <function>contains</function> function returns true if the first
+argument string contains the second argument string, and otherwise
+returns false.</p>
+
+<proto name="substring-before" return-type="string"><arg type="string"/><arg type="string"/></proto>
+
+<p>The <function>substring-before</function> function returns the substring
+of the first argument string that precedes the first occurrence of the
+second argument string in the first argument string, or the empty
+string if the first argument string does not contain the second
+argument string.  For example,
+<code>substring-before("1999/04/01","/")</code> returns
+<code>1999</code>.</p>
+
+<proto name="substring-after" return-type="string"><arg type="string"/><arg type="string"/></proto>
+
+<p>The <function>substring-after</function> function returns the
+substring of the first argument string that follows the first
+occurrence of the second argument string in the first argument string,
+or the empty string if the first argument string does not contain the
+second argument string. For example,
+<code>substring-after("1999/04/01","/")</code> returns
+<code>04/01</code>, and
+<code>substring-after("1999/04/01","19")</code> returns
+<code>99/04/01</code>.</p>
+
+<proto name="substring" return-type="string">
+<arg type="string"/>
+<arg type="number"/>
+<arg type="number" occur="opt"/>
+</proto>
+
+<p>The <code>substring</code> function returns the substring of the
+first argument starting at the position specified in the second
+argument with length specified in the third argument. For example,
+<code>substring("12345",2,3)</code> returns <code>"234"</code>.
+If the third argument is not specified, it returns
+the substring starting at the position specified in the second
+argument and continuing to the end of the string. For example,
+<code>substring("12345",2)</code> returns <code>"2345"</code>.</p>
+
+<p>More precisely, each character in the string (see <specref
+ref="strings"/>) is considered to have a numeric position: the
+position of the first character is 1, the position of the second
+character is 2 and so on.  The returned substring contains those
+characters for which the position of the character is greater than or
+equal to the second argument and, if the third argument is specified,
+less than the sum of the second and third arguments; the comparisons
+and addition used for the above follow the standard IEEE 754
+rules. Thus:</p>
+
+<ulist>
+
+<item><p><code>substring("12345", 1.5, 2.6)</code> returns
+<code>"234"</code></p></item>
+
+<item><p><code>substring("12345", 0, 3)</code> returns
+<code>"12"</code></p></item>
+
+<item><p><code>substring("12345", 0 div 0, 3)</code> returns
+<code>""</code></p></item>
+
+<item><p><code>substring("12345", 1, 0 div 0)</code> returns
+<code>""</code></p></item>
+
+<item><p><code>substring("12345", -42, 1 div 0)</code> returns
+<code>"12345"</code></p></item>
+
+<item><p><code>substring("12345", -1 div 0, 1 div 0)</code> returns
+<code>""</code></p></item>
+
+</ulist>
+
+<proto name="string-length" return-type="number">
+<arg type="string" occur="opt"/>
+</proto>
+
+<p>The <function>string-length</function> returns the number of
+characters in the string (see <specref ref="strings"/>).  If the
+argument is omitted, it defaults to the context node converted to a
+string, in other words the <termref
+def="dt-string-value">string-value</termref> of the context node.</p>
+
+<proto name="normalize" return-type="string"><arg occur="opt" type="string"/></proto>
+
+<p>The <function>normalize</function> function returns the argument
+string with white space normalized by stripping leading and trailing
+whitespace and replacing sequences of whitespace characters by a
+single space.  Whitespace characters are the same allowed by the <xnt
+href="&XML;#NT-S">S</xnt> production in XML.  If the argument is
+omitted, it defaults to the context node converted to a string, in
+other words the <termref def="dt-string-value">string-value</termref>
+of the context node.</p>
+
+<proto name="translate" return-type="string"><arg type="string"/><arg type="string"/><arg type="string"/></proto>
+
+<p>The <function>translate</function> function returns the first
+argument string with occurrences of characters in the second argument
+string replaced by the character at the corresponding position in the
+third argument string.  For example,
+<code>translate("bar","abc","ABC")</code> returns the string
+<code>BAr</code>.  If there is a character in the second argument
+string with no character at a corresponding position in the third
+argument string (because the second argument string is longer than the
+third argument string), then occurrences of that character in the
+first argument string are removed.  For example,
+<code>translate("--aaa--","abc-","ABC")</code> returns
+<code>"AAA"</code>. If a character occurs more than once in second
+argument string, then the first occurrence determines the replacement
+character.  If the third argument string is longer than the second
+argument string, then excess characters are ignored.</p>
+
+</div2>
+
+<div2>
+<head>Boolean Functions</head>
+
+<proto name="boolean" return-type="boolean"><arg type="object"/></proto>
+
+<p>The <function>boolean</function> function converts its argument to a
+boolean as follows:</p>
+
+<ulist>
+
+<item><p>a number is true if and only if it is neither positive or
+negative zero nor NaN</p></item>
+
+<item><p>a node-set is true if and only if it is non-empty</p></item>
+
+<item><p>a string is true if and only if its length is non-zero</p></item>
+
+<item><p>an object of a type other than the four basic types is
+converted to a boolean in a way that is dependent on that
+type</p></item>
+
+</ulist>
+
+<proto name="not" return-type="boolean"><arg type="boolean"/></proto>
+
+<p>The <function>not</function> function returns true if its argument is
+false, and false otherwise.</p>
+
+<proto name="true" return-type="boolean"></proto>
+
+<p>The <function>true</function> function returns true.</p>
+
+<proto name="false" return-type="boolean"></proto>
+
+<p>The <function>false</function> function returns false.</p>
+
+<proto name="lang" return-type="boolean"><arg type="string"/></proto>
+
+<p>The <function>lang</function> function returns true or false depending on
+whether the language of the context node as specified by
+<code>xml:lang</code> attributes is the same as or is a sublanguage of
+the language specified by the argument string.  The language of the
+context node is determined by the value of the <code>xml:lang</code>
+attribute on the context node, or, if the context node has no
+<code>xml:lang</code> attribute, by the value of the
+<code>xml:lang</code> attribute on the nearest ancestor of the context
+node that has an <code>xml:lang</code> attribute.  If there is no such
+attribute, then <function>lang</function> returns false. If there is such an
+attribute, then <function>lang</function> returns true if the attribute
+value is equal to the argument ignoring case, or if there is some
+suffix starting with <code>-</code> such that the attribute value is
+equal to the argument ignoring that suffix of the attribute value and
+ignoring case. For example, <code>lang("en")</code> would return true
+if the context node is any of these five elements:</p>
+
+<eg><![CDATA[<para xml:lang="en"/>
+<div xml:lang="en"><para/></div>
+<para xml:lang="EN"/>
+<para xml:lang="en-us"/>]]></eg>
+</div2>
+
+<div2>
+<head>Number Functions</head>
+
+<proto name="number" return-type="number"><arg occur="opt" type="object"/></proto>
+
+<p>The <function>number</function> function converts its argument to a
+number as follows:</p>
+
+<ulist>
+
+<item><p>a string that consists of optional whitespace followed by an
+optional minus sign followed by a <nt def="NT-Number">Number</nt>
+followed by whitespace is converted to the IEEE 754 number that is
+nearest to the mathematical value represented by the string; any other
+string is converted to NaN</p></item>
+
+<item><p>boolean true is converted to 1; boolean false is converted to
+0</p></item>
+
+<item>
+
+<p>a node-set is first converted to a string as if by a call to the
+<function>string</function> function and then converted in the same way as a
+string argument</p>
+
+</item>
+
+<item><p>an object of a type other than the four basic types is
+converted to a number in a way that is dependent on that
+type</p></item>
+
+</ulist>
+
+<p>If the argument is omitted, it defaults to a node-set with the
+context node as its only member.</p>
+
+<proto name="sum" return-type="number"><arg type="node-set"/></proto>
+
+<p>The <function>sum</function> function returns the sum, for each
+node in the argument node-set, of the result of converting the
+<termref def="dt-string-value">string-value</termref>s of the node to
+a number.</p>
+
+<proto name="floor" return-type="number"><arg type="number"/></proto>
+
+<p>The <function>floor</function> function returns the largest (closest to
+positive infinity) number that is not greater than the argument and
+that is an integer.</p>
+
+<proto name="ceiling" return-type="number"><arg type="number"/></proto>
+
+<p>The <function>ceiling</function> function returns the smallest (closest
+to negative infinity) number that is not less than the argument and
+that is an integer.</p>
+
+<proto name="round" return-type="number"><arg type="number"/></proto>
+
+<p>The <function>round</function> function returns the number that is
+closest to the argument and that is an integer.  If there are two such
+numbers, then the one that is closest to positive infinity is
+returned.</p>
+
+</div2>
+
+
+</div1>
+
+
+<div1 id="data-model">
+<head>Data Model</head>
+
+<p>XPath operates on an XML document as a tree. This section describes
+how XPath models an XML document as a tree.  This model is conceptual
+only and does not mandate any particular implementation.  The
+relationship of this model to the XML Information Set <bibref
+ref="XINFO"/> is described in <specref ref="infoset"/>.</p>
+
+<p>XML documents operated on by XPath must conform to the XML
+Namespaces Recommendation <bibref ref="XMLNAMES"/>.</p>
+
+<p>The tree contains nodes.  There are seven types of node:</p>
+
+<ulist>
+
+<item><p>root nodes</p></item>
+
+<item><p>element nodes</p></item>
+
+<item><p>text nodes</p></item>
+
+<item><p>attribute nodes</p></item>
+
+<item><p>namespace nodes</p></item>
+
+<item><p>processing instruction nodes</p></item>
+
+<item><p>comment nodes</p></item>
+
+</ulist>
+
+<p><termdef term="String Value" id="dt-string-value">For every type of
+node, there is a way of determining a <term>string-value</term> for a
+node of that type.  For some types of node, the string-value is part
+of the node; for other types of node, the string-value is computed
+from the string-value of descendant nodes.</termdef></p>
+
+<p><termdef term="Expanded Name" id="dt-expanded-name">Some types of
+node also have an <term>expanded-name</term>, which is a pair
+consisting of a local part and a namespace URI. The local part is a
+string.  The namespace URI is either null or a string.  The namespace
+URI specified in the XML document can be a URI reference as defined in
+<bibref ref="RFC2396"/>; this means it can have a fragment identifier
+and can be relative.  A relative URI should be resolved into an
+absolute URI during namespace processing: the namespace URIs of
+<termref def="dt-expanded-name">expanded-name</termref>s of nodes in
+the data model should be absolute.</termdef></p>
+
+<p><termdef id="dt-document-order" term="Document Order">There is an
+ordering defined on all the nodes in the document corresponding to the
+order in which the first character of the XML representation of each
+node occurs in the XML representation of the document after expansion
+of general entities.  Thus, the root node will be the first
+node. Element nodes occur before their children. Thus, document order
+orders element nodes in order of the occurrence of their start-tag in
+the XML (after expansion of entities). The attribute nodes and
+namespace nodes of an element occur before the children of the
+element.  The namespace nodes are defined to occur before the
+attribute nodes. The relative order of namespace nodes is
+implementation-dependent.  The relative order of attribute nodes is
+implementation-dependent.</termdef></p>
+
+<div2 id="root-node">
+<head>Root Node</head>
+
+<p>The root node is the root of the tree.  It does not occur anywhere
+else in the tree.  The element node for the document element is a child
+of the root node.  The root node also has as children processing
+instruction and comment nodes for processing instructions and comments
+that occur in the prolog and after the end of the document
+element.</p>
+
+<p>The <termref def="dt-string-value">string-value</termref> of the
+root node is the <termref def="dt-string-value">string-value</termref>
+of the document element.</p>
+
+<p>The root node does not have an <termref
+def="dt-expanded-name">expanded-name</termref>.</p>
+
+</div2>
+
+<div2 id="element-nodes">
+<head>Element Nodes</head>
+
+<p>There is an element node for every element in the document.  An
+element node has an <termref
+def="dt-expanded-name">expanded-name</termref> computed by expanding
+the <xnt href="&XMLNames;#NT-QName">QName</xnt> of the element
+specified in the tag in accordance with the XML Namespaces
+Recommendation <bibref ref="XMLNAMES"/>.  The namespace URI of the
+element's <termref def="dt-expanded-name">expanded-name</termref> will
+be null if the <xnt href="&XMLNames;#NT-QName">QName</xnt> has no
+prefix and there is no applicable default namespace.</p>
+
+<p>The children of an element node are the element nodes, comment
+nodes, processing instruction nodes and text nodes for its content.
+Entity references to both internal and external entities are expanded.
+Character references are resolved.</p>
+
+<p><termdef id="dt-descendants" term="Descendants">The
+<term>descendants</term> of an element node are the children of the
+element node and the descendants of the element children
+nodes.</termdef></p>
+
+<p>The <termref def="dt-string-value">string-value</termref> of an
+element node is the concatenation of the <termref
+def="dt-string-value">string-value</termref>s of all text node
+<termref def="dt-descendants">descendants</termref> of the element
+node in the document order.</p>
+
+<div3 id="unique-id">
+<head>Unique IDs</head>
+
+<p>An element node may have a unique identifier (ID).  This is the
+value of the attribute that is declared in the DTD as type
+<code>ID</code>.  No two elements in a document may have the same
+unique ID.  If an XML processor reports two elements in a document as
+having the same unique ID (which is possible only if the document is
+invalid) then the second element must be treated as not having a
+unique ID.</p>
+
+<note><p>If a document does not have a DTD, then no element in the
+document will have a unique ID.</p></note>
+
+</div3>
+
+</div2>
+
+<div2 id="attribute-nodes">
+<head>Attribute Nodes</head>
+
+<p>Each element node has an associated set of attribute nodes.  A
+defaulted attribute is treated the same as a specified attribute.  If
+an attribute was declared for the element type in the DTD, but the
+default was declared as <code>#IMPLIED</code>, and the attribute was
+not specified on the element, then the element's attribute set does
+not contain a node for the attribute.</p>
+
+<p>An attribute node has an <termref
+def="dt-expanded-name">expanded-name</termref> and a <termref
+def="dt-string-value">string-value</termref>.  The <termref
+def="dt-expanded-name">expanded-name</termref> is computed by
+expanding the <xnt href="&XMLNames;#NT-QName">QName</xnt> specified in
+the tag in the XML document in accordance with the XML Namespaces
+Recommendation <bibref ref="XMLNAMES"/>.  The namespace URI of the
+attribute's name will be null if the <xnt
+href="&XMLNames;#NT-QName">QName</xnt> of the attribute did not have a
+prefix.  The <termref def="dt-string-value">string-value</termref> is
+the normalized value as specified by the XML Recommendation <bibref
+ref="XML"/>.  An attribute whose normalized value is a zero-length
+string is not treated specially: it results in an attribute node whose
+<termref def="dt-string-value">string-value</termref> is a zero-length
+string.</p>
+
+<note><p>It is possible for default attributes to be declared in an
+external DTD or an external parameter entity.  The XML Recommendation
+does not require an XML processor to read an external DTD or an
+external parameter unless it is validating.  A stylesheet that assumes
+that the XPath tree contains default attribute values declared in an
+external DTD or parameter entity may not work with some non-validating
+XML processors.</p></note>
+
+<p>There are no attribute nodes corresponding to attributes that
+declare namespaces (see <bibref ref="XMLNAMES"/>).</p>
+
+
+</div2>
+
+<div2 id="namespace-nodes">
+<head>Namespace Nodes</head>
+
+<p>Each element has an associated set of namespace nodes, one for each
+distinct namespace prefix that is in scope for the element and one for
+the default namespace if one is in scope for the element.  This means
+that an element will have a namespace node:</p>
+
+<ulist>
+
+<item><p>for every attribute on the element whose name starts with
+<code>xmlns:</code>;</p></item>
+
+<item><p>for every attribute on an ancestor element whose name starts
+<code>xmlns:</code> unless the element itself or a nearer ancestor
+redeclares the prefix;</p></item>
+
+<item>
+
+<p>for an <code>xmlns</code> attribute, if the element or some
+ancestor has an <code>xmlns</code> attribute, and the value of the
+<code>xmlns</code> attribute for the nearest such element is
+non-empty</p>
+
+<note><p>An attribute <code>xmlns=""</code> <quote>undeclares</quote>
+the default namespace (see <bibref ref="XMLNAMES"/>).</p></note>
+
+</item>
+
+</ulist>
+
+<p>A namespace node has an <termref
+def="dt-expanded-name">expanded-name</termref>: the local part is
+the namespace prefix (this is empty if the namespace node is for the
+default namespace); the namespace URI is always null.</p>
+
+<p>The <termref def="dt-string-value">string-value</termref> of a
+namespace node is the namespace URI which is being bound to the
+namespace prefix; if it is relative, it must be resolved just like a
+namespace URI in an <termref
+def="dt-expanded-name">expanded-name</termref>.</p>
+
+</div2>
+
+
+<div2>
+<head>Processing Instruction Nodes</head>
+
+<p>There is a processing instruction node for every processing
+instruction, except for any processing instruction that occurs within
+the document type declaration.</p>
+
+<p>A processing instruction has an <termref
+def="dt-expanded-name">expanded-name</termref>: the local part is
+the processing instruction's target; the namespace URI is null.  The
+<termref def="dt-string-value">string-value</termref> of a processing
+instruction node is the part of the processing instruction following
+the target and any whitespace.  It does not include the terminating
+<code>?&gt;</code>.</p>
+
+<note><p>The XML declaration is not a processing instruction.
+Therefore, there is no processing instruction node corresponding to the
+XML declaration.</p></note>
+
+</div2>
+
+<div2>
+<head>Comment Nodes</head>
+
+<p>There is a comment node for every comment, except for any comment that
+occurs within the document type declaration.</p>
+
+<p>The <termref def="dt-string-value">string-value</termref> of
+comment is the content of the comment not including the opening
+<code>&lt;!--</code> or the closing <code>--&gt;</code>.</p>
+
+<p>A comment node does not have an <termref
+def="dt-expanded-name">expanded-name</termref>.</p>
+
+</div2>
+
+<div2>
+<head>Text Nodes</head>
+
+<p>Character data is grouped into text nodes.  As much character data
+as possible is grouped into each text node: a text node never has an
+immediately following or preceding sibling that is a text node.  The
+<termref def="dt-string-value">string-value</termref> of a text node
+is the character data.  A text node always has at least one character
+of data.</p>
+
+<p>Each character within a CDATA section is treated as character data.
+Thus, <code>&lt;![CDATA[&lt;]]&gt;</code> in the source document will
+treated the same as <code>&amp;lt;</code>.  Both will result in a
+single <code>&lt;</code> character in a text node in the tree.  Thus, a
+CDATA section is treated as if the <code>&lt;![CDATA[</code> and
+<code>]]&gt;</code> were removed and every occurrence of
+<code>&lt;</code> and <code>&amp;</code> were replaced by
+<code>&amp;lt;</code> and <code>&amp;amp;</code> respectively.</p>
+
+<note><p>When a text node that contains a <code>&lt;</code> character
+is written out as XML, the <code>&lt;</code> character must be escaped
+by, for example, using <code>&amp;lt;</code>, or including it in a
+CDATA section.</p></note>
+
+<p>Characters inside comments, processing instructions and attribute
+values do not produce text nodes. Line-endings in external entities
+are normalized to #xA as specified in the XML Recommendation <bibref
+ref="XML"/>.</p>
+
+<p>A text node does not have an <termref
+def="dt-expanded-name">expanded-name</termref>.</p>
+
+</div2>
+
+</div1>
+
+</body>
+
+<back>
+<div1>
+<head>References</head>
+<div2>
+<head>Normative References</head>
+<blist>
+
+<bibl id="IEEE754" key="IEEE 754">Institute of Electrical and
+Electronics Engineers. <emph>IEEE Standard for Binary Floating-Point
+Arithmetic</emph>. ANSI/IEEE Std 754-1985.</bibl>
+
+<bibl id="RFC2396" key="RFC2396">T. Berners-Lee, R. Fielding, and
+L. Masinter.  <emph>Uniform Resource Identifiers (URI): Generic
+Syntax</emph>. IETF RFC 2396. See <loc
+href="http://www.ietf.org/rfc/rfc2396.txt">http://www.ietf.org/rfc/rfc2396.txt</loc>.</bibl>
+
+<bibl id="XML" key="XML">World Wide Web Consortium. <emph>Extensible
+Markup Language (XML) 1.0.</emph> W3C Recommendation. See <loc
+href="http://www.w3.org/TR/1998/REC-xml-19980210">http://www.w3.org/TR/1998/REC-xml-19980210</loc></bibl>
+
+<bibl id="XMLNAMES" key="XML Names">World Wide Web
+Consortium. <emph>Namespaces in XML.</emph> W3C Recommendation. See
+<loc
+href="http://www.w3.org/TR/REC-xml-names">http://www.w3.org/TR/REC-xml-names</loc></bibl>
+
+</blist>
+</div2>
+<div2>
+<head>Other References</head>
+
+<blist>
+
+<bibl id="JLS" key="JLS">J. Gosling, B. Joy, and G. Steele.  <emph>The
+Java Language Specification</emph>. See <loc
+href="http://java.sun.com/docs/books/jls/index.html"
+>http://java.sun.com/docs/books/jls/index.html</loc>.</bibl>
+
+<bibl id="TEI" key="TEI">C.M. Sperberg-McQueen, L. Burnard
+<emph>Guidelines for Electronic Text Encoding and
+Interchange</emph>. See <loc href="http://etext.virginia.edu/TEI.html"
+>http://etext.virginia.edu/TEI.html</loc>.</bibl>
+
+<bibl id="XINFO" key="XML Infoset">World Wide Web
+Consortium. <emph>XML Information Set.</emph> W3C Working Draft. May
+17, 1999. See <loc
+href="http://www.w3.org/TR/1999/WD-xml-infoset-19990517"
+>http://www.w3.org/TR/1999/WD-xml-infoset-19990517</loc></bibl>
+
+<bibl id="XPTR" key="XPointer">World Wide Web
+Consortium. <emph>XML Pointer Language (XPointer).</emph> W3C Working
+Draft. See <loc href="http://www.w3.org/TR/WD-xptr"
+>http://www.w3.org/TR/WD-xptr</loc></bibl>
+
+<bibl id="XQL" key="XQL">J. Robie, J. Lapp, D. Schach.
+<emph>XML Query Language (XQL)</emph>. See
+<loc href="http://www.w3.org/TandS/QL/QL98/pp/xql.html"
+>http://www.w3.org/TandS/QL/QL98/pp/xql.html</loc></bibl>
+
+<bibl id="XSLT" key="XSLT">World Wide Web Consortium.  <emph>XSL
+Transformations (XSLT).</emph> W3C Working Draft.  See <loc
+href="http://www.w3.org/TR/WD-xslt"
+>http://www.w3.org/TR/WD-xslt</loc></bibl>
+
+</blist>
+
+</div2>
+</div1>
+
+<inform-div1 id="infoset">
+<head>XML Information Set Mapping</head>
+
+<p>The nodes in the XPath data model can be derived from the
+information items provided by an instantiation of the XML Information
+Set <bibref ref="XINFO"/> with namespace processing as follows:</p>
+
+<ulist>
+
+<item><p>The root node comes from the document information item.  The
+children of the root node come from the property that is an
+ordered list of information items.</p></item>
+
+<item><p>An element node comes from an element information item.  The
+children of an element node come from the property that is an ordered
+list of information items.  The attributes of an element node come
+from the property that is an unordered list of attribute information
+items. The local part of the <termref
+def="dt-expanded-name">expanded-name</termref> of the element node
+comes from the property that is the local part of the element's name.
+The namespace URI of the <termref
+def="dt-expanded-name">expanded-name</termref> of the element node
+comes from the property that is the URI part of the element's
+name. The unique ID of the element node can be derived from the
+attribute information items and the attribute declaration information
+items.</p></item>
+
+<item><p>An attribute node comes from an attribute information item.
+The local part of the <termref
+def="dt-expanded-name">expanded-name</termref> of the attribute node
+comes from the property that is the local part of the attribute's
+name.  The namespace URI of the <termref
+def="dt-expanded-name">expanded-name</termref> of the attribute node
+comes from the property that is the URI part of the attribute's
+name. The <termref def="dt-string-value">string-value</termref> of the
+node is derived from the property that is an ordered list of character
+information items by concatenating the character code properties of
+those information items.</p></item>
+
+<item><p>A text node comes from a sequence of one or more consecutive
+character information items.  The <termref
+def="dt-string-value">string-value</termref> of the node comes from
+concatenating the character code properties of the character
+information items.</p></item>
+
+<item><p>A processing instruction node comes from a processing
+instruction information item.  The local part of the <termref
+def="dt-expanded-name">expanded-name</termref> of the node comes from
+the property that gives the target part of the processing instruction.
+The <termref def="dt-string-value">string-value</termref> of the node
+comes from the property that is the content of the processing
+instruction.</p></item>
+
+<item><p>A comment node comes from a comment information item.  The
+<termref def="dt-string-value">string-value</termref> of the node
+comes from the property that is the content of the comment.</p></item>
+
+<item><p>A namespace node has no corresponding information item in the
+current public XML Information Set WD.</p>
+
+<note><p>A future version of the XML Information Set WD will make the
+information available in some form.</p></note>
+
+</item>
+
+</ulist>
+
+</inform-div1>
+
+<inform-div1>
+<head>Changes from Previous Public Working Draft</head>
+
+<p>The syntax for <nt def="NT-Number">Number</nt> now allows a
+trailing period.</p>
+
+<p>The treatment by the data model of comments and processing
+instructions occurring within the document type declaration has been
+clarified (they are not included in the data model).</p>
+
+<p>The <code>namespace</code> and <code>local-part</code> functions
+have been renamed to <function>namespace-uri</function> and
+<function>local-name</function> for consistency with the DOM Level 2.</p>
+
+<p>The <function>round</function> function rounds to positive infinity
+rather than to even.</p>
+
+</inform-div1>
+</back>
+</spec>

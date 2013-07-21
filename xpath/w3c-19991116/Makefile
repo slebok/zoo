@@ -19,4 +19,9 @@ steps:
 	${tooldir}/subgrammar xpath.v5.bgf Expr xpath.v6.bgf
 	${tooldir}/bgf2html xpath.v6.bgf xpath.html
 
+get:
+	curl -k http://www.w3.org/TR/1999/REC-xpath-19991116.xml > src.recommendation.xml
+	curl -k http://www.w3.org/XML/1998/06/xmlspec-v20.dtd > xmlspec-v20.dtd
+	perl -pi -w -e 's/\/XML\/1998\/06\/xmlspec-v20.dtd/xmlspec-v20.dtd/g;' src.recommendation.xml
+
 include ../../Makefile.grammar
