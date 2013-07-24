@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>9. Full Grammar specification &mdash; Python v3.1.3 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.1.3',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Python v3.1.3 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="top" title="Python v3.1.3 documentation" href="../index.html" />
+    <link rel="up" title="The Python Language Reference" href="index.html" />
+    <link rel="next" title="The Python Standard Library" href="../library/index.html" />
+    <link rel="prev" title="8. Top-level components" href="toplevel_components.html" />
+    <link rel="shortcut icon" type="image/png" href="../_static/py.png" />
+ 
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="../library/index.html" title="The Python Standard Library"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="toplevel_components.html" title="8. Top-level components"
+             accesskey="P">previous</a> |</li>
+        <li><img src="../_static/py.png" alt=""
+                 style="vertical-align: middle; margin-top: -1px"/></li>
+        <li><a href="../index.html">Python v3.1.3 documentation</a> &raquo;</li>
+
+          <li><a href="index.html" accesskey="U">The Python Language Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="full-grammar-specification">
+<h1>9. Full Grammar specification<a class="headerlink" href="#full-grammar-specification" title="Permalink to this headline">¶</a></h1>
+<p>This is the full Python grammar, as it is read by the parser generator and used
+to parse Python source files:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span class="c"># Grammar for Python</span>
+
+<span class="c"># Note:  Changing the grammar specified in this file will most likely</span>
+<span class="c">#        require corresponding changes in the parser module</span>
+<span class="c">#        (../Modules/parsermodule.c).  If you can&#39;t make the changes to</span>
+<span class="c">#        that module yourself, please co-ordinate the required changes</span>
+<span class="c">#        with someone who can; ask around on python-dev for help.  Fred</span>
+<span class="c">#        Drake &lt;fdrake@acm.org&gt; will probably be listening there.</span>
+
+<span class="c"># NOTE WELL: You should also follow all the steps listed in PEP 306,</span>
+<span class="c"># &quot;How to Change Python&#39;s Grammar&quot;</span>
+
+<span class="c"># Start symbols for the grammar:</span>
+<span class="c">#	single_input is a single interactive statement;</span>
+<span class="c">#	file_input is a module or sequence of commands read from an input file;</span>
+<span class="c">#	eval_input is the input for the eval() and input() functions.</span>
+<span class="c"># NB: compound_stmt in single_input is followed by extra NEWLINE!</span>
+<span class="n">single_input</span><span class="p">:</span> <span class="n">NEWLINE</span> <span class="o">|</span> <span class="n">simple_stmt</span> <span class="o">|</span> <span class="n">compound_stmt</span> <span class="n">NEWLINE</span>
+<span class="n">file_input</span><span class="p">:</span> <span class="p">(</span><span class="n">NEWLINE</span> <span class="o">|</span> <span class="n">stmt</span><span class="p">)</span><span class="o">*</span> <span class="n">ENDMARKER</span>
+<span class="n">eval_input</span><span class="p">:</span> <span class="n">testlist</span> <span class="n">NEWLINE</span><span class="o">*</span> <span class="n">ENDMARKER</span>
+
+<span class="n">decorator</span><span class="p">:</span> <span class="s">&#39;@&#39;</span> <span class="n">dotted_name</span> <span class="p">[</span> <span class="s">&#39;(&#39;</span> <span class="p">[</span><span class="n">arglist</span><span class="p">]</span> <span class="s">&#39;)&#39;</span> <span class="p">]</span> <span class="n">NEWLINE</span>
+<span class="n">decorators</span><span class="p">:</span> <span class="n">decorator</span><span class="o">+</span>
+<span class="n">decorated</span><span class="p">:</span> <span class="n">decorators</span> <span class="p">(</span><span class="n">classdef</span> <span class="o">|</span> <span class="n">funcdef</span><span class="p">)</span>
+<span class="n">funcdef</span><span class="p">:</span> <span class="s">&#39;def&#39;</span> <span class="n">NAME</span> <span class="n">parameters</span> <span class="p">[</span><span class="s">&#39;-&gt;&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span>
+<span class="n">parameters</span><span class="p">:</span> <span class="s">&#39;(&#39;</span> <span class="p">[</span><span class="n">typedargslist</span><span class="p">]</span> <span class="s">&#39;)&#39;</span>
+<span class="n">typedargslist</span><span class="p">:</span> <span class="p">((</span><span class="n">tfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="s">&#39;,&#39;</span><span class="p">)</span><span class="o">*</span>
+                <span class="p">(</span><span class="s">&#39;*&#39;</span> <span class="p">[</span><span class="n">tfpdef</span><span class="p">]</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">tfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">])</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span> <span class="s">&#39;**&#39;</span> <span class="n">tfpdef</span><span class="p">]</span> <span class="o">|</span> <span class="s">&#39;**&#39;</span> <span class="n">tfpdef</span><span class="p">)</span>
+                <span class="o">|</span> <span class="n">tfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">tfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">])</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">])</span>
+<span class="n">tfpdef</span><span class="p">:</span> <span class="n">NAME</span> <span class="p">[</span><span class="s">&#39;:&#39;</span> <span class="n">test</span><span class="p">]</span>
+<span class="n">varargslist</span><span class="p">:</span> <span class="p">((</span><span class="n">vfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="s">&#39;,&#39;</span><span class="p">)</span><span class="o">*</span>
+              <span class="p">(</span><span class="s">&#39;*&#39;</span> <span class="p">[</span><span class="n">vfpdef</span><span class="p">]</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">vfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">])</span><span class="o">*</span>  <span class="p">[</span><span class="s">&#39;,&#39;</span> <span class="s">&#39;**&#39;</span> <span class="n">vfpdef</span><span class="p">]</span> <span class="o">|</span> <span class="s">&#39;**&#39;</span> <span class="n">vfpdef</span><span class="p">)</span>
+              <span class="o">|</span> <span class="n">vfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">vfpdef</span> <span class="p">[</span><span class="s">&#39;=&#39;</span> <span class="n">test</span><span class="p">])</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">])</span>
+<span class="n">vfpdef</span><span class="p">:</span> <span class="n">NAME</span>
+
+<span class="n">stmt</span><span class="p">:</span> <span class="n">simple_stmt</span> <span class="o">|</span> <span class="n">compound_stmt</span>
+<span class="n">simple_stmt</span><span class="p">:</span> <span class="n">small_stmt</span> <span class="p">(</span><span class="s">&#39;;&#39;</span> <span class="n">small_stmt</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;;&#39;</span><span class="p">]</span> <span class="n">NEWLINE</span>
+<span class="n">small_stmt</span><span class="p">:</span> <span class="p">(</span><span class="n">expr_stmt</span> <span class="o">|</span> <span class="n">del_stmt</span> <span class="o">|</span> <span class="n">pass_stmt</span> <span class="o">|</span> <span class="n">flow_stmt</span> <span class="o">|</span>
+             <span class="n">import_stmt</span> <span class="o">|</span> <span class="n">global_stmt</span> <span class="o">|</span> <span class="n">nonlocal_stmt</span> <span class="o">|</span> <span class="n">assert_stmt</span><span class="p">)</span>
+<span class="n">expr_stmt</span><span class="p">:</span> <span class="n">testlist</span> <span class="p">(</span><span class="n">augassign</span> <span class="p">(</span><span class="n">yield_expr</span><span class="o">|</span><span class="n">testlist</span><span class="p">)</span> <span class="o">|</span>
+                     <span class="p">(</span><span class="s">&#39;=&#39;</span> <span class="p">(</span><span class="n">yield_expr</span><span class="o">|</span><span class="n">testlist</span><span class="p">))</span><span class="o">*</span><span class="p">)</span>
+<span class="n">augassign</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;+=&#39;</span> <span class="o">|</span> <span class="s">&#39;-=&#39;</span> <span class="o">|</span> <span class="s">&#39;*=&#39;</span> <span class="o">|</span> <span class="s">&#39;/=&#39;</span> <span class="o">|</span> <span class="s">&#39;%=&#39;</span> <span class="o">|</span> <span class="s">&#39;&amp;=&#39;</span> <span class="o">|</span> <span class="s">&#39;|=&#39;</span> <span class="o">|</span> <span class="s">&#39;^=&#39;</span> <span class="o">|</span>
+            <span class="s">&#39;&lt;&lt;=&#39;</span> <span class="o">|</span> <span class="s">&#39;&gt;&gt;=&#39;</span> <span class="o">|</span> <span class="s">&#39;**=&#39;</span> <span class="o">|</span> <span class="s">&#39;//=&#39;</span><span class="p">)</span>
+<span class="c"># For normal assignments, additional restrictions enforced by the interpreter</span>
+<span class="n">del_stmt</span><span class="p">:</span> <span class="s">&#39;del&#39;</span> <span class="n">exprlist</span>
+<span class="n">pass_stmt</span><span class="p">:</span> <span class="s">&#39;pass&#39;</span>
+<span class="n">flow_stmt</span><span class="p">:</span> <span class="n">break_stmt</span> <span class="o">|</span> <span class="n">continue_stmt</span> <span class="o">|</span> <span class="n">return_stmt</span> <span class="o">|</span> <span class="n">raise_stmt</span> <span class="o">|</span> <span class="n">yield_stmt</span>
+<span class="n">break_stmt</span><span class="p">:</span> <span class="s">&#39;break&#39;</span>
+<span class="n">continue_stmt</span><span class="p">:</span> <span class="s">&#39;continue&#39;</span>
+<span class="n">return_stmt</span><span class="p">:</span> <span class="s">&#39;return&#39;</span> <span class="p">[</span><span class="n">testlist</span><span class="p">]</span>
+<span class="n">yield_stmt</span><span class="p">:</span> <span class="n">yield_expr</span>
+<span class="n">raise_stmt</span><span class="p">:</span> <span class="s">&#39;raise&#39;</span> <span class="p">[</span><span class="n">test</span> <span class="p">[</span><span class="s">&#39;from&#39;</span> <span class="n">test</span><span class="p">]]</span>
+<span class="n">import_stmt</span><span class="p">:</span> <span class="n">import_name</span> <span class="o">|</span> <span class="n">import_from</span>
+<span class="n">import_name</span><span class="p">:</span> <span class="s">&#39;import&#39;</span> <span class="n">dotted_as_names</span>
+<span class="c"># note below: the (&#39;.&#39; | &#39;...&#39;) is necessary because &#39;...&#39; is tokenized as ELLIPSIS</span>
+<span class="n">import_from</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;from&#39;</span> <span class="p">((</span><span class="s">&#39;.&#39;</span> <span class="o">|</span> <span class="s">&#39;...&#39;</span><span class="p">)</span><span class="o">*</span> <span class="n">dotted_name</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;.&#39;</span> <span class="o">|</span> <span class="s">&#39;...&#39;</span><span class="p">)</span><span class="o">+</span><span class="p">)</span>
+              <span class="s">&#39;import&#39;</span> <span class="p">(</span><span class="s">&#39;*&#39;</span> <span class="o">|</span> <span class="s">&#39;(&#39;</span> <span class="n">import_as_names</span> <span class="s">&#39;)&#39;</span> <span class="o">|</span> <span class="n">import_as_names</span><span class="p">))</span>
+<span class="n">import_as_name</span><span class="p">:</span> <span class="n">NAME</span> <span class="p">[</span><span class="s">&#39;as&#39;</span> <span class="n">NAME</span><span class="p">]</span>
+<span class="n">dotted_as_name</span><span class="p">:</span> <span class="n">dotted_name</span> <span class="p">[</span><span class="s">&#39;as&#39;</span> <span class="n">NAME</span><span class="p">]</span>
+<span class="n">import_as_names</span><span class="p">:</span> <span class="n">import_as_name</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">import_as_name</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span>
+<span class="n">dotted_as_names</span><span class="p">:</span> <span class="n">dotted_as_name</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">dotted_as_name</span><span class="p">)</span><span class="o">*</span>
+<span class="n">dotted_name</span><span class="p">:</span> <span class="n">NAME</span> <span class="p">(</span><span class="s">&#39;.&#39;</span> <span class="n">NAME</span><span class="p">)</span><span class="o">*</span>
+<span class="n">global_stmt</span><span class="p">:</span> <span class="s">&#39;global&#39;</span> <span class="n">NAME</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">NAME</span><span class="p">)</span><span class="o">*</span>
+<span class="n">nonlocal_stmt</span><span class="p">:</span> <span class="s">&#39;nonlocal&#39;</span> <span class="n">NAME</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">NAME</span><span class="p">)</span><span class="o">*</span>
+<span class="n">assert_stmt</span><span class="p">:</span> <span class="s">&#39;assert&#39;</span> <span class="n">test</span> <span class="p">[</span><span class="s">&#39;,&#39;</span> <span class="n">test</span><span class="p">]</span>
+
+<span class="n">compound_stmt</span><span class="p">:</span> <span class="n">if_stmt</span> <span class="o">|</span> <span class="n">while_stmt</span> <span class="o">|</span> <span class="n">for_stmt</span> <span class="o">|</span> <span class="n">try_stmt</span> <span class="o">|</span> <span class="n">with_stmt</span> <span class="o">|</span> <span class="n">funcdef</span> <span class="o">|</span> <span class="n">classdef</span> <span class="o">|</span> <span class="n">decorated</span>
+<span class="n">if_stmt</span><span class="p">:</span> <span class="s">&#39;if&#39;</span> <span class="n">test</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span> <span class="p">(</span><span class="s">&#39;elif&#39;</span> <span class="n">test</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;else&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">]</span>
+<span class="n">while_stmt</span><span class="p">:</span> <span class="s">&#39;while&#39;</span> <span class="n">test</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span> <span class="p">[</span><span class="s">&#39;else&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">]</span>
+<span class="n">for_stmt</span><span class="p">:</span> <span class="s">&#39;for&#39;</span> <span class="n">exprlist</span> <span class="s">&#39;in&#39;</span> <span class="n">testlist</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span> <span class="p">[</span><span class="s">&#39;else&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">]</span>
+<span class="n">try_stmt</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;try&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span>
+           <span class="p">((</span><span class="n">except_clause</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">)</span><span class="o">+</span>
+	    <span class="p">[</span><span class="s">&#39;else&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">]</span>
+	    <span class="p">[</span><span class="s">&#39;finally&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">]</span> <span class="o">|</span>
+	   <span class="s">&#39;finally&#39;</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span><span class="p">))</span>
+<span class="n">with_stmt</span><span class="p">:</span> <span class="s">&#39;with&#39;</span> <span class="n">with_item</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">with_item</span><span class="p">)</span><span class="o">*</span>  <span class="s">&#39;:&#39;</span> <span class="n">suite</span>
+<span class="n">with_item</span><span class="p">:</span> <span class="n">test</span> <span class="p">[</span><span class="s">&#39;as&#39;</span> <span class="n">expr</span><span class="p">]</span>
+<span class="c"># NB compile.c makes sure that the default except clause is last</span>
+<span class="n">except_clause</span><span class="p">:</span> <span class="s">&#39;except&#39;</span> <span class="p">[</span><span class="n">test</span> <span class="p">[</span><span class="s">&#39;as&#39;</span> <span class="n">NAME</span><span class="p">]]</span>
+<span class="n">suite</span><span class="p">:</span> <span class="n">simple_stmt</span> <span class="o">|</span> <span class="n">NEWLINE</span> <span class="n">INDENT</span> <span class="n">stmt</span><span class="o">+</span> <span class="n">DEDENT</span>
+
+<span class="n">test</span><span class="p">:</span> <span class="n">or_test</span> <span class="p">[</span><span class="s">&#39;if&#39;</span> <span class="n">or_test</span> <span class="s">&#39;else&#39;</span> <span class="n">test</span><span class="p">]</span> <span class="o">|</span> <span class="n">lambdef</span>
+<span class="n">test_nocond</span><span class="p">:</span> <span class="n">or_test</span> <span class="o">|</span> <span class="n">lambdef_nocond</span>
+<span class="n">lambdef</span><span class="p">:</span> <span class="s">&#39;lambda&#39;</span> <span class="p">[</span><span class="n">varargslist</span><span class="p">]</span> <span class="s">&#39;:&#39;</span> <span class="n">test</span>
+<span class="n">lambdef_nocond</span><span class="p">:</span> <span class="s">&#39;lambda&#39;</span> <span class="p">[</span><span class="n">varargslist</span><span class="p">]</span> <span class="s">&#39;:&#39;</span> <span class="n">test_nocond</span>
+<span class="n">or_test</span><span class="p">:</span> <span class="n">and_test</span> <span class="p">(</span><span class="s">&#39;or&#39;</span> <span class="n">and_test</span><span class="p">)</span><span class="o">*</span>
+<span class="n">and_test</span><span class="p">:</span> <span class="n">not_test</span> <span class="p">(</span><span class="s">&#39;and&#39;</span> <span class="n">not_test</span><span class="p">)</span><span class="o">*</span>
+<span class="n">not_test</span><span class="p">:</span> <span class="s">&#39;not&#39;</span> <span class="n">not_test</span> <span class="o">|</span> <span class="n">comparison</span>
+<span class="n">comparison</span><span class="p">:</span> <span class="n">star_expr</span> <span class="p">(</span><span class="n">comp_op</span> <span class="n">star_expr</span><span class="p">)</span><span class="o">*</span>
+<span class="n">comp_op</span><span class="p">:</span> <span class="s">&#39;&lt;&#39;</span><span class="o">|</span><span class="s">&#39;&gt;&#39;</span><span class="o">|</span><span class="s">&#39;==&#39;</span><span class="o">|</span><span class="s">&#39;&gt;=&#39;</span><span class="o">|</span><span class="s">&#39;&lt;=&#39;</span><span class="o">|</span><span class="s">&#39;&lt;&gt;&#39;</span><span class="o">|</span><span class="s">&#39;!=&#39;</span><span class="o">|</span><span class="s">&#39;in&#39;</span><span class="o">|</span><span class="s">&#39;not&#39;</span> <span class="s">&#39;in&#39;</span><span class="o">|</span><span class="s">&#39;is&#39;</span><span class="o">|</span><span class="s">&#39;is&#39;</span> <span class="s">&#39;not&#39;</span>
+<span class="n">star_expr</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;*&#39;</span><span class="p">]</span> <span class="n">expr</span>
+<span class="n">expr</span><span class="p">:</span> <span class="n">xor_expr</span> <span class="p">(</span><span class="s">&#39;|&#39;</span> <span class="n">xor_expr</span><span class="p">)</span><span class="o">*</span>
+<span class="n">xor_expr</span><span class="p">:</span> <span class="n">and_expr</span> <span class="p">(</span><span class="s">&#39;^&#39;</span> <span class="n">and_expr</span><span class="p">)</span><span class="o">*</span>
+<span class="n">and_expr</span><span class="p">:</span> <span class="n">shift_expr</span> <span class="p">(</span><span class="s">&#39;&amp;&#39;</span> <span class="n">shift_expr</span><span class="p">)</span><span class="o">*</span>
+<span class="n">shift_expr</span><span class="p">:</span> <span class="n">arith_expr</span> <span class="p">((</span><span class="s">&#39;&lt;&lt;&#39;</span><span class="o">|</span><span class="s">&#39;&gt;&gt;&#39;</span><span class="p">)</span> <span class="n">arith_expr</span><span class="p">)</span><span class="o">*</span>
+<span class="n">arith_expr</span><span class="p">:</span> <span class="n">term</span> <span class="p">((</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="p">)</span> <span class="n">term</span><span class="p">)</span><span class="o">*</span>
+<span class="n">term</span><span class="p">:</span> <span class="n">factor</span> <span class="p">((</span><span class="s">&#39;*&#39;</span><span class="o">|</span><span class="s">&#39;/&#39;</span><span class="o">|</span><span class="s">&#39;%&#39;</span><span class="o">|</span><span class="s">&#39;//&#39;</span><span class="p">)</span> <span class="n">factor</span><span class="p">)</span><span class="o">*</span>
+<span class="n">factor</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;+&#39;</span><span class="o">|</span><span class="s">&#39;-&#39;</span><span class="o">|</span><span class="s">&#39;~&#39;</span><span class="p">)</span> <span class="n">factor</span> <span class="o">|</span> <span class="n">power</span>
+<span class="n">power</span><span class="p">:</span> <span class="n">atom</span> <span class="n">trailer</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;**&#39;</span> <span class="n">factor</span><span class="p">]</span>
+<span class="n">atom</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;(&#39;</span> <span class="p">[</span><span class="n">yield_expr</span><span class="o">|</span><span class="n">testlist_comp</span><span class="p">]</span> <span class="s">&#39;)&#39;</span> <span class="o">|</span>
+       <span class="s">&#39;[&#39;</span> <span class="p">[</span><span class="n">testlist_comp</span><span class="p">]</span> <span class="s">&#39;]&#39;</span> <span class="o">|</span>
+       <span class="s">&#39;{&#39;</span> <span class="p">[</span><span class="n">dictorsetmaker</span><span class="p">]</span> <span class="s">&#39;}&#39;</span> <span class="o">|</span>
+       <span class="n">NAME</span> <span class="o">|</span> <span class="n">NUMBER</span> <span class="o">|</span> <span class="n">STRING</span><span class="o">+</span> <span class="o">|</span> <span class="s">&#39;...&#39;</span> <span class="o">|</span> <span class="s">&#39;None&#39;</span> <span class="o">|</span> <span class="s">&#39;True&#39;</span> <span class="o">|</span> <span class="s">&#39;False&#39;</span><span class="p">)</span>
+<span class="n">testlist_comp</span><span class="p">:</span> <span class="n">test</span> <span class="p">(</span> <span class="n">comp_for</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">test</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span> <span class="p">)</span>
+<span class="n">trailer</span><span class="p">:</span> <span class="s">&#39;(&#39;</span> <span class="p">[</span><span class="n">arglist</span><span class="p">]</span> <span class="s">&#39;)&#39;</span> <span class="o">|</span> <span class="s">&#39;[&#39;</span> <span class="n">subscriptlist</span> <span class="s">&#39;]&#39;</span> <span class="o">|</span> <span class="s">&#39;.&#39;</span> <span class="n">NAME</span>
+<span class="n">subscriptlist</span><span class="p">:</span> <span class="n">subscript</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">subscript</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span>
+<span class="n">subscript</span><span class="p">:</span> <span class="n">test</span> <span class="o">|</span> <span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="s">&#39;:&#39;</span> <span class="p">[</span><span class="n">test</span><span class="p">]</span> <span class="p">[</span><span class="n">sliceop</span><span class="p">]</span>
+<span class="n">sliceop</span><span class="p">:</span> <span class="s">&#39;:&#39;</span> <span class="p">[</span><span class="n">test</span><span class="p">]</span>
+<span class="n">exprlist</span><span class="p">:</span> <span class="n">star_expr</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">star_expr</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span>
+<span class="n">testlist</span><span class="p">:</span> <span class="n">test</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">test</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span>
+<span class="n">dictorsetmaker</span><span class="p">:</span> <span class="p">(</span> <span class="p">(</span><span class="n">test</span> <span class="s">&#39;:&#39;</span> <span class="n">test</span> <span class="p">(</span><span class="n">comp_for</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">test</span> <span class="s">&#39;:&#39;</span> <span class="n">test</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]))</span> <span class="o">|</span>
+                  <span class="p">(</span><span class="n">test</span> <span class="p">(</span><span class="n">comp_for</span> <span class="o">|</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">test</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]))</span> <span class="p">)</span>
+
+<span class="n">classdef</span><span class="p">:</span> <span class="s">&#39;class&#39;</span> <span class="n">NAME</span> <span class="p">[</span><span class="s">&#39;(&#39;</span> <span class="p">[</span><span class="n">arglist</span><span class="p">]</span> <span class="s">&#39;)&#39;</span><span class="p">]</span> <span class="s">&#39;:&#39;</span> <span class="n">suite</span>
+
+<span class="n">arglist</span><span class="p">:</span> <span class="p">(</span><span class="n">argument</span> <span class="s">&#39;,&#39;</span><span class="p">)</span><span class="o">*</span> <span class="p">(</span><span class="n">argument</span> <span class="p">[</span><span class="s">&#39;,&#39;</span><span class="p">]</span>
+                         <span class="o">|</span><span class="s">&#39;*&#39;</span> <span class="n">test</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">argument</span><span class="p">)</span><span class="o">*</span> <span class="p">[</span><span class="s">&#39;,&#39;</span> <span class="s">&#39;**&#39;</span> <span class="n">test</span><span class="p">]</span> 
+                         <span class="o">|</span><span class="s">&#39;**&#39;</span> <span class="n">test</span><span class="p">)</span>
+<span class="c"># The reason that keywords are test nodes instead of NAME is that using NAME</span>
+<span class="c"># results in an ambiguity. ast.c makes sure it&#39;s a NAME.</span>
+<span class="n">argument</span><span class="p">:</span> <span class="n">test</span> <span class="p">[</span><span class="n">comp_for</span><span class="p">]</span> <span class="o">|</span> <span class="n">test</span> <span class="s">&#39;=&#39;</span> <span class="n">test</span>  <span class="c"># Really [keyword &#39;=&#39;] test</span>
+<span class="n">comp_iter</span><span class="p">:</span> <span class="n">comp_for</span> <span class="o">|</span> <span class="n">comp_if</span>
+<span class="n">comp_for</span><span class="p">:</span> <span class="s">&#39;for&#39;</span> <span class="n">exprlist</span> <span class="s">&#39;in&#39;</span> <span class="n">or_test</span> <span class="p">[</span><span class="n">comp_iter</span><span class="p">]</span>
+<span class="n">comp_if</span><span class="p">:</span> <span class="s">&#39;if&#39;</span> <span class="n">test_nocond</span> <span class="p">[</span><span class="n">comp_iter</span><span class="p">]</span>
+
+<span class="n">testlist1</span><span class="p">:</span> <span class="n">test</span> <span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="n">test</span><span class="p">)</span><span class="o">*</span>
+
+<span class="c"># not used in grammar, but may appear in &quot;node&quot; passed from Parser to Compiler</span>
+<span class="n">encoding_decl</span><span class="p">:</span> <span class="n">NAME</span>
+
+<span class="n">yield_expr</span><span class="p">:</span> <span class="s">&#39;yield&#39;</span> <span class="p">[</span><span class="n">testlist</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="toplevel_components.html"
+                                  title="previous chapter">8. Top-level components</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="../library/index.html"
+                                  title="next chapter">The Python Standard Library</a></p>
+<h3>This Page</h3>
+<ul class="this-page-menu">
+  <li><a href="../bugs.html">Report a Bug</a></li>
+  <li><a href="../_sources/reference/grammar.txt"
+         rel="nofollow">Show Source</a></li>
+</ul>
+
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../library/index.html" title="The Python Standard Library"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="toplevel_components.html" title="8. Top-level components"
+             >previous</a> |</li>
+        <li><img src="../_static/py.png" alt=""
+                 style="vertical-align: middle; margin-top: -1px"/></li>
+        <li><a href="../index.html">Python v3.1.3 documentation</a> &raquo;</li>
+
+          <li><a href="index.html" >The Python Language Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+    &copy; <a href="../copyright.html">Copyright</a> 1990-2010, Python Software Foundation.
+    <br />
+    The Python Software Foundation is a non-profit corporation.  
+    <a href="http://www.python.org/psf/donations/">Please donate.</a>
+    <br />
+    Last updated on Nov 27, 2010.
+    <a href="../bugs.html">Found a bug</a>?
+    <br />
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+
+  </body>
+</html>
