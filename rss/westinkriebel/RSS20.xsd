@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema version="1.1.0" targetNamespace="http://blogs.law.harvard.edu/RSS20.xsd" xmlns="http://blogs.law.harvard.edu/RSS20.xsd"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:annotation>
+		<xs:documentation>Version 1.1.0 fixed double quotes in default values. Adjusted image height and width to use a restricted decimal rather than the nonNegativeInteger.</xs:documentation>
+	</xs:annotation>
+	<xs:element name="rss">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="channel" type="channel" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="channel">
+		<xs:sequence>
+			<xs:element name="title" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The name of the channel. It's how people refer to your service. If you have an HTML website that contains the same information as your RSS file, the title of your channel should be the same as the title of your website. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="link" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The URL to the HTML website corresponding to the channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="description" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Phrase or sentence describing the channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="language" minOccurs="0" maxOccurs="1" default="en-us">
+				<xs:annotation>
+					<xs:documentation>The language the channel is written in. This allows aggregators to group all Italian language sites, for example, on a single page. A list of allowable values for this element, as provided by Netscape, is http://blogs.law.harvard.edu/tech/stories/storyReader$15 here. You may also use http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes values defined by the W3C.</xs:documentation>
+					<xs:appinfo>default="en-us"</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="copyright">
+				<xs:annotation>
+					<xs:documentation>Copyright notice for content in the channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="managingEditor">
+				<xs:annotation>
+					<xs:documentation>Email address for person responsible for editorial content.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="webMaster">
+				<xs:annotation>
+					<xs:documentation>Email address for person responsible for technical issues relating to channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pubDate">
+				<xs:annotation>
+					<xs:documentation>The publication date for the content in the channel. For example, the New York Times publishes on a daily basis, the publication date flips once every 24 hours. That's when the pubDate of the channel changes. All date-times in RSS conform to the Date and Time Specification of http://asg.web.cmu.edu/rf/rfc822.html RFC 822, with the exception that the year may be expressed with two characters or four characters (four preferred).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lastBuildDate">
+				<xs:annotation>
+					<xs:documentation>The last time the content of the channel changed.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="category">
+				<xs:annotation>
+					<xs:documentation>Specify one or more categories that the channel belongs to. Follows the same rules as the item-level http://blogs.law.harvard.edu/tech/rss#ltcategorygtSubelementOfLtitemgt" category element. More http://blogs.law.harvard.edu/tech/rss#syndic8 info.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="generator">
+				<xs:annotation>
+					<xs:documentation>A string indicating the program used to generate the channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docs" default="http://blogs.law.harvard.edu/tech/rss">
+				<xs:annotation>
+					<xs:documentation>A URL that points to the documentation for the format used in the RSS file. It's probably a pointer to this page. It's for people who might stumble across an RSS file on a Web server 25 years from now and wonder what it is.</xs:documentation>
+					<xs:appinfo>default="http://blogs.law.harvard.edu/tech/rss"</xs:appinfo>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string" />
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="cloud">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Allows processes to register with a cloud to be notified of updates to the channel, implementing a lightweight publish-subscribe protocol for RSS feeds. More info http://blogs.law.harvard.edu/tech/rss#ltcloudgtSubelementOfLtchannelgt here.</xs:documentation>
+					</xs:annotation>
+					<xs:attribute name="domain" />
+					<xs:attribute name="port" />
+					<xs:attribute name="path" />
+					<xs:attribute name="registerProcedure" />
+					<xs:attribute name="protocol">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="xml-rpc" />
+								<xs:enumeration value="soap" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ttl">
+				<xs:annotation>
+					<xs:documentation>ttl stands for time to live. It's a number of minutes that indicates how long a channel can be cached before refreshing from the source. 
+More info http://blogs.law.harvard.edu/tech/rss#ltttlgtSubelementOfLtchannelgt here.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="image">
+				<xs:annotation>
+					<xs:documentation>Specifies a GIF, JPEG or PNG image that can be displayed with the channel. More info http://blogs.law.harvard.edu/tech/rss#ltimagegtSubelementOfLtchannelgt here. </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="url" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>The URL of a GIF, JPEG or PNG image that represents the channel. </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="title" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Describes the image, it's used in the ALT attribute of the HTML img tag when the channel is rendered in HTML. </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="link" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>The URL of the site, when the channel is rendered, the image is a link to the site. (Note, in practice the image title and link should have the same value as the channel's title and link.) </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="width" default="88">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:maxInclusive value="144" />
+									<xs:minInclusive value="0" />
+									<xs:fractionDigits value="0" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="height" default="31">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:maxInclusive value="400" />
+									<xs:minInclusive value="0" />
+									<xs:fractionDigits value="0" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="description">
+							<xs:annotation>
+								<xs:documentation>Contains text that is included in the TITLE attribute of the link formed around the image in the HTML rendering.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="rating">
+				<xs:annotation>
+					<xs:documentation>The http://www.w3.org/PICS/ PICS rating for the channel.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="textInput">
+				<xs:annotation>
+					<xs:documentation>
+Specifies a text input box that can be displayed with the channel. More info http://blogs.law.harvard.edu/tech/rss#lttextinputgtSubelementOfLtchannelgt here.
+The purpose of the textInput element is something of a mystery. You can use it to specify a search engine box. Or to allow a reader to provide feedback. Most aggregators ignore it.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="title">
+							<xs:annotation>
+								<xs:documentation>The label of the Submit button in the text input area. </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="description">
+							<xs:annotation>
+								<xs:documentation>Explains the text input area. </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="name">
+							<xs:annotation>
+								<xs:documentation>The name of the text object in the text input area.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="link">
+							<xs:annotation>
+								<xs:documentation>The URL of the CGI script that processes text input requests.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="skipHours">
+				<xs:annotation>
+					<xs:documentation>A hint for aggregators telling them which hours they can skip. 
+More info http://blogs.law.harvard.edu/tech/skipHoursDays#skiphours here.
+</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="skipDays">
+				<xs:annotation>
+					<xs:documentation>
+A hint for aggregators telling them which days they can skip. 
+More info http://blogs.law.harvard.edu/tech/skipHoursDays#skipdays here.
+</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="item" type="item" minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="version" default="2.0" />
+	</xs:complexType>
+	<!-- End of Channel definition -->
+	<!-- Start Item definition -->
+	<xs:complexType name="item">
+		<xs:annotation>
+			<xs:documentation>A channel may contain any number of items. An item may represent a "story" -- much like a story in a newspaper or magazine; if so its description is a synopsis of the story, and the link points to the full story. An item may also be complete in itself, if so, the description contains the text 
+(entity-encoded HTML is allowed), and the link and title may be omitted. All elements of an item are optional, however at least one of title or description must be present.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="title"></xs:element>
+			<xs:element name="link">
+				<xs:annotation>
+					<xs:documentation>The URL of the item.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="description">
+				<xs:annotation>
+					<xs:documentation>The item synopsis. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="author" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>It's the email address of the author of the item. For newspapers and magazines syndicating via RSS, the author is the person who wrote the article that the item describes. For collaborative weblogs, the author of the item might be different from the managing editor or webmaster. For a weblog authored by a single individual it would make sense to omit the author element.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="category" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="domain" use="optional">
+						<xs:annotation>
+							<xs:documentation>The value of the element is a forward-slash-separated string that identifies a hierarchic location in the indicated taxonomy. Processors may establish conventions for the interpretation of categories. </xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="comments" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>If present, it is the url of the comments page for the item. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="enclosure" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Describes a media object that is attached to the item. </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="url" use="required">
+						<xs:annotation>
+							<xs:documentation>Where the enclosure is located</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="length" use="required">
+						<xs:annotation>
+							<xs:documentation>How big it is in bytes.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="type" use="required">
+						<xs:annotation>
+							<xs:documentation>What its type is, a standard MIME type.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="guid" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>A string that uniquely identifies the item. There are no rules for the syntax of a guid. Aggregators must view them as a string. It's up to the source of the feed to establish the uniqueness of the string.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pubDate" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Indicates when the item was published.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="source" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>The RSS channel that the item came from. The purpose of this element is to propagate credit for links, to publicize the sources of news items. It can be used in the Post command of an aggregator. It should be generated automatically when forwarding an item from an aggregator to a weblog authoring tool.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="url" use="required">
+						<xs:annotation>
+							<xs:documentation>links to the XMLization of the source</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
