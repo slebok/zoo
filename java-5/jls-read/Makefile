@@ -1,7 +1,9 @@
 extract:
 	${tooldir}/html2bgf collect.kw src.htm raw.bgf
-	${tooldir}/exbgf ../../../convergence/java/exbgf/recover-read3.exbgf raw.bgf ext.bgf
-	${tooldir}/exbgf ../../../convergence/java/exbgf/correct-read3.exbgf ext.bgf grammar.bgf
+	${tooldir}/exbgf2xbgf ../../../convergence/exbgf/java/exbgf/recover-read3.exbgf recover.xbgf
+	${tooldir}/exbgf2xbgf ../../../convergence/exbgf/java/exbgf/correct-read3.exbgf correct.xbgf
+	${tooldir}/xbgf recover.xbgf raw.bgf ext.bgf
+	${tooldir}/xbgf correct.xbgf ext.bgf grammar.bgf
 
 get:
 	curl -k http://java.sun.com/docs/books/jls/third_edition/html/typesValues.html  > src.htm
