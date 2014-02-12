@@ -2,9 +2,12 @@
 module javascript::synytskyy_cordy::Import
 
 import grammarlab::io::Grammar;
+import grammarlab::language::glue::Interpreter;
 import IO;
 
-void main()
+void go()
 {
-	println("Hello world");
+	println("Start.");
+	execute(|project://zoo/src/javascript/synytskyy_cordy/parse.glue|);
+	println("Done.");
 }
