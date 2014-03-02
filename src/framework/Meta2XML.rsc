@@ -3,17 +3,17 @@ module framework::Meta2XML
 
 import grammarlab::language::glue::abstract::Top;
 import lang::json::ast::JSON;
+import List;
 
 str xmlheader() = "\<?xml version=\"1.0\" encoding=\"UTF-8\"?\>";
+public str xmlfile(list[str] ss) = xmlheader() + intercalate("\n",[s | s <- ss, s!=""]);
+public str glue2xmlfile(GLUE glue) = xmlheader() + glue2xml(glue);
+public str meta2xmlfile(MetaInfo meta) = xmlheader() + meta2xml(meta);
 
 public str glue2xml(GLUE glue)
-	= xmlheader()
-	+ intercalate("\n",[meta2xml_pure(meta) | GLUEA ga <- glue, metadata(MetaInfo meta) := ga]);
+	= intercalate("\n",[meta2xml(meta) | GLUEA ga <- glue, metadata(MetaInfo meta) := ga]);
 
-public str meta2xml(MetaInfo meta)
-	= xmlheader() + meta2xml_pure(meta);
-
-str meta2xml_pure(MetaInfo meta) =
+public str meta2xml(MetaInfo meta) =
 	"\<grammar\>
 	'	\<name\>Extracted\</name\>
 	'	\<source\>
@@ -23,17 +23,20 @@ str meta2xml_pure(MetaInfo meta) =
 
 str mapmap(MetaInfo meta)
 {
-	str res = "";
+	list[str] res = [];
 	for (str k <- meta, k != "links")
-		if (string(str s) := meta[k]) res += "\<<k>\><s>\</<k>\>";
-		elseif (array(list[Value] vs) := meta[k]) res += intercalate("\n",["\<<k>\><v>\</<k>\>" | string(str v) <- vs]);
+		if (string(str s) := meta[k])
+			res += "\<<k>\><s>\</<k>\>";
+		elseif (array(list[Value] vs) := meta[k])
+			res += ["\<<k>\><v>\</<k>\>" | string(str v) <- vs];
 	if ("links" in meta)
-		for (str k <- meta["links"].members)
-			res += "\<link\>
-			       '	<mapurl(k,meta["links"].members[k])>
-			       '	\<name\><k>\</name\>
-			       '\</link\>";
-	return res;
+		res +=
+		[	"\<link\>
+	    	'	<mapurl(k,meta["links"].members[k])>
+	    	'	\<name\><k>\</name\>
+	    	'\</link\>"
+	    | str k <- meta["links"].members];
+	return intercalate("\n",res);
 }
 
 str mapurl("GitHub",string(str x)) = "\<mu\><x>\</mu\>";

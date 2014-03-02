@@ -1,14 +1,10 @@
 @contributor{Vadim Zaytsev - vadim@grammarware.net - UvA}
 module Plugin
 
-import grammarlab::language::GLUE;
-import grammarlab::io::GLUE;
-import grammarlab::language::glue::concrete::Top;
-import grammarlab::language::glue::Interpreter;
-
-import ParseTree;
-import String;
 import IO;
+import String;
+import grammarlab::language::GLUE;
+import framework::Traverse;
 
 public void main()
 {

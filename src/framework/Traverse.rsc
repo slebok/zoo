@@ -13,8 +13,9 @@ import IO;
 public void traverseZoo()
 {
 	loc zoo = |project://zoo/src|;
-	str plan = "", pgra = "", xml = "";
-	for (lan <- listEntries(zoo), isDirectory(zoo+lan))
+	str plan = "", pgra = "";
+	list[str] xml = [];
+	for (lan <- listEntries(zoo), isDirectory(zoo+lan), lan != "framework")
 	{
 		ilan = loadGlue(zoo+lan+"info.glue");
 		println(ilan);
@@ -30,10 +31,11 @@ public void traverseZoo()
 			{
 				println("Processing language <lan>...");
 				plan = lan;
-				println("  Processing grammar <gra>...");
-				pgra = gra;
+				gluelan = loadGlue(zoo+lan+"info.glue");
+				if (plan!="") xml += "\</language\>";
+				xml += "\<language\>"+glue2xml(gluelan);
 			}
-			elseif (gra != pgra)
+			if (lan != plan || gra != pgra)
 			{
 				println("  Processing grammar <gra>...");
 				pgra = gra;
@@ -41,10 +43,10 @@ public void traverseZoo()
 			println("    Executing <glu>...");
 			gluentity = loadGlue(zoo+lan+gra+glu);
 			println(gluentity);
-			visGlue(zoo+lan+gra+glu);
-			execute(gluentity);
+			//visGlue(zoo+lan+gra+glu);
+			//execute(gluentity);
 			xml += glue2xml(gluentity);
 		}
 	}
-	writeFile(|home:///projects/webslps/_dev/zoo.add.xml|,xml);
+	writeFile(|home:///projects/webslps/_dev/zoo.add.xml|,xmlfile(xml));
 }
