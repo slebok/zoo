@@ -1,5 +1,4 @@
-extract:
-	${tooldir}/rscs2bgf ABS.rsc grammar.bgf
+replicate:
 
 again:
 	# cat ABS.parser | sed 's/[A-Za-z]* \([a-z_]*\) =$/\1 =/' > abs.prepared.0
@@ -27,4 +26,4 @@ all:
 clean:
 	rm -f *prepared* raw.bgf ext*.bgf rename.xbgf *.rsc
 
-include ../../Makefile.grammar
+include ../../../Makefile.grammar
