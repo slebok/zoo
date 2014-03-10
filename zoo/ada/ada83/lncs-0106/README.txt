@@ -6,4 +6,3 @@ http://dx.doi.org/10.1007/3-540-10693-6
 http://www.springerlink.com/content/un24t0851755/
 
 Appendix E: Syntax Summary, pages 221..225
-
