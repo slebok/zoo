@@ -8,3 +8,5 @@ https://code.google.com/a/eclipselabs.org/p/api2mol/
   Documentation
    API2MoL abstract syntax
     http://modelum.es/trac/api2mol/attachment/wiki/WikiStart/api2mol.ecore
+   API2MoL concrete syntax
+    http://modelum.es/trac/api2mol/attachment/wiki/WikiStart/api2mol.g
