@@ -2,6 +2,7 @@
 module framework::FrontEnd
 
 import IO;
+import Set;
 import List;
 import String;
 import lang::xml::DOM;
@@ -16,7 +17,7 @@ void main()
 {
 	//println(base.ls);
 	writeHTML(
-		zooval2html(traverse("",base)),
+		zooval2html(traverse("",base), false),
 		|project://zoo/web/index.html|
 	);
 }
@@ -54,7 +55,7 @@ ZooValue xml2zooval(Node e)
 	return zerror();
 }
 
-HTML zooval2html(ZooEntry ze)
+HTML zooval2html(ZooEntry ze, bool debug)
 	= html(
 		//("xmlns":"http://www.w3.org/1999/xhtml"),
 		(),
@@ -68,17 +69,21 @@ HTML zooval2html(ZooEntry ze)
 		body( ("style":"background-color:#9C9;"), [
 			heading(1, (), _text(txtbykey(ze,"name"))),
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
-			heading(2, (), _text("<size([1 | /struct("grammar",_) <- ze])> grammars and counting")),
+			heading(2, (), _text("<countSize(ze)> grammars and counting")),
 			div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
 			heading(1, (), _text("...links...")),
 			hr(),
-			*[*lang2html(iz) | iz <- ze.inner]]
+			*[*lang2html(iz, debug) | iz <- ze.inner]]
 		)
 	);
 
-list[BodyElement] lang2html(ZooEntry z) = [
+str countSize(ZooEntry z)
+	= "<size({ez | /ez:zentry(_, list[ZooValue] meta, _) <- z, /struct("grammar",_) := ez.meta})> (<size([1 | /struct("grammar",_) <- z])>)";
+
+list[BodyElement] lang2html(ZooEntry z, bool debug) = [
 	maketoptitle(z),
-	*[zooval2be(iz) | iz <- z.inner]
+	*[zooval2be(iz, debug) | iz <- z.inner],
+	hr()
 ];
 
 BodyElement maketoptitle(ZooEntry z)
@@ -99,6 +104,8 @@ BodyElement makelinks(lrel[str,str] links)
 
 tuple[str,str] makelink([keyvalue("uri", str uri),keyvalue("name", str name)])
 	= <name, uri>;
+tuple[str,str] makelink([keyvalue("doi", str doi)])
+	= <"DOI", "http://dx.doi.org/<doi>">;
 default tuple[str,str] makelink(list[ZooValue] kvs) = <"<kvs>","#">;
 
 lrel[str,str] getlinks(list[ZooValue] zs) = [makelink(inner) | struct("link", list[ZooValue] inner) <- zs];
@@ -137,27 +144,26 @@ default str th(str n) = "<n>th";
 BodyElement displaytag(str k, str v) = span( ("class":"tag"), _text("<k>:<v>"));
 
 // TODO: make sure it works
-BodyElement grammar2be(list[ZooValue] zs)
+BodyElement grammar2be(list[ZooValue] zs, bool debug)
 	= _seq([
 		strong( (), _text(txtbykey(zs,"dir"))),
 		*[displaytag(k,v) | keyvalue(str k, str v) <- zs],
-		_text("<zs>")]);
+		*(debug?[_text("<zs>")]:[])]);
 
-BodyElement zooval2be(ZooEntry ze)
+BodyElement zooval2be(ZooEntry ze, bool debug)
 	= _seq([
 		maketitle(ze),
 		ul((),
-			[li((), _text("<ze.meta>"))]
+			(debug?[li((), _text("<ze.meta>"))]:[])
 			+ [li((), src2be(zin)) | struct("source", list[ZooValue] zin) <- ze.meta]
-			+ [li((), grammar2be(zin)) | struct("grammar", list[ZooValue] zin) <- ze.meta]
-			+ [li((), zooval2be(iz)) | iz <- ze.inner]
+			+ [li((), grammar2be(zin,debug)) | struct("grammar", list[ZooValue] zin) <- ze.meta]
+			+ [li((), zooval2be(iz,debug)) | iz <- ze.inner]
 	)]);
 
 str shortenpath(loc x) = replaceFirst(x.path, base.path, "");
 
 ZooEntry traverse(str ind, loc x)
 {
-	//alias ZooEntry = zentry(loc where, list[ZooValue] meta, list[ZooEntry] inner)
 	ZooEntry ze = zentry(shortenpath(x), [], []);
 	if(!isDirectory(x)) return noentry(shortenpath(x));
 	bool good = exists(x+"zoo.xml");
