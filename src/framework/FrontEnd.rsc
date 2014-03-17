@@ -10,7 +10,7 @@ import framework::BackEnd;
 void main()
 {
 	writeHTML(
-		zooval2html(traversebase(), false),
+		zooval2html(traversebase(), true),
 		|project://zoo/web/index.html|
 	);
 }
