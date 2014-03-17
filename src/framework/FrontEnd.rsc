@@ -2,57 +2,17 @@
 module framework::FrontEnd
 
 import IO;
-import Set;
-import List;
-import String;
-import lang::xml::DOM;
 import grammarlab::language::XHTML;
 import grammarlab::io::XHTML;
-
-loc base = |home:///projects/webzoo-prep/zoo/|;
-str gitbasedir = "https://github.com/grammarware/zoo/tree/master/zoo/";
-str gitbasefile = "https://github.com/grammarware/zoo/blob/master/zoo/";
+import framework::Types;
+import framework::BackEnd;
 
 void main()
 {
-	//println(base.ls);
 	writeHTML(
-		zooval2html(traverse("",base), false),
+		zooval2html(traversebase(), false),
 		|project://zoo/web/index.html|
 	);
-}
-
-data ZooValue
-	= keyvalue(str key, str val)
-	| flag(str key)
-	| struct(str key, list[ZooValue] inner)
-	| zerror()
-	;
-// This is a kind of extended lrel[str,value]:
-data ZooEntry
-	= zentry(str where, list[ZooValue] meta, list[ZooEntry] inner)
-	| noentry(str where)
-	;
-
-list[ZooValue] getbykey(ZooEntry e, str key) = [ie | ZooValue ie <- e, ie.key == key];
-ZooValue get1bykey(ZooEntry e, str key) = getOneFrom([ie | ZooValue ie <- e, ie.key == key]);
-str txtbykey(ZooEntry e, str key) = txtbykey(e.meta, key);
-str txtbykey(list[ZooValue] es, str key) = safegetOneFrom([val | ZooValue kv <- es, keyvalue(key,str val) := kv]);
-
-str safegetOneFrom([]) = "";
-default str safegetOneFrom(t) = getOneFrom(t);
-
-ZooValue xml2zooval(Node e)
-{
-	if (element(_, _, _ ) !:= e) return zerror();
-	if ([] := e.children)
-		return flag(e.name);
-	elseif ([charData(str v)] := e.children)
-		return keyvalue(e.name,v);
-	else
-		return struct(e.name, [xml2zooval(ie) | ie:element(_, _, _ ) <- e.children]);
-	//println("<ind>--\> found <n> as <children>");
-	return zerror();
 }
 
 HTML zooval2html(ZooEntry ze, bool debug)
@@ -76,9 +36,6 @@ HTML zooval2html(ZooEntry ze, bool debug)
 			*[*lang2html(iz, debug) | iz <- ze.inner]]
 		)
 	);
-
-str countSize(ZooEntry z)
-	= "<size({ez | /ez:zentry(_, list[ZooValue] meta, _) <- z, /struct("grammar",_) := ez.meta})> (<size([1 | /struct("grammar",_) <- z])>)";
 
 list[BodyElement] lang2html(ZooEntry z, bool debug) = [
 	maketoptitle(z),
@@ -117,8 +74,8 @@ BodyElement maketitle(ZooEntry z)
 	if (long == "") long = name; else long = "<long> (<name>)";
 	// https://github.com/software-engineering-amsterdam/poly-ql/tree/master/PhilippBeau/IFLessTermFrequency/src/nl/uva/sc/datatypes
 	// https://github.com/grammarware/zoo/tree/master/zoo/
-	lrel[str,str] links = [<"git",gitbasedir+z.where>];
-	if (flag("readme") in z.meta) links += <"ReadMe","<gitbasefile><z.where>/README.txt">;
+	lrel[str,str] links = [<"git",framework::BackEnd::gitbasedir+z.where>];
+	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile><z.where>/README.txt">;
 	links += getlinks(z.meta);
 	return heading(3, (), _seq([aname(name), _text(long), makelinks(links) ]));
 }
@@ -159,19 +116,3 @@ BodyElement zooval2be(ZooEntry ze, bool debug)
 			+ [li((), grammar2be(zin,debug)) | struct("grammar", list[ZooValue] zin) <- ze.meta]
 			+ [li((), zooval2be(iz,debug)) | iz <- ze.inner]
 	)]);
-
-str shortenpath(loc x) = replaceFirst(x.path, base.path, "");
-
-ZooEntry traverse(str ind, loc x)
-{
-	ZooEntry ze = zentry(shortenpath(x), [], []);
-	if(!isDirectory(x)) return noentry(shortenpath(x));
-	bool good = exists(x+"zoo.xml");
-	println("<ind>Processing <x>...<if(good){> ZOO!<}>");
-	if (!good) return noentry(shortenpath(x));
-	entry = parseXMLDOMTrim(readFile(x+"zoo.xml"));
-	ze.meta = xml2zooval(entry.root).inner;
-	println("<ind>==\> <ze>");
-	ze.inner = [zzz | loc ix <- x.ls, ZooEntry zzz := traverse(ind+"  ",ix), noentry(_) !:= zzz];
-	return ze;
-}
