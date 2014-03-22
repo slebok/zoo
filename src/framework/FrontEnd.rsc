@@ -10,7 +10,7 @@ import framework::BackEnd;
 void main()
 {
 	writeHTML(
-		zooval2html(traversebase(), true),
+		zooval2html(traversebase(), false),
 		|project://zoo/web/index.html|
 	);
 }
@@ -39,7 +39,8 @@ HTML zooval2html(ZooEntry ze, bool debug)
 
 list[BodyElement] lang2html(ZooEntry z, bool debug) = [
 	maketoptitle(z),
-	*[zooval2be(iz, debug) | iz <- z.inner],
+	*(debug?[div((), _text("<z.meta>"))]:[]),
+	*[zooval2be(iz, debug) | iz <- orderedinner(z)],
 	hr()
 ];
 
@@ -114,5 +115,5 @@ BodyElement zooval2be(ZooEntry ze, bool debug)
 			(debug?[li((), _text("<ze.meta>"))]:[])
 			+ [li((), src2be(zin)) | struct("source", list[ZooValue] zin) <- ze.meta]
 			+ [li((), grammar2be(zin,debug)) | struct("grammar", list[ZooValue] zin) <- ze.meta]
-			+ [li((), zooval2be(iz,debug)) | iz <- ze.inner]
+			+ [li((), zooval2be(iz,debug)) | iz <- orderedinner(ze)]
 	)]);

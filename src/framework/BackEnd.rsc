@@ -45,3 +45,14 @@ public ZooEntry traverse(str ind, loc x)
 }
 
 public ZooEntry traversebase() = traverse("",basedir);
+
+public list[ZooEntry] orderedinner(ZooEntry z)
+{
+	if (struct("contents",list[ZooValue] kvs) <- z.meta)
+		return [iz |
+			keyvalue("dir", str d) <- kvs,
+			iz <- z.inner,
+			iz.where == "<z.where>/<d>" ];
+	else
+		return z.inner;
+}
