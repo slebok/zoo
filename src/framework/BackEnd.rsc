@@ -9,8 +9,10 @@ import lang::xml::DOM;
 import framework::Types;
 
 loc basedir = |home:///projects/webzoo-prep/zoo/|;
-str gitbasedir = "https://github.com/grammarware/zoo/tree/master/zoo/";
-str gitbasefile = "https://github.com/grammarware/zoo/blob/master/zoo/";
+//str gitbasedir = "https://github.com/grammarware/zoo/tree/master/zoo/";
+str gitbasedir = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo/";
+//str gitbasefile = "https://github.com/grammarware/zoo/blob/master/zoo/";
+str gitbasefile = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo/";
 
 str shortenpath(loc x) = replaceFirst(x.path, basedir.path, "");
 
