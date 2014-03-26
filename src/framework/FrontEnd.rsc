@@ -30,7 +30,7 @@ HTML zooval2html(ZooEntry ze, bool debug)
 		body( ("style":"background-color:#9C9;"), [
 			div( ("style":"float:right;", "class":"box"), img( "grammarlab.png", "Powered by GrammarLab" ) ),
 			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "GrammarZoo logo" ) ),
-			heading(1, (), _text(txtbykey(ze,"name"))),
+			heading(1, (), _seq([aname("TOP"),_text(txtbykey(ze,"name"))])),
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
 			heading(2, (), _text("<countSize(ze)> grammars and counting")),
 			div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
@@ -50,21 +50,12 @@ HTML zooval2html(ZooEntry ze, bool debug)
 				_text(" a.k.a. @"),
 				ahref( ("href":"http://twitter.com/grammarware"), _text("grammarware")),
 				_text(". Last updated in <namemonth(now().month)> <now().year>."),
-				makelinks([<"↑","#Zoo">]),
+				makelinks([<"↑","#TOP">]),
 				br(),
 				ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img("cc-by.png","CC-BY") ),
 				ahref( ("href":"http://validator.w3.org/check/referer"), img("vxhtml.png","Valid XHTML 1.0") ),
 				ahref( ("href":"http://jigsaw.w3.org/css-validator/check/referer"), img("vcss.png","Valid CSS 2.1") )
 			]) )
-			//<div class="last"><strong>
-			//			All grammars are distributed on terms of the <a href="http://creativecommons.org/licenses/by/3.0/">CC-BY</a> license
-			//			as well as on terms of any other license bound to the source of our research in a way that enforces
-			//			its propagation to derivatives.<br></br></strong>
-			//The page is maintained by Dr. <a href="http://grammarware.net/">Vadim Zaytsev</a> a.k.a. @<a href="http://twitter.com/grammarware">grammarware</a>.
-//Last updated: Aug2013<span class="links">[<a href="/">↑SLPS</a>]</span><br></br>
-//<a href="http://creativecommons.org/licenses/by/3.0/"><img src="http://i.creativecommons.org/l/by/3.0/88x31.png" alt="CC-BY"></img></a>
-//<a href="http://validator.w3.org/check/referer"><img src="../img/vxhtml.png" alt="XHTML 1.0"></img></a>
-//<a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../img/vcss.png" alt="CSS 2.1"></img></a></div>
 		])
 	);
 
@@ -85,7 +76,7 @@ BodyElement sectorlinks(ZooEntry z)
 {
 	list[BodyElement] res = [];
 	for(ZooEntry sec <- z.inner)
-		res += [ahref( ("href":"#<txtbykey(sec,"name")>sector"), _text(txtbykey(sec,"name")) ), _text(" — ")]; 
+		res += [ahref( ("href":"#<safe4anchor(txtbykey(sec,"name"))>sector"), _text(txtbykey(sec,"name")) ), _text(" — ")]; 
 	return _seq(res[..-1]);
 }
 
@@ -96,7 +87,7 @@ list[BodyElement] lang2html(ZooEntry z, bool debug) = [
 	hr()
 ];
 
-BodyElement maketoptitle(ZooEntry z) = heading(2, (), _seq([aname("<txtbykey(z,"name")>sector"), _text(maketoptitlename(z))]));
+BodyElement maketoptitle(ZooEntry z) = heading(2, (), _seq([aname("<safe4anchor(txtbykey(z,"name"))>sector"), _text(maketoptitlename(z))]));
 
 str maketoptitlename(ZooEntry z)
 {
@@ -128,9 +119,9 @@ BodyElement maketitle(ZooEntry z)
 	// https://github.com/software-engineering-amsterdam/poly-ql/tree/master/PhilippBeau/IFLessTermFrequency/src/nl/uva/sc/datatypes
 	// https://github.com/grammarware/zoo/tree/master/zoo/
 	lrel[str,str] links = [<"git",framework::BackEnd::gitbasedir+z.where>];
-	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile><z.where>/README.txt">;
+	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile>/<z.where>/README.txt">;
 	links += getlinks(z.meta);
-	return heading(3, (), _seq([aname(name), _text(long), makelinks(links) ]));
+	return heading(3, (), _seq([aname(safe4anchor(name)), _text(long), makelinks(links) ]));
 }
 
 BodyElement src2be(list[ZooValue] zin) = _seq([
@@ -151,21 +142,40 @@ str th("3") = "3rd";
 default str th(str n) = "<n>th";
 
 // TODO: fancify tags (links, colours, images, etc)
-BodyElement displaytag(str k, str v) = span( ("class":"tag"), _text("<k>:<v>"));
+BodyElement displaytag(str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
+
+BodyElement link2allfiles(str parent, str dir)
+	= makelinks([ link2file(f) | loc f <- (framework::BackEnd::basedir+"<parent>/<dir>").ls ]);
 
 // TODO: make sure it works
-BodyElement grammar2be(list[ZooValue] zs, bool debug)
-	= _seq([
-		strong( (), _text(txtbykey(zs,"dir"))),
-		*[displaytag(k,v) | keyvalue(str k, str v) <- zs],
-		*(debug?[_text("<zs>")]:[])]);
+BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
+	= ul( (),
+		[
+		li( (), _seq([
+			_text("The "),
+			strong( (), _text(txtbykey(zs,"dir"))),
+			_text(" grammar is "),
+			link2allfiles(parent, txtbykey(zs,"dir"))
+		])),
+		li( (), _seq([displaytag(k,v) | keyvalue(str k, str v) <- zs])),
+		*(debug?[li((),_text("<zs>"))]:[])
+		]);
 
 BodyElement zooval2be(ZooEntry ze, bool debug)
 	= _seq([
-		maketitle(ze),
-		ul((),
-			(debug?[li((), _text("<ze.meta>"))]:[])
-			+ [li((), src2be(zin)) | struct("source", list[ZooValue] zin) <- ze.meta]
-			+ [li((), grammar2be(zin,debug)) | struct("grammar", list[ZooValue] zin) <- ze.meta]
-			+ [li((), zooval2be(iz,debug)) | iz <- orderedinner(ze)]
-	)]);
+		dl( (),
+		[dt( (), maketitle(ze)),
+		*(debug?[dd((), _text("<ze.meta>"))]:[]),
+		*listsources(ze),
+		*listgrammars(ze, debug),
+		*[dd((), zooval2be(iz,debug)) | iz <- orderedinner(ze)]
+	])]);
+
+list[BodyElement] listsources(ZooEntry z)
+	= (struct("source", _) <- z.meta)
+	? [dd((), ul((), [li((), src2be(zin)) | struct("source", list[ZooValue] zin) <- z.meta]))]
+	: []
+	;
+
+list[BodyElement] listgrammars(ZooEntry z, bool debug)
+	= [dd((), grammar2be(z.where,zin,debug)) | struct("grammar", list[ZooValue] zin) <- z.meta];
