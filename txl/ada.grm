@@ -1,0 +1,3855 @@
+% Copyright 2010 Bruno LE HYARIC (http://bruno-lehyaric.com). All rights reserved.
+% 
+% Redistribution and use in source and binary forms, with or without modification, are
+% permitted provided that the following conditions are met:
+% 
+%    1. Redistributions of source code must retain the above copyright notice, this list of
+%         conditions and the following disclaimer.
+% 
+%    2. Redistributions in binary form must reproduce the above copyright notice, this list
+%         of conditions and the following disclaimer in the documentation and/or other materials
+%         provided with the distribution.
+% 
+% THIS SOFTWARE IS PROVIDED BY Bruno LE HYARIC ``AS IS'' AND ANY EXPRESS OR IMPLIED
+% WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+% FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Bruno LE HYARIC OR
+% CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+% ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+% NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+% 
+% The views and conclusions contained in the software and documentation are those of the
+% authors and should not be interpreted as representing official policies, either expressed
+% or implied, of Bruno LE HYARIC.
+
+
+% Maintenance log:
+%
+% v1.5  Bruno Le Hyaric     7 Jul 2010     Minor fixes to pragma and lmited with clauses
+%                                          Minor refactoring for comment overrides
+%
+% v1.4  Jim Cordy          19 May 2010     Added handling of Ada 2005 wide identifiers
+%                                          Added handling of Ada proposed if-then-else expressions
+%                                          Refined output formatting 
+%
+% v1.3  Bruno Le Hyaric    19 May 2010     Fix pragmas in task declarations, in protected type declaration,
+%                                          in type record definition, in generic declaration.
+%                                          Fix null procedure declaration.
+%
+% v1.2  Jim Cordy          18 May 2010     Added handling of pragmas 
+%                                          Restructured to make comment overrides easier
+%
+% v1.1  Jim Cordy          14 May 2010     Unified files, corrected several minor errors, tuned for TXL
+%                                          Added handling of pragma statements where allowed
+%                                          Added handling of !, : and % alternatives for |, # and "
+%                                          Disambiguated [name] for TXL
+%                                          Reordered [statement] to avoid backtracking
+%                                          Validated against Ada 3.0 conformance suite
+%
+% v1.0  Bruno Le Hyaric    April 2010      Initial revision
+%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Ada 2005 TXL grammar 
+% based on Ada 2005 LRM, ISO/IEC 8652:1995(E)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Ada is case-insensitive
+#pragma -case
+
+% Ada allows vertical form feeds as spaces
+#pragma -sp ""
+
+% Ada is line-limited
+#pragma -nomultiline
+
+% Main nonterminal in Ada is [compilation]
+define program
+    [compilation]
+end define
+
+
+% Ada 2005 keywords
+keys
+    abort abs abstract accept access aliased 'all and array at
+    begin body
+    case constant
+    declare delay delta digits do 
+    else elsif 'end entry exception exit
+    for 'function
+    generic goto
+    % suppress 'interface' keyword for retro compatibility with old code
+    % if in interface is
+    if in is
+    limited loop
+    mod
+    new 'not null
+    of or others out overriding
+    package pragma private procedure protected
+    raise range record rem renames requeue return reverse
+    select separate subtype synchronized
+    tagged task terminate then type 
+    until use
+    when while with
+    xor
+end keys
+
+
+% Ada 2005 compound delimiters
+compounds
+    => ..  ** := /= >= <= << >> <>
+end compounds
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2_lexical_elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 2.3
+% identifier ::=
+%     identifier_start {identifier_start | identifier_extend}
+
+% 2.3
+% identifier_start ::=
+%     letter_uppercase
+%   | letter_lowercase
+%   | letter_titlecase
+%   | letter_modifier
+%   | letter_other
+%   | number_letter
+
+% 2.3
+% identifier_extend ::=
+%     mark_non_spacing
+%   | mark_spacing_combining
+%   | number_decimal
+%   | punctuation_connector
+%   | other_format
+
+% TXL default [id] is Ada-compatible
+define identifier
+      [id]
+    | [wide_identifier]
+end define
+
+define wide_identifier
+    '[ [stringlit] ']
+end define
+
+% 2.4
+% numeric_literal ::=
+%     decimal_literal | based_literal
+
+define numeric_literal
+      [decimal_literal]
+    | [based_literal]
+end define
+
+% 2.4.1
+% decimal_literal ::=
+%     numeral [.numeral] [exponent]
+
+% 2.4.1
+% numeral ::=
+%     digit {[underline] digit}
+
+% 2.4.1
+% exponent ::=
+%     E [+] numeral | E - numeral
+
+% 2.4.1
+% digit ::=
+%     0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+% 2.4.2
+% based_literal ::=
+%     base # based_numeral [.based_numeral] # [exponent]
+
+% 2.4.2
+% base ::=
+%     numeral
+
+% 2.4.2
+% based_numeral ::=
+%     extended_digit {[underline] extended_digit}
+
+% 2.4.2
+% extended_digit ::=
+%     digit | A | B | C | D | E | F
+
+tokens
+    % TXL does not allow named subpatterns.  
+    % The intermediate forms at therefore are for reference only,
+    % so we can tell where the final definitions actually come from.
+
+    % based_literal must come first!
+
+    % extended_digit   "[\dabcdefABCDEF]"
+    % based_numeral    "{extended_digit}(_?{extended_digit})*"
+      % base           "{numeral}"
+    % based_literal    "{base}\#{based_numeral}(.{based_numeral})?\#{exponent}?"
+
+    based_literal    "((\d)(_?(\d))*)[\#:](([\dabcdefABCDEF])(_?([\dabcdefABCDEF]))*)(.(([\dabcdefABCDEF])(_?([\dabcdefABCDEF]))*))?[\#:]([Ee][\+-]?((\d)(_?(\d))*))?"
+
+      % digit           "\d"
+      % exponent        "[Ee][\+-]?{numeral}"
+      % numeral         "{digit}(_?{digit})*"
+    % decimal_literal   "{numeral}(.{numeral})*{exponent}?"
+
+    decimal_literal     "((\d)(_?(\d))*)(.((\d)(_?(\d))*))*([Ee][\+-]?((\d)(_?(\d))*))?"
+end tokens
+
+
+% 2.5
+% character_literal ::=
+%     'graphic_character'
+
+% TXL [charlit] is Ada-compatible, except that ' is a single character also -
+% adapt to this using negated lookahead in token pattern
+tokens
+    charlit     "'\c'#\:(#[,\)]')"
+end tokens
+
+define character_literal
+    [charlit]
+end define
+
+
+% 2.6
+% string_literal ::=
+%     "{string_element}"
+
+% 2.6
+% string_element ::=
+%     "" | non_quotation_mark_graphic_character
+
+% Extend TXL [stringlit] to Ada quote escape standard, and % alternative
+tokens
+    stringlit   "\"[(\"\")#\"]*\""
+              | "%[(%%)#%]*%"
+end tokens
+
+define string_literal
+    [stringlit]
+end define
+
+
+% 2.7
+% comment ::=
+%     --{non_end_of_line_character}
+
+% define Ada convention for comments
+comments
+    --
+end comments
+
+
+% 2.8
+% pragma ::=
+%     pragma identifier [(pragma_argument_association {, pragma_argument_association})];
+
+define pragma
+    'pragma [id] [blocksemi]
+    | 'pragma [id] [pragma_arguments] [blocksemi]
+end define
+
+define pragma_arguments
+    ( [pragma_argument_association,+] )
+end define
+
+% abstract semiccolon, colon and arrow to make commenting overrides easier
+define semi
+    ; [NL]
+end define
+
+define blocksemi
+    % semicolon that ends a block or major declaration
+    ; [NL]
+end define
+
+define unitsemi
+    % semicolon that ends a unit
+    ; [NL] [NL] 
+end define
+
+define eol
+    [NL]
+end define
+
+define blockeol
+    % major boundary eol
+    [NL]
+end define
+
+define colon
+     : 
+end define
+
+define colon_equals
+     := 
+end define
+
+define arrow
+    => 
+end define
+
+
+% 2.8
+% pragma_argument_association ::=
+%     [pragma_argument_identifier =>] name
+%   | [pragma_argument_identifier =>] expression
+
+% Pragmas are only allowed at the following places in a program:
+% * After a semicolon delimiter, but not within a formal_part or discriminant_part.
+% * At any place where the syntax rules allow a construct defined by a syntactic category
+% whose name ends with "declaration", "statement", "clause", or "alternative", or one of the
+% syntactic categories variant or exception_handler; but not in place of such a construct.
+% Also at any place where a compilation_unit would be allowed.
+% Additional syntax rules and placement restrictions exist for specific pragmas.
+
+define pragma_argument_association
+    [opt identifier_arrow] [expression]
+end define
+
+define identifier_arrow
+    [identifier] [arrow]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3_declarations_and_types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 3.1
+% basic_declaration ::=
+%     type_declaration | subtype_declaration
+%   | object_declaration | number_declaration
+%   | subprogram_declaration | abstract_subprogram_declaration
+%   | null_procedure_declaration | package_declaration
+%   | renaming_declaration | exception_declaration
+%   | generic_declaration | generic_instantiation
+
+define basic_declaration
+      [type_declaration]
+    | [subtype_declaration]
+    | [object_declaration]
+    | [number_declaration]
+    | [subprogram_declaration]
+    | [abstract_subprogram_declaration]
+    | [null_procedure_declaration]
+    | [package_declaration]
+    | [renaming_declaration]
+    | [exception_declaration]
+    | [generic_declaration]
+    | [generic_instantiation]
+    | [pragma]
+end define
+
+
+% 3.1
+% defining_identifier ::=
+%     identifier
+
+define defining_identifier
+    [identifier]
+end define
+
+
+% 3.2.1
+% type_declaration ::=
+%     full_type_declaration
+%   | incomplete_type_declaration
+%   | private_type_declaration
+%   | private_extension_declaration
+
+define type_declaration
+      [full_type_declaration]
+    | [incomplete_type_declaration]
+    | [private_type_declaration]
+    | [private_extension_declaration]
+end define
+
+
+% 3.2.1
+% full_type_declaration ::=
+%     type defining_identifier [known_discriminant_part] is type_definition;
+%   | task_type_declaration
+%   | protected_type_declaration
+
+define full_type_declaration
+    type [defining_identifier] [known_discriminant_part?] is [type_definition] [blocksemi]
+    | [task_type_declaration]
+    | [protected_type_declaration]
+end define
+
+
+% 3.2.1
+% type_definition ::=
+%     enumeration_type_definition | integer_type_definition
+%   | real_type_definition | array_type_definition
+%   | record_type_definition | access_type_definition
+%   | derived_type_definition | interface_type_definition
+
+define type_definition
+      [enumeration_type_definition]
+    | [integer_type_definition]
+    | [real_type_definition]
+    | [array_type_definition]
+    | [record_type_definition]
+    | [access_type_definition]
+    | [derived_type_definition]
+    | [interface_type_definition]
+end define
+
+
+% 3.2.2
+% subtype_declaration ::=
+%     subtype defining_identifier is subtype_indication;
+
+define subtype_declaration
+    subtype [defining_identifier] is [subtype_indication] [semi]
+end define
+
+
+% 3.2.2
+% subtype_indication ::=
+%     [null_exclusion] subtype_mark [constraint]
+
+define subtype_indication
+    [null_exclusion?] [subtype_mark] [constraint?]
+end define
+
+
+% 3.2.2
+% subtype_mark ::=
+%     subtype_name
+
+define subtype_mark
+    [name]
+end define
+
+
+% 3.2.2
+% constraint ::=
+%     scalar_constraint | composite_constraint
+
+define constraint
+      [scalar_constraint]
+    | [composite_constraint]
+end define
+
+
+% 3.2.2
+% scalar_constraint ::=
+%     range_constraint | digits_constraint | delta_constraint
+
+define scalar_constraint
+      [range_constraint]
+    | [digits_constraint]
+    | [delta_constraint]
+end define
+
+
+% 3.2.2
+% composite_constraint ::=
+%     index_constraint | discriminant_constraint
+
+define composite_constraint
+      [index_constraint]
+    | [discriminant_constraint]
+end define
+
+
+% 3.3.1
+% object_declaration ::=
+%     defining_identifier_list : [aliased] [constant] subtype_indication [:= expression];
+%  | defining_identifier_list : [aliased] [constant] access_definition [:= expression];
+%  | defining_identifier_list : [aliased] [constant] array_type_definition [:= expression];
+%  | single_task_declaration
+%  | single_protected_declaration
+
+define object_declaration
+      [defining_identifier_list] [colon] ['aliased?] ['constant?] [subtype_access_or_array_type_definition] [object_declaration_expression?] [semi]
+    | [single_task_declaration]
+    | [single_protected_declaration]
+end define
+
+define subtype_access_or_array_type_definition
+      [subtype_indication]
+    | [access_definition]
+    | [array_type_definition]
+end define
+
+define object_declaration_expression
+    [colon_equals] [expression]
+end define
+
+
+% 3.3.1
+% defining_identifier_list ::=
+%     defining_identifier {, defining_identifier}
+
+define defining_identifier_list
+    [defining_identifier,+]
+end define
+
+
+% 3.3.2
+% number_declaration ::=
+%     defining_identifier_list : constant := static_expression;
+
+define number_declaration
+    [defining_identifier_list] [colon] constant [colon_equals] [expression] [semi]
+end define
+
+
+% 3.4
+% derived_type_definition ::=
+%     [abstract] [limited] new parent_subtype_indication [[and interface_list] record_extension_part]
+
+define derived_type_definition
+    ['abstract?] ['limited?] new [subtype_indication] [interface_and_record_extension_specification?]
+end define
+
+define interface_and_record_extension_specification
+    % tuned for TXL - Jim Cordy, May 2010
+    % and [interface_list]
+    % | [record_extension_part]
+    % | and [interface_list] [record_extension_part]
+    and [interface_list] [record_extension_part?]
+    | [record_extension_part]
+end define
+
+
+% 3.5
+% range_constraint ::=
+%     range range
+
+define range_constraint
+    'range [range]
+end define
+
+
+% 3.5
+% range ::=
+%     range_attribute_reference
+%   | simple_expression .. simple_expression
+
+define range
+      [range_attribute_reference]
+    | [simple_expression] [SP] .. [SP] [simple_expression]
+end define
+
+
+% 3.5.1
+% enumeration_type_definition ::=
+%     (enumeration_literal_specification {, enumeration_literal_specification})
+
+define enumeration_type_definition
+    ( [enumeration_literal_specification,+] )
+end define
+
+
+% 3.5.1
+% enumeration_literal_specification ::=
+%     defining_identifier | defining_character_literal
+
+define enumeration_literal_specification
+      [defining_identifier]
+    | [defining_character_literal]
+end define
+
+
+% 3.5.1
+% defining_character_literal ::=
+%     character_literal
+
+define defining_character_literal
+    [character_literal]
+end define
+
+
+% 3.5.4
+% integer_type_definition ::=
+%     signed_integer_type_definition | modular_type_definition
+
+define integer_type_definition
+      [signed_integer_type_definition]
+    | [modular_type_definition]
+end define
+
+
+% 3.5.4
+% signed_integer_type_definition ::=
+%     range static_simple_expression .. static_simple_expression
+
+define signed_integer_type_definition
+    'range [simple_expression] [SP] .. [SP] [simple_expression]
+end define
+
+
+% 3.5.4
+% modular_type_definition ::=
+%     mod static_expression
+
+define modular_type_definition
+    mod [expression]
+end define
+
+
+% 3.5.6
+% real_type_definition ::=
+%     floating_point_definition | fixed_point_definition
+
+define real_type_definition
+      [floating_point_definition]
+    | [fixed_point_definition]
+end define
+
+
+% 3.5.7
+% floating_point_definition ::=
+%     digits static_expression [real_range_specification]
+
+define floating_point_definition
+    digits [expression] [real_range_specification?]
+end define
+
+
+% 3.5.7
+% real_range_specification ::=
+%     range static_simple_expression .. static_simple_expression
+
+define real_range_specification
+    'range [simple_expression] [SP] .. [SP] [simple_expression]
+end define
+
+
+% 3.5.9
+% fixed_point_definition ::=
+%     ordinary_fixed_point_definition | decimal_fixed_point_definition
+
+define fixed_point_definition
+      [ordinary_fixed_point_definition]
+    | [decimal_fixed_point_definition]
+end define
+
+
+% 3.5.9
+% ordinary_fixed_point_definition ::=
+%     delta static_expression  real_range_specification
+
+define ordinary_fixed_point_definition
+    delta [expression] [real_range_specification]
+end define
+
+
+% 3.5.9
+% decimal_fixed_point_definition ::=
+%     delta static_expression digits static_expression [real_range_specification]
+
+define decimal_fixed_point_definition
+    delta [expression] digits [expression] [real_range_specification?]
+end define
+
+
+% 3.5.9
+% digits_constraint ::=
+%     digits static_expression [range_constraint]
+
+define digits_constraint
+    digits [expression] [range_constraint?]
+end define
+
+
+% 3.6
+% array_type_definition ::=
+%     unconstrained_array_definition | constrained_array_definition
+
+define array_type_definition
+      [unconstrained_array_definition]
+    | [constrained_array_definition]
+end define
+
+
+% 3.6
+% unconstrained_array_definition ::=
+%     array(index_subtype_definition {, index_subtype_definition}) of component_definition
+
+define unconstrained_array_definition
+    array ( [index_subtype_definition,+] ) of [component_definition]
+end define
+
+
+% 3.6
+% index_subtype_definition ::=
+%     subtype_mark range <>
+
+define index_subtype_definition
+    [subtype_mark] 'range <>
+end define
+
+
+% 3.6
+% constrained_array_definition ::=
+%     array (discrete_subtype_definition {, discrete_subtype_definition}) of component_definition
+
+define constrained_array_definition
+    array ( [discrete_subtype_definition,+] ) of [component_definition]
+end define
+
+
+% 3.6
+% discrete_subtype_definition ::=
+%     discrete_subtype_indication | range
+
+define discrete_subtype_definition
+      [subtype_indication]
+    | [range]
+end define
+
+
+% 3.6
+% component_definition ::=
+%     [aliased] subtype_indication
+% | [aliased] access_definition
+
+define component_definition
+      ['aliased?] [subtype_indication]
+    | ['aliased?] [access_definition]
+end define
+
+
+% 3.6.1
+% index_constraint ::=
+%     (discrete_range {, discrete_range})
+
+define index_constraint
+    ( [discrete_range,+] )
+end define
+
+
+% 3.6.1
+% discrete_range ::=
+%     discrete_subtype_indication | range
+
+define discrete_range
+      [subtype_indication]
+    | [range]
+end define
+
+
+% 3.7
+% discriminant_part ::=
+%     unknown_discriminant_part | known_discriminant_part
+
+define discriminant_part
+      [unknown_discriminant_part]
+    | [known_discriminant_part]
+end define
+
+
+% 3.7
+% unknown_discriminant_part ::=
+%     (<>)
+
+define unknown_discriminant_part
+    ( <> )
+end define
+
+
+% 3.7
+% known_discriminant_part ::=
+%     (discriminant_specification {; discriminant_specification})
+
+define known_discriminant_part
+    ( [discriminant_specification_list] )
+end define
+
+define discriminant_specification_list
+    [discriminant_specification] [semi_discriminant_specification*]
+end define
+
+define semi_discriminant_specification
+    ; [discriminant_specification]
+end define
+
+
+% 3.7
+% discriminant_specification ::=
+%     defining_identifier_list : [null_exclusion] subtype_mark [:= default_expression]
+% | defining_identifier_list : access_definition [:= default_expression]
+
+define discriminant_specification
+      [defining_identifier_list] [colon] [null_exclusion?] [subtype_mark] [discriminant_specification_default?]
+    | [defining_identifier_list] [colon] [access_definition] [discriminant_specification_default?]
+end define
+
+define discriminant_specification_default
+    [colon_equals] [default_expression]
+end define
+
+
+% 3.7
+% default_expression ::=
+%     expression
+
+define default_expression
+    [expression]
+end define
+
+
+% 3.7.1
+% discriminant_constraint ::=
+%     (discriminant_association {, discriminant_association})
+
+define discriminant_constraint
+    ( [discriminant_association,] )
+end define
+
+
+% 3.7.1
+% discriminant_association ::=
+%     [discriminant_selector_name {| discriminant_selector_name} =>] expression
+
+define discriminant_association
+    [discriminant_selector_name_arrow?] [expression]
+end define
+
+define discriminant_selector_name_arrow
+    [selector_name] [or_selector_name*] [arrow]
+end define
+
+define or_selector_name
+    [orbar] [selector_name]
+end define
+
+define orbar
+    % Ada allows ! for |
+    '| | '!
+end define
+
+
+% 3.8
+% record_type_definition ::=
+%     [[abstract] tagged] [limited] record_definition
+
+define record_type_definition
+    [record_type_definition_tagged?] ['limited?] [record_definition]
+end define
+
+define record_type_definition_tagged
+    ['abstract?] tagged
+end define
+
+
+% 3.8
+% record_definition ::=
+%     record
+%         component_list
+%    end record
+%  | null record
+
+define record_definition
+    [IN][eol]
+    record [IN][eol]
+          [component_list] [EX]
+    'end record [EX]
+    | null record
+end define
+
+
+% 3.8
+% component_list ::=
+%     component_item {component_item}
+%   | {component_item} variant_part
+%   |  null;
+
+define component_list
+      [component_item+]
+    | [component_item*] [variant_part]
+    | null [semi]
+end define
+
+
+% 3.8
+% component_item ::=
+%     component_declaration | aspect_clause
+
+define component_item
+      [component_declaration]
+    | [aspect_clause]
+    | [pragma]
+end define
+
+
+% 3.8
+% component_declaration ::=
+%     defining_identifier_list : component_definition [:= default_expression];
+
+define component_declaration
+    [defining_identifier_list] [colon] [component_definition] [component_declaration_default?] [semi]
+end define
+
+define component_declaration_default
+    [colon_equals] [default_expression]
+end define
+
+
+% 3.8.1
+% variant_part ::=
+%     case discriminant_direct_name is
+%         variant
+%        {variant}
+%   end case;
+
+define variant_part
+    case [direct_name] is [IN][blockeol]
+        [variant+] [EX]
+    'end case [blocksemi]
+end define
+
+
+% 3.8.1
+% variant ::=
+%     when discrete_choice_list =>
+%        component_list
+
+define variant
+    when [discrete_choice_list] [arrow]
+        [component_list]
+end define
+
+
+% 3.8.1
+% discrete_choice_list ::=
+%     discrete_choice {| discrete_choice}
+
+define discrete_choice_list
+    [discrete_choice] [or_discrete_choice*]
+end define
+
+define or_discrete_choice
+    [orbar] [discrete_choice]
+end define
+
+
+% 3.8.1
+% discrete_choice ::=
+%     expression | discrete_range | others
+
+define discrete_choice
+      [expression]
+    | [discrete_range]
+    | others
+end define
+
+
+% 3.9.1
+% record_extension_part ::=
+%     with record_definition
+
+define record_extension_part
+    with [record_definition]
+end define
+
+
+% 3.9.3
+% abstract_subprogram_declaration ::=
+%     [overriding_indicator]
+%    subprogram_specification is abstract;
+
+define abstract_subprogram_declaration
+    [overriding_indicator?]
+    [subprogram_specification] is abstract [blocksemi]
+end define
+
+
+% 3.9.4
+% interface_type_definition ::=
+%     [limited | task | protected | synchronized] interface [and interface_list]
+
+define interface_type_definition
+    [interface_type_definition_modifier?] interface [interface_type_definition_list?]
+end define
+
+define interface_type_definition_modifier
+      limited
+    | task
+    | protected
+    | synchronized
+end define
+
+define interface_type_definition_list
+    and [interface_list]
+end define
+
+
+% 3.9.4
+% interface_list ::=
+%     interface_subtype_mark {and interface_subtype_mark}
+
+define interface_list
+      [subtype_mark]
+    | [subtype_mark] and [interface_list]
+end define
+
+
+% 3.10
+% access_type_definition ::=
+%     [null_exclusion] access_to_object_definition
+%  | [null_exclusion] access_to_subprogram_definition
+
+define access_type_definition
+      [null_exclusion?] [access_to_object_definition]
+    | [null_exclusion?] [access_to_subprogram_definition]
+end define
+
+
+% 3.10
+% access_to_object_definition ::=
+%     access [general_access_modifier] subtype_indication
+
+define access_to_object_definition
+    access [general_access_modifier?] [subtype_indication]
+end define
+
+
+% 3.10
+% general_access_modifier ::=
+%     all | constant
+
+define general_access_modifier
+      'all
+    | constant
+end define
+
+
+% 3.10
+% access_to_subprogram_definition ::=
+%     access [protected] procedure parameter_profile
+%  | access [protected] 'function  parameter_and_result_profile
+
+define access_to_subprogram_definition
+      access ['protected?] procedure [parameter_profile]
+    | access ['protected?] 'function [parameter_and_result_profile]
+end define
+
+
+% 3.10
+% null_exclusion ::=
+%     not null
+
+define null_exclusion
+    'not null
+end define
+
+
+% 3.10
+% access_definition ::=
+%     [null_exclusion] access [constant] subtype_mark
+%  | [null_exclusion] access [protected] procedure parameter_profile
+%  | [null_exclusion] access [protected] 'function parameter_and_result_profile
+
+define access_definition
+      [null_exclusion?] access ['constant?] [subtype_mark]
+    | [null_exclusion?] access ['protected?] procedure [parameter_profile]
+    | [null_exclusion?] access ['protected?] 'function [parameter_and_result_profile]
+end define
+
+
+% 3.10.1
+% incomplete_type_declaration ::=
+%     type defining_identifier [discriminant_part] [is tagged];
+
+define incomplete_type_declaration
+    type [defining_identifier] [discriminant_part?] [incomplete_type_declaration_modifier?] [blocksemi]
+end define
+
+define incomplete_type_declaration_modifier
+    is tagged
+end define
+
+
+% 3.11
+% declarative_part ::=
+%     {declarative_item}
+
+define declarative_part
+    [declarative_item*]
+end define
+
+
+% 3.11
+% declarative_item ::=
+%     basic_declarative_item | body
+
+define declarative_item
+      [basic_declarative_item]
+    | [body]
+end define
+
+
+% 3.11
+% basic_declarative_item ::=
+%     basic_declaration | aspect_clause | use_clause
+
+define basic_declarative_item
+      [basic_declaration]
+    | [aspect_clause]
+    | [use_clause]
+end define
+
+
+% 3.11
+% body ::=
+%     proper_body | body_stub
+
+define body
+      [proper_body]
+    | [body_stub]
+end define
+
+
+% 3.11
+% proper_body ::=
+%     subprogram_body | package_body | task_body | protected_body
+
+define proper_body
+      [subprogram_body]
+    | [package_body]
+    | [task_body]
+    | [protected_body]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4_names_and_expressions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 4.1
+% name ::=
+%     direct_name | explicit_dereference
+%   | indexed_component | slice
+%   | selected_component | attribute_reference
+%   | type_conversion | function_call
+%   | character_literal
+
+% Tuned, abstracted and disambiguated for TXL - Jim Cordy, May 2010
+define name
+      [direct_name] [name_component*]
+    | [character_literal]
+end define
+
+define name_component
+      [explicit_dereference_component]
+    | [indexed_slice_type_conv_or_function_call_component]
+    | [selected_component_component]
+    | [attribute_reference_component]
+end define
+
+define indexed_slice_type_conv_or_function_call_component
+    '( [index_or_parameter_value,+] ')
+end define
+
+define index_or_parameter_value
+      [expression]
+    | [discrete_range] 
+    | [parameter_association]
+end define
+
+
+% 4.1
+% direct_name ::=
+%     identifier | operator_symbol
+
+define direct_name
+      [identifier]
+    | [operator_symbol]
+end define
+
+
+% 4.1
+% prefix ::=
+%     name | implicit_dereference
+
+define prefix
+    [name]
+    % Redundant and ambiguous - Jim Cordy, May 2010
+    % | [implicit_dereference]
+end define
+
+
+% 4.1
+% explicit_dereference ::=
+%     name.all
+
+define explicit_dereference
+    [name] [explicit_dereference_component]
+end define
+
+define explicit_dereference_component
+    . 'all
+end define
+
+
+% 4.1
+% implicit_dereference ::=
+%     name
+
+define implicit_dereference
+    [name]
+end define
+
+
+% 4.1.1
+% indexed_component ::=
+%     prefix(expression {, expression})
+
+define indexed_component
+    [prefix] [indexed_component_component]
+end define
+
+define indexed_component_component
+    ( [index_expression,+] )
+end define
+
+define index_expression
+    [expression] 
+end define
+
+
+% 4.1.2
+% slice ::=
+%     prefix(discrete_range)
+
+define slice
+    [prefix] [slice_component]
+end define
+
+define slice_component
+    ( [discrete_range] )
+end define
+
+
+% 4.1.3
+% selected_component ::=
+%     prefix . selector_name
+
+define selected_component
+    [prefix] [selected_component_component]
+end define
+
+define selected_component_component
+    . [selector_name]
+end define
+
+
+% 4.1.3
+% selector_name ::=
+%     identifier | character_literal | operator_symbol
+
+define selector_name
+      [identifier]
+    | [character_literal]
+    | [operator_symbol]
+end define
+
+
+% 4.1.4
+% attribute_reference ::=
+%     prefix'attribute_designator
+
+define attribute_reference
+    [prefix] [attribute_reference_component]
+end define
+
+define attribute_reference_component
+    [SPOFF] ' ' [attribute_designator] [SPON]
+end define
+
+
+% 4.1.4
+% attribute_designator ::=
+%     identifier[(static_expression)]
+%  | Access | Delta | Digits
+
+define attribute_designator
+      [identifier] [attribute_designator_expression?]
+    | access
+    | delta
+    | digits
+end define
+
+define attribute_designator_expression
+    ( [expression] )
+end define
+
+
+% 4.1.4
+% range_attribute_reference ::=
+%     prefix'range_attribute_designator
+
+define range_attribute_reference
+    [prefix] [SPOFF] ' ' [range_attribute_designator]
+end define
+
+
+% 4.1.4
+% range_attribute_designator ::=
+%     Range[(static_expression)]
+
+define range_attribute_designator
+    'range [SPON] [range_attribute_designator_expression?]
+end define
+
+define range_attribute_designator_expression
+    ( [expression] )
+end define
+
+
+% 4.3
+% aggregate ::=
+%     record_aggregate | extension_aggregate | array_aggregate
+
+define aggregate
+      [record_aggregate]
+    | [extension_aggregate]
+    | [array_aggregate]
+end define
+
+
+% 4.3.1
+% record_aggregate ::=
+%     (record_component_association_list)
+
+define record_aggregate
+    ( [record_component_association_list] )
+end define
+
+
+% 4.3.1
+% record_component_association_list ::=
+%     record_component_association {, record_component_association}
+%  | null record
+
+define record_component_association_list
+      [record_component_association,+]
+    | null record
+end define
+
+
+% 4.3.1
+% record_component_association ::=
+%     [component_choice_list =>] expression
+%   | component_choice_list => <>
+
+define record_component_association
+      [expression]
+    | [component_choice_list] [arrow] [expression_or_null]
+end define
+
+
+% 4.3.1
+% component_choice_list ::=
+%     component_selector_name {| component_selector_name}
+%   | others
+
+define component_choice_list
+      [selector_name] [or_selector_name*]
+    | others
+end define
+
+
+% 4.3.2
+% extension_aggregate ::=
+%     (ancestor_part with record_component_association_list)
+
+define extension_aggregate
+    ( [ancestor_part] with [record_component_association_list] )
+end define
+
+
+% 4.3.2
+% ancestor_part ::=
+%     expression | subtype_mark
+
+define ancestor_part
+      [expression]
+    | [subtype_mark]
+end define
+
+
+% 4.3.3
+% array_aggregate ::=
+%     positional_array_aggregate | named_array_aggregate
+
+define array_aggregate
+      [positional_array_aggregate]
+    | [named_array_aggregate]
+end define
+
+
+% 4.3.3
+% positional_array_aggregate ::=
+%     (expression, expression {, expression})
+%  | (expression {, expression}, others => expression)
+%  | (expression {, expression}, others => <>)
+
+define positional_array_aggregate
+    ( [index_expression,+] [repeat comma_others] )
+end define
+
+define comma_others
+    , others [arrow] [expression_or_null] 
+end define
+
+
+% 4.3.3
+% named_array_aggregate ::=
+%     (array_component_association {, array_component_association})
+
+define named_array_aggregate
+    ( [array_component_association,+] )
+end define
+
+
+% 4.3.3
+% array_component_association ::=
+%     discrete_choice_list => expression
+%  | discrete_choice_list => <>
+
+define array_component_association
+    [discrete_choice_list] [arrow] [expression_or_null] 
+end define
+
+define expression_or_null
+      [expression]
+    | <>
+end define
+
+
+% 4.4
+% expression ::=
+%     relation {and relation}  | relation {and then relation}
+%   | relation {or relation}  | relation {or else relation}
+%   | relation {xor relation}
+
+define expression
+    [relation] [and_or_xor_relation*]
+end define
+
+define and_or_xor_relation
+    [and_or_xor] [relation]
+end define
+
+define and_or_xor
+      and [opt 'then]
+    | or [opt 'else]
+    | xor
+end define
+
+
+
+% 4.4
+% relation ::=
+%     simple_expression [relational_operator simple_expression?]
+%   | simple_expression [not] in range
+%   | simple_expression [not] in subtype_mark
+
+define relation
+      [simple_expression] [relational_operator_simple_expression?]
+    | [simple_expression] ['not?] in [range]
+    | [simple_expression] ['not?] in [subtype_mark]
+end define
+
+define relational_operator_simple_expression
+    [relational_operator] [simple_expression]
+end define
+
+
+% 4.4
+% simple_expression ::=
+%     [unary_adding_operator] term {binary_adding_operator term}
+
+define simple_expression
+    [unary_adding_operator?] [term] [binary_adding_operator_term*]
+end define
+
+define binary_adding_operator_term
+    [binary_adding_operator] [term]
+end define
+
+
+% 4.4
+% term ::=
+%     factor {multiplying_operator factor}
+
+define term
+    [factor] [multiplying_operator_factor*]
+end define
+
+define multiplying_operator_factor
+    [multiplying_operator] [factor]
+end define
+
+
+% 4.4
+% factor ::=
+%     primary [** primary] | abs primary | not primary
+
+define factor
+      [primary] [starstar_primary?]
+    | abs [primary]
+    | 'not [primary]
+end define
+
+define starstar_primary 
+    ** [primary]
+end define
+
+
+% 4.4
+% primary ::=
+%     numeric_literal | null | string_literal | aggregate
+% | name | qualified_expression | allocator | (expression)
+
+define primary
+      [numeric_literal]
+    | null
+    | [string_literal]
+    | [aggregate]
+    | [name]
+    | [qualified_expression]
+    | [allocator]
+    | ( [expression] )
+    | [if_expression] 
+end define
+
+
+% This patch adds a significant new feature to the language, conditional
+% expressions. This is currently under control of -gnatX (extensions
+% permitted), but is expected to become an official part of the language.
+% 
+% The form of a conditional expression is
+% 
+% ( if expression then expresion
+%     {elsif expression then expression}
+%     [else expression] )
+%
+% Parentheses are not required where they are already present, and there
+% is no ambiguity, so we allow if expressions without them
+
+define if_expression
+    if [expression] then [expression] [elsif_expression*] [else_expression?] 
+end define
+
+define elsif_expression
+    elsif [expression] then [expression]
+end define
+
+define else_expression
+    else [expression]
+end define
+
+
+% 4.5
+% logical_operator ::=
+%     and | or  | xor
+
+define logical_operator
+    and | or | xor
+end define
+
+
+% 4.5
+% relational_operator ::=
+%     =   | /=  | <   | <= | > | >=
+
+define relational_operator
+    = | /= | < | <= | > | >=
+end define
+
+
+% 4.5
+% binary_adding_operator ::=
+%     +   |  -   | &
+
+define binary_adding_operator
+    + | - | [IN][NL] & [EX]
+end define
+
+
+% 4.5
+% unary_adding_operator ::=
+%     +   | -
+
+define unary_adding_operator
+    + | -
+end define
+
+
+% 4.5
+% multiplying_operator ::=
+%     *   | /   | mod | rem
+
+define multiplying_operator
+    * | / | mod | rem
+end define
+
+
+% 4.5
+% highest_precedence_operator ::=
+%     **  | abs | not
+
+define highest_precedence_operator
+    ** | abs | 'not
+end define
+
+
+% 4.6
+% type_conversion ::=
+%     subtype_mark(expression)
+%  | subtype_mark(name)
+
+define type_conversion
+    [subtype_mark] ( [expression] )
+    % Clearly redundant
+    % | [subtype_mark] ( [name] )
+end define
+
+
+% 4.7
+% qualified_expression ::=
+%     subtype_mark'(expression) | subtype_mark'aggregate
+
+define qualified_expression
+    [subtype_mark] [SPOFF] ' ' [expression_or_aggregate]
+end define
+
+define expression_or_aggregate
+      ( [SPON] [expression] )
+    | [SPON] [aggregate]
+end define
+
+
+% 4.8
+% allocator ::=
+%     new subtype_indication | new qualified_expression
+
+define allocator
+    new [subtype_indication]
+    | new [qualified_expression]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5_statements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 5.1
+% sequence_of_statements ::=
+%     statement {statement}
+
+define sequence_of_statements
+    [statement+]
+end define
+
+
+% 5.1
+% statement ::=
+%     {label} simple_statement | {label} compound_statement
+
+define statement
+    [label*] [unlabeled_statement]
+end define
+
+define unlabeled_statement
+      [simple_statement]
+    | [compound_statement]
+end define
+
+
+% 5.1
+% simple_statement ::=
+%     null_statement
+%   | assignment_statement | exit_statement
+%   | goto_statement | procedure_call_statement
+%   | simple_return_statement | entry_call_statement
+%   | requeue_statement | delay_statement
+%   | abort_statement | raise_statement
+%   | code_statement
+
+define simple_statement
+      [null_statement]
+    | [procedure_call_statement]  % Must be first to avoid backtracking - Jim Cordy, May 2010
+    | [assignment_statement]
+    | [exit_statement]
+    | [goto_statement]
+    | [simple_return_statement]
+    | [entry_call_statement]
+    | [requeue_statement]
+    | [delay_statement]
+    | [abort_statement]
+    | [raise_statement]
+    | [code_statement]
+    | [pragma]
+end define
+
+
+% 5.1
+% compound_statement ::=
+%     if_statement | case_statement
+%   | loop_statement | block_statement
+%   | extended_return_statement
+%   | accept_statement | select_statement
+
+define compound_statement
+      [if_statement]
+    | [case_statement]
+    | [loop_statement]
+    | [block_statement]
+    | [extended_return_statement]
+    | [accept_statement]
+    | [select_statement]
+end define
+
+
+% 5.1
+% null_statement ::=
+%     null;
+
+define null_statement
+    null [semi]
+end define
+
+
+% 5.1
+% label ::=
+%     <<label_statement_identifier>>
+
+define label
+    << [statement_identifier] >>
+end define
+
+
+% 5.1
+% statement_identifier ::=
+%     direct_name
+
+define statement_identifier
+    [direct_name]
+end define
+
+
+% 5.2
+% assignment_statement ::=
+%     variable_name := expression;
+
+define assignment_statement
+    [name] [colon_equals] [expression] [semi]
+end define
+
+
+% 5.3
+% if_statement ::=
+%     if condition then
+%        sequence_of_statements
+%   {elsif condition then
+%        sequence_of_statements}
+%   [else
+%        sequence_of_statements]
+%    end if;
+
+define if_statement
+    if [condition] then [IN][eol]
+        [sequence_of_statements]
+    [if_statement_elsif*]
+    [if_statement_else?] [EX]
+    'end if [semi]
+end define
+
+define if_statement_elsif
+    [EX] elsif [condition] then [IN][eol]
+        [sequence_of_statements]
+end define
+
+define if_statement_else
+    [EX] else [IN][eol]
+        [sequence_of_statements]
+end define
+
+
+% 5.3
+% condition ::=
+%     boolean_expression
+
+define condition
+    [expression]
+end define
+
+
+% 5.4
+% case_statement ::=
+%     case expression is
+%         case_statement_alternative
+%        {case_statement_alternative}
+%   end case;
+
+define case_statement
+    case [expression] is [IN][blockeol]
+        [case_statement_alternative+] [EX]
+    'end case [blocksemi]
+end define
+
+
+% 5.4
+% case_statement_alternative ::=
+%     when discrete_choice_list =>
+%        sequence_of_statements
+
+define case_statement_alternative
+    when [discrete_choice_list] [arrow]
+        [sequence_of_statements]
+end define
+
+
+% 5.5
+% loop_statement ::=
+%     [loop_statement_identifier:]
+%        [iteration_scheme] loop
+%           sequence_of_statements
+%         end loop [loop_identifier];
+
+define loop_statement
+    [loop_statement_identifier?]
+    [iteration_scheme?] loop [IN][eol]
+        [sequence_of_statements] [EX]
+    'end loop [identifier?] [blocksemi]
+end define
+
+define loop_statement_identifier
+    [statement_identifier] [colon]
+end define
+
+
+% 5.5
+% iteration_scheme ::=
+%     while condition
+%   | for loop_parameter_specification
+
+define iteration_scheme
+      while [condition]
+    | for [loop_parameter_specification]
+end define
+
+
+% 5.5
+% loop_parameter_specification ::=
+%     defining_identifier in [reverse] discrete_subtype_definition
+
+define loop_parameter_specification
+    [defining_identifier] in ['reverse?] [discrete_subtype_definition]
+end define
+
+
+% 5.6
+% block_statement ::=
+%     [block_statement_identifier:]
+%         [declare
+%              declarative_part]
+%          begin
+%              handled_sequence_of_statements
+%          end [block_identifier];
+
+define block_statement
+    [block_statement_identifier_colon?]
+    [declare_declarative_part?]
+    begin [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end [identifier?] [unitsemi]
+end define
+
+define block_statement_identifier_colon
+    [statement_identifier] [colon]
+end define
+
+define declare_declarative_part
+    declare [IN][eol]
+        [declarative_part] [EX]
+end define
+
+
+% 5.7
+% exit_statement ::=
+%     exit [loop_name] [when condition];
+
+define exit_statement
+    exit [name?] [exit_statement_when_condition?] [semi]
+end define
+
+define exit_statement_when_condition
+    when [condition]
+end define
+
+
+% 5.8
+% goto_statement ::=
+%     goto label_name;
+
+define goto_statement
+    goto [name] [semi]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6_subprograms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 6.1
+% subprogram_declaration ::=
+%     [overriding_indicator]
+%    subprogram_specification;
+
+define subprogram_declaration
+    [overriding_indicator?] [subprogram_specification] [blocksemi]
+end define
+
+
+% 6.1
+% subprogram_specification ::=
+%     procedure_specification
+%  | function_specification
+
+define subprogram_specification
+      [procedure_specification]
+    | [function_specification]
+end define
+
+
+% 6.1
+% procedure_specification ::=
+%     procedure defining_program_unit_name parameter_profile
+
+define procedure_specification
+   procedure [defining_program_unit_name] [parameter_profile]
+end define
+
+
+% 6.1
+% function_specification ::=
+%     function defining_designator parameter_and_result_profile
+
+define function_specification
+    'function [defining_designator] [parameter_and_result_profile]
+end define
+
+
+% 6.1
+% designator ::=
+%     [parent_unit_name . ]identifier | operator_symbol
+
+define designator
+      [designator_parent_unit_name?] [identifier]
+    | [operator_symbol]
+end define
+
+define designator_parent_unit_name
+    [parent_unit_name] .
+end define
+
+
+% 6.1
+% defining_designator ::=
+%     defining_program_unit_name | defining_operator_symbol
+
+define defining_designator
+      [defining_program_unit_name]
+    | [defining_operator_symbol]
+end define
+
+
+% 6.1
+% defining_program_unit_name ::=
+%     [parent_unit_name . ]defining_identifier
+
+define defining_program_unit_name
+    [defining_program_unit_name_parent?] [defining_identifier]
+end define
+
+define defining_program_unit_name_parent
+    [parent_unit_name] .
+end define
+
+
+% 6.1
+% operator_symbol ::=
+%     string_literal
+
+define operator_symbol
+    [string_literal]
+end define
+
+
+% 6.1
+% defining_operator_symbol ::=
+%     operator_symbol
+
+define defining_operator_symbol
+    [operator_symbol]
+end define
+
+
+% 6.1
+% parameter_profile ::=
+%     [formal_part]
+
+define parameter_profile
+    [formal_part?]
+end define
+
+
+% 6.1
+% parameter_and_result_profile ::=
+%     [formal_part] return [null_exclusion] subtype_mark
+%  | [formal_part] return access_definition
+
+define parameter_and_result_profile
+    [formal_part?] return [subtype_or_access_definition]
+end define
+
+define subtype_or_access_definition
+      [null_exclusion?] [subtype_mark]
+    | [access_definition]
+end define
+
+
+% 6.1
+% formal_part ::=
+%     (parameter_specification {; parameter_specification})
+
+define formal_part
+    ( [parameter_specification] [semi_parameter_specification*] )
+end define
+
+define semi_parameter_specification
+    ; [parameter_specification]
+end define
+
+
+% 6.1
+% parameter_specification ::=
+%     defining_identifier_list : mode [null_exclusion] subtype_mark [:= default_expression]
+%  | defining_identifier_list : access_definition [:= default_expression]
+
+define parameter_specification
+    [defining_identifier_list] [colon] [parameter_type_specification]
+end define
+
+define parameter_type_specification 
+      [mode] [null_exclusion?] [subtype_mark] [parameter_specification_default?]
+    | [access_definition] [parameter_specification_default?]
+end define
+
+define parameter_specification_default
+    [colon_equals] [default_expression]
+end define
+
+
+% 6.1
+% mode ::=
+%     [in] | in out | out
+
+define mode
+      ['in?]
+    | in out
+    | out
+end define
+
+
+% 6.3
+% subprogram_body ::=
+%     [overriding_indicator]
+%    subprogram_specification is
+%         declarative_part
+%    begin
+%          handled_sequence_of_statements
+%    end [designator];
+
+define subprogram_body
+    [NL] 
+    [overriding_indicator?]
+    [subprogram_specification] is [IN][blockeol]
+        [declarative_part] [EX]
+    begin [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end [designator?] [unitsemi]
+end define
+
+
+% 6.4
+% procedure_call_statement ::=
+%     procedure_name;
+%  | procedure_prefix actual_parameter_part;
+
+define procedure_call_statement
+    % Clearly redundant
+    % [name] [semi] |
+    [prefix] [opt actual_parameter_part] [semi]
+end define
+
+
+% 6.4
+% function_call ::=
+%     function_name
+%  | function_prefix actual_parameter_part
+
+define function_call
+    % Clearly redundant
+    %   [name] |
+    [prefix] [function_call_component]
+end define
+
+define function_call_component
+    [actual_parameter_part]
+end define
+
+
+% 6.4
+% actual_parameter_part ::=
+%     (parameter_association {, parameter_association})
+
+define actual_parameter_part
+    ( [parameter_association,+] )
+end define
+
+
+% 6.4
+% parameter_association ::=
+%     [formal_parameter_selector_name =>] explicit_actual_parameter
+
+define parameter_association
+    % unselected case already handled by [expression], see [name]
+    [parameter_association_selector_name] [explicit_actual_parameter]
+end define
+
+define parameter_association_selector_name
+    [selector_name] [arrow]
+end define
+
+
+% 6.4
+% explicit_actual_parameter ::=
+%     expression | variable_name
+
+define explicit_actual_parameter
+      [expression]
+    % Obviously redundant
+    % | [name]
+end define
+
+
+% 6.5
+% simple_return_statement ::=
+%     return [expression];
+
+define simple_return_statement
+    return [expression?] [semi]
+end define
+
+
+% 6.5
+% extended_return_statement ::=
+%     return defining_identifier : [aliased] return_subtype_indication [:= expression] [do
+%          handled_sequence_of_statements
+%    end return];
+
+define extended_return_statement
+    return [defining_identifier] [colon] ['aliased?] [return_subtype_indication] [extended_return_statement_expression?] [extended_return_statement_do?] [unitsemi]
+end define
+
+define extended_return_statement_expression
+    [colon_equals] [expression]
+end define
+
+define extended_return_statement_do
+    do [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end return
+end define
+
+
+% 6.5
+% return_subtype_indication ::=
+%     subtype_indication | access_definition
+
+define return_subtype_indication
+      [subtype_indication]
+    | [access_definition]
+end define
+
+
+% 6.7
+% null_procedure_declaration ::=
+%     [overriding_indicator]
+%   procedure_specification is null;
+
+define null_procedure_declaration
+    [overriding_indicator?]
+    [procedure_specification] is null [blocksemi]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 7_packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 7.1
+% package_declaration ::=
+%     package_specification;
+
+define package_declaration
+    [package_specification] [unitsemi]
+end define
+
+
+% 7.1
+% package_specification ::=
+%     package defining_program_unit_name is
+%        {basic_declarative_item}
+%   [private
+%        {basic_declarative_item}]
+%    end [[parent_unit_name.]identifier]
+
+define package_specification
+   [NL] package [defining_program_unit_name] is [IN][blockeol]
+        [basic_declarative_item*] [EX]
+        [package_specification_private?] 
+    'end [package_specification_identifier?]
+end define
+
+define package_specification_private
+    private [IN][eol]
+        [basic_declarative_item*] [EX]
+end define
+
+define package_specification_identifier
+    [parent_name_dot?] [identifier]
+end define
+
+define parent_name_dot
+    [parent_unit_name] . 
+end define
+
+
+% 7.2
+% package_body ::=
+%     package body defining_program_unit_name is
+%         declarative_part
+%   [begin
+%          handled_sequence_of_statements]
+%    end [[parent_unit_name.]identifier];
+
+define package_body
+   [NL]  
+    package 'body [defining_program_unit_name] is [IN][blockeol]
+        [declarative_part] [EX]
+    [package_body_statements?]
+    'end [package_body_identifier?] [unitsemi]
+end define
+
+define package_body_statements
+    begin [IN][eol]
+        [handled_sequence_of_statements] [EX]
+end define
+
+define package_body_identifier
+    [parent_name_dot?] [identifier]
+end define
+
+
+% 7.3
+% private_type_declaration ::=
+%     type defining_identifier [discriminant_part] is [[abstract] tagged] [limited] private;
+
+define private_type_declaration
+    type [defining_identifier] [discriminant_part?] is [blockeol] 
+        [private_type_declaration_tagged?] ['limited?] private [blocksemi]
+end define
+
+define private_type_declaration_tagged
+    ['abstract?] tagged
+end define
+
+
+% 7.3
+% private_extension_declaration ::=
+%     type defining_identifier [discriminant_part] is
+%     [abstract] [limited | synchronized] new ancestor_subtype_indication
+%     [and interface_list] with private;
+
+define private_extension_declaration
+    type [defining_identifier] [discriminant_part?] is [blockeol]
+    ['abstract?] [private_extension_declaration_modifier?] new [subtype_indication]
+    [private_extension_declaration_interface_list?] with private [blocksemi]
+end define
+
+define private_extension_declaration_modifier
+    limited
+    | synchronized
+end define
+
+define private_extension_declaration_interface_list
+    and [interface_list]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 8_visibility_rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 8.3.1
+% overriding_indicator ::=
+%     [not] overriding
+
+define overriding_indicator
+    ['not?] overriding
+end define
+
+
+% 8.4
+% use_clause ::=
+%     use_package_clause | use_type_clause
+
+define use_clause
+      [use_package_clause]
+    | [use_type_clause]
+end define
+
+
+% 8.4
+% use_package_clause ::=
+%     use package_name {, package_name};
+
+define use_package_clause
+    use [used_name,+] [semi]
+end define
+
+define used_name
+    [name] 
+end define
+
+
+% 8.4
+% use_type_clause ::=
+%     use type subtype_mark {, subtype_mark};
+
+define use_type_clause
+    use type [used_subtype_mark,+] [semi]
+end define
+
+define used_subtype_mark
+    [subtype_mark]
+end define
+
+
+% 8.5
+% renaming_declaration ::=
+%     object_renaming_declaration
+%    | exception_renaming_declaration
+%    | package_renaming_declaration
+%    | subprogram_renaming_declaration
+%    | generic_renaming_declaration
+
+define renaming_declaration
+      [object_renaming_declaration]
+    | [exception_renaming_declaration]
+    | [package_renaming_declaration]
+    | [subprogram_renaming_declaration]
+    | [generic_renaming_declaration]
+end define
+
+
+% 8.5.1
+% object_renaming_declaration ::=
+%     defining_identifier : [null_exclusion] subtype_mark renames object_name;
+%  | defining_identifier : access_definition renames object_name;
+
+define object_renaming_declaration
+      [defining_identifier] [colon] [null_exclusion?] [subtype_mark] renames [name] [semi]
+    | [defining_identifier] [colon] [access_definition] renames [name] [semi]
+end define
+
+
+% 8.5.2
+% exception_renaming_declaration ::=
+%     defining_identifier : exception renames exception_name;
+
+define exception_renaming_declaration
+    [defining_identifier] [colon] exception renames [name] [semi]
+end define
+
+
+% 8.5.3
+% package_renaming_declaration ::=
+%     package defining_program_unit_name renames package_name;
+
+define package_renaming_declaration
+   [NL]  package [defining_program_unit_name] renames [name][blocksemi]
+end define
+
+
+% 8.5.4
+% subprogram_renaming_declaration ::=
+%     [overriding_indicator]
+%    subprogram_specification renames callable_entity_name;
+
+define subprogram_renaming_declaration
+    [overriding_indicator?]
+    [subprogram_specification] renames [name] [blocksemi]
+end define
+
+
+% 8.5.5
+% generic_renaming_declaration ::=
+%     generic package defining_program_unit_name renames generic_package_name;
+%  | generic procedure defining_program_unit_name renames generic_procedure_name;
+%  | generic function defining_program_unit_name renames generic_function_name;
+
+define generic_renaming_declaration
+      generic package [defining_program_unit_name] renames [name] [blocksemi]
+    | generic procedure [defining_program_unit_name] renames [name] [blocksemi]
+    | generic 'function [defining_program_unit_name] renames [name] [blocksemi]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 9_tasks_and_synchronization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 9.1
+% task_type_declaration ::=
+%     task type defining_identifier [known_discriminant_part] [is
+%     [new interface_list with]
+%     task_definition];
+
+define task_type_declaration
+    task type [defining_identifier] [known_discriminant_part?]
+    [task_type_declaration_definition?] [blocksemi]
+end define
+
+define task_type_declaration_definition
+    is [IN][blockeol]
+        [task_type_declaration_definition_interface_list?]
+        [task_definition] [EX]
+end define
+
+define task_type_declaration_definition_interface_list
+    new [interface_list] with
+end define
+
+
+% 9.1
+% single_task_declaration ::=
+%     task defining_identifier [is
+%     [new interface_list with]
+%     task_definition];
+
+define single_task_declaration
+    task [defining_identifier]
+    [single_task_declaration_definition?] [unitsemi]
+end define
+
+define single_task_declaration_definition
+    is [IN][blockeol] 
+        [single_task_declaration_definition_interface_list?] [EX]
+        [task_definition]
+end define
+
+define single_task_declaration_definition_interface_list
+    new [interface_list] with
+end define
+
+
+% 9.1
+% task_definition ::=
+%     {task_item}
+%  [ private
+%     {task_item}]
+%  end [task_identifier]
+
+define task_definition
+    [IN] [task_item*]
+    [task_definition_private?] [EX]
+    'end [identifier?]
+end define
+
+define task_definition_private
+    private [IN][eol]
+        [task_item*] [EX]
+end define
+
+
+% 9.1
+% task_item ::=
+%     entry_declaration | aspect_clause
+
+define task_item
+      [entry_declaration]
+    | [aspect_clause]
+    | [pragma]
+end define
+
+
+% 9.1
+% task_body ::=
+%     task body defining_identifier is
+%     declarative_part
+%   begin
+%     handled_sequence_of_statements
+%   end [task_identifier];
+
+define task_body
+    [NL] 
+    task 'body [defining_identifier] is [IN][blockeol]
+        [declarative_part] [EX]
+    begin [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end [identifier?][unitsemi]
+end define
+
+
+% 9.4
+% protected_type_declaration ::=
+%     protected type defining_identifier [known_discriminant_part] is
+%     [new interface_list with]
+%     protected_definition;
+
+define protected_type_declaration
+    [NL] protected type [defining_identifier] [known_discriminant_part?] is [protected_type_declaration_interface_list?] [eol]
+    [protected_definition] [unitsemi]    
+end define
+
+define protected_type_declaration_interface_list
+    new [interface_list] with
+end define
+
+
+% 9.4
+% single_protected_declaration ::=
+%     protected defining_identifier is
+%     [new interface_list with]
+%     protected_definition;
+
+define single_protected_declaration
+    protected [defining_identifier] is [blockeol]
+    [single_protected_declaration_interface_list?]
+    [protected_definition] [unitsemi]
+end define
+
+define single_protected_declaration_interface_list
+    new [interface_list] with
+end define
+
+
+% 9.4
+% protected_definition ::=
+%     { protected_operation_declaration }
+%   [ private
+%    { protected_element_declaration } ]
+%  end [protected_identifier]
+
+define protected_definition
+    [IN] [protected_operation_declaration*] 
+        [protected_definition_private?] [EX]
+    'end [identifier?]
+end define
+
+define protected_definition_private
+    [EX] private [IN] [eol]
+        [protected_element_declaration*] 
+end define
+
+
+% 9.4
+% protected_operation_declaration ::=
+%     subprogram_declaration
+%     | entry_declaration
+%     | aspect_clause
+
+define protected_operation_declaration
+      [subprogram_declaration]
+    | [entry_declaration]
+    | [aspect_clause]
+    | [pragma]
+end define
+
+
+% 9.4
+% protected_element_declaration ::=
+%     protected_operation_declaration
+%     | component_declaration
+
+define protected_element_declaration
+      [protected_operation_declaration]
+    | [component_declaration]
+end define
+
+
+% 9.4
+% protected_body ::=
+%     protected body defining_identifier is
+%   { protected_operation_item }
+%  end [protected_identifier];
+
+define protected_body
+    protected 'body [defining_identifier] is [IN][blockeol]
+        [protected_operation_item*] [EX]
+    'end [identifier?] [unitsemi]
+end define
+
+
+% 9.4
+% protected_operation_item ::=
+%     subprogram_declaration
+%     | subprogram_body
+%     | entry_body
+%     | aspect_clause
+
+define protected_operation_item
+      [subprogram_declaration]
+    | [subprogram_body]
+    | [entry_body]
+    | [aspect_clause]
+end define
+
+
+% 9.5.2
+% entry_declaration ::=
+%     [overriding_indicator]
+%   entry defining_identifier [(discrete_subtype_definition)] parameter_profile;
+
+define entry_declaration
+    [overriding_indicator?]
+    entry [defining_identifier] [entry_declaration_subtype?] [parameter_profile] [blocksemi]
+end define
+
+define entry_declaration_subtype
+    ( [discrete_subtype_definition] )
+end define
+
+
+% 9.5.2
+% accept_statement ::=
+%     accept entry_direct_name [(entry_index)] parameter_profile [do
+%     handled_sequence_of_statements
+%   end [entry_identifier]];
+
+define accept_statement
+    accept [direct_name] [accept_statement_entry_index?] [parameter_profile]
+    [accept_statement_statements?] [unitsemi]
+end define
+
+define accept_statement_entry_index
+    ( [entry_index] )
+end define
+
+define accept_statement_statements
+    do [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end [identifier?]
+end define
+
+
+% 9.5.2
+% entry_index ::=
+%     expression
+
+define entry_index
+    [expression]
+end define
+
+
+% 9.5.2
+% entry_body ::=
+%     entry defining_identifier  entry_body_formal_part  entry_barrier is
+%    declarative_part
+%  begin
+%    handled_sequence_of_statements
+%  end [entry_identifier];
+
+define entry_body
+    [NL] 
+    entry [defining_identifier] [entry_body_formal_part] [entry_barrier] is [IN][blockeol]
+        [declarative_part] [EX]
+    begin [IN][eol]
+        [handled_sequence_of_statements] [EX]
+    'end [identifier?] [unitsemi]
+end define
+
+
+% 9.5.2
+% entry_body_formal_part ::=
+%     [(entry_index_specification)] parameter_profile
+
+define entry_body_formal_part
+    [entry_body_formal_part_specification?] [parameter_profile]
+end define
+
+define entry_body_formal_part_specification
+    ( [entry_index_specification] )
+end define
+
+
+% 9.5.2
+% entry_barrier ::=
+%     when condition
+
+define entry_barrier
+    when [condition]
+end define
+
+
+% 9.5.2
+% entry_index_specification ::=
+%     for defining_identifier in discrete_subtype_definition
+
+define entry_index_specification
+    for [defining_identifier] in [discrete_subtype_definition]
+end define
+
+
+% 9.5.3
+% entry_call_statement ::=
+%     entry_name [actual_parameter_part];
+
+define entry_call_statement
+    [name] [actual_parameter_part?] [semi]
+end define
+
+
+% 9.5.4
+% requeue_statement ::=
+%     requeue entry_name [with abort];
+
+define requeue_statement
+    requeue [name] [requeue_statement_with_abort?] [semi]
+end define
+
+define requeue_statement_with_abort
+    with abort
+end define
+
+
+% 9.6
+% delay_statement ::=
+%     delay_until_statement | delay_relative_statement
+
+define delay_statement
+      [delay_until_statement]
+    | [delay_relative_statement]
+end define
+
+
+% 9.6
+% delay_until_statement ::=
+%     delay until delay_expression;
+
+define delay_until_statement
+    delay until [expression] [semi]
+end define
+
+
+% 9.6
+% delay_relative_statement ::=
+%     delay delay_expression;
+
+define delay_relative_statement
+    delay [expression] [semi]
+end define
+
+
+% 9.7
+% select_statement ::=
+%     selective_accept
+%  | timed_entry_call
+%  | conditional_entry_call
+%  | asynchronous_select
+
+define select_statement
+      [selective_accept]
+    | [timed_entry_call]
+    | [conditional_entry_call]
+    | [asynchronous_select]
+end define
+
+
+% 9.7.1
+% selective_accept ::=
+%     select
+%   [guard]
+%     select_alternative
+%  { or
+%   [guard]
+%     select_alternative }
+%  [ else
+%   sequence_of_statements ]
+%  end select;
+
+define selective_accept
+    select [IN][eol]
+        [guard?]
+        [select_alternative]
+    [selective_accept_or_alternative*]
+    [selective_accept_else_alternative?] [EX]
+    'end select [unitsemi]
+end define
+
+define selective_accept_or_alternative
+    [EX] or [IN][eol]  
+        [guard?]
+        [select_alternative]
+end define
+
+define selective_accept_else_alternative
+    else
+        [sequence_of_statements]
+end define
+
+
+% 9.7.1
+% guard ::=
+%     when condition =>
+
+define guard
+    when [condition] [arrow]
+end define
+
+
+% 9.7.1
+% select_alternative ::=
+%     accept_alternative
+%  | delay_alternative
+%  | terminate_alternative
+
+define select_alternative
+      [accept_alternative]
+    | [delay_alternative]
+    | [terminate_alternative]
+end define
+
+
+% 9.7.1
+% accept_alternative ::=
+%     accept_statement [sequence_of_statements]
+
+define accept_alternative
+    [accept_statement] [sequence_of_statements?]
+end define
+
+
+% 9.7.1
+% delay_alternative ::=
+%     delay_statement [sequence_of_statements]
+
+define delay_alternative
+    [delay_statement] [sequence_of_statements?]
+end define
+
+
+% 9.7.1
+% terminate_alternative ::=
+%     terminate;
+
+define terminate_alternative
+    terminate [semi]
+end define
+
+
+% 9.7.2
+% timed_entry_call ::=
+%     select
+%   entry_call_alternative
+%  or
+%   delay_alternative
+%  end select;
+
+define timed_entry_call
+    select [IN][eol]
+        [entry_call_alternative]
+    [EX] or [IN][eol]
+        [delay_alternative] [EX]
+    'end select [unitsemi]
+end define
+
+
+% 9.7.2
+% entry_call_alternative ::=
+%     procedure_or_entry_call [sequence_of_statements]
+
+define entry_call_alternative
+    [procedure_or_entry_call] [sequence_of_statements?]
+end define
+
+
+% 9.7.2
+% procedure_or_entry_call ::=
+%     procedure_call_statement | entry_call_statement
+
+define procedure_or_entry_call
+      [procedure_call_statement]
+    | [entry_call_statement]
+end define
+
+
+% 9.7.3
+% conditional_entry_call ::=
+%     select
+%   entry_call_alternative
+%  else
+%   sequence_of_statements
+%  end select;
+
+define conditional_entry_call
+    select [IN][eol]
+        [entry_call_alternative]
+    [EX] else [IN][eol]
+        [sequence_of_statements] [EX]
+    'end select [unitsemi]
+end define
+
+
+% 9.7.4
+% asynchronous_select ::=
+%     select
+%   triggering_alternative
+%  then abort
+%   abortable_part
+%  end select;
+
+define asynchronous_select
+    select [IN][eol]
+        [triggering_alternative] [EX]
+    [EX] then abort [IN][eol]
+        [abortable_part] [EX]
+    'end select [unitsemi]
+end define
+
+
+% 9.7.4
+% triggering_alternative ::=
+%     triggering_statement [sequence_of_statements]
+
+define triggering_alternative
+    [triggering_statement] [sequence_of_statements?]
+end define
+
+
+% 9.7.4
+% triggering_statement ::=
+%     procedure_or_entry_call | delay_statement
+
+define triggering_statement
+      [procedure_or_entry_call]
+    | [delay_statement]
+end define
+
+
+% 9.7.4
+% abortable_part ::=
+%     sequence_of_statements
+
+define abortable_part
+    [sequence_of_statements]
+end define
+
+
+% 9.8
+% abort_statement ::=
+%     abort task_name {, task_name};
+
+define abort_statement
+    abort [abort_name,+] [semi]
+end define
+
+define abort_name
+    [name] 
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 10_program_structure_and_compilation_issues
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 10.1.1
+% compilation ::=
+%     {compilation_unit}
+
+define compilation
+    [compilation_unit*]
+end define
+
+
+% 10.1.1
+% compilation_unit ::=
+%     context_clause library_item
+%  | context_clause subunit
+
+define compilation_unit
+      [context_clause] [library_item]
+    | [context_clause] [subunit]
+    | [pragma]
+end define
+
+
+% 10.1.1
+% library_item ::=
+%     [private] library_unit_declaration
+%  | library_unit_body
+%  | [private] library_unit_renaming_declaration
+
+define library_item
+      ['private?] [library_unit_declaration]
+    | [library_unit_body]
+    | ['private?] [library_unit_renaming_declaration]
+end define
+
+
+% 10.1.1
+% library_unit_declaration ::=
+%     subprogram_declaration | package_declaration
+%   | generic_declaration | generic_instantiation
+
+define library_unit_declaration
+      [subprogram_declaration]
+    | [package_declaration]
+    | [generic_declaration]
+    | [generic_instantiation]
+    | [pragma]
+end define
+
+
+% 10.1.1
+% library_unit_renaming_declaration ::=
+%     package_renaming_declaration
+% | generic_renaming_declaration
+% | subprogram_renaming_declaration
+
+define library_unit_renaming_declaration
+      [package_renaming_declaration]
+    | [generic_renaming_declaration]
+    | [subprogram_renaming_declaration]
+    | [pragma]
+end define
+
+
+% 10.1.1
+% library_unit_body ::=
+%     subprogram_body | package_body
+
+define library_unit_body
+      [subprogram_body]
+    | [package_body]
+end define
+
+
+% 10.1.1
+% parent_unit_name ::=
+%     name
+
+define parent_unit_name
+    [name]
+end define
+
+
+% 10.1.2
+% context_clause ::=
+%     {context_item}
+
+define context_clause
+    [context_item*]
+end define
+
+
+% 10.1.2
+% context_item ::=
+%     with_clause | use_clause
+
+define context_item
+      [with_clause]
+    | [use_clause]
+end define
+
+
+% 10.1.2
+% with_clause ::=
+%     limited_with_clause | nonlimited_with_clause
+
+define with_clause
+      [limited_with_clause]
+    | [nonlimited_with_clause]
+end define
+
+
+% 10.1.2
+% limited_with_clause ::=
+%     limited [private] with library_unit_name {, library_unit_name};
+
+define limited_with_clause
+    'limited ['private?] with [with_name,+] [semi]
+end define
+
+define with_name
+    [name] 
+end define
+
+
+% 10.1.2
+% nonlimited_with_clause ::=
+%     [private] with library_unit_name {, library_unit_name};
+
+define nonlimited_with_clause
+    ['private?] with [with_name,+] [semi]
+end define
+
+
+% 10.1.3
+% body_stub ::=
+%     subprogram_body_stub | package_body_stub | task_body_stub | protected_body_stub
+
+define body_stub
+      [subprogram_body_stub]
+    | [package_body_stub]
+    | [task_body_stub]
+    | [protected_body_stub]
+end define
+
+
+% 10.1.3
+% subprogram_body_stub ::=
+%     [overriding_indicator]
+%   subprogram_specification is separate;
+
+define subprogram_body_stub
+    [overriding_indicator?]
+    [subprogram_specification] is separate [blocksemi]
+end define
+
+
+% 10.1.3
+% package_body_stub ::=
+%     package body defining_identifier is separate;
+
+define package_body_stub
+    [NL] package 'body [defining_identifier] is separate [blocksemi]
+end define
+
+
+% 10.1.3
+% task_body_stub ::=
+%     task body defining_identifier is separate;
+
+define task_body_stub
+    task 'body [defining_identifier] is separate [blocksemi]
+end define
+
+
+% 10.1.3
+% protected_body_stub ::=
+%     protected body defining_identifier is separate;
+
+define protected_body_stub
+    protected 'body [defining_identifier] is separate [blocksemi]
+end define
+
+
+% 10.1.3
+% subunit ::=
+%     separate (parent_unit_name) proper_body
+
+define subunit
+    separate ( [parent_unit_name] ) [proper_body]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 11_exceptions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 11.1
+% exception_declaration ::=
+%     defining_identifier_list : exception;
+
+define exception_declaration
+    [defining_identifier_list] [colon] exception [semi]
+end define
+
+
+% 11.2
+% handled_sequence_of_statements ::=
+%     sequence_of_statements
+%  [exception
+%     exception_handler
+%    {exception_handler}]
+
+define handled_sequence_of_statements
+    [sequence_of_statements]
+    [handled_sequence_of_statements_exception?]
+end define
+
+define handled_sequence_of_statements_exception
+    exception [IN][eol]
+        [exception_handler+] [EX]
+end define
+
+
+% 11.2
+% exception_handler ::=
+%     when [choice_parameter_specification:] exception_choice {| exception_choice} =>
+%     sequence_of_statements
+
+define exception_handler
+    when [exception_handler_specification?]  [exception_choice] [or_exception_choice*] [arrow]
+        [sequence_of_statements]
+end define
+
+define exception_handler_specification
+    [choice_parameter_specification] [colon]
+end define
+
+define or_exception_choice
+    [orbar] [exception_choice] 
+end define
+
+
+% 11.2
+% choice_parameter_specification ::=
+%     defining_identifier
+
+define choice_parameter_specification
+    [defining_identifier]
+end define
+
+
+% 11.2
+% exception_choice ::=
+%     exception_name | others
+
+define exception_choice
+     [name]
+    | others 
+end define
+
+
+% 11.3
+% raise_statement ::=
+%     raise;
+%        | raise exception_name [with string_expression];
+
+define raise_statement
+    raise [semi]
+    | raise [name] [raise_statement_expression?] [semi] 
+end define
+
+define raise_statement_expression
+    with [expression]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 12_generic_units
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 12.1
+% generic_declaration ::=
+%     generic_subprogram_declaration | generic_package_declaration
+
+define generic_declaration
+      [generic_subprogram_declaration]
+    | [generic_package_declaration]
+end define
+
+
+% 12.1
+% generic_subprogram_declaration ::=
+%     generic_formal_part  subprogram_specification;
+
+define generic_subprogram_declaration
+    [generic_formal_part] [subprogram_specification] [blocksemi]
+end define
+
+
+% 12.1
+% generic_package_declaration ::=
+%     generic_formal_part  package_specification;
+
+define generic_package_declaration
+    [generic_formal_part] [package_specification] [blocksemi]
+end define
+
+
+% 12.1
+% generic_formal_part ::=
+%     generic {generic_formal_parameter_declaration | use_clause}
+
+define generic_formal_part
+    generic [generic_formal_parameter_declaration_or_use_clause*]
+end define
+
+define generic_formal_parameter_declaration_or_use_clause
+      [generic_formal_parameter_declaration]
+    | [use_clause]
+    | [pragma]
+end define
+
+
+% 12.1
+% generic_formal_parameter_declaration ::=
+%     formal_object_declaration
+%    | formal_type_declaration
+%    | formal_subprogram_declaration
+%    | formal_package_declaration
+
+define generic_formal_parameter_declaration
+      [formal_object_declaration]
+    | [formal_type_declaration]
+    | [formal_subprogram_declaration]
+    | [formal_package_declaration]
+end define
+
+
+% 12.3
+% generic_instantiation ::=
+%     package defining_program_unit_name is
+%           new generic_package_name [generic_actual_part];
+%   | [overriding_indicator]
+%     procedure defining_program_unit_name is
+%           new generic_procedure_name [generic_actual_part];
+%   | [overriding_indicator]
+%     function defining_designator is
+%           new generic_function_name [generic_actual_part];
+
+define generic_instantiation
+     package [defining_program_unit_name] is
+        [generic_instantiation_clause]
+    | [overriding_indicator?]
+     procedure [defining_program_unit_name] is
+        [generic_instantiation_clause]
+    | [overriding_indicator?]
+    'function [defining_designator] is
+        [generic_instantiation_clause]
+end define
+
+define generic_instantiation_clause
+    new [name] [generic_actual_part?] [blocksemi]
+end define
+
+% 12.3
+% generic_actual_part ::=
+%     (generic_association {, generic_association})
+
+define generic_actual_part
+    ( [generic_association,+] )
+end define
+
+
+% 12.3
+% generic_association ::=
+%     [generic_formal_parameter_selector_name =>] explicit_generic_actual_parameter
+
+define generic_association
+    [generic_association_selector_name?] [explicit_generic_actual_parameter]
+end define
+
+define generic_association_selector_name
+    [selector_name] [arrow]
+end define
+
+
+% 12.3
+% explicit_generic_actual_parameter ::=
+%     expression | variable_name
+%   | subprogram_name | entry_name | subtype_mark
+%   | package_instance_name
+
+define explicit_generic_actual_parameter
+      [expression]
+    | [name]
+    | [subtype_mark]
+end define
+
+
+% 12.4
+% formal_object_declaration ::=
+%     defining_identifier_list : mode [null_exclusion] subtype_mark [:= default_expression];
+%    defining_identifier_list : mode access_definition [:= default_expression];
+
+define formal_object_declaration
+      [defining_identifier_list] [colon] [mode] [null_exclusion?] [subtype_mark] [formal_object_declaration_default?] [semi]
+    | [defining_identifier_list] [colon] [mode] [access_definition] [formal_object_declaration_default?] [semi]
+end define
+
+define formal_object_declaration_default
+    [colon_equals] [default_expression]
+end define
+
+
+% 12.5
+% formal_type_declaration ::=
+%     type defining_identifier[discriminant_part] is formal_type_definition;
+
+define formal_type_declaration
+    type [defining_identifier] [discriminant_part?] is [formal_type_definition] [blocksemi]
+end define
+
+
+% 12.5
+% formal_type_definition ::=
+%     formal_private_type_definition
+%    | formal_derived_type_definition
+%    | formal_discrete_type_definition
+%    | formal_signed_integer_type_definition
+%    | formal_modular_type_definition
+%    | formal_floating_point_definition
+%    | formal_ordinary_fixed_point_definition
+%    | formal_decimal_fixed_point_definition
+%    | formal_array_type_definition
+%    | formal_access_type_definition
+%    | formal_interface_type_definition
+
+define formal_type_definition
+      [formal_private_type_definition]
+    | [formal_derived_type_definition]
+    | [formal_discrete_type_definition]
+    | [formal_signed_integer_type_definition]
+    | [formal_modular_type_definition]
+    | [formal_floating_point_definition]
+    | [formal_ordinary_fixed_point_definition]
+    | [formal_decimal_fixed_point_definition]
+    | [formal_array_type_definition]
+    | [formal_access_type_definition]
+    | [formal_interface_type_definition]
+end define
+
+
+% 12.5.1
+% formal_private_type_definition ::=
+%     [[abstract] tagged] [limited] private
+
+define formal_private_type_definition
+    [formal_private_type_definition_tagged?] ['limited?] private
+end define
+
+define formal_private_type_definition_tagged
+    ['abstract?] tagged
+end define
+
+
+% 12.5.1
+% formal_derived_type_definition ::=
+%     [abstract] [limited | synchronized] new subtype_mark [[and interface_list]with private]
+
+define formal_derived_type_definition
+    ['abstract?] [formal_derived_type_definition_modifier?] new [subtype_mark] [formal_derived_type_definition_interface_list?]
+end define
+
+define formal_derived_type_definition_modifier
+    limited
+    | synchronized
+end define
+
+define formal_derived_type_definition_interface_list
+    [and_interface_list?] with private
+end define
+
+define and_interface_list
+    and [interface_list] 
+end define
+
+
+% 12.5.2
+% formal_discrete_type_definition ::=
+%     (<>)
+
+define formal_discrete_type_definition
+    ( <> )
+end define
+
+
+% 12.5.2
+% formal_signed_integer_type_definition ::=
+%     range <>
+
+define formal_signed_integer_type_definition
+    'range <>
+end define
+
+
+% 12.5.2
+% formal_modular_type_definition ::=
+%     mod <>
+
+define formal_modular_type_definition
+    mod <>
+end define
+
+
+% 12.5.2
+% formal_floating_point_definition ::=
+%     digits <>
+
+define formal_floating_point_definition
+    digits <>
+end define
+
+
+% 12.5.2
+% formal_ordinary_fixed_point_definition ::=
+%     delta <>
+
+define formal_ordinary_fixed_point_definition
+    delta <>
+end define
+
+
+% 12.5.2
+% formal_decimal_fixed_point_definition ::=
+%     delta <> digits <>
+
+define formal_decimal_fixed_point_definition
+    delta <> digits <>
+end define
+
+
+% 12.5.3
+% formal_array_type_definition ::=
+%     array_type_definition
+
+define formal_array_type_definition
+    [array_type_definition]
+end define
+
+
+% 12.5.4
+% formal_access_type_definition ::=
+%     access_type_definition
+
+define formal_access_type_definition
+    [access_type_definition]
+end define
+
+
+% 12.5.5
+% formal_interface_type_definition ::=
+%     interface_type_definition
+
+define formal_interface_type_definition
+    [interface_type_definition]
+end define
+
+
+% 12.6
+% formal_subprogram_declaration ::=
+%     formal_concrete_subprogram_declaration
+%    | formal_abstract_subprogram_declaration
+
+define formal_subprogram_declaration
+      [formal_concrete_subprogram_declaration]
+    | [formal_abstract_subprogram_declaration]
+end define
+
+
+% 12.6
+% formal_concrete_subprogram_declaration ::=
+%     with subprogram_specification [is subprogram_default];
+
+define formal_concrete_subprogram_declaration
+    with [subprogram_specification] [formal_concrete_subprogram_declaration_default?] [semi]
+end define
+
+define formal_concrete_subprogram_declaration_default
+    is [subprogram_default]
+end define
+
+
+% 12.6
+% formal_abstract_subprogram_declaration ::=
+%     with subprogram_specification is abstract [subprogram_default];
+
+define formal_abstract_subprogram_declaration
+    with [subprogram_specification] is abstract [subprogram_default?] [semi]
+end define
+
+
+% 12.6
+% subprogram_default ::=
+%     default_name | <> | null
+
+define subprogram_default
+      [default_name]
+    | <>
+    | null
+end define
+
+
+% 12.6
+% default_name ::=
+%     name
+
+define default_name
+    [name]
+end define
+
+
+% 12.7
+% formal_package_declaration ::=
+%     with package defining_identifier is new generic_package_name  formal_package_actual_part;
+
+define formal_package_declaration
+    with package [defining_identifier] is new [name] [formal_package_actual_part] [semi]
+end define
+
+
+% 12.7
+% formal_package_actual_part ::=
+%     ([others =>] <>)
+%  | [generic_actual_part]
+%  | (formal_package_association {, formal_package_association} [, others => <>])
+
+define formal_package_actual_part
+    ( [others_arrow?] <> )
+    | [generic_actual_part?]
+    | ( [formal_package_association,+] [comma_others_arrow_null?] ) 
+end define
+
+define others_arrow
+    others [arrow]
+end define
+
+define comma_others_arrow_null
+    , others [arrow] <> 
+end define
+
+
+% 12.7
+% formal_package_association ::=
+%     generic_association
+%  | generic_formal_parameter_selector_name => <>
+
+define formal_package_association
+      [generic_association]
+    | [selector_name] [arrow] <>
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 13_representation_issues
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% 13.1
+% aspect_clause ::=
+%     attribute_definition_clause
+%        | enumeration_representation_clause
+%        | record_representation_clause
+%        | at_clause
+
+define aspect_clause
+      [attribute_definition_clause]
+    | [enumeration_representation_clause]
+    | [record_representation_clause]
+    | [at_clause]
+end define
+
+
+% 13.1
+% local_name ::=
+%     direct_name
+%        | direct_name'attribute_designator
+%        | library_unit_name
+
+define local_name
+      [direct_name]
+    | [direct_name] [SPOFF] ' ' [attribute_designator] [SPON]
+    % Clearly redundant
+    % | [library_unit_name]
+end define
+
+define library_unit_name
+    [name]
+end define
+
+
+% 13.3
+% attribute_definition_clause ::=
+%     for local_name'attribute_designator use expression;
+%    | for local_name'attribute_designator use name;
+
+define attribute_definition_clause
+    for [local_name] [SPOFF] ' ' [attribute_designator] [SPON] use [expression] [blocksemi]
+end define
+
+
+% 13.4
+% enumeration_representation_clause ::=
+%     for first_subtype_local_name use enumeration_aggregate;
+
+define enumeration_representation_clause
+    for [local_name] use [enumeration_aggregate] [blocksemi]
+end define
+
+
+% 13.4
+% enumeration_aggregate ::=
+%     array_aggregate
+
+define enumeration_aggregate
+    [array_aggregate]
+end define
+
+
+% 13.5.1
+% record_representation_clause ::=
+%     for first_subtype_local_name use
+%        record [mod_clause]
+%          {component_clause}
+%        end record;
+
+define record_representation_clause
+    for [local_name] use [IN][eol]
+        record [mod_clause?] [IN][eol]
+            [component_clause*] [EX]
+        'end record [blocksemi] [EX]
+end define
+
+
+% 13.5.1
+% component_clause ::=
+%     component_local_name at position 'range first_bit .. last_bit;
+
+define component_clause
+    [local_name] at [position] 'range [first_bit] [SP] ..[SP] [last_bit] [semi]
+end define
+
+
+% 13.5.1
+% position ::=
+%     static_expression
+
+define position
+    [expression]
+end define
+
+
+% 13.5.1
+% first_bit ::=
+%     static_simple_expression
+
+define first_bit
+    [simple_expression]
+end define
+
+
+% 13.5.1
+% last_bit ::=
+%     static_simple_expression
+
+define last_bit
+    [simple_expression]
+end define
+
+
+% 13.8
+% code_statement ::=
+%     qualified_expression;
+
+define code_statement
+    [qualified_expression] [semi]
+end define
+
+
+% 13.12
+% restriction ::=
+%     restriction_identifier
+%    | restriction_parameter_identifier => restriction_parameter_argument
+
+define restriction
+    [identifier] [arrow_restriction_parameter_argument?]
+end define
+
+define arrow_restriction_parameter_argument
+    [arrow] [restriction_parameter_argument]
+end define
+
+
+% 13.12
+% restriction_parameter_argument ::=
+%     name | expression
+
+define restriction_parameter_argument
+    % Clearly redundant
+    % [name] |
+    [expression]
+end define
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% J_obsolescent_features
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% J.3
+% delta_constraint ::=
+%     delta static_expression [range_constraint]
+
+define delta_constraint
+    delta [expression] [range_constraint?]
+end define
+
+
+% J.7
+% at_clause ::=
+%     for direct_name use at expression;
+
+define at_clause
+    for [direct_name] use at [expression] [semi]
+end define
+
+
+% J.8
+% mod_clause ::=
+%     at mod static_expression;
+
+define mod_clause
+    at mod [expression] [semi]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

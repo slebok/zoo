@@ -1,0 +1,470 @@
+% Copyright 2010 James Cordy.  All rights reserved.
+% 
+% Redistribution and use in source and binary forms, with or without modification, are
+% permitted provided that the following conditions are met:
+% 
+%    1. Redistributions of source code must retain the above copyright notice, this list of
+%       conditions and the following disclaimer.
+% 
+%    2. Redistributions in binary form must reproduce the above copyright notice, this list
+%       of conditions and the following disclaimer in the documentation and/or other materials
+%       provided with the distribution.
+% 
+% THIS SOFTWARE IS PROVIDED BY Bruno LE HYARIC ``AS IS'' AND ANY EXPRESS OR IMPLIED
+% WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+% FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Bruno LE HYARIC OR
+% CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+% CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+% SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+% ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+% NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+% ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+% 
+% The views and conclusions contained in the software and documentation are those of the
+% authors and should not be interpreted as representing official policies, either expressed
+% or implied, of Bruno LE HYARIC.
+
+
+% Maintenance log:
+%
+% v1.3        Bruno Le Hyaric     5 July 2010     Added more observed cases
+% v1.2        James Cordy         7 June 2010     Added more observed cases 
+% v1.1        James Cordy         20 May 2010     Added some minor observed cases
+% v1.0        James Cordy         May 2010        Initial revision
+%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Comment overrides for Ada 2005 TXL grammar 
+% James Cordy, May 2010
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% These overrides allow transformations that preserve comments in output.
+% Care must be taken to allow for comments in all patterns that use these overrides.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2_lexical_elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine semi
+    ; [eol]
+end redefine
+
+redefine blocksemi
+    ; [NL] [opt comment_NL]
+end redefine
+
+redefine unitsemi
+    ; [NL] [NL] [opt comment_NL]
+end redefine
+
+redefine colon
+    : [opt comment_NL]
+end redefine
+
+redefine arrow
+    => [opt comment_NL]
+end redefine
+
+redefine colon_equals
+    [opt comment_NL] := [opt comment_NL]
+end redefine
+
+redefine eol
+      [comment_NL] 
+    | [NL]
+end redefine
+
+redefine blockeol
+    [NL] [opt comment_NL] 
+end redefine
+
+define comment_NL
+    [SP] [comment] [NL]                % only present if -comment is on
+    [opt comment_NL]
+end define
+
+redefine pragma_arguments
+    [opt comment_NL] ...
+end redefine
+
+redefine pragma_arguments
+    ... [opt comment_NL]
+end redefine
+
+redefine pragma_argument_association
+    [opt comment_NL] ... 
+end redefine
+
+redefine pragma_argument_association
+    ...  [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3_declarations_and_types
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine type_definition
+    [opt comment_NL] ...
+end redefine
+
+redefine type_definition
+    ...  [opt comment_NL]
+end redefine
+
+redefine subtype_indication
+    [opt comment_NL] ...
+end redefine
+
+redefine subtype_indication
+    ... [opt comment_NL]
+end redefine
+
+redefine defining_identifier
+    [opt comment_NL] ...
+end redefine
+
+redefine defining_identifier
+    ...  [opt comment_NL]
+end redefine
+
+redefine enumeration_literal_specification
+    [opt comment_NL] ...
+end redefine
+
+redefine enumeration_literal_specification
+    ... [opt comment_NL]
+end redefine
+
+redefine index_subtype_definition
+    [opt comment_NL] ...
+end define
+
+redefine index_subtype_definition
+    ... [opt comment_NL]
+end define
+
+redefine discrete_subtype_definition
+    [opt comment_NL] ...
+end redefine
+
+redefine discrete_subtype_definition
+    ... [opt comment_NL]
+end redefine
+
+redefine discrete_range
+    [opt comment_NL] ...
+end redefine
+
+redefine discrete_range
+    ... [opt comment_NL]
+end redefine
+
+redefine discriminant_specification
+    [opt comment_NL] ...
+end redefine
+
+redefine discriminant_specification
+    ... [opt comment_NL]
+end redefine
+
+redefine discriminant_association
+    [opt comment_NL] ...
+end redefine
+
+redefine discriminant_association
+    ... [opt comment_NL]
+end redefine
+
+redefine known_discriminant_part
+    ... [opt comment_NL]
+end redefine
+
+redefine or_selector_name
+    [opt comment_NL] ...
+end redefine
+
+redefine or_selector_name
+    ... [opt comment_NL]
+end redefine
+
+redefine orbar
+    [opt comment_NL] ...
+end redefine
+
+redefine orbar
+    ... [opt comment_NL]
+end redefine
+
+redefine declarative_item
+      ...
+    | [comment_NL] [declarative_item]
+    | [NL] [comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4_names_and_expressions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine name
+    [opt comment_NL] ...
+end redefine
+
+redefine name
+    ... [opt comment_NL]
+end redefine
+
+redefine index_or_parameter_value
+    [opt comment_NL] ...
+end redefine
+
+redefine index_or_parameter_value
+    ... [opt comment_NL]
+end redefine
+
+redefine record_component_association
+    [opt comment_NL] ...
+end redefine
+
+redefine record_component_association
+    ... [opt comment_NL]
+end redefine
+
+redefine array_component_association
+    [opt comment_NL] ...
+end redefine
+
+redefine array_component_association
+    ... [opt comment_NL]
+end redefine
+
+redefine relation
+    [opt comment_NL] ...
+end redefine
+
+redefine relation
+    ... [opt comment_NL]
+end redefine
+
+redefine indexed_slice_type_conv_or_function_call_component
+    [opt comment_NL] ...
+end redefine
+
+redefine indexed_slice_type_conv_or_function_call_component
+    ... [opt comment_NL]
+end redefine
+
+redefine simple_expression
+    [opt comment_NL] ...
+end redefine
+
+redefine simple_expression
+    ... [opt comment_NL]
+end redefine
+
+redefine relational_operator_simple_expression
+    [opt comment_NL] ...
+end redefine
+
+redefine relational_operator_simple_expression
+    ... [opt comment_NL]
+end redefine
+
+redefine binary_adding_operator_term
+    [opt comment_NL] ...
+end redefine
+
+redefine binary_adding_operator_term
+    ... [opt comment_NL]
+end redefine
+
+redefine selected_component_component
+    . [opt comment_NL] [selector_name]
+end define
+
+%redefine binary_adding_operator_term
+%    [binary_adding_operator] [opt comment_NL] [term]
+%end redefine
+
+redefine term
+    [opt comment_NL] ...
+end redefine
+
+redefine term
+    ... [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5_statements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine statement
+      ...
+    | [NL] [comment_NL]
+end redefine
+
+redefine label
+    [opt comment_NL] ...
+end redefine
+
+redefine label
+    ... [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6_subprograms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine actual_parameter_part
+    [opt comment_NL] ...
+end redefine
+
+redefine actual_parameter_part
+    ... [opt comment_NL]
+end redefine
+
+redefine parameter_specification
+    [opt comment_NL] ...
+end redefine
+
+redefine parameter_specification
+    ... [opt comment_NL]
+end redefine
+
+redefine parameter_association
+    [opt comment_NL] ...
+end redefine
+
+redefine parameter_association
+    ... [opt comment_NL]
+end redefine
+
+redefine formal_part
+    ... [opt NL_comment_NL]
+end redefine
+
+redefine parameter_and_result_profile
+    ... [opt NL_comment_NL]
+end redefine
+
+define NL_comment_NL
+    [NL] [comment_NL]
+end define
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 7_packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 8_visibility_rules
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine used_name
+    [opt comment_NL] [name] [opt comment_NL]
+end redefine
+
+redefine used_subtype_mark
+    [opt comment_NL] [subtype_mark] [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 9_tasks_and_synchronization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine abort_name
+    [opt comment_NL] [name] [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 10_program_structure_and_compilation_issues
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine compilation
+    [opt comment_NL] ...
+end redefine
+
+redefine compilation
+    ... [opt comment_NL]
+end redefine
+
+redefine compilation_unit
+      ...
+    | [comment_NL]
+end redefine
+
+redefine with_name
+    [opt comment_NL] [name] [opt comment_NL]
+end redefine
+
+redefine subunit
+    separate ( [parent_unit_name] [opt comment_NL] ) [opt comment_NL] [proper_body]
+end redefine
+
+redefine context_clause
+      ...
+    | [comment_NL] [context_clause]
+    | [NL] [comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 11_exceptions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine or_exception_choice
+    [opt comment_NL] [orbar] [exception_choice] [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 12_generic_units
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine generic_formal_part
+    generic [opt comment_NL] [generic_formal_parameter_declaration_or_use_clause*]
+end redefine
+
+redefine generic_association
+    [opt comment_NL] [generic_association_selector_name?] [explicit_generic_actual_parameter] [opt comment_NL]
+end redefine
+
+redefine formal_package_association
+    [opt comment_NL] ...
+end redefine
+
+redefine formal_package_association
+    ... [opt comment_NL]
+end redefine
+
+redefine generic_instantiation_clause
+    [opt comment_NL] ...
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 13_representation_issues
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+redefine enumeration_aggregate
+    [opt comment_NL] ...
+end redefine
+
+redefine enumeration_aggregate
+    ... [opt comment_NL]
+end redefine
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% J_obsolescent_features
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
