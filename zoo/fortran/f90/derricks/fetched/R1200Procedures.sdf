@@ -1,0 +1,156 @@
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section 12xx Procedures section
+%%%%%%%%%%
+
+module languages/fortran/syntax/R1200Procedures
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/Fortran90
+
+exports
+
+sorts
+
+  ActualArg CallStmt ContainsStmt EndFunctionStmt EndInterfaceStmt
+  EndSubroutineStmt EntryStmt ExternalStmt FunctionArg FunctionArgList
+  FunctionInterfaceRange FunctionPar FunctionParList FunctionPrefix FunctionRange
+  FunctionReference FunctionStmt FunctionSubprogram GenericSpec InterfaceBlock
+  InterfaceBlockPart InterfaceBody InterfaceStmt IntrinsicStmt ModuleProcedureStmt
+  ProcedureName ProcedureNameList ReturnStmt SFDummyArgNameList 
+  %% StmtFunctionStmt obsolescant/deleted
+  SubprogramInterfaceBody SubroutineInterfaceRange SubroutinePar SubroutineParList SubroutineRange
+  SubroutineStmt SubroutineSubprogram   
+
+context-free syntax
+
+%%R1201 %% note: iso says interfacebody allways precedes moduleprocstmt.
+  InterfaceStmt InterfaceBlockPart+ EndInterfaceStmt    -> InterfaceBlock
+
+  InterfaceBody                                 -> InterfaceBlockPart
+  ModuleProcedureStmt                           -> InterfaceBlockPart
+
+%%R1202
+  LblDef 'interface' GenericName EOS            -> InterfaceStmt
+  LblDef 'interface' GenericSpec EOS            -> InterfaceStmt
+  LblDef 'interface' EOS                        -> InterfaceStmt
+
+%%R1203
+  LblDef 'end' 'interface' EOS                  -> EndInterfaceStmt
+
+%%R1204
+  LblDef FunctionPrefix FunctionName FunctionInterfaceRange     -> InterfaceBody
+  LblDef 'subroutine' SubroutineName SubroutineInterfaceRange   -> InterfaceBody
+
+  FunctionParList   EOS SubprogramInterfaceBody EndFunctionStmt         -> FunctionInterfaceRange
+  FunctionParList   EOS EndFunctionStmt                                 -> FunctionInterfaceRange
+
+  SubroutineParList EOS SubprogramInterfaceBody EndSubroutineStmt       -> SubroutineInterfaceRange
+  SubroutineParList EOS EndSubroutineStmt                               -> SubroutineInterfaceRange
+
+  SpecificationPartConstruct                            -> SubprogramInterfaceBody
+  SubprogramInterfaceBody SpecificationPartConstruct    -> SubprogramInterfaceBody
+
+%%R1205
+  LblDef 'module' 'procedure' ProcedureNameList EOS     -> ModuleProcedureStmt
+  {ProcedureName ","}+                                  -> ProcedureNameList
+  Ident                                                 -> ProcedureName
+
+%%R1206
+  'operator' '(' DefinedOperator ')'            -> GenericSpec
+  'assignment' '(' '=' ')'                      -> GenericSpec
+
+%%R1207
+  LblDef 'external' {ExternalName ","}+ EOS     -> ExternalStmt
+
+%%R1208
+  LblDef 'intrinsic' {IntrinsicProcedureName ","}+ EOS  -> IntrinsicStmt
+
+%%R1209
+  Name '(' FunctionArgList? ')'                         -> FunctionReference
+
+%%R1210 
+  LblDef 'call' SubroutineNameUse EOS                           -> CallStmt
+  LblDef 'call' SubroutineNameUse '(' {ActualArg ","}* ')' EOS  -> CallStmt
+
+%%R1213 
+  (Name '=')? Expr                      -> ActualArg
+  (Name '=')? '*' LblRef                -> ActualArg
+
+%%R1211 [ keyword = ] actual-arg
+  FunctionArg                                   -> FunctionArgList
+  FunctionArgList ',' FunctionArg               -> FunctionArgList
+  SectionSubscriptList ',' FunctionArg          -> FunctionArgList
+
+  Name '=' Expr                                 -> FunctionArg
+
+%%R1212 keyword is dummy-arg-name
+%% see 1211
+
+%%R1214 alt-return-spec is '*' label
+%% see 1213
+
+%%R1215
+  LblDef FunctionPrefix FunctionName FunctionRange      -> FunctionSubprogram
+  FunctionParList EOS Body? EndFunctionStmt             -> FunctionRange
+
+%%R1215
+  FunctionParList 'result' '(' Name ')' EOS InternalSubProgPart EndFunctionStmt         -> FunctionRange
+  FunctionParList 'result' '(' Name ')' EOS Body EndFunctionStmt                        -> FunctionRange
+  FunctionParList 'result' '(' Name ')' EOS EndFunctionStmt                             -> FunctionRange
+  FunctionParList EOS InternalSubProgPart EndFunctionStmt                               -> FunctionRange
+
+%%R1216
+%%R1217
+  'recursive' 'function'                -> FunctionPrefix
+  'recursive' TypeSpec 'function'       -> FunctionPrefix
+  TypeSpec 'recursive' 'function'       -> FunctionPrefix
+
+%%R1218
+%% endfunction (without spaces) is allowed
+  LblDef 'end' EOS                              -> EndFunctionStmt
+  LblDef 'end' 'function' EndName? EOS          -> EndFunctionStmt
+
+%%R1219
+%%R1220
+  LblDef 'recursive'? 'subroutine' SubroutineName SubroutineRange       -> SubroutineSubprogram
+  SubroutineParList? EOS Body? EndSubroutineStmt                        -> SubroutineRange
+  SubroutineParList  EOS InternalSubProgPart EndSubroutineStmt          -> SubroutineRange
+%% split subroutineStmt/subroutineSubprogram needed? (ELI legacy)
+  LblDef 'subroutine' Name SubroutineParList? EOS                       -> SubroutineStmt
+   '(' {SubroutinePar ","}* ')'                                         -> SubroutineParList
+
+%%R1221
+   DummyArgName         -> SubroutinePar
+   '*'                  -> SubroutinePar
+
+%%/* Must be split on semantic grounds, due to the different scopes for the
+   LblDef FunctionPrefix Name FunctionParList? EOS      -> FunctionStmt
+   TypeSpec? 'function'                                 -> FunctionPrefix
+
+   '(' {FunctionPar ","}* ')'                           -> FunctionParList
+   DummyArgName                                         -> FunctionPar
+
+%%R1222
+  LblDef 'end' 'subroutine' EndName? EOS        -> EndSubroutineStmt
+  LblDef 'end' EOS                              -> EndSubroutineStmt
+
+%%R1223
+  LblDef 'entry' EntryName SubroutineParList EOS                        -> EntryStmt
+  LblDef 'entry' EntryName SubroutineParList 'result' '(' Name ')' EOS  -> EntryStmt
+
+%%R1224
+  LblDef 'return' Expr? EOS             -> ReturnStmt
+
+%%R1225
+  LblDef 'contains' EOS                 -> ContainsStmt
+
+%%-R1226 
+%% statement-functions are obsolete in fortran 95. 
+%% The following rule causes ambiguity with assignment statements like
+%% FOO(NOARG) = IN2-IN3
+%% If you're ok with ambig rules then uncomment the next line.
+%% LblDef  Name '(' SFDummyArgNameList? ')' '=' Expr EOS        -> StmtFunctionStmt
+
+  {SFDummyArgName ","}+                 -> SFDummyArgNameList
+

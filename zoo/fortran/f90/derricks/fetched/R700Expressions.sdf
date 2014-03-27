@@ -1,0 +1,234 @@
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R7xx Expressions and Assignments
+%%%%%%%%%%
+
+module languages/fortran/syntax/R700Expressions
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/R1200Procedures
+  languages/fortran/syntax/R600UseDataObjects
+
+exports
+
+sorts
+  AddOp AddOperand AndOp AndOperand AssignmentStmt
+  CExpr ComplexConst ConcatOp COperand CPrimary
+  DefinedBinaryOp DefinedUnaryOp ElsewhereStmt EndWhereStmt
+  EquivOp EquivOperand Expr Level1Expr Level2Expr
+  Level3Expr Level4Expr Level5Expr LogicalConstant MaskExpr
+  MultOp MultOperand NotOp  OrOp OrOperand
+  PointerAssignmentStmt PowerOp Primary RelOp SFExpr
+  SFExprList SFFactor SFPrimary SFTerm Sign
+  SpecificationExpr Target UFExpr UFFactor UFPrimary
+  UFTerm UnsignedArithmeticConstant WhereConstruct WhereConstructStmt
+  WhereStmt    
+
+context-free syntax
+%%%% TODO: put these under the right section
+
+  UFTerm                        -> UFExpr
+  Sign UFTerm                   -> UFExpr
+  UFExpr AddOp UFTerm           -> UFExpr
+  UFFactor                      -> UFTerm
+  UFTerm MultOp UFFactor        -> UFTerm
+  UFTerm ConcatOp UFPrimary     -> UFTerm
+  UFPrimary                     -> UFFactor
+  UFPrimary PowerOp UFFactor    -> UFFactor
+
+  Icon                          -> UFPrimary
+  Scon                          -> UFPrimary
+  Name                          -> UFPrimary
+  FunctionReference             -> UFPrimary
+  DataRef                       -> UFPrimary
+  '(' UFExpr ')'                -> UFPrimary
+
+%%82,83
+  (CExpr ConcatOp)? CPrimary    -> CExpr
+  COperand                      -> CPrimary
+  '(' CExpr ')'                 -> CPrimary
+  Scon                          -> COperand
+  Name                          -> COperand
+  DataRef                       -> COperand
+  FunctionReference             -> COperand
+
+%%101
+  Icon                          -> UnsignedArithmeticConstant
+  Rcon                          -> UnsignedArithmeticConstant
+  ComplexConst                  -> UnsignedArithmeticConstant
+
+%%107
+  '(' Expr ',' Expr ')'         -> ComplexConst
+
+%%108
+  '.true.' | '.false.'          -> LogicalConstant
+
+%%R701
+  ArrayConstructor              -> Primary
+  ArrayConstructor              -> SFPrimary
+  UnsignedArithmeticConstant    -> Primary
+  Name                          -> Primary
+  DataRef                       -> Primary
+  FunctionReference             -> Primary
+  '(' Expr ')'                  -> Primary
+  Scon                          -> Primary
+
+%%R703
+  DefinedUnaryOp? Primary       -> Level1Expr
+
+%%R704
+  Dop                           -> DefinedUnaryOp
+
+%%R705
+  Level1Expr (PowerOp MultOperand)?     -> MultOperand
+
+%%R706
+  (AddOperand MultOp)? MultOperand      -> AddOperand
+
+%%R707 % ELI: "We need to distinguish unary operators" SDF: ambig on "-2" on next 2 lines 
+  (Level2Expr AddOp)? AddOperand        -> Level2Expr
+  Sign AddOperand                       -> Level2Expr
+
+%%R708
+  '**'                                  -> PowerOp
+
+%%R709
+  '*' | '/'                             -> MultOp
+
+%%R710
+  '+' | '-'                             -> AddOp
+  '+' | '-'                             -> Sign
+
+%%R711
+  (Level3Expr ConcatOp)? Level2Expr     -> Level3Expr
+
+%%R712
+  '//'                                  -> ConcatOp
+
+%%R713
+  (Level3Expr RelOp)? Level3Expr        -> Level4Expr
+
+%%R714
+  '==' | '/=' | '<' | '<=' | '>' | '>='                         -> RelOp
+%%from F77
+  '.eq.' | '.ne.' | '.lt.' | '.le.' | '.gt.' | '.ge.'           -> RelOp
+
+%%R715
+  NotOp? Level4Expr                     -> AndOperand
+
+%%R716
+  (OrOperand AndOp)? AndOperand         -> OrOperand
+
+%%R717
+  (EquivOperand OrOp)? OrOperand        -> EquivOperand
+
+%%R718
+  (Level5Expr EquivOp)? EquivOperand    -> Level5Expr
+
+%%R719
+ '.not.'                                -> NotOp 
+
+%%R720
+  '.and.'                               -> AndOp
+
+%%R721
+  '.or.'                                -> OrOp
+
+%%R722
+  '.eqv.' | '.neqv.'                    -> EquivOp
+
+  LogicalConstant                       -> Primary
+
+%%R723
+  (Expr DefinedBinaryOp)? Level5Expr    -> Expr
+
+%%R724
+  Dop                                   -> DefinedBinaryOp
+
+%%R725-R734 chain rule deleted
+
+%%R734 %% JD seems nice to see difference EXPR and SpecificationEpr?
+  Expr -> SpecificationExpr
+
+%%R735 
+%% todo: check. Original ISO: assignmentStatement is variable '=' expression
+  LblDef Name '%' Name '=' Expr EOS                                      -> AssignmentStmt
+  LblDef Name '%' DataRef '=' Expr EOS                                   -> AssignmentStmt
+  LblDef Name '(' SFExprList ')' '%' Name '=' Expr EOS                   -> AssignmentStmt
+  LblDef Name '(' SFExprList ')' '%' DataRef '=' Expr EOS                -> AssignmentStmt
+  LblDef Name '(' SFDummyArgNameList ')' '%' Name '=' Expr EOS           -> AssignmentStmt
+  LblDef Name '(' SFDummyArgNameList ')' '%' DataRef '=' Expr EOS        -> AssignmentStmt
+  LblDef Name '=' Expr EOS                                               -> AssignmentStmt
+  LblDef Name '(' SFExprList ')' '=' Expr EOS                            -> AssignmentStmt
+  LblDef Name '(' SFExprList ')' SubstringRange '=' Expr EOS             -> AssignmentStmt
+
+  SFExpr ':' Expr ':' Expr                      -> SFExprList
+  SFExpr ':' ':' Expr                           -> SFExprList
+  ':' Expr ':' Expr                             -> SFExprList
+  ':' ':' Expr                                  -> SFExprList
+  ':'                                           -> SFExprList
+  ':' Expr                                      -> SFExprList
+  SFExpr                                        -> SFExprList
+  SFExpr ':'                                    -> SFExprList
+  SFExpr ':' Expr                               -> SFExprList
+  SFExprList ',' SectionSubscript               -> SFExprList
+  SFDummyArgNameList ',' ':'                    -> SFExprList
+  SFDummyArgNameList ',' ':' Expr               -> SFExprList
+%% problem with code like P(A,2). A can be both SFExprList and SFDummyargnameList. 
+%% Conflict with 3 lines above: SFExprList ',' SectionSubscript  
+%%  SFDummyArgNameList ',' SFExpr                 -> SFExprList
+  SFDummyArgNameList ',' SFExpr ':'             -> SFExprList
+  SFDummyArgNameList ',' SFExpr ':' Expr        -> SFExprList
+
+  SFTerm                                        -> SFExpr
+  Sign AddOperand                               -> SFExpr
+  SFExpr AddOp AddOperand                       -> SFExpr
+  SFFactor                                      -> SFTerm
+  SFTerm MultOp MultOperand                     -> SFTerm
+  SFPrimary                                     -> SFFactor
+  SFPrimary PowerOp MultOperand                 -> SFFactor
+  Icon                                          -> SFPrimary
+  Name                                          -> SFPrimary
+  DataRef                                       -> SFPrimary
+  FunctionReference                             -> SFPrimary
+  '(' Expr ')'                                  -> SFPrimary
+
+%%R736
+  LblDef Name '=>' Target EOS                                                   -> PointerAssignmentStmt
+  LblDef Name '%' Name '=>' Target EOS                                          -> PointerAssignmentStmt
+  LblDef Name '%' DataRef '=>' Target EOS                                       -> PointerAssignmentStmt
+  LblDef Name '(' SFExprList ')' '%' Name '=>' Target EOS                       -> PointerAssignmentStmt
+  LblDef Name '(' SFExprList ')' '%' DataRef '=>' Target EOS                    -> PointerAssignmentStmt
+  LblDef Name '(' SFDummyArgNameList ')' '%' Name '=>' Target EOS               -> PointerAssignmentStmt
+  LblDef Name '(' SFDummyArgNameList ')' '%' DataRef '=>' Target EOS            -> PointerAssignmentStmt
+
+%%R737
+  Expr  -> Target
+
+%%R738
+  LblDef 'where' '(' MaskExpr ')' AssignmentStmt  -> WhereStmt
+
+%%R739
+%% todo: sdf-fy
+%%  Where     EndWhereStmt      -> WhereConstruct
+%%  ElseWhere EndWhereStmt      -> WhereConstruct
+%%  WhereConstructStmt          -> Where
+%%  Where AssignmentStmt        -> Where
+%%  Where ElsewhereStmt         -> ElseWhere
+%%  ElseWhere AssignmentStmt    -> ElseWhere
+  WhereConstructStmt AssignmentStmt* 
+                (ElsewhereStmt AssignmentStmt*)? 
+        EndWhereStmt                            -> WhereConstruct
+
+%%R740
+  LblDef 'where' '(' MaskExpr ')' EOS           -> WhereConstructStmt
+
+%%R741
+  Expr  -> MaskExpr
+
+%%R742
+  LblDef 'elsewhere' EOS                        -> ElsewhereStmt
+
+%%R743
+  LblDef 'end' 'where' EOS                      -> EndWhereStmt
+

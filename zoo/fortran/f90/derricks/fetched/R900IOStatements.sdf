@@ -1,0 +1,193 @@
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R9xx Input/Output Statements
+%%%%%%%%%%
+
+module languages/fortran/syntax/R900IOStatements
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/Fortran90
+
+exports
+
+sorts
+  BackspaceStmt CloseSpec CloseSpecList CloseStmt ConnectSpec
+  ConnectSpecList EndfileStmt FormatIdentifier InputImpliedDo InputItem
+  InputItemList InquireSpec InquireSpecList InquireStmt IoControlSpec
+  IoControlSpecList OpenStmt OutputImpliedDo OutputItem OutputItemList
+  PositionSpec PrintStmt RdCtlSpec RdFmtId RdFmtIdExpr
+  RdIoCtlSpecList RdUnitId ReadStmt RewindStmt UnitIdentifier
+  WriteStmt    
+
+context-free syntax
+  %% already defined in R800 section:
+  Icon  ->  LblRef
+
+%%R901
+  UFExpr | '*'                  -> UnitIdentifier
+
+%%-R902 rule deleted:
+%% external-file-unit is scalar-int-expr
+%%-R903 rule deleted:
+%% internal-file-unit is default-char-variable
+
+%%R904
+  LblDef 'open' '(' ConnectSpecList ')' EOS  -> OpenStmt
+
+%%R905
+  {ConnectSpec ","}+                    -> ConnectSpecList
+  UnitIdentifier                        -> ConnectSpec
+  'unit'     '=' UnitIdentifier         -> ConnectSpec
+  'iostat'   '=' ScalarVariable         -> ConnectSpec
+  'err'      '=' LblRef                 -> ConnectSpec
+  'file'     '=' CExpr                  -> ConnectSpec
+  'status'   '=' CExpr                  -> ConnectSpec
+  'access'   '=' CExpr                  -> ConnectSpec
+  'form'     '=' CExpr                  -> ConnectSpec
+  'recl'     '=' Expr                   -> ConnectSpec
+  'blank'    '=' CExpr                  -> ConnectSpec
+%%since F90:
+  'position' '=' CExpr                  -> ConnectSpec
+  'action'   '=' CExpr                  -> ConnectSpec
+  'delim'    '=' CExpr                  -> ConnectSpec
+  'pad'      '=' CExpr                  -> ConnectSpec
+
+
+%%-R906 rule deleted:
+%% file-name-expr is scalar-default-char-variable
+
+%%R907
+  LblDef 'close' '(' CloseSpecList ')' EOS      -> CloseStmt
+
+%%R908
+  {CloseSpec ","}+                              -> CloseSpecList
+               UnitIdentifier                   -> CloseSpec
+  'unit'   '=' UnitIdentifier                   -> CloseSpec
+  'iostat' '=' ScalarVariable                   -> CloseSpec
+  'err'    '=' LblRef                           -> CloseSpec
+  'status' '=' CExpr                            -> CloseSpec
+
+%%909
+  LblDef 'read' RdCtlSpec InputItemList? EOS    -> ReadStmt
+  LblDef 'read' RdFmtId EOS                     -> ReadStmt
+  LblDef 'read' RdFmtId ',' InputItemList EOS   -> ReadStmt
+
+%%R910
+  LblDef 'write' '(' IoControlSpecList ')' OutputItemList? EOS  -> WriteStmt
+
+%%R911
+  LblDef 'print' FormatIdentifier ( ',' OutputItemList )? EOS   -> PrintStmt
+
+%%R912
+  'unit'   '=' UnitIdentifier           -> IoControlSpec
+  'fmt'    '=' FormatIdentifier         -> IoControlSpec
+  'nml'    '=' NamelistGroupName        -> IoControlSpec
+  'rec'    '=' Expr                     -> IoControlSpec
+  'iostat' '=' ScalarVariable           -> IoControlSpec
+  'err'    '=' LblRef                   -> IoControlSpec
+  'end'    '=' LblRef                   -> IoControlSpec
+  'advance' '='  CExpr                  -> IoControlSpec
+  'size'   '=' Variable                 -> IoControlSpec
+  'eor'    '=' LblRef                   -> IoControlSpec
+
+  UnitIdentifier ',' FormatIdentifier?  -> IoControlSpecList
+  UnitIdentifier ',' IoControlSpec      -> IoControlSpecList
+  IoControlSpec                         -> IoControlSpecList
+  IoControlSpecList ',' IoControlSpec   -> IoControlSpecList
+
+%%912
+  RdUnitId                              -> RdCtlSpec
+  '(' RdIoCtlSpecList ')'               -> RdCtlSpec
+  '(' UFExpr ')'                        -> RdUnitId
+  '(' '*' ')'                           -> RdUnitId
+
+  UnitIdentifier ',' IoControlSpec      -> RdIoCtlSpecList
+  UnitIdentifier ',' FormatIdentifier   -> RdIoCtlSpecList
+  IoControlSpec                         -> RdIoCtlSpecList
+  RdIoCtlSpecList ',' IoControlSpec     -> RdIoCtlSpecList
+
+%%R913 format
+  LblRef                                -> RdFmtId
+  '*'                                   -> RdFmtId
+  COperand                              -> RdFmtId
+  COperand ConcatOp CPrimary            -> RdFmtId
+  RdFmtIdExpr ConcatOp CPrimary         -> RdFmtId
+  '(' UFExpr ')'                        -> RdFmtIdExpr
+
+%%913
+  LblRef | CExpr | '*'                  -> FormatIdentifier
+
+%%R914
+  Name                                  -> InputItem
+  DataRef                               -> InputItem
+  InputImpliedDo                        -> InputItem
+  {InputItem ","}+                      -> InputItemList
+
+%%R915
+  Expr                                  -> OutputItem
+  OutputImpliedDo                       -> OutputItem
+  {OutputItem ","}+                     -> OutputItemList
+
+%%R916
+%%R917
+%%R918
+  '(' InputItemList  ',' ImpliedDoVariable '=' Expr ',' Expr ')'                -> InputImpliedDo
+  '(' InputItemList  ',' ImpliedDoVariable '=' Expr ',' Expr ',' Expr ')'       -> InputImpliedDo
+
+  '(' OutputItemList ',' ImpliedDoVariable '=' Expr ',' Expr ')'                -> OutputImpliedDo
+  '(' OutputItemList ',' ImpliedDoVariable '=' Expr ',' Expr ',' Expr ')'       -> OutputImpliedDo
+
+%%R919
+  LblDef 'backspace' UnitIdentifier EOS                 -> BackspaceStmt
+  LblDef 'backspace' '(' {PositionSpec ","}+ ')' EOS    -> BackspaceStmt
+
+%%R920
+%% note: 'endfile' without space is allowed
+  LblDef 'end' 'file' UnitIdentifier EOS                        -> EndfileStmt
+  LblDef 'end' 'file' '('  {PositionSpec ","}+ ')' EOS          -> EndfileStmt
+
+%%R921
+  LblDef 'rewind' UnitIdentifier EOS                    -> RewindStmt
+  LblDef 'rewind' '(' {PositionSpec ","}+ ')' EOS       -> RewindStmt
+
+%%R922
+  'unit='?  UnitIdentifier  -> PositionSpec
+  'iostat=' ScalarVariable  -> PositionSpec
+  'err='    LblRef          -> PositionSpec
+
+%%R923
+  LblDef 'inquire' '(' InquireSpecList ')' EOS                                  -> InquireStmt
+  LblDef 'inquire' '(' 'iolength' '=' ScalarVariable ')' OutputItemList EOS     -> InquireStmt
+
+%%R924
+  'unit'        '=' UnitIdentifier      -> InquireSpec
+  'file'        '=' CExpr               -> InquireSpec
+  'iostat'      '=' ScalarVariable      -> InquireSpec
+  'err'         '=' LblRef              -> InquireSpec
+  'exist'       '=' ScalarVariable      -> InquireSpec
+  'opened'      '=' ScalarVariable      -> InquireSpec
+  'number'      '=' ScalarVariable      -> InquireSpec
+  'named'       '=' ScalarVariable      -> InquireSpec
+  'name'        '=' ScalarVariable      -> InquireSpec
+  'access'      '=' ScalarVariable      -> InquireSpec
+  'sequential'  '=' ScalarVariable      -> InquireSpec
+  'direct'      '=' ScalarVariable      -> InquireSpec
+  'form'        '=' ScalarVariable      -> InquireSpec
+  'formatted'   '=' ScalarVariable      -> InquireSpec
+  'unformatted' '=' ScalarVariable      -> InquireSpec
+  'recl'        '=' Expr                -> InquireSpec
+  'nextrec'     '=' ScalarVariable      -> InquireSpec
+  'blank'       '=' ScalarVariable      -> InquireSpec
+  'position'    '=' ScalarVariable      -> InquireSpec
+  'action'      '=' ScalarVariable      -> InquireSpec
+  'read'        '=' ScalarVariable      -> InquireSpec
+  'write'       '=' ScalarVariable      -> InquireSpec
+  'readwrite'   '=' ScalarVariable      -> InquireSpec
+  'delim'       '=' ScalarVariable      -> InquireSpec
+  'pad'         '=' ScalarVariable      -> InquireSpec
+
+%%R924
+%% see constraint: the unit= may be ommitted from the first spec in the list
+  UnitIdentifier "," {InquireSpec ","}+ -> InquireSpecList
+  {InquireSpec ","}+                    -> InquireSpecList
+

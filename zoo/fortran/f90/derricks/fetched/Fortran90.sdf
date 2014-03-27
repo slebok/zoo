@@ -1,0 +1,168 @@
+%%%%%%%%%%
+%% This Fortran grammar is structured according to document ISO/IEC 1539:1991. 
+%% Rulenumbers are named R2xx - R12xx as in Annex D of 1539:1991
+%% The grammar is adapted from an ELI project grammer, http://eli-project.cvs.sourceforge.net/eli-project
+%%
+%%%%%%%%%%
+%% ISO/IEC 1539:1991 section R2xx Fortran terms and concepts
+%%%%%%%%%%
+
+module languages/fortran/syntax/Fortran90
+
+imports languages/fortran/syntax/FortranLex
+imports languages/fortran/syntax/R400DataTypes
+imports languages/fortran/syntax/R500DataDeclarations
+imports languages/fortran/syntax/R600UseDataObjects
+imports languages/fortran/syntax/R700Expressions
+imports languages/fortran/syntax/R800ExecutionControl
+imports languages/fortran/syntax/R900IOStatements
+imports languages/fortran/syntax/R1000_IOEditing
+imports languages/fortran/syntax/R1100ProgramUnits
+imports languages/fortran/syntax/R1200Procedures
+
+exports
+
+sorts
+  ActionStmt ArrayName Body
+  BodyConstruct CommonBlockName ComponentName DeclarationConstruct DefinedOperator
+  DummyArgName EndName EntryName ExecutableConstruct ExecutableProgram
+  ExecutionPartConstruct ExternalName FunctionName GenericName ImpliedDoVariable
+  InternalSubProgPart InternalSubprogram IntrinsicProcedureName  MainProgram
+  MainRange  ModuleSubprogram ModuleSubprogramPartConstruct Name
+  NamelistGroupName ObjectName ProgramName ProgramUnit SFDummyArgName
+  SpecificationPartConstruct SpecificationStmt SubroutineName SubroutineNameUse TypeName
+  VariableName   
+  
+
+context-free start-symbols 
+  ExecutableProgram
+
+context-free syntax
+
+%%R201 JD: the optional startcommentblock is needed to parse comment lines in 1st lines of a file.
+%% original: ExecutableProgram ProgramUnit -> ExecutableProgram
+  StartCommentBlock? ProgramUnit+       -> ExecutableProgram
+
+%%R202
+%%R203
+  MainProgram                           -> ProgramUnit
+  FunctionSubprogram                    -> ProgramUnit
+  SubroutineSubprogram                  -> ProgramUnit
+  Module                                -> ProgramUnit
+  BlockDataSubprogram                   -> ProgramUnit
+
+
+%%R1101
+  ProgramStmt? MainRange                -> MainProgram
+  BodyConstruct+ EndProgramStmt         -> MainRange
+  InternalSubProgPart EndProgramStmt    -> MainRange
+  EndProgramStmt                        -> MainRange
+
+  SpecificationPartConstruct            -> BodyConstruct
+  ExecutableConstruct                   -> BodyConstruct
+  BodyConstruct+                        -> Body
+
+%%R204
+  ImplicitStmt                          -> SpecificationPartConstruct
+  ParameterStmt                         -> SpecificationPartConstruct
+  FormatStmt                            -> SpecificationPartConstruct
+  EntryStmt                             -> SpecificationPartConstruct
+  DeclarationConstruct                  -> SpecificationPartConstruct
+  UseStmt                               -> SpecificationPartConstruct
+
+%%R207
+  TypeDeclarationStmt                   -> DeclarationConstruct
+  SpecificationStmt                     -> DeclarationConstruct
+  DerivedTypeDef                        -> DeclarationConstruct
+  InterfaceBlock                        -> DeclarationConstruct
+
+%%R209
+  ExecutableConstruct                   -> ExecutionPartConstruct
+  FormatStmt                            -> ExecutionPartConstruct
+  DataStmt                              -> ExecutionPartConstruct
+  EntryStmt                             -> ExecutionPartConstruct
+
+%%R214                     
+  AccessStmt                            -> SpecificationStmt
+  AllocatableStmt                       -> SpecificationStmt
+  CommonStmt                            -> SpecificationStmt
+  DataStmt                              -> SpecificationStmt
+  DimensionStmt                         -> SpecificationStmt
+  EquivalenceStmt                       -> SpecificationStmt
+  ExternalStmt                          -> SpecificationStmt
+  IntrinsicStmt                         -> SpecificationStmt
+  SaveStmt                              -> SpecificationStmt
+  IntentStmt                            -> SpecificationStmt
+  NamelistStmt                          -> SpecificationStmt
+  OptionalStmt                          -> SpecificationStmt
+  PointerStmt                           -> SpecificationStmt
+  TargetStmt                            -> SpecificationStmt
+
+%%R210
+  Body ContainsStmt   InternalSubprogram        -> InternalSubProgPart
+  ContainsStmt        InternalSubprogram        -> InternalSubProgPart
+  InternalSubProgPart InternalSubprogram        -> InternalSubProgPart
+
+%%R211
+  FunctionSubprogram            -> InternalSubprogram
+  SubroutineSubprogram          -> InternalSubprogram
+
+%%R212
+  ContainsStmt                  -> ModuleSubprogramPartConstruct
+  ModuleSubprogram              -> ModuleSubprogramPartConstruct
+
+%%R213
+  FunctionSubprogram            -> ModuleSubprogram
+  SubroutineSubprogram          -> ModuleSubprogram
+
+%%R215
+  ActionStmt                    -> ExecutableConstruct
+  DoConstruct                   -> ExecutableConstruct
+  IfConstruct                   -> ExecutableConstruct
+  CaseConstruct                 -> ExecutableConstruct
+  WhereConstruct                -> ExecutableConstruct
+  EndDoStmt                     -> ExecutableConstruct
+
+%%R216
+  AllocateStmt                  -> ActionStmt
+  CycleStmt                     -> ActionStmt
+  DeallocateStmt                -> ActionStmt
+  ExitStmt                      -> ActionStmt
+  NullifyStmt                   -> ActionStmt
+  PointerAssignmentStmt         -> ActionStmt
+  WhereStmt                     -> ActionStmt
+  ArithmeticIfStmt              -> ActionStmt
+  AssignmentStmt                -> ActionStmt
+  AssignStmt                    -> ActionStmt
+  BackspaceStmt                 -> ActionStmt
+  CallStmt                      -> ActionStmt
+  CloseStmt                     -> ActionStmt
+  ContinueStmt                  -> ActionStmt
+  EndfileStmt                   -> ActionStmt
+  GotoStmt                      -> ActionStmt
+  ComputedGotoStmt              -> ActionStmt
+  AssignedGotoStmt              -> ActionStmt
+  IfStmt                        -> ActionStmt
+  InquireStmt                   -> ActionStmt
+  OpenStmt                      -> ActionStmt
+  PauseStmt                     -> ActionStmt
+  PrintStmt                     -> ActionStmt
+  ReadStmt                      -> ActionStmt
+  ReturnStmt                    -> ActionStmt
+  RewindStmt                    -> ActionStmt
+%%  StmtFunctionStmt            -> ActionStmt see R1226 comment
+  StopStmt                      -> ActionStmt
+  WriteStmt                     -> ActionStmt
+
+
+%%R311
+  Dop                   -> DefinedOperator
+  PowerOp               -> DefinedOperator
+  MultOp                -> DefinedOperator
+  AddOp                 -> DefinedOperator
+  ConcatOp              -> DefinedOperator
+  RelOp                 -> DefinedOperator
+  NotOp                 -> DefinedOperator
+  AndOp                 -> DefinedOperator
+  OrOp                  -> DefinedOperator
+  EquivOp               -> DefinedOperator

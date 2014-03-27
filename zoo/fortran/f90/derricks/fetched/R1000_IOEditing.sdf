@@ -1,0 +1,73 @@
+%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R10xx Input/Output Editing
+%%%%%%%%%
+
+module languages/fortran/syntax/R1000_IOEditing
+
+imports
+  %% needed for Icon, Scon, LblDef:
+  languages/fortran/syntax/FortranLex
+
+exports
+
+sorts
+  BlankInterpEditDescr CharStringEditDescr ControlEditDescr   
+  DataEditDescr FormatItem FormatItemList FormatStmt
+  PositionEditDescr SignEditDescr   
+
+context-free syntax
+
+%%R1001
+%%R1002
+  LblDef 'format' '(' FormatItemList? ')' EOS  -> FormatStmt
+
+  { FormatItem ","}+                    -> FormatItemList
+
+%%R1003
+  Icon? DataEditDescr                   -> FormatItem
+  ControlEditDescr                      -> FormatItem
+  CharStringEditDescr                   -> FormatItem
+  Icon? DataEditDescr                   -> FormatItem
+  Icon? '(' FormatItemList ')'          -> FormatItem
+  FormatItem ":" FormatItem	    -> FormatItem
+
+%%R1005-R1009
+  'I'  Icon ('.' Icon)?                 -> DataEditDescr
+  'O'  Icon ('.' Icon)?                 -> DataEditDescr
+  'B'  Icon ('.' Icon)?                 -> DataEditDescr
+  'Z'  Icon ('.' Icon)?                 -> DataEditDescr
+  'F'  Icon '.' Icon                    -> DataEditDescr  
+  'E'  Icon '.' Icon ('E' Icon)?        -> DataEditDescr
+  'EN' Icon '.' Icon ('E' Icon)?        -> DataEditDescr
+  'ES' Icon '.' Icon ('E' Icon)?        -> DataEditDescr
+  'G'  Icon '.' Icon ('E' Icon)?        -> DataEditDescr
+  'L'  Icon                             -> DataEditDescr
+  'A'  Icon?                            -> DataEditDescr
+  'D'  Icon '.' Icon                    -> DataEditDescr
+
+%%R1010,R1011
+  PositionEditDescr                     -> ControlEditDescr
+  Icon? '/'                             -> ControlEditDescr
+  ':'                                   -> ControlEditDescr   
+  SignEditDescr                         -> ControlEditDescr
+  ('-'|'+')? Icon 'P' (Icon? DataEditDescr)?    -> ControlEditDescr
+  BlankInterpEditDescr                  -> ControlEditDescr
+
+%%R1012, R1013
+  'T'  Icon                             -> PositionEditDescr
+  'TL' Icon                             -> PositionEditDescr
+  'TR' Icon                             -> PositionEditDescr
+  Icon 'X'                              -> PositionEditDescr
+
+%%R1014
+  'S'                                   -> SignEditDescr
+  'SP'                                  -> SignEditDescr
+  'SS'                                  -> SignEditDescr
+
+%%R1015
+  'BN'                                  -> BlankInterpEditDescr
+  'BZ'                                  -> BlankInterpEditDescr
+
+%%R1016
+  Scon                                  -> CharStringEditDescr 
+  Icon 'H' Character+                   -> CharStringEditDescr

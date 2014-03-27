@@ -1,0 +1,148 @@
+module languages/fortran/syntax/FortranLex
+%%
+%% Input restrictions:
+%% -Make sure that the last statement at the end of the file has a '\n' to prevent a parse error.
+%% -Userdefined operators (.XYZ.) are not handled yet
+%% -include 'file' lines must first be processed or make it a comment (put a ! in front)
+%%
+%% F77 fixed format text can also be parsed if some pre-processing is done first,
+%% Minimal changes needed for fixed form source handling:
+%% a. change continuation symbols in 6th column by a & on the previous line (but not in a comment of course)
+%%    in VIM regexp: :g/^     [^ ]/-1s/$/ \&/ followed by :%/^     [^ ]/      / (5 spaces+nonspace -> 6 spaces) 
+%% b. change every comment-symbol (* or C) in the first column into a !.
+%%    in VIM regexp: %s/^[C\*]/!/
+
+
+exports
+ 
+sorts
+  BinaryConstant Character Comment StartCommentBlock FixedComment
+  Continuation Dop EOS HexConstant
+  Icon Ident Label LblDef
+  Letter OctalConstant
+  Rcon ScalarIntLiteralConstant  Scon
+  SconDouble SconSingle 
+%% Ident Aliasses:
+  Name ArrayName ComponentName GenericName NamelistGroupName TypeName EndName CommonBlockName DummyArgName
+  EntryName ExternalName FunctionName ImpliedDoVariable IntrinsicProcedureName ObjectName ProgramName
+  SFDummyArgName SubroutineName SubroutineNameUse VariableName
+
+lexical syntax
+
+%% Everything following a ! is comment. With the \n it is an End of Statement
+  "!" ~[\n]*  			-> Comment
+  (Comment? "\n" [\ \t]* )+ 	-> EOS
+%% ; at end of line is allowed
+  (";" [\ \t]*)+ Comment? "\n" [\ \t]*  -> EOS
+
+%% Fixed source form comment rules (beware of code starting in 1st column!)
+  ("\n" [Cc\*] ~[\n]*)+         -> FixedComment
+   FixedComment "\n" [\ \t]* 	-> EOS
+
+%% commentlines at the start of a file/program are handled seperately in Fortran90.sdf
+  EOS  -> StartCommentBlock
+
+%% Statement seperator is also EOS (used seldomly)
+  ([\ \t]* ";" [\ \t]*)+            -> EOS 
+%%
+%% Continuation can optionally be seperated by comment. The & on the next line is also optional.
+   "&" [\ \t]* ("!" ~[\n]*)? "\n" ( [\ \t]+ "&" )?  -> Continuation
+   Continuation -> LAYOUT	
+
+%% Layout does NOT have a \n since that's part of EOS
+   [\ \t] -> LAYOUT
+
+%% number as label: max 5 digits with space in 6th pos
+    [0-9][0-9][0-9][0-9][0-9] 	-> Label
+    [0-9][0-9][0-9][0-9]            -> Label
+    [0-9][0-9][0-9]         	-> Label   
+    [0-9][0-9]              	-> Label
+    [0-9]  			-> Label
+
+
+%%
+  [A-Z]                         -> Letter
+  [A-Za-z][A-Za-z0-9\_]*        -> Ident
+%% Integer Constant
+  [0-9]+                        -> Icon
+
+%%R420 Character constants allow '' and "" as escaped ' and " in string literals like 'don''t' (="don't")
+%% seperate names needed for lexical restrictions later 
+%% NOTE: continuated strings like 'hello&\n   &world' will be parsed as one string with & embedded.
+  [\'] (~[\'] | "''")*  [\']    -> SconSingle
+  [\"] (~[\"] | '""')*  [\"]    -> SconDouble
+  SconSingle | SconDouble       -> Scon
+
+%%R301: character definition with the 21 specials from table 3.1
+  [a-zA-Z0-9\ \=\+\-\*\/\(\)\,\;\'\:\!\"\%\&\<\>\\\?\$] -> Character
+
+%%R412-R416 Real and Double Literal Constant. Kind is handled in R400Datatypes.sdf
+%% [sign] significant [exponent-letter exponent] [__kind-param]
+%% JD: [\+\-]? removed because of Sign in R707
+          [0-9]+ "." [0-9]* ([EeDd] [\+\-]? [0-9]+)?            -> Rcon
+%% [sign] digit-string exponent-letter exponent [__kind-param]
+                 "." [0-9]+ ([EeDd] [\+\-]? [0-9]+)?            -> Rcon
+%% or [sign] digit-string exponent-letter exponent [__kind-param]
+          [0-9]+ [EeDd] [\+\-]? [0-9]+                          -> Rcon
+%%R408
+  [Bb] [\'] [01]+ [\']          -> BinaryConstant
+  [Bb] [\"] [01]+ [\"]          -> BinaryConstant
+%%R409
+  [Oo] [\'] [0-7]+ [\']         -> OctalConstant
+  [Oo] [\"] [0-7]+ [\']         -> OctalConstant
+%%R410
+  [Zz] [\'] [0-9A-Fa-f]+ [\"]   -> HexConstant
+  [Zz] [\"] [0-9A-Fa-f]+ [\"]   -> HexConstant
+
+%%
+  [0-9]+                        -> ScalarIntLiteralConstant 
+
+%%R704,724 Defined-unary-operator and Defined-binary-operator
+%% JD: disabled Userdefined operators to prevent ambig with normal relops in expressions. 
+  "." "TODO" Letter+ "."        -> Dop
+
+lexical restrictions
+  SconSingle -/- [\']
+  SconDouble -/- [\"]
+
+%% commentline should be the complete line until newline. This must be lexical restriction
+%%   Comment  -/- ~[\n]  
+
+%% if  (Comment "\n" [\ \t]* )+ -> EOS, then to prevent ambig with layout:
+   EOS -/- [\ \t]
+
+context-free restrictions
+
+   Continuation? -/- ~[\n]  
+
+%% layout definition **without** \n due to the EOS definition. Lines are importent in Fortran.
+%% Continuation-char & should be part of continuation, so not layout.
+   LAYOUT? -/- [\ \t\&]
+
+%% to prevent layout/comment parsed as after LblDef (which causes ambigs)
+   LblDef -/- [\!]
+
+context-free syntax
+   Label?                               -> LblDef
+
+%% Ident Aliasses. TODO: put them in the right modules.
+  Ident  -> Name
+  Ident  -> ArrayName
+  Ident  -> ComponentName
+  Ident  -> GenericName
+  Ident  -> NamelistGroupName
+  Ident  -> TypeName
+  Ident  -> EndName
+  Ident  -> CommonBlockName
+  Ident  -> DummyArgName
+  Ident  -> EntryName
+  Ident  -> ExternalName
+  Ident  -> FunctionName
+  Ident  -> ImpliedDoVariable
+  Ident  -> IntrinsicProcedureName
+  Ident  -> ObjectName
+  Ident  -> ProgramName
+  Ident  -> SFDummyArgName
+  Ident  -> SubroutineName
+  Ident  -> SubroutineNameUse
+  Ident  -> VariableName

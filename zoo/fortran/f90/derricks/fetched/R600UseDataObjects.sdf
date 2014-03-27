@@ -1,0 +1,98 @@
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R6xx Use of Data Objects
+%%%%%%%%%%
+
+module languages/fortran/syntax/R600UseDataObjects
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/R700Expressions
+
+exports
+
+sorts
+  AllocatedShape AllocateObject AllocateObjectList AllocateShapeSpec AllocateStmt
+  Allocation AllocationList ArrayElement DataRef DeallocateStmt
+  FieldSelector NullifyStmt PointerField PointerObject PointerObjectList
+  ScalarVariable SectionSubscript SectionSubscriptList StructureComponent Subscript
+  SubscriptTriplet SubstringRange Variable  
+
+context-free syntax
+
+%%R601
+  VariableName | ArrayElement                                   -> ScalarVariable
+  VariableName                                                  -> Variable
+  VariableName '(' {Subscript ","}+ ')'                         -> Variable
+  VariableName SubstringRange                                   -> Variable
+  VariableName '(' {Subscript ","}+ ')' SubstringRange          -> Variable
+  Expr                                                          -> Subscript
+
+%%R612
+  Name '%' Name                                                 -> DataRef
+  DataRef '%' Name                                              -> DataRef
+  Name '(' SectionSubscriptList ')'                             -> DataRef
+  DataRef '(' SectionSubscriptList ')'                          -> DataRef
+
+  {SectionSubscript ","}+                                       -> SectionSubscriptList
+  Expr                                                          -> SectionSubscript
+  SubscriptTriplet                                              -> SectionSubscript
+
+%%R609
+%%R610
+%%R611
+  '(' SubscriptTriplet ')'                                      -> SubstringRange
+
+%%R614
+  VariableName FieldSelector                                    -> StructureComponent
+  StructureComponent FieldSelector                              -> StructureComponent
+  '(' SectionSubscriptList ')' '%' Name                         -> FieldSelector
+  '%' Name                                                      -> FieldSelector
+
+%%R615
+  StructureComponent '(' SectionSubscriptList ')'               -> ArrayElement
+  VariableName '(' SectionSubscriptList ')'                     -> ArrayElement
+
+%%R619
+  Expr? ':' Expr? (':' Expr)?                                   -> SubscriptTriplet
+
+%%R622
+  LblDef 'allocate' '(' AllocationList ',' 'stat' '=' Variable ')' EOS  -> AllocateStmt
+  LblDef 'allocate' '(' AllocationList ')' EOS                          -> AllocateStmt
+
+%%R623 chain rule deleted
+
+%%R624
+   {Allocation ","}+                            -> AllocationList
+   AllocateObject AllocatedShape?               -> Allocation
+   '(' SectionSubscriptList ')'                 -> AllocatedShape
+%%/* From ELI: Need to use SectionSubscriptList here to solve an LALR(1) conflict with the
+%% * FieldSelector in R625.  (Can't tell which we have until the character
+%% * following the right paren, but we must reduce WITHIN the parens.)
+%% */
+
+%%R625
+  {AllocateObject ","}+                         -> AllocateObjectList
+  VariableName                                  -> AllocateObject
+  AllocateObject FieldSelector                  -> AllocateObject
+
+%%R626
+%% JD is this correct??/* Omitted to solve LALR(1) conflict.  see R624
+  {Expr ":" }+                                  -> AllocateShapeSpec
+
+%%R629
+  LblDef 'nullify' '(' PointerObjectList ')' EOS        -> NullifyStmt
+  {PointerObject ","}+                                  -> PointerObjectList
+
+%%R630
+  Name                                          -> PointerObject
+  PointerField                                  -> PointerObject
+  Name '(' SFExprList ')' '%' Name              -> PointerField
+  Name '(' SFDummyArgNameList ')' '%' Name      -> PointerField
+  Name '%' Name                                 -> PointerField
+  PointerField FieldSelector                    -> PointerField
+
+%%R631
+  LblDef 'deallocate' '(' AllocateObjectList ',' 'stat' '=' Variable ')' EOS           -> DeallocateStmt
+  LblDef 'deallocate' '(' AllocateObjectList ')' EOS                                   -> DeallocateStmt
+
+

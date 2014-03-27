@@ -1,0 +1,151 @@
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R8xx Execution Control
+%%%%%%%%%%
+
+module languages/fortran/syntax/R800ExecutionControl
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/Fortran90
+
+exports
+
+sorts
+  ArithmeticIfStmt AssignedGotoStmt AssignStmt BlockDoConstruct CaseBodyConstruct
+  CaseConstruct CaseSelector CaseStmt CaseValueRange ComputedGotoStmt
+  ContinueStmt CycleStmt DoConstruct ElseIfStmt ElseStmt
+  EndDoStmt EndIfStmt EndSelectStmt ExitStmt GoToKw
+  GotoStmt IfConstruct  IfConstructName IfStmt IfThenStmt
+  Int-Real-Dp-Expression LabelDoStmt  LblRef LoopControl PauseStmt
+  ScalarIntExpr ScalarLogicalExpr ScalarNumericExpr SelectCaseBody SelectCaseRange
+  StopStmt    
+
+context-free syntax
+
+%%R802
+  IfThenStmt ExecutionPartConstruct* 
+                (ElseIfStmt ExecutionPartConstruct*)* 
+                (ElseStmt   ExecutionPartConstruct*)? 
+         EndIfStmt                                                              -> IfConstruct 
+
+%%R803
+  LblDef (IfConstructName ":")? 'if' '(' ScalarLogicalExpr ')' 'then' EOS       -> IfThenStmt
+  Ident -> IfConstructName
+
+%%R804
+  LblDef 'else' 'if' '(' ScalarLogicalExpr ')' 'then' IfConstructName? EOS      -> ElseIfStmt
+
+%%R805
+  LblDef 'else' IfConstructName? EOS                                            -> ElseStmt
+
+%%R806
+  LblDef 'end' 'if' IfConstructName? EOS                                        -> EndIfStmt
+
+%%R807
+%% JD: removed EOS at end since its part of ActionStmt 
+  LblDef 'if' '(' ScalarLogicalExpr ')' ActionStmt                              -> IfStmt
+%% JD: simplification 
+  Expr -> ScalarLogicalExpr
+
+%%R808
+%%  LblDef Name ':' 'selectcase' '(' Expr ')' EOS SelectCaseRange       -> CaseConstruct
+%%  LblDef 'selectcase' '(' Expr ')' EOS SelectCaseRange                -> CaseConstruct
+  LblDef Name ':' 'select' 'case' '(' Expr ')' EOS SelectCaseRange      -> CaseConstruct
+  LblDef 'select' 'case' '(' Expr ')' EOS SelectCaseRange               -> CaseConstruct
+
+  SelectCaseBody EndSelectStmt                                  -> SelectCaseRange
+  EndSelectStmt                                                 -> SelectCaseRange
+
+  CaseBodyConstruct+                            -> SelectCaseBody
+  CaseStmt                                      -> CaseBodyConstruct
+  ExecutionPartConstruct                        -> CaseBodyConstruct
+
+%%R810
+  LblDef 'case' CaseSelector Name? EOS          -> CaseStmt
+
+%%R811
+  LblDef 'end' 'select' EndName? EOS            -> EndSelectStmt
+
+%%R813
+  '(' { CaseValueRange "," }+  ')'              -> CaseSelector
+  'default'                                     -> CaseSelector
+
+%%R814
+  Expr                                          -> CaseValueRange
+  Expr ':'                                      -> CaseValueRange
+  ':' Expr                                      -> CaseValueRange
+  Expr ':' Expr                                 -> CaseValueRange
+
+%%R816
+   BlockDoConstruct                             -> DoConstruct
+
+%%R817
+%%/* Block DO constructs cannot be recognized syntactically because there is
+%% * no requirement that there is an end do statement. (A do loop may use label+continue construct)
+%%   DoStmt Block EndDoStmt  -> BlockDoConstruct
+%%   DoStmt Block  -> BlockDoConstruct
+%% JD: endo IS compulsory in cases where LblRef is missing. Can we use this to locate Do-blocks?
+
+%%R818
+  LblDef 'do' LblRef EOS                                -> BlockDoConstruct
+  LblDef 'do' LoopControl EOS                           -> BlockDoConstruct
+  LblDef 'do' EOS                                       -> BlockDoConstruct
+  LblDef Name ':' 'do' LblRef LoopControl EOS           -> BlockDoConstruct
+  LblDef Name ':' 'do' LblRef EOS                       -> BlockDoConstruct
+  LblDef Name ':' 'do' LoopControl EOS                  -> BlockDoConstruct
+  LblDef Name ':' 'do' EOS                              -> BlockDoConstruct
+
+%%40
+%%R818
+  LabelDoStmt                                           -> DoConstruct
+
+%%R819
+  LblDef 'do' LblRef ','? LoopControl EOS               -> LabelDoStmt
+
+%%R821
+  'while' '(' Expr ')'                                                                                  -> LoopControl
+  VariableName '=' Int-Real-Dp-Expression ',' Int-Real-Dp-Expression (',' Int-Real-Dp-Expression)?      -> LoopControl
+%% TODO: Constraint: Int-Real-Dp-Expression should be a int, default-real or double-precision expression
+  Expr                                                  -> Int-Real-Dp-Expression
+
+%%R822 
+%% do-variable is scalar-variable
+
+%%R825
+  LblDef 'end' 'do' Name? EOS                           -> EndDoStmt
+
+%%R834
+  LblDef 'cycle' EndName? EOS                           -> CycleStmt
+
+%%R835
+  LblDef 'exit' EndName? EOS                            -> ExitStmt
+
+%%R836
+ 'go' 'to'                                              -> GoToKw
+  LblDef GoToKw LblRef EOS                              -> GotoStmt
+
+%%R837
+  LblDef GoToKw '(' {LblRef ","}+ ')' ","? ScalarIntExpr EOS  -> ComputedGotoStmt
+  Icon  ->  LblRef
+  Expr   -> ScalarIntExpr
+
+%%R838
+  LblDef 'assign' LblRef 'to' VariableName EOS  -> AssignStmt
+
+%%R839
+  LblDef GoToKw VariableName EOS                                -> AssignedGotoStmt
+  LblDef GoToKw VariableName ','? '(' {LblRef ","}+ ')' EOS     -> AssignedGotoStmt
+
+%%R840
+  LblDef 'if' '(' ScalarNumericExpr ')' LblRef ',' LblRef ',' LblRef EOS  -> ArithmeticIfStmt
+  Expr -> ScalarNumericExpr
+
+%%R841
+  LblDef 'continue' EOS                        -> ContinueStmt
+
+%%R842
+  LblDef 'stop' (Icon | Scon)? EOS             -> StopStmt
+
+%%R844
+  LblDef 'pause' (Icon | Scon)? EOS            -> PauseStmt
+

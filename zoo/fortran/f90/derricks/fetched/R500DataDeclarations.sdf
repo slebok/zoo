@@ -1,0 +1,292 @@
+%%%%%%%%%%
+%%Fortran ISO/IEC 1539:1991 section R5xx Data Object declarations and Specifications
+%%%%%%%%%%
+
+module languages/fortran/syntax/R500DataDeclarations
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/R400DataTypes
+  languages/fortran/syntax/R700Expressions
+
+exports
+
+sorts
+  AccessId AccessIdList AccessSpec AccessStmt AllocatableStmt
+  ArrayAllocation ArrayAllocationList ArrayDeclarator ArrayDeclaratorList ArraySpec
+  AssumedShapeSpec AssumedShapeSpecList AssumedSizeSpec AttrSpec CharLength
+  CharSelector Comblock CommonBlockObject CommonBlockObjectList
+  CommonStmt Constant DataIDoObject DataIDoObjectList DataImpliedDo
+  Datalist DataStmt DataStmtObject DataStmtObjectList DataStmtSet
+  DataStmtValue DataStmtValueList DeferredShapeSpec DeferredShapeSpecList DimensionStmt
+  EntityDecl EquivalenceObject EquivalenceSet EquivalenceSetList EquivalenceStmt
+  ExplicitShapeSpec ExplicitShapeSpecList ImplicitSpec ImplicitStmt IntentPar
+  IntentParList IntentSpec IntentStmt KindSelector LengthSelector
+  LetterSpec LowerBound NamedConstant NamedConstantDef NamedConstantDefList
+  NamedConstantUse NamelistGroup NamelistGroupObject NamelistStmt
+  OptionalPar OptionalParList OptionalStmt ParameterStmt PointerStmt
+  PointerStmtObject PointerStmtObjectList SavedEntity SavedEntityList SaveStmt
+  TargetObject TargetObjectList TargetStmt TypeDeclarationStmt TypeParamValue
+  TypeSpec UpperBound   
+
+context-free syntax
+
+%%R307
+  Ident                         -> NamedConstant
+  Ident                         -> NamedConstantUse
+
+%%R501
+  LblDef TypeSpec (',' AttrSpec)* ':' ':' {EntityDecl ","}+ EOS         -> TypeDeclarationStmt
+  LblDef TypeSpec {EntityDecl ","}+ EOS                                 -> TypeDeclarationStmt
+
+%%R502
+  'integer'   KindSelector      -> TypeSpec
+  'real'      KindSelector      -> TypeSpec
+  'double' 'precision'          -> TypeSpec
+  'complex'   KindSelector      -> TypeSpec
+  'character' CharSelector      -> TypeSpec
+  'logical'   KindSelector      -> TypeSpec
+  'type' '(' TypeName ')'       -> TypeSpec
+%%old F77 rules:
+  'integer'                     -> TypeSpec
+  'real'                        -> TypeSpec
+  'complex'                     -> TypeSpec
+  'logical'                     -> TypeSpec
+  'character'                   -> TypeSpec
+  'character' LengthSelector    -> TypeSpec
+
+%%R503
+  'parameter'                   -> AttrSpec
+   AccessSpec                   -> AttrSpec
+  'allocatable'                 -> AttrSpec
+  'dimension' '(' ArraySpec ')' -> AttrSpec
+  'external'                    -> AttrSpec
+  'intent' '(' IntentSpec ')'   -> AttrSpec
+  'intrinsic'                   -> AttrSpec
+  'optional'                    -> AttrSpec
+  'pointer'                     -> AttrSpec
+  'save'                        -> AttrSpec
+  'target'                      -> AttrSpec
+
+%%R504
+  ObjectName '=' Expr                                   -> EntityDecl
+  ObjectName '(' ArraySpec ')' '=' Expr                 -> EntityDecl
+  ObjectName '*' CharLength '=' Expr                    -> EntityDecl
+  ObjectName '*' CharLength '(' ArraySpec ')' '=' Expr  -> EntityDecl
+%%F77
+  ObjectName                                            -> EntityDecl
+  ObjectName '*' CharLength                             -> EntityDecl
+  ObjectName '(' ArraySpec ')'                          -> EntityDecl
+  ObjectName '(' ArraySpec ')' '*' CharLength           -> EntityDecl
+
+
+%%R505
+%% expr used as scalar-int-initialization-expr 
+  '(' ('kind' '=')? Expr ')'                            -> KindSelector
+%%TODO: remove this often used in complex declarations like Integer*8 Complex*8 Complex*16 (IBM standard, not ISO!?)
+  '*' Icon                                              -> KindSelector
+
+%%R506
+  '(' 'len' '=' TypeParamValue ',' 'kind' '=' Expr ')'  -> CharSelector
+  '(' 'len' '=' TypeParamValue ',' Expr ')'             -> CharSelector
+  '(' 'len' '=' TypeParamValue ')'                      -> CharSelector
+  '(' ('kind' '=')? Expr ')'                            -> CharSelector
+
+%%R507
+  '(' TypeParamValue ')'        -> LengthSelector
+%%F77
+  '*' CharLength                -> LengthSelector
+
+%%R508
+  '(' TypeParamValue ')'        -> CharLength
+  ScalarIntLiteralConstant      -> CharLength
+
+%%R509
+  SpecificationExpr | '*'       -> TypeParamValue
+
+%%R510
+  'public'      -> AccessSpec
+  'private'     -> AccessSpec
+
+%%R511
+  'in'          -> IntentSpec
+  'out'         -> IntentSpec
+  'in' 'out'    -> IntentSpec
+
+%%R512
+  AssumedShapeSpecList                          -> ArraySpec
+  DeferredShapeSpecList                         -> ArraySpec
+  ExplicitShapeSpecList                         -> ArraySpec
+  AssumedSizeSpec                               -> ArraySpec
+
+%%R513
+  {ExplicitShapeSpec ","}+                      -> ExplicitShapeSpecList
+  (LowerBound ':')? UpperBound                  -> ExplicitShapeSpec
+
+%%R514 
+  SpecificationExpr                             -> LowerBound
+
+%%R515
+  SpecificationExpr                             -> UpperBound
+
+%%R516
+  LowerBound? ':'                               -> AssumedShapeSpec
+  LowerBound ':'                                -> AssumedShapeSpecList
+  DeferredShapeSpecList ',' LowerBound ':'      -> AssumedShapeSpecList
+  AssumedShapeSpecList ',' AssumedShapeSpec     -> AssumedShapeSpecList
+
+%%R517
+  {DeferredShapeSpec ","}+                      -> DeferredShapeSpecList
+  ':'                                           -> DeferredShapeSpec
+
+%%R518
+  (LowerBound ':')? '*'                                 -> AssumedSizeSpec
+  ExplicitShapeSpecList ',' '*'                         -> AssumedSizeSpec
+  ExplicitShapeSpecList ',' LowerBound ':' '*'          -> AssumedSizeSpec
+
+%%R519
+  LblDef 'intent' '(' IntentSpec ')' ':' ':' IntentParList EOS  -> IntentStmt
+  LblDef 'intent' '(' IntentSpec ')' IntentParList EOS          -> IntentStmt
+  {IntentPar ","}+                                              -> IntentParList
+  DummyArgName                                                  -> IntentPar
+
+%%R520
+  LblDef 'optional' ':' ':' OptionalParList EOS         -> OptionalStmt
+  LblDef 'optional' OptionalParList EOS                 -> OptionalStmt
+  {OptionalPar ","}+                                    -> OptionalParList
+  DummyArgName                                          -> OptionalPar
+
+%%R521
+  LblDef AccessSpec ':' ':' AccessIdList EOS            -> AccessStmt
+  LblDef AccessSpec AccessIdList? EOS                   -> AccessStmt
+
+%%R522
+  {AccessId ","}+               -> AccessIdList
+  GenericName                   -> AccessId
+  GenericSpec                   -> AccessId
+
+%%R523 see 26
+  LblDef 'save' ':' ':' SavedEntityList EOS             -> SaveStmt
+  LblDef 'save' SavedEntityList? EOS                    -> SaveStmt
+
+%%R524
+  {SavedEntity ","}+            -> SavedEntityList
+  VariableName                  -> SavedEntity
+  '/' CommonBlockName '/'       -> SavedEntity
+
+%%R525
+  LblDef 'dimension' ':' ':' ArrayDeclaratorList EOS    -> DimensionStmt
+  LblDef 'dimension' ArrayDeclaratorList EOS            -> DimensionStmt
+
+  {ArrayDeclarator ","}+                                -> ArrayDeclaratorList
+  VariableName '(' ArraySpec ')'                        -> ArrayDeclarator
+
+%%R526
+  LblDef 'allocatable' ':' ':' ArrayAllocationList EOS  -> AllocatableStmt
+  LblDef 'allocatable' ArrayAllocationList EOS          -> AllocatableStmt
+  {ArrayAllocation ","}+                                -> ArrayAllocationList
+  ArrayName ( '(' DeferredShapeSpecList ')' )?          -> ArrayAllocation
+
+%%R527
+  LblDef 'pointer' ':' ':' PointerStmtObjectList EOS    -> PointerStmt
+  LblDef 'pointer' PointerStmtObjectList EOS            -> PointerStmt
+  {PointerStmtObject ","}+                              -> PointerStmtObjectList
+  ObjectName                                            -> PointerStmtObject
+  ObjectName '(' DeferredShapeSpecList ')'              -> PointerStmtObject
+
+%%R528
+  LblDef 'target' ':' ':' TargetObjectList EOS          -> TargetStmt
+  LblDef 'target' TargetObjectList EOS                  -> TargetStmt
+  {TargetObject ","}+                                   -> TargetObjectList
+  ObjectName                                            -> TargetObject
+  ObjectName '(' ArraySpec ')'                          -> TargetObject
+
+%%R529
+  LblDef 'data' Datalist EOS                            -> DataStmt
+  {DataStmtSet ","}+                                    -> Datalist
+
+%%R530
+  DataStmtObjectList '/' DataStmtValueList '/'          -> DataStmtSet
+
+%%R531
+  {DataStmtObject ","}+                                 -> DataStmtObjectList
+  Variable                                              -> DataStmtObject
+  DataImpliedDo                                         -> DataStmtObject
+
+%%R532
+  {DataStmtValue ","}+                                          -> DataStmtValueList
+  Constant                                                      -> DataStmtValue
+%%TODO  @<Scalar Integer Literal Constant@> '*' Constant        -> DataStmtValue
+  NamedConstantUse '*' Constant                                 -> DataStmtValue
+
+%%R533 see 100
+  StructureConstructor                  -> Constant
+  BozLiteralConstant                    -> Constant
+
+%%R535
+  '(' DataIDoObjectList ',' ImpliedDoVariable '=' Expr ',' Expr (',' Expr)? ')' -> DataImpliedDo
+
+%%R536
+  {DataIDoObject ","}+                  -> DataIDoObjectList
+  ArrayElement                          -> DataIDoObject
+  DataImpliedDo                         -> DataIDoObject
+  StructureComponent                    -> DataIDoObject
+
+%%R538
+  LblDef 'parameter' '(' NamedConstantDefList ')' EOS  -> ParameterStmt
+
+%%R539
+%% original iso: named-constant-def is named-constant = initialization-expr
+  {NamedConstantDef ","}+                       -> NamedConstantDefList
+  NamedConstant '=' Expr                        -> NamedConstantDef
+
+%%R540
+  LblDef 'implicit' 'none' EOS                  -> ImplicitStmt
+  LblDef 'implicit' {ImplicitSpec ","}+ EOS     -> ImplicitStmt
+
+%%541
+  TypeSpec "(" {LetterSpec ","}+ ")"            -> ImplicitSpec
+  Letter ( "-" Letter )?                        -> LetterSpec
+
+%%R543
+%% todo: Use SDF notation.
+%%  LblDef 'namelist' NamelistGroups  EOS                               -> NamelistStmt
+%%                      '/' NamelistGroupName '/' NamelistGroupObject   -> NamelistGroups
+%%  NamelistGroups ','? '/' NamelistGroupName '/' NamelistGroupObject   -> NamelistGroups
+%%  NamelistGroups ',' NamelistGroupObject                              -> NamelistGroups
+  LblDef 'namelist' NamelistGroup ( ','? NamelistGroup)*  EOS           -> NamelistStmt
+  '/' NamelistGroupName '/' {NamelistGroupObject ","}+                  -> NamelistGroup
+
+%%R544
+  VariableName                                                  -> NamelistGroupObject
+
+%%R545
+  LblDef 'equivalence' EquivalenceSetList EOS                   -> EquivalenceStmt
+
+%%R546
+  {EquivalenceSet ","}+                                         -> EquivalenceSetList
+  '(' EquivalenceObject "," {EquivalenceObject ","}+ ')'        -> EquivalenceSet
+
+%%R547 Note: Variable includes Substring variables %% TODO: check EqObject def substring,arrayname?
+  ArrayName                                     -> EquivalenceObject
+  Variable                                      -> EquivalenceObject
+
+%%R548
+%%  LblDef 'common' Comlist EOS                 -> CommonStmt
+%%  CommonBlockObject                           -> Comlist
+%%  Comblock CommonBlockObject                  -> Comlist
+%%  Comlist ',' CommonBlockObject               -> Comlist
+%%  Comlist Comblock CommonBlockObject          -> Comlist
+%%  Comlist ',' Comblock CommonBlockObject      -> Comlist
+%%  '/' '/'                                     -> Comblock
+%%  '/' CommonBlockName '/'                     -> Comblock
+  LblDef 'common' Comblock? CommonBlockObjectList (','? Comblock CommonBlockObjectList)* EOS    -> CommonStmt
+  '/' CommonBlockName? '/'                                                                      -> Comblock
+
+%%R549
+%%todo: check if this can be reverted to 
+%%      original iso def: CommonBlockObject is VariableName [(ExplicitShapeSpecList)]
+  VariableName                                  -> CommonBlockObject
+  ArrayDeclarator                               -> CommonBlockObject
+  {CommonBlockObject ","}+                      -> CommonBlockObjectList
+

@@ -1,0 +1,75 @@
+%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R11xx ProgramUnits
+%%%%%%%%%
+
+module languages/fortran/syntax/R1100ProgramUnits
+
+imports
+  languages/fortran/syntax/FortranLex
+  languages/fortran/syntax/Fortran90
+
+exports
+
+sorts
+  BlockDataBody BlockDataBodyConstruct BlockDataName BlockDataStmt BlockDataSubprogram EndBlockDataStmt
+  EndModuleStmt EndProgramStmt Module ModuleBody ModuleName ModuleStmt
+  Only OnlyList ProgramStmt Rename RenameList UseName UseStmt    
+
+context-free syntax
+
+%%R1102
+  LblDef 'program' ProgramName EOS              -> ProgramStmt
+
+%%R1103
+  LblDef 'end' EOS                              -> EndProgramStmt
+  LblDef 'end' 'program' EndName? EOS           -> EndProgramStmt
+
+%%R1104
+  ModuleStmt ModuleBody EndModuleStmt           -> Module
+  ModuleStmt EndModuleStmt                      -> Module
+  SpecificationPartConstruct                    -> ModuleBody
+  ModuleSubprogramPartConstruct                 -> ModuleBody
+  ModuleBody SpecificationPartConstruct         -> ModuleBody
+  ModuleBody ModuleSubprogramPartConstruct      -> ModuleBody
+
+%%R1105
+  LblDef 'module' ModuleName EOS                -> ModuleStmt
+%% alias
+  Ident  -> ModuleName
+
+%%R1106
+  LblDef 'end' EOS                              -> EndModuleStmt
+  LblDef 'end' 'module' EndName? EOS            -> EndModuleStmt
+
+%%R1107
+  LblDef 'use' Name ( ',' RenameList )? EOS             -> UseStmt
+  LblDef 'use' Name ',' 'only' ':' OnlyList? EOS        -> UseStmt
+  {Rename ","}+                                         -> RenameList
+  {Only  ","}+                                          -> OnlyList
+
+%%R1108
+  Ident '=>' UseName                            -> Rename
+
+%% aliases
+  Ident  -> UseName
+  Ident  -> BlockDataName
+ 
+
+%%R1109
+  GenericSpec                                   -> Only
+  ( Ident '=>' )? UseName                       -> Only
+
+%%R1110
+  BlockDataStmt BlockDataBody EndBlockDataStmt          -> BlockDataSubprogram
+  BlockDataStmt EndBlockDataStmt                        -> BlockDataSubprogram
+
+  BlockDataBodyConstruct+       -> BlockDataBody
+  SpecificationPartConstruct    -> BlockDataBodyConstruct
+
+%%R1111 
+  LblDef 'block' 'data' BlockDataName? EOS      -> BlockDataStmt
+
+%%R1112
+  LblDef 'end' 'block' 'data' EndName? EOS      -> EndBlockDataStmt
+  LblDef 'end' EOS                              -> EndBlockDataStmt
+
