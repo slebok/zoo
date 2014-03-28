@@ -1,0 +1,1717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  targetNamespace="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <!--======================================================================-->
+  <!--===== DO NOT EDIT! THIS IS A GENERATED FILE ==========================-->
+  <!--======================================================================-->
+  <!-- Generated from the XUL Planet's Elements Reference. 
+                   See http://mozilla.doslash.org/xulschema for more info -->
+  <!--======================================================================-->
+  <!-- This file defines common XUL attributes and events -->
+  <!-- 
+    ...but let's declare a few simple types first:
+  -->
+  <!-- boolType is used instead of xs:boolean to make XML editors show true/false dropdown -->
+  <xs:simpleType name="boolType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- scriptType is for inline script code, that often occurs in on* attributes -->
+  <xs:simpleType name="scriptType">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <!-- 
+    Common (i.e. not specific to a few) XUL attributes. These are all sticked into XULElement attributes
+    on XulPlanet.com, we are more restrictive about this. While certain combinations allowed by the schema
+    may not make sense, it's still better than allowing all of XULElement attributes on all XUL elements.
+            
+    There are a few groups of attributes declared below. 
+      IdAttributeGroup     (used solely for overlayElementType)
+      CommonAttributeGroup (also includes IdAttributeGroup)
+      XULAttributeGroup = CommonAttributeGroup + OverlayAttributeGroup + RDFAttributeGroup 
+      BoxAttributeGroup
+      ContainerAttributeGroup
+      EventHandlerAttributeGroup
+    The last three don't include any attributeGroups, so generally a XUL element includes one to four 
+    of the following attribute groups: XULAttributeGroup, BoxAttributeGroup, ContainerAttributeGroup.             
+  -->
+  <!--
+     Attributes that make sense for *all* XUL elements - that is, to info elements too
+   -->
+  <xs:attributeGroup name="IdAttributeGroup">
+    <xs:attribute name="id"/>
+    <xs:attribute name="class" type="xs:string"/>
+  </xs:attributeGroup>
+  <xs:attributeGroup name="CommonAttributeGroup">
+    <xs:attributeGroup ref="xul:IdAttributeGroup"/>
+    <xs:attribute name="observes"/>
+    <xs:attribute name="ordinal" type="xs:int"/>
+    <xs:attribute name="persist"/>
+  </xs:attributeGroup>
+  <!-- 
+     And these make sense for any element in an overlay 
+   -->
+  <xs:attributeGroup name="OverlayAttributeGroup">
+    <xs:attribute name="insertafter"/>
+    <xs:attribute name="insertbefore"/>
+    <xs:attribute name="position" type="xs:int"/>
+    <xs:attribute name="removeelement"/>
+  </xs:attributeGroup>
+  <!-- 
+     Attributes used with XUL templates (xxx TBD) 
+   -->
+  <xs:attributeGroup name="RDFAttributeGroup">
+    <xs:attribute name="allownegativeassertions" type="xul:boolType"/>
+    <xs:attribute name="coalesceduplicatearcs" type="xul:boolType"/>
+    <xs:attribute name="container" type="xul:boolType"/>
+    <xs:attribute name="containment"/>
+    <xs:attribute name="datasources"/>
+    <xs:attribute name="empty" type="xul:boolType"/>
+    <xs:attribute name="flags">
+      <xs:simpleType>
+        <xs:list>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="dont-test-empty"/>
+              <xs:enumeration value="dont-build-content"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:list>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="ref"/>
+    <xs:attribute name="sortDirection">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ascending"/>
+          <xs:enumeration value="descending"/>
+          <xs:enumeration value="natural"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="sortResource"/>
+    <xs:attribute name="sortResource2"/>
+    <xs:attribute name="template"/>
+    <xs:attribute name="uri" type="xs:string"/>
+  </xs:attributeGroup>
+  <!-- 
+      This group combines all of the above. These attributes apply to almost all XUL elements
+    -->
+  <xs:attributeGroup name="XULAttributeGroup">
+    <xs:attributeGroup ref="xul:CommonAttributeGroup"/>
+    <xs:attributeGroup ref="xul:OverlayAttributeGroup"/>
+  </xs:attributeGroup>
+  <!-- 
+      These make sense for any visible element 
+    -->
+  <xs:attributeGroup name="BoxAttributeGroup">
+    <xs:attribute name="collapsed" type="xul:boolType"/>
+    <xs:attribute name="hidden" type="xul:boolType"/>
+    <xs:attribute name="flex" type="xs:int"/>
+    <xs:attribute name="context"/>
+    <xs:attribute name="contextmenu"/>
+    <xs:attribute name="menu"/>
+    <xs:attribute name="popup"/>
+    <xs:attribute name="tooltip"/>
+    <xs:attribute name="tooltiptext" type="xs:string"/>
+    <xs:attribute name="debug" type="xul:boolType"/>
+    <xs:attribute name="statustext" type="xs:string"/>
+    <xs:attribute name="style"/>
+    <xs:attribute name="wait-cursor"/>
+    <xs:attribute name="top" type="xs:int"/>
+    <xs:attribute name="left" type="xs:int"/>
+    <xs:attribute name="height" type="xs:int"/>
+    <xs:attribute name="maxheight" type="xs:int"/>
+    <xs:attribute name="maxwidth" type="xs:int"/>
+    <xs:attribute name="minheight" type="xs:int"/>
+    <xs:attribute name="minwidth" type="xs:int"/>
+    <xs:attribute name="width" type="xs:int"/>
+  </xs:attributeGroup>
+  <!-- 
+      These Attributes affect the children of the element, therefore 
+      they only apply to container elements 
+    -->
+  <xs:attributeGroup name="ContainerAttributeGroup">
+    <xs:attribute name="align">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="start"/>
+          <xs:enumeration value="center"/>
+          <xs:enumeration value="end"/>
+          <xs:enumeration value="baseline"/>
+          <xs:enumeration value="stretch"/>
+          <!--deprecated attribute value left omitted-->
+          <!--deprecated attribute value center omitted-->
+          <!--deprecated attribute value right omitted-->
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="allowevents" type="xul:boolType"/>
+    <xs:attribute name="dir">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ltr"/>
+          <xs:enumeration value="rtl"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="equalsize">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="always"/>
+          <xs:enumeration value="never"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="mousethrough">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="always"/>
+          <xs:enumeration value="never"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="orient">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="horizontal"/>
+          <xs:enumeration value="vertical"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="pack">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="start"/>
+          <xs:enumeration value="center"/>
+          <xs:enumeration value="end"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <!-- 
+      Common XUL events
+    -->
+  <xs:attributeGroup name="EventHandlerAttributeGroup">
+    <xs:attribute type="xul:scriptType" name="onblur"/>
+    <xs:attribute type="xul:scriptType" name="onbroadcast"/>
+    <xs:attribute type="xul:scriptType" name="onchange"/>
+    <xs:attribute type="xul:scriptType" name="onclick"/>
+    <xs:attribute type="xul:scriptType" name="onclose"/>
+    <xs:attribute type="xul:scriptType" name="oncommand"/>
+    <xs:attribute type="xul:scriptType" name="oncommandupdate"/>
+    <xs:attribute type="xul:scriptType" name="oncontextmenu"/>
+    <xs:attribute type="xul:scriptType" name="ondblclick"/>
+    <xs:attribute type="xul:scriptType" name="ondragdrop"/>
+    <xs:attribute type="xul:scriptType" name="ondragenter"/>
+    <xs:attribute type="xul:scriptType" name="ondragexit"/>
+    <xs:attribute type="xul:scriptType" name="ondraggesture"/>
+    <xs:attribute type="xul:scriptType" name="ondragover"/>
+    <xs:attribute type="xul:scriptType" name="onfocus"/>
+    <xs:attribute type="xul:scriptType" name="oninput"/>
+    <xs:attribute type="xul:scriptType" name="onkeydown"/>
+    <xs:attribute type="xul:scriptType" name="onkeypress"/>
+    <xs:attribute type="xul:scriptType" name="onkeyup"/>
+    <xs:attribute type="xul:scriptType" name="onload"/>
+    <xs:attribute type="xul:scriptType" name="onmousedown"/>
+    <xs:attribute type="xul:scriptType" name="onmousemove"/>
+    <xs:attribute type="xul:scriptType" name="onmouseout"/>
+    <xs:attribute type="xul:scriptType" name="onmouseover"/>
+    <xs:attribute type="xul:scriptType" name="onmouseup"/>
+    <xs:attribute type="xul:scriptType" name="onoverflow"/>
+    <xs:attribute type="xul:scriptType" name="onoverflowchanged"/>
+    <xs:attribute type="xul:scriptType" name="onpopuphidden"/>
+    <xs:attribute type="xul:scriptType" name="onpopuphiding"/>
+    <xs:attribute type="xul:scriptType" name="onpopupshowing"/>
+    <xs:attribute type="xul:scriptType" name="onpopupshown"/>
+    <xs:attribute type="xul:scriptType" name="onselect"/>
+    <xs:attribute type="xul:scriptType" name="onunderflow"/>
+    <xs:attribute type="xul:scriptType" name="onunload"/>
+  </xs:attributeGroup>
+  <!-- This file contains the list of XUL elements with descriptions -->
+  <xs:element name="action">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:actionElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="arrowscrollbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:arrowscrollboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="bbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:bboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="binding">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:bindingElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="bindings">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:bindingsElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="box">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:boxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="broadcaster">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:broadcasterElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="broadcasterset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:broadcastersetElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="browser">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:browserElementType">
+          <xs:attribute name="autocompleteenabled" type="xul:boolType"/>
+          <xs:attribute name="autocompletepopup"/>
+          <xs:attribute name="autoscroll" type="xul:boolType"/>
+          <xs:attribute name="disablehistory" type="xul:boolType"/>
+          <xs:attribute name="disablesecurity" type="xul:boolType"/>
+          <xs:attribute name="homepage"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="type" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="button">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:buttonElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="autoCheck" type="xul:boolType"/>
+          <xs:attribute name="checkState"/>
+          <xs:attribute name="checked" type="xul:boolType"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="dlgType">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="accept"/>
+                <xs:enumeration value="cancel"/>
+                <xs:enumeration value="help"/>
+                <xs:enumeration value="disclosure"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="group"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="open" type="xul:boolType"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="checkbox"/>
+                <xs:enumeration value="menu"/>
+                <xs:enumeration value="menu-button"/>
+                <xs:enumeration value="radio"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="caption">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:captionElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="checkbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:checkboxElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="checked" type="xul:boolType"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="colorpicker">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:colorpickerElementType">
+          <xs:attribute name="color"/>
+          <xs:attribute name="type" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="column">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:columnElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="columns">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:columnsElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="command">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:commandElementType">
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="label" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="commandset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:commandsetElementType">
+          <xs:attribute name="commandupdater" type="xul:boolType"/>
+          <xs:attribute name="events">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="focus"/>
+                <xs:enumeration value="select"/>
+                <xs:enumeration value="clipboard"/>
+                <xs:enumeration value="undo"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="targets"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="conditions">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:conditionsElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="content">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:contentElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deck">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:deckElementType">
+          <xs:attribute name="selectedIndex" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="description">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:descriptionElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dialog">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:dialogElementType">
+          <xs:attribute name="buttonalign" type="xs:string"/>
+          <xs:attribute name="buttondir" type="xs:string"/>
+          <xs:attribute name="buttonorient" type="xs:string"/>
+          <xs:attribute name="buttonpack" type="xs:string"/>
+          <xs:attribute name="buttons">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="accept"/>
+                <xs:enumeration value="cancel"/>
+                <xs:enumeration value="help"/>
+                <xs:enumeration value="disclosure"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="ondialogaccept"/>
+          <xs:attribute name="ondialogcancel"/>
+          <xs:attribute name="ondialogdisclosure"/>
+          <xs:attribute name="ondialoghelp"/>
+          <xs:attribute name="title" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dialogheader">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:dialogheaderElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="description" type="xs:string"/>
+          <xs:attribute name="title" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="editor">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:editorElementType">
+          <xs:attribute name="editortype">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="html"/>
+                <xs:enumeration value="text"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="src"/>
+          <xs:attribute name="type" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="grid">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:gridElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="groupbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:groupboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="hbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:hboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="iframe">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:iframeElementType">
+          <xs:attribute name="src"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="image">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:imageElementType">
+          <xs:attribute name="onerror"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="validate">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="always"/>
+                <xs:enumeration value="never"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="key">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:keyElementType">
+          <xs:attribute name="command"/>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="key"/>
+          <xs:attribute name="keycode"/>
+          <xs:attribute name="keytext" type="xs:string"/>
+          <xs:attribute name="modifiers">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="shift"/>
+                <xs:enumeration value="alt"/>
+                <xs:enumeration value="meta"/>
+                <xs:enumeration value="control"/>
+                <xs:enumeration value="accel"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="phase" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="keyset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:keysetElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="label">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:labelElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="control"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listboxElementType">
+          <xs:attribute name="disableKeyNavigation" type="xul:boolType"/>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="rows" type="xs:int"/>
+          <xs:attribute name="seltype">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="single"/>
+                <xs:enumeration value="multiple"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="suppressonselect" type="xul:boolType"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listcell">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listcellElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="type" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listcol">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listcolElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listcols">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listcolsElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listhead">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listheadElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listheader">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listheaderElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="label" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="listitem">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:listitemElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="checked" type="xul:boolType"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="current" type="xul:boolType"/>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="selected" type="xul:boolType"/>
+          <xs:attribute name="type" type="xs:string"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="member">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:memberElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menu">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menuElementType">
+          <xs:attribute name="acceltext" type="xs:string"/>
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="key"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="menuactive" type="xul:boolType"/>
+          <xs:attribute name="open" type="xul:boolType"/>
+          <xs:attribute name="sizetopopup">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="always"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menubar">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menubarElementType">
+          <xs:attribute name="accessible"/>
+          <xs:attribute name="statusbar"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menuitem">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menuitemElementType">
+          <xs:attribute name="acceltext" type="xs:string"/>
+          <xs:attribute name="accessible"/>
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="autocheck"/>
+          <xs:attribute name="checked" type="xul:boolType"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="key"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="name"/>
+          <xs:attribute name="selected" type="xul:boolType"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="checkbox"/>
+                <xs:enumeration value="radio"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="validate">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="always"/>
+                <xs:enumeration value="never"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menulist">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menulistElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disableautoselect" type="xul:boolType"/>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="editable" type="xul:boolType"/>
+          <xs:attribute name="focused" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="open" type="xul:boolType"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menupopup">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menupopupElementType">
+          <xs:attribute name="ignorekeys" type="xul:boolType"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="menuseparator">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:menuseparatorElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="observes">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:observesElementType">
+          <xs:attribute name="attribute"/>
+          <xs:attribute name="element"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="overlay">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:overlayElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="page">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:pageElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="popup">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:popupElementType">
+          <xs:attribute name="ignorekeys" type="xul:boolType"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="popupset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:popupsetElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="progressmeter">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:progressmeterElementType">
+          <xs:attribute name="mode">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="determined"/>
+                <xs:enumeration value="undetermined"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="value"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="radio">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:radioElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="focused" type="xul:boolType"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="selected" type="xul:boolType"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="radiogroup">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:radiogroupElementType">
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="focused" type="xul:boolType"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="value" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="resizer">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:resizerElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="row">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:rowElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rows">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:rowsElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="rule">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:ruleElementType">
+          <xs:attribute name="iscontainer">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="true"/>
+                <xs:enumeration value="false"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="isempty">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="true"/>
+                <xs:enumeration value="false"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="parent"/>
+          <xs:attribute name="parsetype" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="script">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:scriptElementType">
+          <xs:attribute name="src"/>
+          <xs:attribute name="type"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="scrollbar">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:scrollbarElementType">
+          <xs:attribute name="curpos" type="xs:int"/>
+          <xs:attribute name="increment" type="xs:int"/>
+          <xs:attribute name="maxpos" type="xs:int"/>
+          <xs:attribute name="pageincrement" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="scrollbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:scrollboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="separator">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:separatorElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spacer">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:spacerElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="splitter">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:splitterElementType">
+          <xs:attribute name="collapse">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="none"/>
+                <xs:enumeration value="before"/>
+                <xs:enumeration value="after"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="resizeafter">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="closest"/>
+                <xs:enumeration value="farthest"/>
+                <xs:enumeration value="grow"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="resizebefore">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="closest"/>
+                <xs:enumeration value="farthest"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="state">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="open"/>
+                <xs:enumeration value="collapsed"/>
+                <xs:enumeration value="dragging"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stack">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:stackElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="statusbar">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:statusbarElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="statusbarpanel">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:statusbarpanelElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="src"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stringbundle">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:stringbundleElementType">
+          <xs:attribute name="src"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="stringbundleset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:stringbundlesetElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tab">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="afterselected" type="xul:boolType"/>
+          <xs:attribute name="beforeselected" type="xul:boolType"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="linkedpanel"/>
+          <xs:attribute name="selected" type="xul:boolType"/>
+          <xs:attribute name="validate">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="always"/>
+                <xs:enumeration value="never"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tabbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabboxElementType">
+          <xs:attribute name="eventnode">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="parent"/>
+                <xs:enumeration value="window"/>
+                <xs:enumeration value="document"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="handleCtrlPageUpDown" type="xul:boolType"/>
+          <xs:attribute name="handleCtrlTab" type="xul:boolType"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tabbrowser">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabbrowserElementType">
+          <xs:attribute name="autocompleteenabled" type="xul:boolType"/>
+          <xs:attribute name="autocompletepopup"/>
+          <xs:attribute name="autoscroll" type="xul:boolType"/>
+          <xs:attribute name="contentcontextmenu"/>
+          <xs:attribute name="contenttooltip"/>
+          <xs:attribute name="handleCtrlPageUpDown" type="xul:boolType"/>
+          <xs:attribute name="onbookmarkgroup"/>
+          <xs:attribute name="onnewtab"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tabpanel">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabpanelElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tabpanels">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabpanelsElementType">
+          <xs:attribute name="selectedIndex" type="xs:int"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tabs">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tabsElementType">
+          <xs:attribute name="closebutton" type="xul:boolType"/>
+          <xs:attribute name="disableclose" type="xul:boolType"/>
+          <xs:attribute name="first-tab" type="xul:boolType"/>
+          <xs:attribute name="last-tab" type="xul:boolType"/>
+          <xs:attribute name="onclosetab"/>
+          <xs:attribute name="onnewtab"/>
+          <xs:attribute name="setfocus" type="xul:boolType"/>
+          <xs:attribute name="tooltiptextnew" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="template">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:templateElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="textbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:textboxElementType">
+          <xs:attribute name="cols" type="xs:int"/>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="maxlength" type="xs:int"/>
+          <xs:attribute name="multiline" type="xul:boolType"/>
+          <xs:attribute name="readonly" type="xul:boolType"/>
+          <xs:attribute name="rows" type="xs:int"/>
+          <xs:attribute name="size" type="xs:int"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="timeout" type="xs:int"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="autocomplete"/>
+                <xs:enumeration value="password"/>
+                <xs:enumeration value="timed"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="value" type="xs:string"/>
+          <xs:attribute name="wrap" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="textnode">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:textnodeElementType">
+          <xs:attribute name="value"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="titlebar">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:titlebarElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbar">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarElementType">
+          <xs:attribute name="currentset"/>
+          <xs:attribute name="customindex"/>
+          <xs:attribute name="customizable"/>
+          <xs:attribute name="defaultset"/>
+          <xs:attribute name="grippytooltiptext" type="xs:string"/>
+          <xs:attribute name="toolbarname"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarbutton">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarbuttonElementType">
+          <xs:attribute name="accesskey"/>
+          <xs:attribute name="autoCheck" type="xul:boolType"/>
+          <xs:attribute name="checkState"/>
+          <xs:attribute name="checked" type="xul:boolType"/>
+          <xs:attribute name="command"/>
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="disabled" type="xul:boolType"/>
+          <xs:attribute name="dlgType">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="accept"/>
+                <xs:enumeration value="cancel"/>
+                <xs:enumeration value="help"/>
+                <xs:enumeration value="disclosure"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="group"/>
+          <xs:attribute name="image"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="open" type="xul:boolType"/>
+          <xs:attribute name="tabindex" type="xs:int"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="menu"/>
+                <xs:enumeration value="menu-button"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="validate">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="always"/>
+                <xs:enumeration value="never"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbaritem">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbaritemElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarpalette">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarpaletteElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarseparator">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarseparatorElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarset">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarsetElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarspacer">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarspacerElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbarspring">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolbarspringElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="toolbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:toolboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tooltip">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tooltipElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="default" type="xul:boolType"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="noautohide" type="xul:boolType"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="tree">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treeElementType">
+          <xs:attribute name="alternatingbackground" type="xul:boolType"/>
+          <xs:attribute name="disableKeyNavigation" type="xul:boolType"/>
+          <xs:attribute name="enableColumnDrag" type="xul:boolType"/>
+          <xs:attribute name="hidecolumnpicker" type="xul:boolType"/>
+          <xs:attribute name="rows" type="xs:int"/>
+          <xs:attribute name="seltype">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="single"/>
+                <xs:enumeration value="multiple"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="statedatasource"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treecell">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treecellElementType">
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="mode">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="none"/>
+                <xs:enumeration value="normal"/>
+                <xs:enumeration value="undetermined"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="properties"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="value"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treechildren">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treechildrenElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treecol">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treecolElementType">
+          <xs:attribute name="crop">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="start"/>
+                <xs:enumeration value="end"/>
+                <!--deprecated attribute value left omitted-->
+                <!--deprecated attribute value right omitted-->
+                <xs:enumeration value="center"/>
+                <xs:enumeration value="none"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="cycler" type="xul:boolType"/>
+          <xs:attribute name="dragging" type="xul:boolType"/>
+          <xs:attribute name="fixed" type="xul:boolType"/>
+          <xs:attribute name="hideheader" type="xul:boolType"/>
+          <xs:attribute name="ignoreincolumnpicker" type="xul:boolType"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="primary" type="xul:boolType"/>
+          <xs:attribute name="sort"/>
+          <xs:attribute name="sortActive" type="xul:boolType"/>
+          <xs:attribute name="src"/>
+          <xs:attribute name="type">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="checkbox"/>
+                <xs:enumeration value="progressmeter"/>
+                <xs:enumeration value="text"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treecols">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treecolsElementType">
+          <xs:attribute name="pickertooltiptext" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treeitem">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treeitemElementType">
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="open" type="xul:boolType"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treerow">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treerowElementType">
+          <xs:attribute name="properties"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="treeseparator">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:treeseparatorElementType">
+          <xs:attribute name="properties"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="triple">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:tripleElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="vbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:vboxElementType"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="window">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:windowElementType">
+          <xs:attribute name="hidechrome" type="xul:boolType"/>
+          <xs:attribute name="screenX" type="xs:int"/>
+          <xs:attribute name="screenY" type="xs:int"/>
+          <xs:attribute name="sizemode">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="maximized"/>
+                <xs:enumeration value="minimized"/>
+                <xs:enumeration value="normal"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+          <xs:attribute name="title" type="xs:string"/>
+          <xs:attribute name="windowtype" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="wizard">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:wizardElementType">
+          <xs:attribute name="firstpage" type="xul:boolType"/>
+          <xs:attribute name="lastpage" type="xul:boolType"/>
+          <xs:attribute name="onwizardback"/>
+          <xs:attribute name="onwizardcancel"/>
+          <xs:attribute name="onwizardfinish"/>
+          <xs:attribute name="onwizardnext"/>
+          <xs:attribute name="pagestep" type="xs:int"/>
+          <xs:attribute name="title" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="wizardpage">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="xul:wizardpageElementType">
+          <xs:attribute name="description" type="xs:string"/>
+          <xs:attribute name="label" type="xs:string"/>
+          <xs:attribute name="next"/>
+          <xs:attribute name="onpageadvanced"/>
+          <xs:attribute name="onpagehide"/>
+          <xs:attribute name="onpagerewound"/>
+          <xs:attribute name="onpageshow"/>
+          <xs:attribute name="pageid"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   ***** BEGIN LICENSE BLOCK *****
+   Version: MPL 1.1
+   
+   The contents of this file are subject to the Mozilla Public License Version
+   1.1 (the "License"); you may not use this file except in compliance with
+   the License. You may obtain a copy of the License at
+   http://www.mozilla.org/MPL/
+   
+   Software distributed under the License is distributed on an "AS IS" basis,
+   WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   for the specific language governing rights and limitations under the
+   License.
+   
+   The Original Code is the XUL Schema.
+   
+   The Initial Developer of the Original Code is Nickolay Ponomarev.
+   Portions created by the Initial Developer are Copyright (C) 2005
+   the Initial Developer. All Rights Reserved.
+   
+   Contributor(s):
+     Franklin de Graaf (original XULMaker's XUL Schema)
+     Nickolay Ponomarev <asqueella@gmail.com>
+   
+   ***** END LICENSE BLOCK *****
+-->
+
+<!--
+   This file specifies types and possible children for XUL elements. It is used 
+   in XUL Schema generation.
+
+   It is based on XUL Schema by Franklin de Graaf, which is 
+   (C) 2003 X-Power Computing Group Inc.
+   Franklin generously permitted this to be based on his schema.
+
+   Please see http://mozilla.doslash.org/xulschema for more information.
+ -->
+<elements xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!-- ================================================================================= -->
+  <!-- Informational elements                                                            -->
+  <!-- ================================================================================= -->
+  <type name="Info">
+    <element name="broadcasterset">
+      <zeroOrMore>
+        <element ref="broadcaster"/>
+      </zeroOrMore>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="commandset">
+      <zeroOrMore>
+        <element ref="command"/>
+      </zeroOrMore>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="keyset">
+      <zeroOrMore>
+        <element ref="key"/>
+      </zeroOrMore>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="popupset">
+      <zeroOrMore>
+        <element ref="popup"/>
+        <element ref="menupopup"/>
+      </zeroOrMore>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="stringbundleset">
+      <zeroOrMore>
+        <element ref="stringbundle"/>
+      </zeroOrMore>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="broadcaster"/>
+    <element name="command"/>
+    <element name="key"/>
+    <element name="observes"/>
+    <element name="stringbundle"/>
+    <element name="script"/>
+  </type>
+  <!-- ================================================================================= -->
+  <!-- Generic container elements                                                        -->
+  <!-- ================================================================================= -->
+  <type name="GenericContainer">
+    <element name="arrowscrollbox"/>
+    <element name="bbox"/>
+    <element name="box"/>
+    <element name="caption"/>
+    <element name="column"/>
+    <element name="deck"/>
+    <element name="hbox"/>
+    <element name="row"/>
+    <element name="scrollbox"/>
+    <element name="stack"/>
+    <element name="statusbarpanel"/>
+    <element name="tabpanel"/>
+    <element name="toolbaritem"/>
+    <element name="vbox"/>
+    <element name="wizardpage"/>
+    <!-- XXX description should be mixed="true" -->
+    <element name="description"/>
+  </type>
+  <!-- ================================================================================= -->
+  <!-- "Box" elements that can't have any children                                       -->
+  <!-- ================================================================================= -->
+  <type name="Box">
+    <element name="autorepeatbutton"/>
+    <element name="browser"/>
+    <element name="checkbox"/>
+    <element name="colorpicker"/>
+    <element name="dialogheader"/>
+    <element name="editor"/>
+    <element name="iframe"/>
+    <element name="image"/>
+    <element name="label"/>
+    <element name="progressmeter"/>
+    <element name="tabbrowser"/>
+    <element name="textbox"/>
+    <element name="resizer"/>
+    <element name="separator"/>
+    <element name="spacer"/>
+    <element name="splitter"/>
+    <element name="titlebar"/>
+    <element name="tooltip"/>
+    <element name="textnode"/>
+    <element name="listcol"/>
+    <element name="listheader"/>
+    <element name="menuitem"/>
+    <element name="menuseparator"/>
+    <element name="menulist"/>
+    <element name="radio"/>
+    <element name="scrollbarbutton"/>
+    <element name="slider"/>
+    <element name="thumb"/>
+    <element name="tab"/>
+    <!-- xxx is it a box? -->
+    <element name="toolbarbutton"/>
+    <element name="toolbarseparator"/>
+    <element name="toolbarspacer"/>
+    <element name="toolbarspring"/>
+    <element name="treecell"/>
+    <element name="treecol"/>
+    <element name="treeseparator"/>
+  </type>
+  <!-- ================================================================================= -->
+  <!-- XUL Templates-related elements. Consider removing them altogether?                -->
+  <!-- ================================================================================= -->
+  <type name="RDF">
+    <element name="action"/>
+    <element name="binding"/>
+    <element name="bindings"/>
+    <element name="conditions"/>
+    <element name="content"/>
+    <element name="member"/>
+    <element name="rule"/>
+    <element name="template"/>
+    <element name="triple"/>
+  </type>
+  <!-- ================================================================================= -->
+  <!-- Various container elements                                                        -->
+  <!-- ================================================================================= -->
+  <type name="Container">
+    <element name="columns">
+      <zeroOrMore>
+        <element ref="column"/>
+        <element ref="splitter"/>
+      </zeroOrMore>
+    </element>
+    <element name="grid">
+      <choice>
+        <element ref="columns"/>
+        <element ref="rows"/>
+      </choice>
+    </element>
+    <element name="groupbox">
+      <zeroOrMore>
+        <element ref="caption"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </zeroOrMore>
+    </element>
+    <element name="listbox">
+      <sequence>
+        <element ref="listcols" minOccurs="1"/>
+        <element ref="listhead" minOccurs="0"/>
+        <element ref="listitem" minOccurs="1" maxOccurs="unbounded"/>
+      </sequence>
+    </element>
+    <element name="listitem">
+      <choice>
+        <!-- xxx? -->
+        <element ref="listcell" minOccurs="1" maxOccurs="unbounded"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </choice>
+    </element>
+    <element name="menubar">
+      <zeroOrMore>
+        <element ref="menu"/>
+      </zeroOrMore>
+    </element>
+    <element name="menupopup">
+      <zeroOrMore>
+        <element ref="menu"/>
+        <element ref="menuitem"/>
+        <element ref="menuseparator"/>
+      </zeroOrMore>
+    </element>
+    <!-- xul.css says <popup> is deprecated :| -->
+    <element name="popup">
+      <zeroOrMore>
+        <element ref="menu"/>
+        <element ref="menuitem"/>
+        <element ref="menuseparator"/>
+      </zeroOrMore>
+    </element>
+    <element name="radiogroup">
+      <oneOrMore>
+        <element ref="radio"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </oneOrMore>
+    </element>
+    <element name="rows">
+      <oneOrMore>
+        <element ref="row"/>
+      </oneOrMore>
+    </element>
+    <element name="statusbar">
+      <oneOrMore>
+        <element ref="statusbarpanel"/>
+      </oneOrMore>
+    </element>
+    <element name="tabbox">
+      <all>
+        <element ref="tabs"/>
+        <element ref="tabpanels"/>
+      </all>
+    </element>
+    <element name="tabs">
+      <oneOrMore>
+        <element ref="tab"/>
+        <!-- number of tab elements must equal the number of tabpanel elements -->
+      </oneOrMore>
+    </element>
+    <element name="toolbar">
+      <zeroOrMore>
+        <element ref="toolbaritem"/>
+        <element ref="toolbarseparator"/>
+        <element ref="toolbarspacer"/>
+        <element ref="toolbarspring"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </zeroOrMore>
+    </element>
+    <element name="toolbox">
+      <sequence>
+        <!-- xxx -->
+        <element ref="toolbarpalette" minOccurs="0"/>
+        <element ref="toolbarset" minOccurs="0"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </sequence>
+    </element>
+    <element name="treecols">
+      <oneOrMore>
+        <element ref="treecol"/>
+        <element ref="splitter"/>
+      </oneOrMore>
+    </element>
+  </type>
+  <!-- ============================================================== -->
+  <type name="Box">
+    <element name="button">
+      <optional>
+        <element ref="image"/>
+      </optional>
+    </element>
+    <element name="listcell">
+      <!--group ref="BoxContainers"/-->
+    </element>
+    <element name="listcols">
+      <oneOrMore>
+        <element ref="listcol"/>
+      </oneOrMore>
+      <!--attributeGroup ref="Container"/-->
+    </element>
+    <element name="listhead">
+      <oneOrMore>
+        <element ref="listheader"/>
+      </oneOrMore>
+    </element>
+    <element name="menu">
+      <optional>
+        <element ref="menupopup"/>
+      </optional>
+    </element>
+    <element name="scrollbar">
+      <zeroOrMore>
+        <element ref="scrollbarbutton"/>
+        <element ref="slider"/>
+        <element ref="thumb"/>
+      </zeroOrMore>
+    </element>
+    <element name="tabpanels">
+      <oneOrMore>
+        <element ref="tabpanel"/>
+        <!-- number of tabpanel elements must equal the number of tab elements -->
+      </oneOrMore>
+    </element>
+    <!-- xxx is this true? -->
+    <element name="toolbarpalette">
+      <zeroOrMore>
+        <element ref="toolbarbutton"/>
+        <element ref="toolbaritem"/>
+      </zeroOrMore>
+    </element>
+    <element name="toolbarset">
+      <zeroOrMore>
+        <element ref="toolbar"/>
+      </zeroOrMore>
+    </element>
+    <element name="tree">
+      <sequence>
+        <element ref="treecols" minOccurs="0" maxOccurs="1"/>
+        <element ref="treechildren" minOccurs="0" maxOccurs="1"/>
+      </sequence>
+    </element>
+    <element name="treechildren">
+      <oneOrMore>
+        <element ref="treeitem"/>
+        <element ref="treeseparator"/>
+      </oneOrMore>
+    </element>
+    <element name="treeitem">
+      <sequence>
+        <element ref="treerow" minOccurs="1" maxOccurs="unbounded"/>
+        <element ref="treechildren" minOccurs="0" maxOccurs="1"/>
+      </sequence>
+    </element>
+    <element name="treerow">
+      <sequence>
+        <element ref="treecell" minOccurs="1" maxOccurs="unbounded"/>
+      </sequence>
+    </element>
+  </type>
+  <!-- Define some element types -->
+  <definetype name="XUL">
+    <attributeGroup ref="XUL"/>
+  </definetype>
+  <definetype name="RDF"/>
+  <definetype name="TopLevel"/>
+  <definetype name="Info" derive="XUL"/>
+  <definetype name="Box" derive="XUL">
+    <attributeGroup ref="Box"/>
+  </definetype>
+  <!-- base type for containers -->
+  <definetype name="Container" derive="Box">
+    <attributeGroup ref="Container"/>
+  </definetype>
+  <!-- for containers that have standart content - xxx better name -->
+  <definetype name="GenericContainer" derive="Container">
+    <zeroOrMore>
+      <group ref="BoxContainer"/>
+      <group ref="Widget"/>
+    </zeroOrMore>
+  </definetype>
+  <!--
+  **********************************************************************************
+  TopLevel
+  **********************************************************************************
+  -->
+  <type name="TopLevel">
+    <element name="dialog">
+      <zeroOrMore>
+        <!-- dialogheader in fact may be in many places -->
+        <element ref="dialogheader"/>
+        <group ref="InfoContainer"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </zeroOrMore>
+      <attributeGroup ref="XUL"/>
+      <attributeGroup ref="Box"/>
+      <attributeGroup ref="Container"/>
+      <attributeGroup ref="EventHandler"/>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="overlay">
+      <sequence>
+        <any namespace="##targetNamespace" maxOccurs="unbounded" processContents="lax"/>
+      </sequence>
+      <attributeGroup ref="Id"/>
+      <attributeGroup ref="EventHandler"/>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="page">
+      <zeroOrMore>
+        <group ref="InfoContainer"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </zeroOrMore>
+      <attributeGroup ref="XUL"/>
+      <attributeGroup ref="Box"/>
+      <attributeGroup ref="Container"/>
+      <attributeGroup ref="EventHandler"/>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="window">
+      <zeroOrMore>
+        <!-- XXX figure out what's with resizer -->
+        <element ref="resizer"/>
+        <group ref="InfoContainer"/>
+        <group ref="BoxContainer"/>
+        <group ref="Widget"/>
+      </zeroOrMore>
+      <attributeGroup ref="XUL"/>
+      <attributeGroup ref="Box"/>
+      <attributeGroup ref="Container"/>
+      <attributeGroup ref="EventHandler"/>
+    </element>
+    <!-- ================================================================================= -->
+    <element name="wizard">
+      <sequence>
+        <zeroOrMore>
+          <element ref="wizardpage"/>
+          <group ref="InfoContainer"/>
+          <group ref="BoxContainer"/>
+          <group ref="Widget"/>
+        </zeroOrMore>
+      </sequence>
+      <attributeGroup ref="XUL"/>
+      <attributeGroup ref="Box"/>
+      <attributeGroup ref="Container"/>
+      <attributeGroup ref="EventHandler"/>
+    </element>
+  </type>
+  <!-- ********************************************************************************* -->
+  <!--                                                                                   -->
+  <!--                  Basic element groups                                             -->
+  <!--                                                                                   -->
+  <!-- ********************************************************************************* -->
+  <!-- 
+  This is a group of top-level elements that may be root elements of a XUL document. 
+  -->
+  <group name="TopLevel">
+    <choice>
+      <element ref="dialog"/>
+      <element ref="overlay"/>
+      <element ref="page"/>
+      <element ref="window"/>
+      <element ref="wizard"/>
+    </choice>
+  </group>
+  <!-- 
+  This is a group of invisible container elements, which appear as children of a root element.
+  -->
+  <group name="InfoContainer">
+    <choice>
+      <element ref="broadcasterset"/>
+      <element ref="commandset"/>
+      <element ref="keyset"/>
+      <element ref="popupset"/>
+      <element ref="script"/>
+      <element ref="stringbundleset"/>
+      <!-- xxx this is from xul.css, do we need to include this? 
+      element ref="data"/-->
+    </choice>
+  </group>
+  <!-- 
+  This is a group of "generic" or "top level" box containers. "Generic" in the sense that
+  they may be children of elements derived from GenericContainer *xxx this is uncluear*
+  For example, "tabs" is not a "generic" element, because it can only be a child 
+  of "tabbox". 
+  
+  This group of elements always appear in a context where any one of the elements from this 
+  group may appear in any order any number of times.
+  -->
+  <group name="BoxContainer">
+    <choice>
+      <element ref="arrowscrollbox"/>
+      <element ref="bbox"/>
+      <element ref="box"/>
+      <element ref="deck"/>
+      <element ref="grid"/>
+      <element ref="groupbox"/>
+      <element ref="hbox"/>
+      <element ref="menubar"/>
+      <!-- XXX does popup really belong here? -->
+      <element ref="popup"/>
+      <element ref="radiogroup"/>
+      <element ref="scrollbox"/>
+      <element ref="stack"/>
+      <element ref="statusbar"/>
+      <element ref="tabbox"/>
+      <!-- XXX doesn't work yet? 
+      element ref="tabbrowser"/-->
+      <element ref="toolbar"/>
+      <element ref="toolbox"/>
+      <element ref="tooltip"/>
+      <element ref="tree"/>
+      <element ref="vbox"/>
+    </choice>
+  </group>
+  <!-- 
+  Widgets Group 
+  
+  Widget elements may appear in "generic" Box Container Elements and in any one of the
+  specific (non-generic) terminal box container elements.
+  Specific terminal box container elements include: tab, tabpanel listcell, treecell, etc.
+  Although its not a widget, we include the template element here because a template may
+  occur anywhere where a widget may occur.
+  -->
+  <group name="Widget">
+    <choice>
+      <element ref="browser"/>
+      <element ref="button"/>
+      <element ref="checkbox"/>
+      <element ref="colorpicker"/>
+      <element ref="description"/>
+      <element ref="iframe"/>
+      <element ref="label"/>
+      <element ref="listbox"/>
+      <element ref="menulist"/>
+      <element ref="spacer"/>
+      <element ref="splitter"/>
+      <element ref="template"/>
+      <element ref="textbox"/>
+      <element ref="titlebar"/>
+      <element ref="toolbarbutton"/>
+    </choice>
+  </group>
+  <!-- ********************************************************************************* -->
+  <!--                                                                                   -->
+  <!--              Fix us please                                                        -->
+  <!--                                                                                   -->
+  <!-- ********************************************************************************* -->
+  <!-- These are elements that are not defined in the XUL reference -->
+  <defineelement name="autorepeatbutton"/>
+  <defineelement name="scrollbarbutton"/>
+  <defineelement name="slider"/>
+  <defineelement name="thumb"/>
+</elements>
