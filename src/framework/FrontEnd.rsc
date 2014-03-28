@@ -34,7 +34,7 @@ HTML zooval2html(ZooEntry ze, bool debug)
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
 			heading(2, (), _text("<countSize(ze)> grammars and counting")),
 			div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
-			heading(1, (), sectorlinks(ze)),
+			heading(1, (), subsectionlinks(ze)),
 			hr(),
 			*[*lang2html(iz, debug) | iz <- ze.inner],
 			div( ("class":"last"), _seq([strong( (),
@@ -72,11 +72,12 @@ str namemonth(10) = "October";
 str namemonth(11) = "November";
 str namemonth(12) = "December";
 
-BodyElement sectorlinks(ZooEntry z)
+BodyElement subsectionlinks(ZooEntry z)
 {
 	list[BodyElement] res = [];
 	for(ZooEntry sec <- z.inner)
-		res += [ahref( ("href":"#<safe4anchor(txtbykey(sec,"name"))>sector"), _text(txtbykey(sec,"name")) ), _text(" — ")]; 
+		//res += [ahref( ("href":"#<safe4anchor(txtbykey(sec,"name"))>sector"), _text(txtbykey(sec,"name")) ), _text(" — ")]; 
+		res += [ahref( ("href":"#<safe4anchor(sec.where)>"), _text(txtbykey(sec,"name")) ), _text(" — ")];
 	return _seq(res[..-1]);
 }
 
@@ -87,7 +88,20 @@ list[BodyElement] lang2html(ZooEntry z, bool debug) = [
 	hr()
 ];
 
-BodyElement maketoptitle(ZooEntry z) = heading(2, (), _seq([aname("<safe4anchor(txtbykey(z,"name"))>sector"), _text(maketoptitlename(z))]));
+BodyElement maketoptitle(ZooEntry z)
+{
+	//anch = "<safe4anchor(txtbykey(z,"name"))>sector";
+	anch = safe4anchor(z.where);
+	return _seq([heading(2, (), _seq([
+		ahref( ("name":anch, "href":"#<anch>"), _text("(•)")),
+		_text(" "),
+		_text(maketoptitlename(z)),
+		_text(" "),
+		ahref( ("href":"#TOP"), _text("(↑)"))
+	])),
+		heading(2, ("class":"xs"), subsectionlinks(z))
+	]);
+}
 
 str maketoptitlename(ZooEntry z)
 {
@@ -114,14 +128,21 @@ lrel[str,str] getlinks(list[ZooValue] zs) = [makelink(inner) | struct("link", li
 BodyElement maketitle(ZooEntry z)
 {
 	name = txtbykey(z,"name");
+	anch = safe4anchor(z.where);
 	long = txtbykey(z,"long");
-	if (long == "") long = name; else long = "<long> (<name>)";
-	// https://github.com/software-engineering-amsterdam/poly-ql/tree/master/PhilippBeau/IFLessTermFrequency/src/nl/uva/sc/datatypes
-	// https://github.com/grammarware/zoo/tree/master/zoo/
+	if (long == "")
+		long = name;
+	elseif (!isflagset(z,"forgetshort"))
+		long = "<long> (<name>)";
 	lrel[str,str] links = [<"git",framework::BackEnd::gitbasedir+z.where>];
-	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile>/<z.where>/README.txt">;
+	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile><z.where>/README.txt">;
 	links += getlinks(z.meta);
-	return heading(3, (), _seq([aname(safe4anchor(name)), _text(long), makelinks(links) ]));
+	//return heading(3, (), _seq([
+	return span( ("class":"hh"), _seq([
+		ahref( ("name":anch, "href":"#<anch>"), _text("(•)")),
+		_text(" "),
+		_text(long),
+		makelinks(links) ]));
 }
 
 BodyElement src2be(list[ZooValue] zin) = _seq([
@@ -130,22 +151,21 @@ BodyElement src2be(list[ZooValue] zin) = _seq([
 	*[em((),_text("<a>, ")) | keyvalue(k,a) <- zin, k == "title"],
 	*[_text("<a>, ") | keyvalue(k,a) <- zin, k == "subtitle"],
 	*[*[code((),_text(a)),_text(", ")] | keyvalue(k,a) <- zin, k == "file"],
-	*[_text("<th(k)> <k>, ") | keyvalue(k,a) <- zin, k == "version" || k == "edition" || k == "revision"],
-	*[_text(" (<a>)") | keyvalue(k,a) <- zin, k == "date"],
+	*[_text("<th(a,k)>, ") | keyvalue(k,a) <- zin, k == "version" || k == "edition" || k == "revision"],
+	*[_text(a) | keyvalue(k,a) <- zin, k == "venue"],
+	*[_text(" <a>") | keyvalue(k,a) <- zin, k == "date"],
 	*[_text(", <a>") | keyvalue(k,a) <- zin, k == "specific" || k == "also"],
 	makelinks(getlinks(zin))
 ]);
 
-str th("1") = "1st";
-str th("2") = "2nd";
-str th("3") = "3rd";
-default str th(str n) = "<n>th";
+str th("1", str k) = "1st <k>";
+str th("2", str k) = "2nd <k>";
+str th("3", str k) = "3rd <k>";
+str th(n:/^[0-9]+$/ , str k) = "<n>th <k>";
+default str th(str n, str k) = "<k> <n>";
 
 // TODO: fancify tags (links, colours, images, etc)
 BodyElement displaytag(str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
-
-BodyElement link2allfiles(str parent, str dir)
-	= makelinks([ link2file(f) | loc f <- (framework::BackEnd::basedir+"<parent>/<dir>").ls ]);
 
 // TODO: make sure it works
 BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
@@ -155,7 +175,7 @@ BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
 			_text("The "),
 			strong( (), _text(txtbykey(zs,"dir"))),
 			_text(" grammar is "),
-			link2allfiles(parent, txtbykey(zs,"dir"))
+			makelinks(link2allfiles(framework::BackEnd::basedir+"<parent>/<txtbykey(zs,"dir")>"))
 		])),
 		li( (), _seq([displaytag(k,v) | keyvalue(str k, str v) <- zs])),
 		*(debug?[li((),_text("<zs>"))]:[])
@@ -173,7 +193,7 @@ BodyElement zooval2be(ZooEntry ze, bool debug)
 
 list[BodyElement] listsources(ZooEntry z)
 	= (struct("source", _) <- z.meta)
-	? [dd((), ul((), [li((), src2be(zin)) | struct("source", list[ZooValue] zin) <- z.meta]))]
+	? [dd((), ul((), [li((), src2be(zin)) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source" || key == "item"]))]
 	: []
 	;
 

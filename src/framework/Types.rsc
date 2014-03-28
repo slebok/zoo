@@ -21,6 +21,8 @@ public ZooValue get1bykey(ZooEntry e, str key) = getOneFrom([ie | ZooValue ie <-
 public str txtbykey(ZooEntry e, str key) = txtbykey(e.meta, key);
 public str txtbykey(list[ZooValue] es, str key) = safegetOneFrom([val | ZooValue kv <- es, keyvalue(key,str val) := kv]);
 
+public bool isflagset(ZooEntry e, str key) = [ie | ZooValue ie <- e.meta, flag(key) := ie] != [];
+
 public str safe4anchor(str s)
 {
 	for (weird <- [" ", "\t", "/", "#", "–", "—"])

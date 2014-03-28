@@ -12,9 +12,17 @@ loc basedir = |home:///projects/webzoo-prep/zoo/|;
 //str gitbasedir = "https://github.com/grammarware/zoo/tree/master/zoo/";
 str gitbasedir = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo/";
 //str gitbasefile = "https://github.com/grammarware/zoo/blob/master/zoo";
-str gitbasefile = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo";
+str gitbasefile = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo/";
 
-public tuple[str,str] link2file(loc x) = <x.file, gitbasefile+x.path>;
+public lrel[str,str] link2allfiles(loc x)
+	= isDirectory(x)
+	? [link2file(f) | loc f <- x.ls ]
+	: [link2file(x)];
+
+public tuple[str,str] link2file(loc x)
+	= isDirectory(x)
+	? <x.file, gitbasedir+shortenpath(x)>
+	: <x.file, gitbasefile+shortenpath(x)>;
 
 str shortenpath(loc x) = replaceFirst(x.path, basedir.path, "");
 
