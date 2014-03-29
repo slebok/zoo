@@ -1,0 +1,97 @@
+module languages/ansi-c/syntax/Expressions
+
+imports languages/ansi-c/syntax/Constants
+imports languages/ansi-c/syntax/Identifiers
+imports languages/ansi-c/syntax/Declarations
+
+exports 
+
+sorts Expression
+
+context-free syntax
+
+Identifier 				-> Expression 
+HexadecimalConstant 			-> Expression {category("Constant")}
+IntegerConstant				-> Expression {category("Constant")}
+CharacterConstant 			-> Expression {category("Constant")}
+FloatingPointConstant 			-> Expression {category("Constant")}
+StringConstant 				-> Expression {category("Constant")}
+"(" Expression ")" 			-> Expression {bracket}
+"sizeof" "(" TypeName ")"                    -> Expression 
+
+context-free restrictions
+"&" -/- [\&]
+"-" -/- [\-]
+"+" -/- [\+]
+
+context-free priorities
+{
+Expression "[" Expression "]"	  -> Expression 
+Expression "(" {Expression ","}* ")"  -> Expression 
+Expression "." Identifier 		  -> Expression 
+Expression "->" Identifier 	  -> Expression
+Expression "++" 		           -> Expression
+Expression "--" 		           -> Expression
+} <0>
+> 
+{
+"++" Expression 		 -> Expression
+"--" Expression 		 -> Expression
+"&" Expression 		 -> Expression
+"*" Expression 	 	 -> Expression
+"+" Expression 		 -> Expression
+"-" Expression 		 -> Expression
+"~" Expression 		 -> Expression
+"!" Expression 		 -> Expression
+"sizeof" Expression 	 -> Expression
+"(" TypeName ")" Expression -> Expression 
+}
+> { left:
+Expression "*" Expression -> Expression {left}
+Expression "/" Expression -> Expression {left}
+Expression "%" Expression -> Expression {left}}
+> { left:
+Expression "+" Expression -> Expression {left}
+Expression "-" Expression -> Expression {left}}
+> { left:
+Expression "<<" Expression -> Expression {left}
+Expression ">>" Expression -> Expression {left}}
+> { left:
+Expression "<" Expression -> Expression {left}
+Expression ">" Expression -> Expression {left}
+Expression "<=" Expression -> Expression {left}
+Expression ">=" Expression -> Expression {left}
+} >
+{left:
+Expression "==" Expression -> Expression {left}
+Expression "!=" Expression -> Expression {left}
+}
+> Expression "&" Expression -> Expression {left}
+> Expression "^" Expression -> Expression {left}
+> Expression "|" Expression -> Expression {left}
+> Expression "&&" Expression -> Expression {left}
+> Expression "||" Expression -> Expression {left}
+> Expression "?" Expression ":" Expression -> Expression {right}
+<0,4> > 
+{right:
+Expression "=" Expression -> Expression {right}
+Expression "*=" Expression -> Expression {right}
+Expression "/=" Expression -> Expression {right}
+Expression "%=" Expression -> Expression {right}
+Expression "+=" Expression -> Expression {right}
+Expression "-=" Expression -> Expression {right}
+Expression "<<=" Expression -> Expression {right}
+Expression ">>=" Expression -> Expression {right}
+Expression "&=" Expression -> Expression {right}
+Expression "^=" Expression -> Expression {right}
+Expression "|=" Expression -> Expression {right}
+}
+>
+Expression "," Expression -> Expression {left}
+
+
+context-free priorities
+Expression "?" Expression ":" Expression -> Expression {right}
+ <0> >
+Expression "?" Expression ":" Expression -> Expression
+

@@ -1,0 +1,539 @@
+% TXL Base Grammar for ANSI and K+R C
+
+% Author: A Malton, University of Waterloo, Feb 2002
+% Based on the TXL release ANSI C 7.0 grammar by
+% J.R. Cordy, Queen's University, January 1994
+
+% This is a TXL base grammar for C, including
+%    * ANSI features (e.g. literal string concatenation)
+%    * old-style (K&R) function parameters
+%
+% but excluding:
+%    * preprocessor directives
+%    * comments
+%    * C++ features
+%    * string literal 
+
+% C and C++ style comments are accepted but not parsed.
+
+% MODIFICATION LOG:
+%
+% Corrected formatting cues to fix problems with lack of spacing - JRC 30.5.04
+% Added handling of preprocessor directives - JRC 8.1.03
+%
+
+% Comment out this line to disallow preprocessor directives
+#define PREPROCESSOR
+%
+
+% Lexical properties of C
+
+#pragma -idchars '$' -width 160
+
+comments
+    //
+    /* */
+end comments
+
+tokens
+    hex			"0[xX][\dAaBbCcDdEeFf]+[LUlu]*"
+    dotfloat	 	".\d+([eE][+-]?\d+)?[FLfl]?"
+    float		"\d+.\d*([eE][+-]?\d+)?[FLfl]?"
+           	|	"\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
+           	|	"\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
+    long    	        "\d+[LUlu]+"
+#ifdef PREPROCESSOR
+    id		|	"\#\i+"
+#endif
+end tokens
+
+keys
+        auto            double          int             struct
+        break           else            long            switch
+        case            enum            register        typedef
+        char            extern          return          union
+        const           float           short           unsigned
+        continue        for             signed          void
+        default         goto            sizeof          volatile
+        do              if              static          while
+#ifdef PREPROCESSOR
+       '#define '#else '#endif '#if '#ifdef '#ifndef '#include '#line '#undef '#indent '#LINK
+#endif
+end keys
+
+compounds
+        ->      ++      --      <<      >>      <=      >=      ==      !=
+        &&      ||      *=      /=      '%=     +=      -=
+        <<=     >>=     &=      ^=      |=
+end compounds
+
+define C_compilation_unit
+    [repeat declaration_or_function_definition]
+end define
+
+% Constants
+
+define constant
+    [number]
+|   [float]
+|   [hex]
+|   [long]
+|   [SP] [dotfloat]		    % TXL doesn't defaultly space before .
+|   [charlit]                       % "single" character constant
+|   [string]
+end define
+
+define string
+    [repeat stringlit+]			% Includes implicit concatenation
+end define
+
+% Expressions
+define expression
+    [list assignment_expression+]
+end define
+
+define constant_expression
+    [conditional_expression]
+end define
+
+define assignment_expression
+    [conditional_expression] [opt assignment_operation]
+end define
+
+define assignment_operation
+    [assignment_operator] [assignment_expression]
+end define
+
+define assignment_operator
+    = | *= | /= | '%= | += | -= | >>= | <<= | &= | ^= | '|=
+end define
+
+define conditional_expression
+    [binary_expression] [opt conditional_operation]
+end define
+
+define conditional_operation
+    ? [expression] : [conditional_expression]
+end define
+
+define binary_expression
+    [unary_expression] 
+|   [binary_expression] [binary_operator] [unary_expression]
+end define
+
+define binary_operator
+     +  | -  | *  | / | '% 
+|   ==  | != | <  | > | <= | >=
+|   '|| | && | '| | ^ | & 
+|   <<  | >> 
+end define
+
+define unary_expression
+    [postfix_expression]
+|   [unary_operator] [SPOFF] [unary_expression] [SPON]
+|   ( [type_name] ) [unary_expression]
+|   [sizeof_expression]
+end define
+
+define sizeof_expression
+    'sizeof ( [type_name] )
+|   'sizeof [unary_expression]
+end define
+
+define unary_operator
+    * | & | + | - | ! | ~ | ++ | --
+end define
+
+% A postfix expression might refer to some part
+% of a named thing (e.g. x [4]. a. b)
+% or a computed thing (e.g. x [4] (i). x. y)
+% or a literal thing (e.g. "foobar" [3]).
+
+% This grammar assigns uid reference markup to the first category only.
+
+define postfix_expression
+    [reference]
+|   [nonreference]
+end define
+
+define reference
+    [reference_id]
+|   [reference_expression]
+end define
+
+define reference_id
+    [id]
+end define
+
+define reference_expression
+    [unannotated_reference_base] [repeat postfix_extension]
+end define
+
+define unannotated_reference_base
+    [reference_id]
+|   [nonreferential_primary]
+end define
+
+define nonreference
+    [nonreferential_primary] [repeat postfix_extension]
+end define
+
+define nonreferential_primary
+    [constant]
+|   [string]
+|   '( [expression] ')
+end define
+
+define postfix_extension
+    '[ [expression] ']
+|   '( [opt expression] ')
+|   '. [id]
+|   '-> [id]
+|   '++
+|   '--
+end define
+
+% Declarations
+
+% A declaration starts with a decl_specifiers and ends with declarators.
+% The decl_specifiers is a sequence of "declaration specifiers",
+% each of which is either a type specifier (e.g. "int")
+% or a qualifier of some kind (e.g. "extern").
+% There can't be more than one type specifier.
+% Here we ensure that there is either exactly one [type_specifier],
+% or if the type was omitted, exactly one (empty) [opt type_specifier].
+% (Apart from any nested declarations in struct or union specs.)
+
+define declaration
+    [declaration_body] [semi]
+#ifdef PREPROCESSOR
+|   [preprocessor]
+#endif
+end define
+
+define declaration_body
+    [decl_specifiers] [list init_declarator+]
+|   [enum_specifier]
+|   [struct_or_union_specifier]
+end define
+
+define decl_specifiers
+    [repeat decl_qualifier] [opt type_specifier] [repeat decl_qualifier]
+end define
+
+% Structures
+
+define struct_or_union_specifier
+    [struct_or_union] [opt tagged_reference_id] {   [IN] [NL]
+	[repeat member_declaration]                 [EX]
+    }
+|   [struct_or_union] [tagged_reference_id]
+end define
+
+% This kind of reference id is the kind used in struct... and enum... definitions.
+% It's in a different name space and often needs to be skipped.
+
+define tagged_reference_id
+    [reference_id]
+end define
+
+define member_declaration
+    [decl_specifiers] [list member_declarator+] [semi]
+#ifdef PREPROCESSOR
+|   [preprocessor]
+#endif
+end define
+
+define member_declarator
+    [declarator] [opt bitfieldsize]
+|   [bitfieldsize]
+end define
+
+define bitfieldsize
+    ': [constant_expression]
+end define
+
+define decl_qualifier
+    [sc_specifier]		% In ANSI C, not allowed for member_declaraton.
+|   [cv_qualifier]
+|   [type_qualifier]
+end define
+
+define sc_specifier
+    'auto
+|   'register
+|   'static
+|   'extern
+|   'typedef
+end define
+
+define type_specifier
+    [simple_type_name]
+|   [enum_specifier]
+|   [struct_or_union_specifier]
+end define
+
+define type_qualifier
+    'long
+|   'short
+|   'signed
+|   'unsigned
+end define
+
+define simple_type_name
+    'char
+|   'int
+|   'void
+|   'float
+|   'double
+|   [type_id]
+end define
+
+define type_id
+    [reference_id]
+end define
+
+define struct_or_union
+    'struct | 'union
+end define
+
+define enum_specifier
+    'enum [opt tagged_reference_id] { [list enumerator] }
+|   'enum [tagged_reference_id]
+end define
+
+define enumerator
+    [reference_id] [opt enumerator_value]
+end define
+
+define enumerator_value
+    = [constant_expression]
+end define
+
+define init_declarator
+    [declarator] [opt initialization]
+end define
+
+define declarator
+    [repeat ptr_operator] [base_declarator] [SPON] [repeat declarator_extension] 
+end define
+
+define base_declarator
+    [reference_id] 
+|   ( [declarator] )
+end define
+
+define declarator_extension
+    [function_declarator_extension]
+|   [array_declarator_extension]
+end define
+
+define function_declarator_extension
+    ( [argument_declaration_list] ) [repeat cv_qualifier]
+end define
+
+define array_declarator_extension
+    '[ [opt constant_expression] ']
+end define
+
+define ptr_operator
+    * [repeat cv_qualifier] [SPOFF]
+end define
+
+define cv_qualifier
+    'const
+|   'volatile
+end define
+
+% For expressions mentioning types (e.g. casts and sizeof)
+
+define type_name
+    [type_specifiers] [opt abstract_declarator]
+end define
+
+% Can't be empty, and no more than one type.
+
+define type_specifiers
+    [repeat type_qualifier+] [opt type_specifier] [repeat type_qualifier]
+|   [type_specifier] [repeat type_qualifier]
+end define
+
+% This is a declarator which doesn't introduce a name, but is just for mentioning types.
+
+define abstract_declarator
+    [repeat ptr_operator+] [repeat declarator_extension]
+|   ( [abstract_declarator] ) [repeat declarator_extension]
+end define
+
+define argument_declaration_list
+    [list argument_declaration]
+end define
+
+% An argument declaration is like a regular one except at most one declarator, without initializer,
+% is allowed.  This allows empty argument declaration, which has a reasonable meaning in theory,
+% but not in C.
+
+define argument_declaration
+    [decl_specifiers] [opt argument_declarator]
+|   '...		% Only allowed last in a non-empty list, never mind.
+end define
+
+define argument_declarator
+    [declarator]
+|   [abstract_declarator]
+end define
+
+define initialization
+    = [initializer]
+|   ( [constant_expression] )
+end define
+
+define initializer
+    [expression]
+|   [NL] { [IN] [list initializer] [opt ',] [EX] }
+end define
+
+% Statements
+define statement
+    [repeat label] [unlabeled_statement]
+#ifdef PREPROCESSOR
+|   [preprocessor]
+#endif
+end define
+
+define label
+    [label_id] ': 
+|   [EX][SP][SP] 'case [constant_expression] ': [IN] [NL] 
+|   [EX][SP][SP] 'default ': [IN] [NL] 
+end define
+
+define label_id
+    [id]
+end define
+
+define unlabeled_statement
+    [expression_statement]
+|   [if_statement]
+|   [for_statement]
+|   [while_statement]
+|   [switch_statement]
+|   [do_statement]
+|   [null_statement]
+|   [jump_statement]
+|   [compound_statement]
+end define
+
+define null_statement
+    [semi]
+end define
+
+define compound_statement
+    { [IN] [NL] 
+	[compound_statement_body]
+    } [opt ';] [NL]
+end define
+ 
+define compound_statement_body
+    [repeat statement]        [EX] 
+|   [declaration]		% Prefer statements if possible.
+    [compound_statement_body]
+end define
+
+define expression_statement
+    [expression] [semi]
+end define
+
+define if_statement
+    'if ( [expression] ) [statement] [opt else_statement]
+end define
+
+define switch_statement
+    'switch ( [expression] ) [statement]
+end define 
+
+define else_statement
+    'else [statement]
+end define
+
+define while_statement
+    'while '( [expression] ') [statement]
+end define
+
+define do_statement
+    'do [statement] 'while ( [expression] ) [semi]
+end define
+
+define for_statement
+    'for ( [opt expression] '; [opt expression] '; [opt expression] )
+	[statement]
+end define
+
+define jump_statement
+    'goto [label_id] [semi]
+|   'continue [semi]
+|   'break [semi]
+|   'return [opt expression] [semi]
+end define
+
+% Top-Level
+
+define declaration_or_function_definition
+    [declaration]
+|   [function_definition]
+end define
+
+define function_definition
+    [NL] [decl_specifiers] [declarator] [opt KR_parameter_decls]
+    [compound_statement] [NL]
+end define
+
+define KR_parameter_decls
+    [NL] [IN] [repeat declaration+] [EX]
+end define
+
+define semi
+    '; [NL]
+end define
+
+define program
+    [C_compilation_unit]
+end define
+
+#ifdef PREPROCESSOR
+
+% Parse preprocessor directive lines, but don't interpret them
+
+define preprocessor
+    '#define [id] '( [list id+] ')  [expression] [NL]
+|   '#define [id]  [expression]  [NL]
+|   [EX] '#else  [IN] [NL]
+|   [EX] '#endif [NL] [NL]
+|   [NL] '#if [expression] [IN] [NL]
+|   [NL] '#ifdef [id] [IN] [NL]
+|   [NL] '#ifndef [id] [IN] [NL]
+|   '#ident [stringlit] [NL]
+|   '#include [stringlit] [NL]
+|   '#include < [SPOFF] [filepath] > [SPON] [NL]
+|   '#line [integernumber] [opt stringlit] [NL]
+|   '#undef [id] [NL]
+|   '#LINK [stringlit] [NL]
+end define
+
+define filepath
+    [file_id] [repeat slash_fileid]
+end define
+
+define file_id
+    [id]
+|   [key]
+end define
+
+define slash_fileid
+    [slash] [file_id]
+end define
+
+define slash
+    '/ | '\ | '. | ':
+end define
+
+#endif

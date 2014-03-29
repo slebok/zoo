@@ -1,0 +1,35 @@
+module languages/ansi-c/syntax/Default-C-After-CPP
+
+%% This module assumes you've run the "cpp" command before parsing
+
+imports languages/ansi-c/syntax/C
+imports languages/generic-cpp/syntax/Whitespace
+
+hiddens
+
+context-free start-symbols
+	TranslationUnit
+
+exports
+
+sorts Flag LineDirective
+
+context-free syntax
+
+"__builtin_va_arg" "(" Expression "," TypeName ")" -> Expression {prefer}
+
+context-free syntax
+
+"#" linenum:IntegerConstant filename:StringConstant Flag* -> LineDirective
+
+"1" -> Flag {cons("start-of-file")}
+"2" -> Flag {cons("returning-from-file")}
+"3" -> Flag {cons("system-file")}
+"4" -> Flag {cons("c-code-indicator")}
+
+context-free syntax
+
+LineDirective -> ExternalDeclaration
+LineDirective -> Statement
+LineDirective -> StructDeclarator
+

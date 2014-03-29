@@ -1,0 +1,28 @@
+module languages/ansi-c/syntax/Statements
+
+imports languages/ansi-c/syntax/Expressions
+imports languages/ansi-c/syntax/Declarations
+
+exports
+
+sorts Statement
+
+context-free syntax
+"{" Declaration* Statement*  "}" 			-> Statement
+Identifier ":" Statement 				-> Statement
+"case" Expression ":" Statement 			-> Statement
+"default" ":" Statement 				-> Statement
+";" 							-> Statement
+Expression ";" 						-> Statement
+"if" "(" Expression ")" Statement 		   	-> Statement
+"if" "(" Expression ")" Statement "else" Statement 	-> Statement
+"switch" "(" Expression ")" Statement 		   	-> Statement
+"while" "(" Expression ")" Statement 			-> Statement
+"do" Statement "while" "(" Expression ")" ";" 		-> Statement
+"for" "(" Expression? ";" Expression? ";" Expression? ")" Statement	
+							-> Statement
+"goto" Identifier ";" 					-> Statement
+"continue" ";" 						-> Statement
+"break" ";" 						-> Statement
+"return" ";" 						-> Statement
+"return" Expression ";" 				-> Statement

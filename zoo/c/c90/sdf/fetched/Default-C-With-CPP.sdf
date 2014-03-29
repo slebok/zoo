@@ -1,0 +1,103 @@
+module languages/ansi-c/syntax/Default-C-With-CPP
+
+imports languages/generic-cpp/syntax/Whitespace
+imports languages/generic-cpp/syntax/CommentsAsLayout
+
+imports languages/ansi-c/syntax/C
+
+%% This module shows a typical C/CPP combination that may work for your C
+%% files. There is no guarantee however, since one can not predict
+%% in which ways the preprocessor statements are intertwined with the C
+%% constructs. This module covers a lot of 'nice' uses of the preprocessor.
+
+%% generic CPP substitions
+imports languages/generic-cpp/syntax/Substitutions[Identifier Expression StringConstant]
+
+%% where can we put include directives
+imports languages/generic-cpp/syntax/Includes[ExternalDeclaration]
+
+%% definition of expression macros
+imports languages/generic-cpp/syntax/Macros[Identifier Expression Statement]
+
+%% Conditional statements 
+imports languages/generic-cpp/syntax/Conditionals[
+	Identifier
+	Expression
+	Statement+
+	Statement
+]
+
+%% Conditional declarations
+imports languages/generic-cpp/syntax/Conditionals[
+	Identifier
+	Expression
+	Declaration+
+	Declaration
+]
+
+%% Conditional part of a block statement:
+imports languages/generic-cpp/syntax/Conditionals[
+	Identifier
+	Expression
+	(Declaration+ Statement+)
+	Statement
+]
+
+%% Conditional functions
+imports languages/generic-cpp/syntax/Conditionals[
+	Identifier
+	{Expression ";"}+
+	ExternalDeclaration+
+	FunctionDefinition
+]
+
+%% Macros with expressions as definitions
+imports languages/generic-cpp/syntax/Macros[
+	Identifier
+	Expression
+	Declaration
+]
+
+%% Macros with bracketed statements as definitions
+imports languages/generic-cpp/syntax/Macros[
+	Identifier
+	( "(" Statement ")" )
+	Declaration
+]
+
+%% Macros with normal statements as definitions
+imports languages/generic-cpp/syntax/Macros[
+	Identifier 
+	Statement
+	Declaration
+]
+
+%% Macro that yield a declaration without ; at the end
+imports languages/generic-cpp/syntax/Macros[
+	Identifier
+	( Specifier+ {InitDeclarator ","}+ )
+	Declaration
+]
+
+%% Macro that yields a while with one statement without ; at the end
+imports languages/generic-cpp/syntax/Macros[
+	Identifier
+	( "while" "(" Expression ")" Expression)
+	Declaration
+]
+
+%% Macro that yields a do while without ; at the end
+imports languages/generic-cpp/syntax/Macros[
+	Identifier
+	( "do" Statement "while" "(" Expression ")" )
+	Declaration
+]
+exports
+
+context-free syntax
+	"va_arg" "(" Expression "," TypeName ")" -> Expression {prefer}
+
+hiddens
+
+context-free start-symbols
+	TranslationUnit

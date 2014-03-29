@@ -1,0 +1,26 @@
+module languages/ansi-c/syntax/Constants
+
+exports
+
+sorts HexadecimalConstant  IntegerConstant CharacterConstant FloatingPointConstant StringConstant Exponent
+
+lexical syntax
+[0] [xX] [a-fA-F0-9]+ [uUlL]*		-> HexadecimalConstant
+[0-9]+ [uUlL]*		        	-> IntegerConstant
+[L]? [\'] (([\\]~[])|~[\\\'])+ [\']	-> CharacterConstant
+
+[Ee] [\+\-]? [0-9]+ -> Exponent
+
+[0-9]+ 		   Exponent  [fFlL]?	-> FloatingPointConstant
+[0-9]* [\.] [0-9]+ Exponent? [fFlL]?	-> FloatingPointConstant
+[0-9]+ [\.]	   Exponent? [fFlL]?	-> FloatingPointConstant
+
+
+[L]? [\"] ( ([\\]~[]) | ~[\\\"] )* [\"]	-> StringConstant
+
+lexical restrictions
+
+IntegerConstant 	-/- [0-9]
+FloatingPointConstant	-/- [0-9]
+HexadecimalConstant	-/- [a-fA-F0-9]
+
