@@ -101,8 +101,8 @@ BodyElement maketitle(ZooEntry z)
 		makelinks(links) ]));
 }
 
-BodyElement src2be(list[ZooValue] zin) = _seq([
-	_text("Source: "),
+public BodyElement src2be(str src, list[ZooValue] zin) = _seq([
+	_text(src),
 	*[_text("<a>, ") | keyvalue(k,a) <- zin, k == "author" || k == "standard"],
 	*[em((),_text("<a>, ")) | keyvalue(k,a) <- zin, k == "title"],
 	*[_text("<a>, ") | keyvalue(k,a) <- zin, k == "subtitle"],
@@ -161,7 +161,7 @@ BodyElement zooval2be(ZooEntry ze, bool debug)
 
 list[BodyElement] listsources(ZooEntry z)
 	= (struct("source", _) <- z.meta)
-	? [dd((), ul((), [li((), src2be(zin)) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source" || key == "item"]))]
+	? [dd((), ul((), [li((), src2be("Source: ",zin)) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source" || key == "item"]))]
 	: []
 	;
 

@@ -7,7 +7,7 @@ import framework::Types;
 import framework::BackEnd;
 import grammarlab::language::XHTML;
 
-BodyElement onedot(str colour) = span( ("style":"color:<colour>"), _text("•"));
+BodyElement onedot(str colour) = span( ("style":"color:<colour>"), _text("•")); // ★?
 BodyElement onearrow(str colour) = strong( ("style":"color:<colour>"), _text("→"));
 
 public BodyElement colouredDots(list[ZooValue] zs) = colouredDots(zentry("",zs,[])); 

@@ -41,7 +41,7 @@ public str countAllTypes(ZooEntry z)
 public set[str] allUsedTypes(ZooEntry z)
 	= {t | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) <- inner};
 
-ZooValue xml2zooval(Node e)
+public ZooValue xml2zooval(Node e)
 {
 	if (element(_, _, _ ) !:= e) return zerror();
 	if ([] := e.children)
