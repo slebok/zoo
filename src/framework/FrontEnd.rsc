@@ -32,7 +32,8 @@ HTML zooval2html(ZooEntry ze, bool debug)
 			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "GrammarZoo logo" ) ),
 			heading(1, (), _seq([aname("TOP"),_text(txtbykey(ze,"name"))])),
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
-			heading(2, (), _text("<countSize(ze)> grammars and counting")),
+			heading(2, ("class":"fh"), _text("<countEntries(ze)> entries and counting")),
+			heading(3, ("class":"sh"), _text("<countGrammars(ze)> grammars: <countAllTypes(ze)>")),
 			div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
 			heading(1, (), subsectionlinks(ze)),
 			hr(),
@@ -42,8 +43,7 @@ HTML zooval2html(ZooEntry ze, bool debug)
 					_text("All grammars are distributed on terms of the "),
 					ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), _text("CC-BY")),
 					_text(" license as well as on terms of any other license bound to the source of our research in a way that enforces its propagation to derivatives.")
-				])
-			),
+				])),
 				br(),
 				_text("The page is maintained by Dr. "),
 				ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
@@ -75,8 +75,7 @@ str namemonth(12) = "December";
 BodyElement subsectionlinks(ZooEntry z)
 {
 	list[BodyElement] res = [];
-	for(ZooEntry sec <- z.inner)
-		//res += [ahref( ("href":"#<safe4anchor(txtbykey(sec,"name"))>sector"), _text(txtbykey(sec,"name")) ), _text(" — ")]; 
+	for(ZooEntry sec <- orderedinner(z))
 		res += [ahref( ("href":"#<safe4anchor(sec.where)>"), _text(txtbykey(sec,"name")) ), _text(" — ")];
 	return _seq(res[..-1]);
 }
@@ -165,7 +164,8 @@ str th(n:/^[0-9]+$/ , str k) = "<n>th <k>";
 default str th(str n, str k) = "<k> <n>";
 
 // TODO: fancify tags (links, colours, images, etc)
-BodyElement displaytag(str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
+BodyElement displaytag(k:"level", str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), strong((),_text(" : <v>"))]));
+default BodyElement displaytag(str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
 
 // TODO: make sure it works
 BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
@@ -177,9 +177,21 @@ BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
 			_text(" grammar is "),
 			makelinks(link2allfiles(framework::BackEnd::basedir+"<parent>/<txtbykey(zs,"dir")>"))
 		])),
+		*displayfiles(parent,zs,debug),
 		li( (), _seq([displaytag(k,v) | keyvalue(str k, str v) <- zs])),
 		*(debug?[li((),_text("<zs>"))]:[])
 		]);
+
+list[BodyElement] displayfiles(str parent, list[ZooValue] zs, bool debug)
+{
+	//public list[ZooValue] getbykey(ZooEntry e, str key) = [ie | ZooValue ie <- e, ie.key == key];
+	files = [f | ZooValue ie <- zs, keyvalue("fileused", str f) := ie];
+	if(files == []) return [];
+	return [li( (), _seq([
+		_text("Files used: "),
+		makelinks([link2file(framework::BackEnd::basedir+"<parent>/<f>") | f <- files]
+	)]))];
+}
 
 BodyElement zooval2be(ZooEntry ze, bool debug)
 	= _seq([

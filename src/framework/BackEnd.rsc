@@ -26,8 +26,17 @@ public tuple[str,str] link2file(loc x)
 
 str shortenpath(loc x) = replaceFirst(x.path, basedir.path, "");
 
-public str countSize(ZooEntry z)
-	= "<size({ez | /ez:zentry(_, list[ZooValue] meta, _) <- z, /struct("grammar",_) := ez.meta})> (<size([1 | /struct("grammar",_) <- z])>)";
+public int countEntries(ZooEntry z)
+	= size({ez | /ez:zentry(_, list[ZooValue] meta, _) <- z, /struct("grammar",_) := ez.meta});
+
+public int countGrammars(ZooEntry z)
+	= size([1 | /struct("grammar",_) <- z]);
+
+public int countByType(ZooEntry z, str t)
+	= size([1 | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) in inner]);
+
+public str countAllTypes(ZooEntry z)
+	= intercalate(" + ",["<k> <v>" | <k,v> <- reverse(sort([<countByType(z,t),t> | t <- {t | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) <- inner}]))]);
 
 ZooValue xml2zooval(Node e)
 {
