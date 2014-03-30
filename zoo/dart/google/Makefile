@@ -5,6 +5,6 @@ extract:
 	${tooldir}/subgrammar ext.bgf compilationUnit libraryUnit grammar.bgf
 
 get:
-	curl -k https://dart.googlecode.com/svn/branches/bleeding_edge/dart/language/grammar/Dart.g > Dart.g
+	curl -k https://dart.googlecode.com/svn/branches/bleeding_edge/dart/language/grammar/Dart.g > fetched/Dart.g
 
 include ../../Makefile.grammar
