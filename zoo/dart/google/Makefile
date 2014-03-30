@@ -1,6 +1,6 @@
 extract:
-	../../../extraction/antlr/antlrpp.py Dart.rsc.g Dart.prepared.g
-	java -cp ${CLASSPATH}:../../../../download/antlrworks-1.1.7.jar:../../../extraction/antlr slps.antlr2bgf.Tool Dart.prepared.g raw.bgf
+	${slpsdir}/topics/extraction/antlr/antlrpp.py Dart.rsc.g Dart.prepared.g
+	java -cp ${CLASSPATH}:${slpsdir}/download/antlrworks-1.1.7.jar:${slpsdir}/topics/extraction/antlr slps.antlr2bgf.Tool Dart.prepared.g raw.bgf
 	${tooldir}/xbgf post-extraction.xbgf raw.bgf ext.bgf
 	${tooldir}/subgrammar ext.bgf compilationUnit libraryUnit grammar.bgf
 

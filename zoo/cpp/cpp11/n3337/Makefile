@@ -1,0 +1,3 @@
+extract:
+
+include ../../../Makefile.grammar
