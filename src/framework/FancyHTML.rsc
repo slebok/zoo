@@ -1,12 +1,16 @@
 @contributor{Vadim Zaytsev - vadim@grammarware.net - UvA}
 module framework::FancyHTML
 
+import String;
 import DateTime;
 import framework::Types;
 import framework::BackEnd;
 import grammarlab::language::XHTML;
 
 BodyElement onedot(str colour) = span( ("style":"color:<colour>"), _text("•"));
+BodyElement onearrow(str colour) = strong( ("style":"color:<colour>"), _text("→"));
+
+public BodyElement colouredDots(list[ZooValue] zs) = colouredDots(zentry("",zs,[])); 
 
 public BodyElement colouredDots(ZooEntry z)
 {
@@ -24,6 +28,13 @@ public BodyElement colouredDots(ZooEntry z)
 	else
 		return _seq(res);
 }
+
+BodyElement colouredArrow("fetched") = onearrow("red");
+BodyElement colouredArrow("extracted") = onearrow("yellow");
+BodyElement colouredArrow("corrected") = onearrow("green");
+BodyElement colouredArrow("recovered") = onearrow("green");
+BodyElement colouredArrow("adapted") = onearrow("purple");
+default BodyElement colouredArrow(str dir) = onearrow("black");
 
 public BodyElement makelinks(lrel[str,str] links)
 {
@@ -80,3 +91,26 @@ public BodyElement footer()
 		ahref( ("href":"http://validator.w3.org/check/referer"), img("vxhtml.png","Valid XHTML 1.0") ),
 		ahref( ("href":"http://jigsaw.w3.org/css-validator/check/referer"), img("vcss.png","Valid CSS 2.1") )
 	]));
+
+public str safe4anchor(str s)
+{
+	for (weird <- [" ", "\t", "/", "#", "–", "—"])
+		s = replaceAll(s,weird,"_");
+	return s;
+}
+
+// TODO: fancify tags (links, colours, images, etc)
+BodyElement displaytag(_, k:"level", str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), strong((),_text(" : <v>"))]));
+BodyElement displaytag(str parent, k:"derivedFrom", str v)
+	= span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : "), ahref( ("href":link2grammar(parent,v)), _text(v))]));
+BodyElement displaytag(str parent, k:"subsetOf", str v)
+	= span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : "), ahref( ("href":link2grammar(parent,v)), _text(v))]));
+BodyElement displaytag(str parent, k:"partOf", str v)
+	= span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : "), ahref( ("href":link2grammar(parent,v)), _text(v))]));
+default BodyElement displaytag(_, str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
+
+str link2grammar(str parent, str goal)
+{
+	if (!startsWith(goal,"/")) return "#"+safe4anchor("<parent>/<goal>");
+	return "#"+safe4anchor(replaceFirst(goal,"/",""));
+}

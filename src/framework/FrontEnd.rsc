@@ -114,24 +114,29 @@ BodyElement src2be(list[ZooValue] zin) = _seq([
 	makelinks(getlinks(zin))
 ]);
 
-// TODO: fancify tags (links, colours, images, etc)
-BodyElement displaytag(k:"level", str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), strong((),_text(" : <v>"))]));
-default BodyElement displaytag(str k, str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), _text(" : <v>")]));
-
 // TODO: make sure it works
 BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
-	= ul( (),
+{
+	// Too bad we don't have 'where' or 'let' in Rascal...
+	dir = txtbykey(zs,"dir");
+	pdir = "<parent>/<dir>";
+	dirloc = framework::BackEnd::basedir+pdir;
+	anch = safe4anchor(pdir);
+	return ul( (),
 		[
 		li( (), _seq([
-			_text("The "),
-			strong( (), _text(txtbykey(zs,"dir"))),
+			_text("("),
+			ahref( ("name":anch, "href":"#<anch>"), colouredArrow(txtbykey(zs,"dir"))),
+			_text(") The "),
+			strong( (), _text(dir)),
 			_text(" grammar is "),
-			makelinks(link2allfiles(framework::BackEnd::basedir+"<parent>/<txtbykey(zs,"dir")>"))
+			makelinks(link2allfiles(dirloc))
 		])),
 		*displayfiles(parent,zs,debug),
-		li( (), _seq([displaytag(k,v) | keyvalue(str k, str v) <- zs])),
+		li( (), _seq([displaytag(parent,k,v) | keyvalue(str k, str v) <- zs])),
 		*(debug?[li((),_text("<zs>"))]:[])
 		]);
+}
 
 list[BodyElement] displayfiles(str parent, list[ZooValue] zs, bool debug)
 {

@@ -23,13 +23,6 @@ public str txtbykey(list[ZooValue] es, str key) = safegetOneFrom([val | ZooValue
 
 public bool isflagset(ZooEntry e, str key) = [ie | ZooValue ie <- e.meta, flag(key) := ie] != [];
 
-public str safe4anchor(str s)
-{
-	for (weird <- [" ", "\t", "/", "#", "–", "—"])
-		s = replaceAll(s,weird,"_");
-	return s;
-}
-
 public str safegetOneFrom([]) = "";
 public str safegetOneFrom([str x]) = x;
 public default str safegetOneFrom(list[str] xs) = getOneFrom(xs);
