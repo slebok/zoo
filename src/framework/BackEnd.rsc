@@ -36,7 +36,10 @@ public int countByType(ZooEntry z, str t)
 	= size([1 | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) in inner]);
 
 public str countAllTypes(ZooEntry z)
-	= intercalate(" + ",["<k> <v>" | <k,v> <- reverse(sort([<countByType(z,t),t> | t <- {t | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) <- inner}]))]);
+	= intercalate(" + ",["<k> <v>" | <k,v> <- reverse(sort([<countByType(z,t),t> | t <- allUsedTypes(z)]))]);
+
+public set[str] allUsedTypes(ZooEntry z)
+	= {t | /struct("grammar",list[ZooValue] inner) <- z, keyvalue("dir", t) <- inner};
 
 ZooValue xml2zooval(Node e)
 {
@@ -76,4 +79,15 @@ public list[ZooEntry] orderedinner(ZooEntry z)
 			iz.where == "<z.where>/<d>" ];
 	else
 		return z.inner;
+}
+
+str getcolour(ZooEntry z)
+{
+	gs = allUsedTypes(z);
+	if (countGrammars(z)==0) return "black";
+	if ("recovered" in gs) return "purple";
+	if ("corrected" in gs) return "green";
+	if ("extracted" in gs) return "yellow";
+	if ("fetched" in gs) return "red"; 
+	return "cyan";
 }

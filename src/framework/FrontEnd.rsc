@@ -2,11 +2,11 @@
 module framework::FrontEnd
 
 import IO;
-import DateTime;
 import grammarlab::language::XHTML;
 import grammarlab::io::XHTML;
 import framework::Types;
 import framework::BackEnd;
+import framework::FancyHTML;
 
 void main()
 {
@@ -38,46 +38,18 @@ HTML zooval2html(ZooEntry ze, bool debug)
 			heading(1, (), subsectionlinks(ze)),
 			hr(),
 			*[*lang2html(iz, debug) | iz <- ze.inner],
-			div( ("class":"last"), _seq([strong( (),
-				_seq([
-					_text("All grammars are distributed on terms of the "),
-					ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), _text("CC-BY")),
-					_text(" license as well as on terms of any other license bound to the source of our research in a way that enforces its propagation to derivatives.")
-				])),
-				br(),
-				_text("The page is maintained by Dr. "),
-				ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
-				_text(" a.k.a. @"),
-				ahref( ("href":"http://twitter.com/grammarware"), _text("grammarware")),
-				_text(". Last updated in <namemonth(now().month)> <now().year>."),
-				makelinks([<"↑","#TOP">]),
-				br(),
-				ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img("cc-by.png","CC-BY") ),
-				ahref( ("href":"http://validator.w3.org/check/referer"), img("vxhtml.png","Valid XHTML 1.0") ),
-				ahref( ("href":"http://jigsaw.w3.org/css-validator/check/referer"), img("vcss.png","Valid CSS 2.1") )
-			]) )
-		])
-	);
-
-str namemonth(1) = "January";
-str namemonth(2) = "February";
-str namemonth(3) = "March";
-str namemonth(4) = "April";
-str namemonth(5) = "May";
-str namemonth(6) = "June";
-str namemonth(7) = "July";
-str namemonth(8) = "August";
-str namemonth(9) = "September";
-str namemonth(10) = "October";
-str namemonth(11) = "November";
-str namemonth(12) = "December";
+			footer()
+	]) );
 
 BodyElement subsectionlinks(ZooEntry z)
 {
 	list[BodyElement] res = [];
 	for(ZooEntry sec <- orderedinner(z))
 		res += [ahref( ("href":"#<safe4anchor(sec.where)>"), _text(txtbykey(sec,"name")) ), _text(" — ")];
-	return _seq(res[..-1]);
+	if (res == [])
+		return _text("empty!");
+	else
+		return _seq(res[..-1]);
 }
 
 list[BodyElement] lang2html(ZooEntry z, bool debug) = [
@@ -92,7 +64,8 @@ BodyElement maketoptitle(ZooEntry z)
 	//anch = "<safe4anchor(txtbykey(z,"name"))>sector";
 	anch = safe4anchor(z.where);
 	return _seq([heading(2, (), _seq([
-		ahref( ("name":anch, "href":"#<anch>"), _text("(•)")),
+		ahref( ("name":anch, "href":"#<anch>", "title":"<countGrammars(z)> grammars"), 
+			_seq([ _text("("), colouredDots(z), _text(")") ])),
 		_text(" "),
 		_text(maketoptitlename(z)),
 		_text(" "),
@@ -108,22 +81,6 @@ str maketoptitlename(ZooEntry z)
 	return (long!="")?long:txtbykey(z,"name");
 }
 
-BodyElement makelinks(lrel[str,str] links)
-{
-	list[BodyElement] res = [];
-	for (link <- links)
-		res += [_text(" ["), ahref(("href":link[1]),_text(link[0])), _text("]")];
-	return span( ("class":"links"), _seq(res) );
-}
-
-tuple[str,str] makelink([keyvalue("uri", str uri),keyvalue("name", str name)])
-	= <name, uri>;
-tuple[str,str] makelink([keyvalue("doi", str doi)])
-	= <"DOI", "http://dx.doi.org/<doi>">;
-default tuple[str,str] makelink(list[ZooValue] kvs) = <"<kvs>","#">;
-
-lrel[str,str] getlinks(list[ZooValue] zs) = [makelink(inner) | struct("link", list[ZooValue] inner) <- zs];
-
 BodyElement maketitle(ZooEntry z)
 {
 	name = txtbykey(z,"name");
@@ -136,9 +93,9 @@ BodyElement maketitle(ZooEntry z)
 	lrel[str,str] links = [<"git",framework::BackEnd::gitbasedir+z.where>];
 	if (flag("readme") in z.meta) links += <"ReadMe","<framework::BackEnd::gitbasefile><z.where>/README.txt">;
 	links += getlinks(z.meta);
-	//return heading(3, (), _seq([
 	return span( ("class":"hh"), _seq([
-		ahref( ("name":anch, "href":"#<anch>"), _text("(•)")),
+		ahref( ("name":anch, "href":"#<anch>", "title":"<countGrammars(z)> grammars"),
+			_seq([ _text("("), colouredDots(z), _text(")") ])),
 		_text(" "),
 		_text(long),
 		makelinks(links) ]));
@@ -156,12 +113,6 @@ BodyElement src2be(list[ZooValue] zin) = _seq([
 	*[_text(", <a>") | keyvalue(k,a) <- zin, k == "specific" || k == "also"],
 	makelinks(getlinks(zin))
 ]);
-
-str th("1", str k) = "1st <k>";
-str th("2", str k) = "2nd <k>";
-str th("3", str k) = "3rd <k>";
-str th(n:/^[0-9]+$/ , str k) = "<n>th <k>";
-default str th(str n, str k) = "<k> <n>";
 
 // TODO: fancify tags (links, colours, images, etc)
 BodyElement displaytag(k:"level", str v) = span( ("class":"tag"), _seq([em( (), _text("<k>")), strong((),_text(" : <v>"))]));
