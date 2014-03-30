@@ -1,0 +1,859 @@
+# Idents:      153
+# - top:       1
+# - used:      152
+# - defined:   145
+# - undefined: 8
+# Literals:    121
+
+ref-or-out
+  : "ref"
+  | "out"
+  ;
+
+expression-unary-operator
+  : lex-csharp-extra/plus
+  | lex-csharp-extra/minus
+  | increment-decrement
+  | "!"
+  | "~"
+  | "*"
+  ;
+
+increment-decrement
+  : "++"
+  | "--"
+  ;
+
+expression-shift-operator
+  : "<<"
+  | ">>"
+  ;
+
+expression-relational-operator
+  : lex-csharp-extra/less-than
+  | lex-csharp-extra/greater-than
+  | "<="
+  | ">="
+  | "is"
+  | "as"
+  ;
+
+expression-equality-operator
+  : "=="
+  | "!="
+  ;
+
+conversion-kind
+  : "implicit"
+  | "explicit"
+  ;
+
+maybe-empty-block
+  : "{" statement* "}"
+  | ";"
+  ;
+
+built-in-type
+  : integral-type
+  | built-in-class-type
+  | "bool"
+  | "decimal"
+  | "float"
+  | "double"
+  ;
+
+built-in-class-type
+  : "object"
+  | "string"
+  ;
+
+else-part
+  : "else" embedded-statement
+  ;
+
+qualified-identifier-list
+  : { qualified-identifier "," } +
+  ;
+
+compilation-unit
+  : using-directive* global-attributes namespace-member-declaration*
+  ;
+
+type
+  : non-array-type rank-specifier*
+  ;
+
+integral-type
+  : "sbyte"
+  | "byte"
+  | "short"
+  | "ushort"
+  | "int"
+  | "uint"
+  | "long"
+  | "ulong"
+  | "char"
+  ;
+
+argument-list
+  : { argument "," } *
+  ;
+
+argument
+  : ref-or-out? expression
+  ;
+
+primary-expression
+  : "new" non-array-type "[" expression-list "]" rank-specifier* array-initializer?
+  | "new" array-type array-initializer
+  | lex-csharp/literal
+  | lex-csharp/identifier
+  | "(" expression ")"
+  | primary-expression "." lex-csharp/identifier
+  | predefined-type "." lex-csharp/identifier
+  | primary-expression "(" argument-list ")"
+  | primary-expression "[" expression-list "]"
+  | "this"
+  | "base" "." lex-csharp/identifier
+  | "base" "[" expression-list "]"
+  | primary-expression increment-decrement
+  | "new" type "(" argument-list ")"
+  | "typeof" "(" type-or-void ")"
+  | "checked" "(" expression ")"
+  | "unchecked" "(" expression ")"
+  ;
+
+predefined-type
+  : "bool"
+  | "byte"
+  | "char"
+  | "decimal"
+  | "double"
+  | "float"
+  | "int"
+  | "long"
+  | "object"
+  | "sbyte"
+  | "short"
+  | "string"
+  | "uint"
+  | "ulong"
+  | "ushort"
+  ;
+
+expression-list
+  : { expression "," } +
+  ;
+
+unary-expression
+  : expression-unary-operator unary-expression
+  | "(" type ")" unary-expression
+  | primary-expression
+  ;
+
+assignment-operator
+  : "="
+  | "+="
+  | "-="
+  | "*="
+  | "/="
+  | "%="
+  | "&="
+  | "|="
+  | "^="
+  | "<<="
+  | ">>="
+  ;
+
+expression
+  : expression "?" expression ":" expression
+  | expression "||" expression
+  | expression "&&" expression
+  | expression lex-csharp-extra/bar expression
+  | expression "^" expression
+  | expression lex-csharp-extra/ampersand expression
+  | expression expression-equality-operator expression
+  | expression expression-relational-operator expression
+  | expression "is" built-in-type
+  | expression expression-shift-operator expression
+  | expression lex-csharp-extra/plus expression
+  | expression lex-csharp-extra/minus expression
+  | expression "*" expression
+  | expression "/" expression
+  | expression "%" expression
+  | unary-expression
+  | unary-expression assignment-operator expression
+  ;
+
+statement
+  : labeled-statement
+  | declaration-statement
+  | embedded-statement
+  ;
+
+embedded-statement
+  : maybe-empty-block
+  | statement-expression ";"
+  | selection-statement
+  | iteration-statement
+  | jump-statement
+  | try-statement
+  | "checked" block
+  | "unchecked" block
+  | lock-statement
+  | using-statement
+  ;
+
+block
+  : "{" statement* "}"
+  ;
+
+labeled-statement
+  : lex-csharp/identifier ":" statement
+  ;
+
+declaration-statement
+  : local-variable-declaration ";"
+  | local-constant-declaration ";"
+  ;
+
+local-variable-declaration
+  : type { variable-declarator "," } +
+  ;
+
+local-constant-declaration
+  : "const" type { constant-declarator "," } +
+  ;
+
+constant-declarator
+  : lex-csharp/identifier "=" expression
+  ;
+
+statement-expression
+  : primary-expression "(" argument-list ")"
+  | "new" type "(" argument-list ")"
+  | unary-expression assignment-operator expression
+  | primary-expression increment-decrement
+  | increment-decrement primary-expression
+  ;
+
+selection-statement
+  : if-statement
+  | switch-statement
+  ;
+
+if-statement
+  : "if" "(" expression ")" embedded-statement else-part?
+  ;
+
+switch-statement
+  : "switch" "(" expression ")" "{" switch-section* "}"
+  ;
+
+switch-section
+  : switch-label+ statement+
+  ;
+
+switch-label
+  : "case" expression ":"
+  | "default" ":"
+  ;
+
+iteration-statement
+  : while-statement
+  | do-statement
+  | for-statement
+  | foreach-statement
+  ;
+
+while-statement
+  : "while" "(" expression ")" embedded-statement
+  ;
+
+do-statement
+  : "do" embedded-statement "while" "(" expression ")" ";"
+  ;
+
+for-statement
+  : "for" "(" for-initializer? ";" expression? ";" statement-expression-list? ")" embedded-statement
+  ;
+
+for-initializer
+  : local-variable-declaration
+  | statement-expression-list
+  ;
+
+statement-expression-list
+  : { statement-expression "," } +
+  ;
+
+foreach-statement
+  : "foreach" "(" type lex-csharp/identifier "in" expression ")" embedded-statement
+  ;
+
+jump-statement
+  : break-statement
+  | continue-statement
+  | goto-statement
+  | return-statement
+  | throw-statement
+  ;
+
+break-statement
+  : "break" ";"
+  ;
+
+continue-statement
+  : "continue" ";"
+  ;
+
+goto-statement
+  : "goto" lex-csharp/identifier ";"
+  | "goto" "case" expression ";"
+  | "goto" "default" ";"
+  ;
+
+return-statement
+  : "return" expression? ";"
+  ;
+
+throw-statement
+  : "throw" expression? ";"
+  ;
+
+try-statement
+  : "try" block catch-clauses finally-clause?
+  | "try" block finally-clause
+  ;
+
+catch-clauses
+  : specific-catch-clause+ general-catch-clause?
+  | specific-catch-clause* general-catch-clause
+  ;
+
+specific-catch-clause
+  : "catch" "(" built-in-class-type lex-csharp/identifier? ")" block
+  | "catch" "(" qualified-identifier lex-csharp/identifier? ")" block
+  ;
+
+general-catch-clause
+  : "catch" block
+  ;
+
+finally-clause
+  : "finally" block
+  ;
+
+lock-statement
+  : "lock" "(" expression ")" embedded-statement
+  ;
+
+using-statement
+  : "using" "(" resource-acquisition ")" embedded-statement
+  ;
+
+resource-acquisition
+  : local-variable-declaration
+  | expression
+  ;
+
+namespace-declaration
+  : "namespace" qualified-identifier namespace-body ";"?
+  ;
+
+qualified-identifier
+  : { lex-csharp/identifier "." } +
+  ;
+
+namespace-body
+  : "{" using-directive* namespace-member-declaration* "}"
+  ;
+
+using-directive
+  : "using" ( lex-csharp/identifier "=" )? qualified-identifier ";"
+  ;
+
+namespace-member-declaration
+  : namespace-declaration
+  | type-declaration
+  ;
+
+type-declaration
+  : class-declaration
+  | struct-declaration
+  | interface-declaration
+  | enum-declaration
+  | delegate-declaration
+  ;
+
+class-declaration
+  : attributes class-modifier* "class" lex-csharp/identifier class-base? class-body ";"?
+  ;
+
+class-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "abstract"
+  | "sealed"
+  ;
+
+class-base
+  : ":" qualified-identifier-list
+  | ":" built-in-class-type ( "," qualified-identifier-list )?
+  ;
+
+class-body
+  : "{" class-member-declaration* "}"
+  ;
+
+class-member-declaration
+  : constant-declaration
+  | field-declaration
+  | method-declaration
+  | property-declaration
+  | event-declaration
+  | indexer-declaration
+  | operator-declaration
+  | constructor-declaration
+  | destructor-declaration
+  | static-constructor-declaration
+  | type-declaration
+  ;
+
+constant-declaration
+  : attributes constant-modifier* "const" type { constant-declarator "," } + ";"
+  ;
+
+constant-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  ;
+
+field-declaration
+  : attributes field-modifier* type { variable-declarator "," } + ";"
+  ;
+
+field-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "static"
+  | "readonly"
+  | "volatile"
+  ;
+
+variable-declarator
+  : lex-csharp/identifier
+  | lex-csharp/identifier "=" variable-initializer
+  ;
+
+method-declaration
+  : method-header maybe-empty-block
+  ;
+
+method-header
+  : attributes method-modifier* type-or-void qualified-identifier "(" formal-parameter-list? ")"
+  ;
+
+method-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "static"
+  | "virtual"
+  | "sealed"
+  | "override"
+  | "abstract"
+  | "extern"
+  ;
+
+type-or-void
+  : type
+  | "void"
+  ;
+
+formal-parameter-list
+  : fixed-parameters
+  | fixed-parameters "," parameter-array
+  | parameter-array
+  ;
+
+fixed-parameters
+  : { fixed-parameter "," } +
+  ;
+
+fixed-parameter
+  : attributes parameter-modifier? type lex-csharp/identifier
+  ;
+
+parameter-modifier
+  : "ref"
+  | "out"
+  ;
+
+parameter-array
+  : attributes "params" array-type lex-csharp/identifier
+  ;
+
+property-declaration
+  : attributes property-modifier* type qualified-identifier "{" accessor-declarations "}"
+  ;
+
+property-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "static"
+  | "virtual"
+  | "sealed"
+  | "override"
+  | "abstract"
+  | "extern"
+  ;
+
+accessor-declarations
+  : get-accessor-declaration set-accessor-declaration?
+  | set-accessor-declaration get-accessor-declaration?
+  ;
+
+get-accessor-declaration
+  : attributes "get" maybe-empty-block
+  ;
+
+set-accessor-declaration
+  : attributes "set" maybe-empty-block
+  ;
+
+event-declaration
+  : attributes event-modifier* "event" type { variable-declarator "," } + ";"
+  | attributes event-modifier* "event" type qualified-identifier "{" event-accessor-declarations "}"
+  ;
+
+event-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "static"
+  | "virtual"
+  | "sealed"
+  | "override"
+  | "abstract"
+  | "extern"
+  ;
+
+event-accessor-declarations
+  : add-accessor-declaration remove-accessor-declaration
+  | remove-accessor-declaration add-accessor-declaration
+  ;
+
+add-accessor-declaration
+  : attributes "add" block
+  ;
+
+remove-accessor-declaration
+  : attributes "remove" block
+  ;
+
+indexer-declaration
+  : attributes indexer-modifier* indexer-declarator "{" accessor-declarations "}"
+  ;
+
+indexer-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "virtual"
+  | "sealed"
+  | "override"
+  | "abstract"
+  | "extern"
+  ;
+
+indexer-declarator
+  : type "this" "[" formal-parameter-list "]"
+  | type qualified-identifier "." "this" "[" formal-parameter-list "]"
+  ;
+
+operator-declaration
+  : attributes operator-modifier+ operator-declarator maybe-empty-block
+  ;
+
+operator-modifier
+  : "public"
+  | "static"
+  | "extern"
+  ;
+
+operator-declarator
+  : unary-operator-declarator
+  | binary-operator-declarator
+  | conversion-operator-declarator
+  ;
+
+unary-operator-declarator
+  : type "operator" overloadable-unary-operator "(" type lex-csharp/identifier ")"
+  ;
+
+overloadable-unary-operator
+  : lex-csharp-extra/plus
+  | lex-csharp-extra/minus
+  | increment-decrement
+  | "!"
+  | "~"
+  | "true"
+  | "false"
+  ;
+
+binary-operator-declarator
+  : type "operator" overloadable-binary-operator "(" type lex-csharp/identifier "," type lex-csharp/identifier ")"
+  ;
+
+overloadable-binary-operator
+  : lex-csharp-extra/plus
+  | lex-csharp-extra/minus
+  | "*"
+  | "/"
+  | "%"
+  | lex-csharp-extra/ampersand
+  | lex-csharp-extra/bar
+  | "^"
+  | "<<"
+  | ">>"
+  | "=="
+  | "!="
+  | lex-csharp-extra/greater-than
+  | lex-csharp-extra/less-than
+  | ">="
+  | "<="
+  ;
+
+conversion-operator-declarator
+  : conversion-kind "operator" type "(" type lex-csharp/identifier ")"
+  ;
+
+constructor-declaration
+  : attributes constructor-modifier* constructor-declarator maybe-empty-block
+  ;
+
+constructor-modifier
+  : "public"
+  | "protected"
+  | "internal"
+  | "private"
+  | "extern"
+  ;
+
+constructor-declarator
+  : lex-csharp/identifier "(" formal-parameter-list? ")" constructor-initializer?
+  ;
+
+constructor-initializer
+  : ":" "base" "(" argument-list ")"
+  | ":" "this" "(" argument-list ")"
+  ;
+
+static-constructor-declaration
+  : attributes static-constructor-modifiers lex-csharp/identifier "(" ")" maybe-empty-block
+  ;
+
+static-constructor-modifiers
+  : "extern"? "static"
+  | "static" "extern"
+  ;
+
+destructor-declaration
+  : attributes "extern"? "~" lex-csharp/identifier "(" ")" maybe-empty-block
+  ;
+
+struct-declaration
+  : attributes struct-modifier* "struct" lex-csharp/identifier ( ":" qualified-identifier-list )? struct-body ";"?
+  ;
+
+struct-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  ;
+
+struct-body
+  : "{" struct-member-declaration* "}"
+  ;
+
+struct-member-declarations
+  : struct-member-declaration
+  | struct-member-declarations struct-member-declaration
+  ;
+
+struct-member-declaration
+  : constant-declaration
+  | field-declaration
+  | method-declaration
+  | property-declaration
+  | event-declaration
+  | indexer-declaration
+  | operator-declaration
+  | constructor-declaration
+  | static-constructor-declaration
+  | type-declaration
+  ;
+
+array-type
+  : non-array-type rank-specifier+
+  ;
+
+non-array-type
+  : qualified-identifier
+  | built-in-type
+  ;
+
+rank-specifier
+  : "[" ","* "]"
+  ;
+
+array-initializer
+  : "{" "}"
+  | "{" { variable-initializer "," } + ","? "}"
+  ;
+
+variable-initializer
+  : expression
+  | array-initializer
+  ;
+
+interface-declaration
+  : attributes interface-modifier* "interface" lex-csharp/identifier ( ":" qualified-identifier-list )? interface-body ";"?
+  ;
+
+interface-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  ;
+
+interface-body
+  : "{" interface-member-declaration* "}"
+  ;
+
+interface-member-declaration
+  : interface-method-declaration
+  | interface-property-declaration
+  | interface-event-declaration
+  | interface-indexer-declaration
+  ;
+
+interface-method-declaration
+  : attributes "new"? type-or-void lex-csharp/identifier "(" formal-parameter-list? ")" ";"
+  ;
+
+interface-property-declaration
+  : attributes "new"? type lex-csharp/identifier "{" interface-accessors "}"
+  ;
+
+interface-accessors
+  : attributes "get" ";" ( attributes "set" ";" )?
+  | attributes "set" ";" ( attributes "get" ";" )?
+  ;
+
+interface-event-declaration
+  : attributes "new"? "event" type lex-csharp/identifier ";"
+  ;
+
+interface-indexer-declaration
+  : attributes "new"? type "this" "[" formal-parameter-list "]" "{" interface-accessors "}"
+  ;
+
+enum-declaration
+  : attributes enum-modifier* "enum" lex-csharp/identifier ( ":" integral-type )? enum-body ";"?
+  ;
+
+enum-body
+  : "{" "}"
+  | "{" { enum-member-declaration "," } + ","? "}"
+  ;
+
+enum-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  ;
+
+enum-member-declaration
+  : attributes lex-csharp/identifier ( "=" expression )?
+  ;
+
+delegate-declaration
+  : attributes delegate-modifier* "delegate" type-or-void lex-csharp/identifier "(" formal-parameter-list? ")" ";"
+  ;
+
+delegate-modifier
+  : "new"
+  | "public"
+  | "protected"
+  | "internal"
+  | "private"
+  ;
+
+global-attributes
+  : global-attribute-section*
+  ;
+
+global-attribute-section
+  : "[" "assembly" ":" attribute-list ","? "]"
+  ;
+
+attributes
+  : attribute-section*
+  ;
+
+attribute-section
+  : "[" ( attribute-target ":" )? attribute-list ","? "]"
+  ;
+
+attribute-target
+  : "field"
+  | "event"
+  | "method"
+  | "module"
+  | "param"
+  | "property"
+  | "return"
+  | "type"
+  ;
+
+attribute-list
+  : { attribute "," } +
+  ;
+
+attribute
+  : attribute-name attribute-arguments?
+  ;
+
+attribute-name
+  : qualified-identifier
+  ;
+
+attribute-arguments
+  : "(" expression-list? ")"
+  ;

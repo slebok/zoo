@@ -1,0 +1,97 @@
+##################################################################
+##################################################################
+#####################   Disambiguation    ########################
+##################################################################
+##################################################################
+## Type names
+%redefine
+type-name
+  : namespace-or-type-name
+  ;
+%to
+type-name
+  : qualified-identifier
+  ;
+
+%eliminate
+namespace-name
+
+%eliminate	value-type
+%eliminate	struct-type
+%eliminate	simple-type
+%eliminate	numeric-type
+%eliminate	floating-point-type
+%eliminate	enum-type
+%eliminate	reference-type
+%eliminate	interface-type
+%eliminate	class-type
+
+%redefine
+attribute-name
+  : type-name
+  ;
+%to
+attribute-name
+  : qualified-identifier
+  ;
+
+%eliminate
+namespace-or-type-name
+
+## delegate-creation-expression
+################################
+## object-creation-expression
+
+#%redefine
+#primary-no-array-creation-expression
+#  : literal
+#  | simple-name
+#  | parenthesized-expression
+#  | member-access
+#  | invocation-expression
+#  | element-access
+#  | this-access
+#  | base-access
+#  | post-increment-expression
+#  | post-decrement-expression
+#  | object-creation-expression
+#  | delegate-creation-expression
+#  | typeof-expression
+#  | checked-expression
+#  | unchecked-expression
+#  ;
+#%to
+#primary-no-array-creation-expression
+#  : literal
+#  | simple-name
+#  | parenthesized-expression
+#  | member-access
+#  | invocation-expression
+#  | element-access
+#  | this-access
+#  | base-access
+#  | post-increment-expression
+#  | post-decrement-expression
+#  | object-creation-expression
+##  | delegate-creation-expression	#-> totally covered by object-creation-expression!
+#  | typeof-expression
+#  | checked-expression
+#  | unchecked-expression
+#  ;
+
+%redefine
+attribute-arguments
+  : "(" expression-list? ")"
+  | "(" expression-list "," named-argument-list ")"
+  | "(" named-argument-list ")"
+  ;
+%to
+attribute-arguments
+  : "(" expression-list? ")"
+  ;
+
+%eliminate
+named-argument-list
+
+%eliminate
+named-argument

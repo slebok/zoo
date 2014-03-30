@@ -1,0 +1,291 @@
+##################################################################
+##################################################################
+##################   Introducing expressions   ###################
+##################################################################
+##################################################################
+
+%rename
+return-type
+%to
+type-or-void
+
+%introduce
+expression-equality-operator
+  : "=="
+  | "!="
+  ;
+
+%introduce
+expression-relational-operator
+  : less-than
+  | greater-than
+  | "<="
+  | ">="
+  | "is"
+  | "as"
+  ;
+
+%introduce
+expression-shift-operator
+  : "<<"
+  | ">>"
+  ;
+
+%introduce
+increment-decrement
+  : "++"
+  | "--"
+  ;
+
+%introduce
+expression-unary-operator
+  : plus
+  | minus
+  | increment-decrement
+  | "!"
+  | "~"
+  | "*"
+  ;
+
+%redefine
+primary-expression
+  : array-creation-expression
+  | primary-no-array-creation-expression
+  ;
+%to
+primary-expression
+# array creation:
+  : "new" non-array-type "[" expression-list "]" rank-specifier* array-initializer?
+  | "new" array-type array-initializer
+# primary no array creation:
+  | literal
+  | identifier
+  | "(" expression ")"
+  | primary-expression "." identifier
+  | predefined-type "." identifier
+  | primary-expression "(" argument-list ")"
+  | primary-expression "[" expression-list "]"
+  | "this"
+  | "base" "." identifier
+  | "base" "[" expression-list "]"
+  | primary-expression increment-decrement
+  | "new" type "(" argument-list ")"
+  | "typeof" "(" type-or-void ")"
+  | "checked" "(" expression ")"
+  | "unchecked" "(" expression ")"
+  ;
+
+%redefine
+expression
+  : conditional-expression
+  | assignment
+  ;
+%to
+expression
+  : expression "?" expression ":" expression
+  | expression "||" expression
+  | expression "&&" expression
+  | expression bar expression
+  | expression "^" expression
+  | expression ampersand expression
+  | expression expression-equality-operator expression
+  | expression expression-relational-operator expression
+## bug-fix!
+  | expression "is" built-in-type
+  | expression expression-shift-operator expression
+  | expression plus expression
+  | expression minus expression
+  | expression "*" expression
+  | expression "/" expression
+  | expression "%" expression
+  | unary-expression
+#assignment
+  | unary-expression assignment-operator expression
+  ;
+
+%redefine
+unary-expression
+  : primary-expression
+  | "+" unary-expression
+  | "-" unary-expression
+  | "!" unary-expression
+  | "~" unary-expression
+  | "*" unary-expression
+  | pre-increment-expression
+  | pre-decrement-expression
+  | cast-expression
+  ;
+%to
+unary-expression
+  : expression-unary-operator unary-expression
+  | "(" type ")" unary-expression
+  | primary-expression
+  ;
+
+%redefine
+while-statement
+  : "while" "(" boolean-expression ")" embedded-statement
+  ;
+%to
+while-statement
+  : "while" "(" expression ")" embedded-statement
+  ;
+
+%redefine
+do-statement
+  : "do" embedded-statement "while" "(" boolean-expression ")" ";"
+  ;
+%to
+do-statement
+  : "do" embedded-statement "while" "(" expression ")" ";"
+  ;
+
+%redefine
+for-statement
+  : "for" "(" for-initializer? ";" for-condition? ";" for-iterator? ")" embedded-statement
+  ;
+%to
+for-statement
+  : "for" "(" for-initializer? ";" expression? ";" statement-expression-list? ")" embedded-statement
+  ;
+
+%redefine
+statement-expression
+  : invocation-expression
+  | object-creation-expression
+  | assignment
+  | post-increment-expression
+  | post-decrement-expression
+  | pre-increment-expression
+  | pre-decrement-expression
+  ;
+%to
+statement-expression
+  : primary-expression "(" argument-list ")"
+  | "new" type "(" argument-list ")"
+  | unary-expression assignment-operator expression
+  | primary-expression increment-decrement
+  | increment-decrement primary-expression
+  ;
+
+## eliminate doesn't work because of the circle
+%reject primary-no-array-creation-expression
+%eliminate	delegate-creation-expression
+%eliminate	delegate-type
+%eliminate  type-name
+%eliminate	member-access
+%eliminate	invocation-expression
+%eliminate	array-creation-expression
+%eliminate	simple-name
+%eliminate	parenthesized-expression
+%eliminate	element-access
+%eliminate	this-access
+%eliminate	base-access
+%eliminate	post-increment-expression
+%eliminate	post-decrement-expression
+%eliminate	object-creation-expression
+%eliminate	typeof-expression
+%eliminate	checked-expression
+%eliminate	unchecked-expression
+%eliminate	pre-increment-expression
+%eliminate	pre-decrement-expression
+%eliminate	cast-expression
+%eliminate      conditional-expression
+%eliminate      conditional-or-expression
+%eliminate      conditional-and-expression
+%eliminate      inclusive-or-expression
+%eliminate      exclusive-or-expression
+%eliminate      and-expression
+%eliminate	equality-expression
+%eliminate	relational-expression
+%eliminate	shift-expression
+%eliminate	additive-expression
+%eliminate	multiplicative-expression
+%eliminate	assignment
+%eliminate	for-condition
+%eliminate	for-iterator
+
+%introduce
+ref-or-out
+  : "ref"
+  | "out"
+  ;
+
+%redefine
+argument
+  : expression
+  | "ref" variable-reference
+  | "out" variable-reference
+  ;
+%to
+argument
+  : ref-or-out? expression
+  ;
+
+%eliminate	variable-reference
+%eliminate	boolean-expression
+
+# Avoiding ++ vs + + ambiguity:
+%redefine
+overloadable-unary-operator
+  : "+"
+  | "-"
+  | "!"
+  | "~"
+  | "++"
+  | "--"
+  | "true"
+  | "false"
+  ;
+%to
+overloadable-unary-operator
+  : plus
+  | minus
+  | increment-decrement
+  | "!"
+  | "~"
+  | "true"
+  | "false"
+  ;
+
+# Just to make sure + and - ain't used anywhere
+# (not really needed, just for the sake of completeness):
+%redefine
+overloadable-binary-operator
+  : "+"
+  | "-"
+  | "*"
+  | "/"
+  | "%"
+  | "&"
+  | "|"
+  | "^"
+  | "<<"
+  | ">>"
+  | "=="
+  | "!="
+  | ">"
+  | "<"
+  | ">="
+  | "<="
+  ;
+%to
+overloadable-binary-operator
+  : plus
+  | minus
+  | "*"
+  | "/"
+  | "%"
+  | ampersand
+  | bar
+  | "^"
+  | "<<"
+  | ">>"
+  | "=="
+  | "!="
+  | greater-than
+  | less-than
+  | ">="
+  | "<="
+  ;
+

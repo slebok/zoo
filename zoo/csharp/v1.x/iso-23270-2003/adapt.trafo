@@ -1,0 +1,389 @@
+## Grammar adaptation for the ME
+
+%redefine
+qualified-identifier
+  : identifier
+  | qualified-identifier "." identifier
+  ;
+%to
+qualified-identifier
+  : {identifier "."}+
+  ;
+
+%redefine
+type
+  : value-type
+  | reference-type
+  ;
+%to
+type
+  : non-array-type rank-specifier*
+  ;
+
+%introduce
+built-in-class-type
+  : "object"
+  | "string"
+  ;
+
+%introduce
+built-in-type
+  : integral-type
+  | built-in-class-type
+## simple-type
+  | "bool"
+## numeric-type
+  | "decimal"
+## floating-point-type
+  | "float"
+  | "double"
+ ;
+
+%redefine
+non-array-type
+  : type
+  ;
+%to
+non-array-type
+  : qualified-identifier
+  | built-in-type
+  ;
+
+%redefine 
+using-directive
+  : using-alias-directive
+  | using-namespace-directive
+  ;
+%to
+using-directive
+  : "using" (identifier "=")? qualified-identifier ";"
+  ;
+
+%eliminate
+using-alias-directive
+
+%eliminate
+using-namespace-directive
+
+## This construct is used throughout the spec, but has thousand different names for it:
+%introduce
+maybe-empty-block
+  : "{" statement* "}"
+  | ";"
+  ;
+
+%redefine
+embedded-statement
+  : block
+  | empty-statement
+  | expression-statement
+  | selection-statement
+  | iteration-statement
+  | jump-statement
+  | try-statement
+  | checked-statement
+  | unchecked-statement
+  | lock-statement
+  | using-statement
+  ;
+%to
+embedded-statement
+  : maybe-empty-block
+  | expression-statement
+  | selection-statement
+  | iteration-statement
+  | jump-statement
+  | try-statement
+  | checked-statement
+  | unchecked-statement
+  | lock-statement
+  | using-statement
+  ;
+
+%eliminate
+empty-statement
+
+%redefine
+method-declaration
+  : method-header method-body
+  ;
+%to
+method-declaration
+  : method-header maybe-empty-block
+  ;
+
+%eliminate
+method-body
+
+%redefine
+get-accessor-declaration
+  : attributes? "get" accessor-body
+  ;
+%to
+get-accessor-declaration
+  : attributes "get" maybe-empty-block
+  ;
+
+%redefine
+set-accessor-declaration
+  : attributes? "set" accessor-body
+  ;
+%to
+set-accessor-declaration
+  : attributes "set" maybe-empty-block
+  ;
+
+%eliminate
+accessor-body
+
+%redefine
+operator-declaration
+  : attributes operator-modifier+ operator-declarator operator-body
+  ;
+%to
+operator-declaration
+  : attributes operator-modifier+ operator-declarator maybe-empty-block
+  ;
+
+%eliminate
+operator-body
+
+%redefine
+constructor-declaration
+  : attributes constructor-modifier* constructor-declarator constructor-body
+  ;
+%to
+constructor-declaration
+  : attributes constructor-modifier* constructor-declarator maybe-empty-block
+  ;
+
+%eliminate
+constructor-body
+
+%redefine
+static-constructor-declaration
+  : attributes static-constructor-modifiers identifier "(" ")" static-constructor-body
+  ;
+%to
+static-constructor-declaration
+  : attributes static-constructor-modifiers identifier "(" ")" maybe-empty-block
+  ;
+
+%eliminate static-constructor-body
+
+%redefine
+destructor-declaration
+  : attributes "extern"? "~" identifier "(" ")" destructor-body
+  ;
+%to
+destructor-declaration
+  : attributes "extern"? "~" identifier "(" ")" maybe-empty-block
+  ;
+
+%eliminate
+destructor-body
+
+## Pushing choices inside, EBNFification:
+%introduce
+conversion-kind
+  : "implicit"
+  | "explicit"
+  ;
+
+%redefine
+conversion-operator-declarator
+  : "implicit" "operator" type "(" type identifier ")"
+  | "explicit" "operator" type "(" type identifier ")"
+  ;
+%to
+conversion-operator-declarator
+  : conversion-kind "operator" type "(" type identifier ")"
+  ;
+
+%redefine
+global-attribute-section
+  : "[" global-attribute-target-specifier attribute-list "]"
+  | "[" global-attribute-target-specifier attribute-list "," "]"
+  ;
+%to
+global-attribute-section
+  : "[" "assembly" ":" attribute-list ","? "]"
+  ;
+
+%eliminate
+global-attribute-target-specifier
+
+%eliminate
+global-attribute-target
+
+%redefine
+class-base
+  : ":" class-type
+  | ":" interface-type-list
+  | ":" class-type "," interface-type-list
+  ;
+%to
+class-base
+  : ":" qualified-identifier-list
+  | ":" built-in-class-type ("," qualified-identifier-list)?
+  ;
+
+%redefine
+method-header
+  : attributes method-modifier* return-type member-name "(" formal-parameter-list? ")"
+  ;
+%to
+method-header
+  : attributes method-modifier* return-type qualified-identifier "(" formal-parameter-list? ")"
+  ;
+
+%redefine
+property-declaration
+  : attributes property-modifier* type member-name "{" accessor-declarations "}"
+  ;
+%to
+property-declaration
+  : attributes property-modifier* type qualified-identifier "{" accessor-declarations "}"
+  ;
+
+%redefine
+event-declaration
+  : attributes event-modifier* "event" type variable-declarators ";"
+  | attributes event-modifier* "event" type member-name "{" event-accessor-declarations "}"
+  ;
+%to
+event-declaration
+  : attributes event-modifier* "event" type { variable-declarator "," }+ ";"
+  | attributes event-modifier* "event" type qualified-identifier "{" event-accessor-declarations "}"
+  ;
+
+%eliminate
+member-name
+
+%redefine
+indexer-declarator
+  : type "this" "[" formal-parameter-list "]"
+  | type interface-type "." "this" "[" formal-parameter-list "]"
+  ;
+%to
+indexer-declarator
+  : type "this" "[" formal-parameter-list "]"
+  | type qualified-identifier "." "this" "[" formal-parameter-list "]"
+  ;
+
+%eliminate
+interface-base
+
+%eliminate
+interface-type-list
+
+%redefine
+specific-catch-clause
+  : "catch" "(" class-type identifier? ")" block
+  ;
+%to
+specific-catch-clause
+  : "catch" "(" built-in-class-type identifier? ")" block
+  | "catch" "(" qualified-identifier identifier? ")" block
+  ;
+
+%redefine
+constant-declarator
+  : identifier "=" constant-expression
+  ;
+%to
+constant-declarator
+  : identifier "=" expression
+  ;
+
+%eliminate
+constant-expression
+
+%eliminate
+variable-declarators
+
+%redefine
+local-constant-declaration
+  : "const" type constant-declarators
+  ;
+%to
+local-constant-declaration
+  : "const" type {constant-declarator ","} +
+  ;
+
+%eliminate
+constant-declarators
+
+%redefine
+attribute-arguments
+  : "(" positional-argument-list? ")"
+  | "(" positional-argument-list "," named-argument-list ")"
+  | "(" named-argument-list ")"
+  ;
+%to
+attribute-arguments
+  : "(" expression-list? ")"
+  | "(" expression-list "," named-argument-list ")"
+  | "(" named-argument-list ")"
+  ;
+
+%eliminate
+positional-argument-list
+
+%redefine
+typeof-expression
+  : "typeof" "(" type ")"
+  | "typeof" "(" "void" ")"
+  ;
+%to
+typeof-expression
+  : "typeof" "(" return-type ")"
+  ;
+
+%redefine
+embedded-statement
+  : maybe-empty-block
+  | expression-statement
+  | selection-statement
+  | iteration-statement
+  | jump-statement
+  | try-statement
+  | checked-statement
+  | unchecked-statement
+  | lock-statement
+  | using-statement
+  ;
+%to
+embedded-statement
+  : maybe-empty-block
+  | statement-expression ";"
+  | selection-statement
+  | iteration-statement
+  | jump-statement
+  | try-statement
+  | "checked" block
+  | "unchecked" block
+  | lock-statement
+  | using-statement
+  ;
+
+%eliminate
+checked-statement
+
+%eliminate
+unchecked-statement
+
+%eliminate
+expression-statement
+
+## Add preprocessor:
+#%include
+#statement
+#  : pp-directive
+#  ;
+#
+#%include
+#class-member-declaration
+#  : pp-directive
+#  ;
+

@@ -1,0 +1,694 @@
+##################################################################
+##################################################################
+##########################   Part I    ###########################
+##################################################################
+##################################################################
+## ECMA Specification did not use any *s and the grammar therefore
+## looked very much like:
+## 	A: B? C D;
+## 	B: X | (B X);
+## 	X: ...
+## This could have been transformed by this file to:
+## 	A: X* C D;
+
+%redefine
+compilation-unit
+  : using-directives? global-attributes? namespace-member-declarations?
+  ;
+%to
+compilation-unit
+  : using-directive* global-attributes namespace-member-declaration*
+  ;
+
+%redefine
+global-attributes
+  : global-attribute-sections
+  ;
+%to
+global-attributes
+  : global-attribute-section*
+  ;
+
+%eliminate
+global-attribute-sections
+
+%redefine
+namespace-body
+  : "{" using-directives? namespace-member-declarations? "}"
+  ;
+%to
+namespace-body
+  : "{" using-directive* namespace-member-declaration* "}"
+  ;
+
+%eliminate
+namespace-member-declarations
+
+%eliminate
+using-directives
+
+%redefine
+class-declaration
+  : attributes? class-modifiers? "class" identifier class-base? class-body ";"?
+  ;
+%to
+class-declaration
+  : attributes class-modifier* "class" identifier class-base? class-body ";"?
+  ;
+
+%eliminate
+class-modifiers
+
+%redefine
+fixed-parameter
+  : attributes? parameter-modifier? type identifier
+  ;
+%to
+fixed-parameter
+  : attributes parameter-modifier? type identifier
+  ;
+
+%redefine
+parameter-array
+  : attributes? "params" array-type identifier
+  ;
+%to
+parameter-array
+  : attributes "params" array-type identifier
+  ;
+
+%redefine
+attributes
+  : attribute-sections
+  ;
+%to
+attributes
+  : attribute-section*
+  ;
+
+%eliminate
+attribute-sections
+
+%redefine
+attribute-section
+  : "[" attribute-target-specifier? attribute-list "]"
+  | "[" attribute-target-specifier? attribute-list "," "]"
+  ;
+%to
+attribute-section
+  : "[" (attribute-target ":")? attribute-list ","? "]";
+
+%eliminate
+attribute-target-specifier
+
+%redefine
+class-body
+  : "{" class-member-declarations? "}"
+  ;
+%to
+class-body
+  : "{" class-member-declaration* "}"
+  ;
+
+%eliminate
+class-member-declarations
+
+%redefine
+constant-declaration
+  : attributes? constant-modifiers? "const" type constant-declarators ";"
+  ;
+%to
+constant-declaration
+  : attributes constant-modifier* "const" type {constant-declarator ","}+ ";"
+  ;
+
+%redefine
+goto-statement
+  : "goto" identifier ";"
+  | "goto" "case" constant-expression ";"
+  | "goto" "default" ";"
+  ;
+%to
+goto-statement
+  : "goto" identifier ";"
+  | "goto" "case" expression ";"
+  | "goto" "default" ";"
+  ;
+
+%redefine
+switch-label
+  : "case" constant-expression ":"
+  | "default" ":"
+  ;
+%to
+switch-label
+  : "case" expression ":"
+  | "default" ":"
+  ;
+
+%eliminate
+constant-modifiers
+
+%redefine
+field-declaration
+  : attributes? field-modifiers? type variable-declarators ";"
+  ;
+%to
+field-declaration
+  : attributes field-modifier* type { variable-declarator "," }+ ";"
+  ;
+
+%eliminate
+field-modifiers
+
+%redefine
+array-initializer
+  : "{" variable-initializer-list? "}"
+  | "{" variable-initializer-list "," "}"
+  ;
+%to
+array-initializer
+  : "{" "}"
+  | "{" { variable-initializer "," }+ ","? "}"
+  ;
+
+%eliminate
+variable-initializer-list
+
+##%eliminate
+##variable-declarators
+
+%introduce
+qualified-identifier-list
+  : {qualified-identifier ","}+;
+
+%redefine
+struct-declaration
+  : attributes? struct-modifiers? "struct" identifier struct-interfaces? struct-body ";"?
+  ;
+%to
+struct-declaration
+  : attributes struct-modifier* "struct" identifier (":" qualified-identifier-list)? struct-body ";"?
+  ;
+
+%eliminate
+struct-modifiers
+
+%eliminate
+struct-interfaces
+
+%redefine
+struct-body
+  : "{" struct-member-declarations? "}"
+  ;
+%to
+struct-body
+  : "{" struct-member-declaration* "}"
+  ;
+
+%redefine
+interface-declaration
+  : attributes? interface-modifiers? "interface" identifier interface-base? interface-body ";"?
+  ;
+%to
+interface-declaration
+  : attributes interface-modifier* "interface" identifier (":" qualified-identifier-list)? interface-body ";"?
+  ;
+
+%eliminate
+interface-modifiers
+
+%redefine
+interface-body
+  : "{" interface-member-declarations? "}"
+  ;
+%to
+interface-body
+  : "{" interface-member-declaration* "}"
+  ;
+
+%eliminate
+interface-member-declarations
+
+%redefine
+enum-declaration: attributes? enum-modifiers? "enum" identifier enum-base? enum-body ";"?;
+%to
+enum-declaration
+  : attributes enum-modifier* "enum" identifier (":" integral-type)? enum-body ";"?;
+
+%eliminate
+enum-modifiers
+
+%eliminate
+enum-base
+
+%redefine
+enum-body
+  : "{" enum-member-declarations? "}"
+  | "{" enum-member-declarations "," "}"
+  ;
+%to
+enum-body
+  : "{" "}"
+  | "{" { enum-member-declaration "," } + "," ? "}"
+  ;
+
+%eliminate
+enum-member-declarations
+
+%redefine
+enum-member-declaration
+  : attributes? identifier
+  | attributes? identifier "=" constant-expression
+  ;
+%to
+enum-member-declaration
+  : attributes identifier ("=" expression)?
+  ;
+
+%redefine
+delegate-declaration
+  : attributes? delegate-modifiers? "delegate" type identifier "(" formal-parameter-list? ")" ";"
+  ;
+%to
+delegate-declaration
+  : attributes delegate-modifier* "delegate" type identifier "(" formal-parameter-list? ")" ";"
+  ;
+
+%eliminate
+delegate-modifiers
+
+%redefine
+method-header
+  : attributes? method-modifiers? return-type member-name "(" formal-parameter-list? ")";
+%to
+method-header
+  : attributes method-modifier* return-type member-name "(" formal-parameter-list? ")";
+
+%eliminate
+method-modifiers
+
+%redefine
+property-declaration
+  : attributes? property-modifiers? type member-name "{" accessor-declarations "}"
+  ;
+%to
+property-declaration
+  : attributes property-modifier* type member-name "{" accessor-declarations "}"
+  ;
+
+%eliminate
+property-modifiers
+
+%redefine
+array-creation-expression
+  : "new" non-array-type "[" expression-list "]" rank-specifiers? array-initializer?
+  | "new" array-type array-initializer
+  ;
+%to
+array-creation-expression
+  : "new" non-array-type "[" expression-list "]" rank-specifier* array-initializer?
+  | "new" array-type array-initializer
+  ;
+
+%redefine
+block
+  : "{" statement-list? "}"
+  ;
+%to
+block
+  : "{" statement* "}"
+  ;
+
+%introduce
+else-part
+  : "else" embedded-statement
+  ;
+
+%redefine
+if-statement
+  : ( "if" "(" boolean-expression ")" embedded-statement )
+  | ( "if" "(" boolean-expression ")" embedded-statement "else" embedded-statement )
+  ;
+%to
+if-statement
+  : "if" "(" expression ")" embedded-statement else-part?
+  ;
+
+%redefine
+switch-statement
+  : "switch" "(" expression ")" switch-block
+  ;
+%to
+switch-statement
+  : "switch" "(" expression ")" "{" switch-section* "}"
+  ;
+
+%eliminate
+switch-block
+
+%eliminate
+switch-sections
+
+%redefine
+switch-section
+  : switch-labels statement-list
+  ;
+%to
+switch-section
+  : switch-label+ statement+
+  ;
+
+%eliminate
+switch-labels
+
+%eliminate
+statement-list
+
+%redefine
+try-statement
+  : ( "try" block catch-clauses )
+  | ( "try" block finally-clause )
+  | ( "try" block catch-clauses finally-clause )
+  ;
+%to
+try-statement
+  : ( "try" block catch-clauses finally-clause? )
+  | ( "try" block finally-clause )
+  ;
+
+%redefine
+catch-clauses
+  : ( specific-catch-clauses general-catch-clause? )
+  | ( specific-catch-clauses? general-catch-clause )
+  ;
+%to
+catch-clauses
+  : ( specific-catch-clause+ general-catch-clause? )
+  | ( specific-catch-clause* general-catch-clause  )
+  ;
+
+%eliminate
+specific-catch-clauses
+
+%redefine
+event-declaration
+  : attributes? event-modifiers? "event" type variable-declarators ";"
+  | attributes? event-modifiers? "event" type member-name "{" event-accessor-declarations "}"
+  ;
+%to
+event-declaration
+  : attributes event-modifier* "event" type variable-declarators ";"
+  | attributes event-modifier* "event" type member-name "{" event-accessor-declarations "}"
+  ;
+
+%eliminate
+event-modifiers
+
+%redefine
+add-accessor-declaration
+  : attributes? "add" block
+  ;
+%to
+add-accessor-declaration
+  : attributes "add" block
+  ;
+
+%redefine
+remove-accessor-declaration
+  : attributes? "remove" block
+  ;
+%to
+remove-accessor-declaration
+  : attributes "remove" block
+  ;
+
+%redefine
+indexer-declaration
+  : attributes? indexer-modifiers? indexer-declarator "{" accessor-declarations "}"
+  ;
+%to
+indexer-declaration
+  : attributes indexer-modifier* indexer-declarator "{" accessor-declarations "}"
+  ;
+
+%eliminate
+indexer-modifiers
+
+%redefine
+operator-declaration
+  : attributes? operator-modifiers operator-declarator operator-body
+  ;
+%to
+operator-declaration
+  : attributes operator-modifier+ operator-declarator operator-body
+  ;
+
+%eliminate
+operator-modifiers
+
+%redefine
+constructor-declaration
+  : attributes? constructor-modifiers? constructor-declarator constructor-body
+  ;
+%to
+constructor-declaration
+  : attributes constructor-modifier* constructor-declarator constructor-body
+  ;
+
+%eliminate
+constructor-modifiers
+
+%redefine
+static-constructor-declaration
+  : attributes? static-constructor-modifiers identifier "(" ")" static-constructor-body
+  ;
+%to
+static-constructor-declaration
+  : attributes static-constructor-modifiers identifier "(" ")" static-constructor-body
+  ;
+
+%redefine
+destructor-declaration
+  : attributes? "extern"? "~" identifier "("  ")" destructor-body
+  ;
+%to
+destructor-declaration
+  : attributes "extern"? "~" identifier "("  ")" destructor-body
+  ;
+
+%redefine
+array-type
+  : non-array-type rank-specifiers
+  ;
+%to
+array-type
+  : non-array-type rank-specifier+
+  ;
+
+%eliminate
+rank-specifiers
+
+%redefine
+rank-specifier
+  : "[" dim-separators? "]"
+  ;
+%to
+rank-specifier
+  : "[" ","* "]"
+  ;
+
+%eliminate
+dim-separators
+
+%redefine
+interface-method-declaration
+  : attributes? "new"? return-type identifier "(" formal-parameter-list? ")" ";"
+  ;
+%to
+interface-method-declaration
+  : attributes "new"? return-type identifier "(" formal-parameter-list? ")" ";"
+  ;
+
+%redefine
+interface-property-declaration
+  : attributes? "new"? type identifier "{" interface-accessors "}"
+  ;
+%to
+interface-property-declaration
+  : attributes "new"? type identifier "{" interface-accessors "}"
+  ;
+
+%redefine
+interface-accessors
+  : ( attributes? "get" ";" )
+  | ( attributes? "set" ";" )
+  | ( attributes? "get" ";" attributes? "set" ";" )
+  | ( attributes? "set" ";" attributes? "get" ";" )
+  ;
+%to
+interface-accessors
+  : ( attributes "get" ";" (attributes "set" ";")? )
+  | ( attributes "set" ";" (attributes "get" ";")? )
+  ;
+
+
+
+
+##################################################################
+##################################################################
+##########################   Part II   ###########################
+##################################################################
+##################################################################
+## ECMA Specification does not know SDF feature with
+## comma-separated lists, we can therefore go from:
+## 	A : B | A "," B;
+## to:
+## 	A: {B ","}+;
+##
+## Careful! Sometimes it is not + but * --- do not forget to fish
+## all the use cases for such "improvement".
+
+%redefine
+argument-list
+  : argument
+  | argument-list "," argument
+  ;
+%to
+argument-list
+  : { argument "," } *
+  ;
+
+%redefine
+invocation-expression
+  : primary-expression "(" argument-list? ")"
+  ;
+%to
+invocation-expression
+  : primary-expression "(" argument-list ")"
+  ;
+
+%redefine
+object-creation-expression
+  : "new" type "(" argument-list? ")"
+  ;
+%to
+object-creation-expression
+  : "new" type "(" argument-list ")"
+  ;
+
+%redefine
+constructor-initializer
+  : ":" "base" "(" argument-list? ")"
+  | ":" "this" "(" argument-list? ")"
+  ;
+%to
+constructor-initializer
+##  : ":" ( "base" | "this" ) "(" argument-list ")"		# doesn't seem to work
+  : ":" "base" "(" argument-list ")"
+  | ":" "this" "(" argument-list ")"
+  ;
+
+%redefine
+expression-list
+  : expression
+  | expression-list "," expression
+  ;
+%to
+expression-list
+  : { expression "," }+
+  ;
+
+%redefine
+statement-expression-list
+  : statement-expression
+  | statement-expression-list "," statement-expression
+  ;
+%to
+statement-expression-list
+  : { statement-expression "," } +
+  ;
+
+%redefine
+interface-type-list
+  : interface-type
+  | interface-type-list "," interface-type
+  ;
+%to
+interface-type-list
+  : { interface-type "," } +
+  ;
+
+%redefine
+fixed-parameters
+  : fixed-parameter
+  | fixed-parameters "," fixed-parameter
+  ;
+%to
+fixed-parameters
+  : { fixed-parameter "," } +
+  ;
+
+%redefine
+attribute-list
+  : attribute
+  | attribute-list "," attribute
+  ;
+%to
+attribute-list
+  : { attribute "," } +
+  ;
+
+%redefine
+positional-argument-list
+  : positional-argument
+  | positional-argument-list "," positional-argument
+  ;
+%to
+positional-argument-list
+  : { expression "," } +
+  ;
+
+%eliminate
+positional-argument
+
+%redefine
+named-argument-list
+  : named-argument
+  | named-argument-list "," named-argument
+  ;
+%to
+named-argument-list
+  : { named-argument "," } +
+  ;
+
+%redefine
+named-argument
+  : identifier "=" attribute-argument-expression
+  ;
+%to
+named-argument
+  : identifier "=" expression
+  ;
+
+%eliminate
+attribute-argument-expression
+
+%redefine
+local-variable-declaration
+  : type local-variable-declarators
+  ;
+%to
+local-variable-declaration
+  : type {variable-declarator "," }+
+  ;
+
+%eliminate
+local-variable-declarators
+
+%eliminate
+local-variable-declarator
+
+%eliminate
+local-variable-initializer
+

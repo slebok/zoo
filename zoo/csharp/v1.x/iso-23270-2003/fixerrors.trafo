@@ -1,0 +1,46 @@
+##################################################################
+##################################################################
+#########################  Error Fixes ###########################
+##################################################################
+##################################################################
+##
+## Error 1: delegates can be void
+%redefine
+delegate-declaration
+  : attributes delegate-modifier* "delegate" type identifier "(" formal-parameter-list? ")" ";"
+  ;
+%to
+delegate-declaration
+  : attributes delegate-modifier* "delegate" return-type identifier "(" formal-parameter-list? ")" ";"
+  ;
+
+##
+## Error 2: static constructors can be unsafe
+## (also removed ambiguity in static-constructor-declaration)
+%redefine
+static-constructor-modifiers
+  : "extern"? "static"
+  | "static" "extern"?
+  ;
+%to
+static-constructor-modifiers
+  : "extern"? "static"
+  | "static" "extern"
+  ;
+#static-constructor-modifiers
+#  : "static" "unsafe"? "extern"?
+#  | "unsafe" "extern"? "static"
+#  | "extern" "unsafe"? "static"
+#  | "unsafe" "static" "extern"
+#  | "static" "extern" "unsafe"
+#  | "extern" "static" "unsafe"
+#  ;
+
+##
+## Error 3: "is" can be compared to the built-in-type, which is not an identifier
+##
+#%include
+#expression
+#  : expression "is" built-in-type
+#  ;
+
