@@ -1,0 +1,274 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:bgf="http://planet-sl.org/bgf" xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Browsable Grammar</title><style type="text/css">
+		          h1, table { text-align: center; }
+		          .label, .sel { color: green; }
+		          .marked { background-color: #FFE5B4;}
+		          .nt { color: blue; font-weight: bold; }
+		          .t { color: red;  font-style:italic; }
+		          .meta { color: green; font-style:italic; font-family: Roman, "Times New Roman", serif; }
+		          h6 { text-align: right; }
+		          .date { font-size: small; }
+
+		          .note
+		          {
+		          text-align: right;
+		          font-weight: bold;
+		          margin: 0px;
+		          }
+		          .frame, pre
+		          {
+		          border: 1px solid black;
+		          border-spacing: 2px;
+		          border-collapse: collapse;
+		          background-color: #ECECEC;
+		          }
+
+		        </style></head><body><pre><a class="nt" name="asm_stmtblock">asm_stmtblock</a>:
+        <span class="t">"asm"</span> <a class="nt" href="#asm_stm">asm_stm</a><span class="meta">*</span> <a class="nt" href="#end_struct">end_struct</a>
+</pre><pre><a class="nt" name="asm_stm">asm_stm</a>:
+        <a class="nt" href="#asmlabel_colon">asmlabel_colon</a><span class="meta">?</span> <a class="nt" href="#asm_unlabeledstm_semi">asm_unlabeledstm_semi</a><span class="meta">?</span>
+</pre><pre><a class="nt" name="asmlabel_colon">asmlabel_colon</a>:
+        <a class="nt" href="#asmlabel">asmlabel</a> <a class="nt" href="#colon">colon</a>
+</pre><pre><a class="nt" name="asm_unlabeledstm_semi">asm_unlabeledstm_semi</a>:
+        <a class="nt" href="#asm_unlabeledstm">asm_unlabeledstm</a> <span class="t">";"</span><span class="meta">?</span> <a class="nt" href="#NL">NL</a>
+</pre><pre><a class="nt" name="asmid">asmid</a>:
+        <span class="t">"@"</span><span class="meta">*</span> <a class="nt" href="#asmlbl">asmlbl</a>
+        <span class="t">"@+"</span><span class="meta">*</span> <a class="nt" href="#id">id</a>
+        <span class="t">"@+"</span><span class="meta">*</span> <a class="nt" href="#anynumber">anynumber</a>
+        <span class="t">"@+"</span><span class="meta">*</span> <a class="nt" href="#key">key</a>
+</pre><pre><a class="nt" name="asmlabel">asmlabel</a>:
+        <a class="nt" href="#SPOFF">SPOFF</a> <a class="nt" href="#asmid">asmid</a><span class="meta">+</span> <a class="nt" href="#SPON">SPON</a>
+        <a class="nt" href="#label_id">label_id</a>
+</pre><pre><a class="nt" name="asm_expr">asm_expr</a>:
+        <a class="nt" href="#asm_term">asm_term</a> <a class="nt" href="#asm_infix_expr">asm_infix_expr</a><span class="meta">*</span>
+</pre><pre><a class="nt" name="asm_infix_expr">asm_infix_expr</a>:
+        <a class="nt" href="#asm_infixop">asm_infixop</a> <a class="nt" href="#asm_term">asm_term</a>
+</pre><pre><a class="nt" name="asm_term">asm_term</a>:
+        <a class="nt" href="#asm_prefixop">asm_prefixop</a><span class="meta">*</span> <a class="nt" href="#asm_primary">asm_primary</a> <a class="nt" href="#asm_postfixop">asm_postfixop</a><span class="meta">*</span>
+</pre><pre><a class="nt" name="asm_primary">asm_primary</a>:
+        <span class="t">"["</span> <a class="nt" href="#asm_expr">asm_expr</a> <span class="t">"]"</span>
+        <span class="t">"("</span> <a class="nt" href="#asm_expr">asm_expr</a> <span class="t">")"</span>
+        <a class="nt" href="#asm_register">asm_register</a>
+        <a class="nt" href="#id">id</a>
+        <a class="nt" href="#anynumber">anynumber</a>
+        <a class="nt" href="#charlit">charlit</a>
+        <a class="nt" href="#stringlit">stringlit</a>
+        <a class="nt" href="#asmhex">asmhex</a>
+        <a class="nt" href="#SP">SP</a> <a class="nt" href="#asmlabel">asmlabel</a>
+</pre><pre><a class="nt" name="asmhex">asmhex</a>:
+        <a class="nt" href="#number">number</a> <a class="nt" href="#SPOFF">SPOFF</a> <a class="nt" href="#id">id</a> <a class="nt" href="#SPON">SPON</a>
+</pre><pre><a class="nt" name="asm_unlabeledstm">asm_unlabeledstm</a>:
+        <a class="nt" href="#asm_directive">asm_directive</a> <span class="meta">{</span><a class="nt" href="#asm_directive_arg">asm_directive_arg</a> <span class="t">","</span><span class="meta">}*</span>
+        <a class="nt" href="#asm_opcode_prefix">asm_opcode_prefix</a><span class="meta">?</span> <a class="nt" href="#asm_opcode">asm_opcode</a> <span class="meta">{</span><a class="nt" href="#asm_expr">asm_expr</a> <span class="t">","</span><span class="meta">}*</span>
+</pre><pre><a class="nt" name="asm_opcode_prefix">asm_opcode_prefix</a>:
+        <span class="t">"lock"</span> <a class="nt" href="#space">space</a><span class="meta">?</span>
+</pre><pre><a class="nt" name="asm_opcode">asm_opcode</a>:
+        <span class="t">"adc"</span>
+        <span class="t">"add"</span>
+        <span class="t">"and"</span>
+        <span class="t">"bswap"</span>
+        <span class="t">"bt"</span>
+        <span class="t">"btr"</span>
+        <span class="t">"bts"</span>
+        <span class="t">"call"</span>
+        <span class="t">"cdq"</span>
+        <span class="t">"cld"</span>
+        <span class="t">"cmp"</span>
+        <span class="t">"dec"</span>
+        <span class="t">"div"</span>
+        <span class="t">"f2xm1"</span>
+        <span class="t">"fabs"</span>
+        <span class="t">"fadd"</span>
+        <span class="t">"faddp"</span>
+        <span class="t">"fbstp"</span>
+        <span class="t">"fchs"</span>
+        <span class="t">"fclex"</span>
+        <span class="t">"fcom"</span>
+        <span class="t">"fcomp"</span>
+        <span class="t">"fcos"</span>
+        <span class="t">"fdiv"</span>
+        <span class="t">"fdivp"</span>
+        <span class="t">"fdivrp"</span>
+        <span class="t">"ffree"</span>
+        <span class="t">"fiadd"</span>
+        <span class="t">"fidiv"</span>
+        <span class="t">"fild"</span>
+        <span class="t">"fimul"</span>
+        <span class="t">"fistp"</span>
+        <span class="t">"fld"</span>
+        <span class="t">"fld1"</span>
+        <span class="t">"fldcw"</span>
+        <span class="t">"fldl2e"</span>
+        <span class="t">"fldlg2"</span>
+        <span class="t">"fldln2"</span>
+        <span class="t">"fldz"</span>
+        <span class="t">"fmul"</span>
+        <span class="t">"fmulp"</span>
+        <span class="t">"fnclex"</span>
+        <span class="t">"fninit"</span>
+        <span class="t">"fnstcw"</span>
+        <span class="t">"fnstsw"</span>
+        <span class="t">"fpatan"</span>
+        <span class="t">"fprem"</span>
+        <span class="t">"fptan"</span>
+        <span class="t">"frndint"</span>
+        <span class="t">"fscale"</span>
+        <span class="t">"fsin"</span>
+        <span class="t">"fsincos"</span>
+        <span class="t">"fsqrt"</span>
+        <span class="t">"fstcw"</span>
+        <span class="t">"fstp"</span>
+        <span class="t">"fstsw"</span>
+        <span class="t">"fsub"</span>
+        <span class="t">"fsubp"</span>
+        <span class="t">"fsubr"</span>
+        <span class="t">"fwait"</span>
+        <span class="t">"fxch"</span>
+        <span class="t">"fxtract"</span>
+        <span class="t">"fyl2x"</span>
+        <span class="t">"fyl2xp1"</span>
+        <span class="t">"imul"</span>
+        <span class="t">"inc"</span>
+        <span class="t">"int"</span>
+        <span class="t">"ja"</span>
+        <span class="t">"jae"</span>
+        <span class="t">"jb"</span>
+        <span class="t">"jbe"</span>
+        <span class="t">"jc"</span>
+        <span class="t">"je"</span>
+        <span class="t">"jecxz"</span>
+        <span class="t">"jg"</span>
+        <span class="t">"jge"</span>
+        <span class="t">"jl"</span>
+        <span class="t">"jle"</span>
+        <span class="t">"jmp"</span>
+        <span class="t">"jnc"</span>
+        <span class="t">"jne"</span>
+        <span class="t">"jnl"</span>
+        <span class="t">"jns"</span>
+        <span class="t">"jnz"</span>
+        <span class="t">"jo"</span>
+        <span class="t">"jp"</span>
+        <span class="t">"js"</span>
+        <span class="t">"jz"</span>
+        <span class="t">"lea"</span>
+        <span class="t">"leave"</span>
+        <span class="t">"lodsb"</span>
+        <span class="t">"lodsw"</span>
+        <span class="t">"loop"</span>
+        <span class="t">"mov"</span>
+        <span class="t">"movsb"</span>
+        <span class="t">"movsx"</span>
+        <span class="t">"movzx"</span>
+        <span class="t">"mul"</span>
+        <span class="t">"neg"</span>
+        <span class="t">"not"</span>
+        <span class="t">"or"</span>
+        <span class="t">"pop"</span>
+        <span class="t">"popfd"</span>
+        <span class="t">"push"</span>
+        <span class="t">"pushfd"</span>
+        <span class="t">"rcl"</span>
+        <span class="t">"rcr"</span>
+        <span class="t">"rep"</span>
+        <span class="t">"repe"</span>
+        <span class="t">"repne"</span>
+        <span class="t">"ret"</span>
+        <span class="t">"rol"</span>
+        <span class="t">"ror"</span>
+        <span class="t">"sahf"</span>
+        <span class="t">"sar"</span>
+        <span class="t">"sbb"</span>
+        <span class="t">"seto"</span>
+        <span class="t">"shl"</span>
+        <span class="t">"shld"</span>
+        <span class="t">"shr"</span>
+        <span class="t">"shrd"</span>
+        <span class="t">"std"</span>
+        <span class="t">"stosb"</span>
+        <span class="t">"stosd"</span>
+        <span class="t">"stosw"</span>
+        <span class="t">"sub"</span>
+        <span class="t">"test"</span>
+        <span class="t">"wait"</span>
+        <span class="t">"xadd"</span>
+        <span class="t">"xchg"</span>
+        <span class="t">"xor"</span>
+</pre><pre><a class="nt" name="asm_directive">asm_directive</a>:
+        <span class="t">"DB"</span>
+        <span class="t">"DW"</span>
+        <span class="t">"DD"</span>
+        <span class="t">"DQ"</span>
+</pre><pre><a class="nt" name="asm_directive_arg">asm_directive_arg</a>:
+        <a class="nt" href="#charlit">charlit</a>
+        <a class="nt" href="#sign">sign</a><span class="meta">?</span> <a class="nt" href="#anynumber">anynumber</a>
+        <a class="nt" href="#asm_expr">asm_expr</a>
+</pre><pre><a class="nt" name="asm_register">asm_register</a>:
+        <span class="t">"ST"</span> <span class="t">"("</span> <a class="nt" href="#integernumber">integernumber</a> <span class="t">")"</span>
+        <span class="t">"ST"</span>
+        <span class="t">"FS"</span>
+        <span class="t">"GS"</span>
+        <span class="t">"EAX"</span>
+        <span class="t">"EBX"</span>
+        <span class="t">"ECX"</span>
+        <span class="t">"EDX"</span>
+        <span class="t">"ESP"</span>
+        <span class="t">"EBP"</span>
+        <span class="t">"ESI"</span>
+        <span class="t">"EDI"</span>
+        <span class="t">"AX"</span>
+        <span class="t">"BX"</span>
+        <span class="t">"CX"</span>
+        <span class="t">"DX"</span>
+        <span class="t">"SP"</span>
+        <span class="t">"BP"</span>
+        <span class="t">"SI"</span>
+        <span class="t">"DI"</span>
+        <span class="t">"AL"</span>
+        <span class="t">"BL"</span>
+        <span class="t">"CL"</span>
+        <span class="t">"DL"</span>
+        <span class="t">"CS"</span>
+        <span class="t">"DS"</span>
+        <span class="t">"SS"</span>
+        <span class="t">"ES"</span>
+        <span class="t">"AH"</span>
+        <span class="t">"BH"</span>
+        <span class="t">"CH"</span>
+        <span class="t">"DH"</span>
+        <span class="t">"CS"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+        <span class="t">"DS"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+        <span class="t">"SS"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+        <span class="t">"FS"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+        <span class="t">"GS"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+        <span class="t">"ES"</span> <a class="nt" href="#segmt_overr">segmt_overr</a><span class="meta">?</span>
+</pre><pre><a class="nt" name="segmt_overr">segmt_overr</a>:
+        <a class="nt" href="#SPOFF">SPOFF</a> <span class="t">":"</span> <a class="nt" href="#asm_expr">asm_expr</a> <a class="nt" href="#SPON">SPON</a>
+</pre><pre><a class="nt" name="asm_prefixop">asm_prefixop</a>:
+        <span class="t">"high"</span>
+        <span class="t">"low"</span>
+        <span class="t">"offset"</span>
+        <span class="t">"dmtindex"</span>
+        <span class="t">"vmtoffset"</span>
+        <span class="t">"type"</span>
+        <span class="t">"not"</span>
+        <span class="t">"&amp;"</span>
+        <a class="nt" href="#sign">sign</a>
+        <span class="t">"@"</span>
+</pre><pre><a class="nt" name="asm_infixop">asm_infixop</a>:
+        <span class="t">"."</span>
+        <span class="t">"+"</span>
+        <span class="t">"-"</span>
+        <span class="t">"*"</span>
+        <span class="t">"/"</span>
+        <span class="t">"ptr"</span>
+        <span class="t">"mod"</span>
+        <span class="t">"xor"</span>
+        <span class="t">"and"</span>
+        <span class="t">"or"</span>
+        <span class="t">"shr"</span>
+        <span class="t">"shl"</span>
+</pre><pre><a class="nt" name="asm_postfixop">asm_postfixop</a>:
+        <span class="t">"["</span> <a class="nt" href="#asm_expr">asm_expr</a> <span class="t">"]"</span>
+        <span class="t">"."</span> <a class="nt" href="#asm_expr">asm_expr</a>
+</pre></body></html>

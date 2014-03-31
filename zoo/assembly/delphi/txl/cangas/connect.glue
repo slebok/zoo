@@ -1,0 +1,22 @@
+extract BGF |home:///projects/webzoo-prep/zoo/assembly/delphi/txl/cangas/extracted/grammar.bgf|.
+eliminate unlabeled_stm.
+//Reroot2top. // broken! TODO: fix & actually we need SubGrammar
+eliminate procedure_body.
+reroot to asm_stmtblock.
+define asmlbl ::= "@(\\d+\\u+\\i*)";.
+// To be absolutely perfect, we need to specify that any sequence SPOFF x y z SPON has x y z as lexical syntax 
+define SPON ::= ε;.
+inline SPON.
+define SPOFF ::= ε;.
+inline SPOFF.
+define SP ::= " ";.
+define NL ::= "\\n";.
+// These ones are from pascal/delphi/delphi2006/cangas/fetched:
+define end_struct ::= "end"; .
+define sign ::= "+" | "-"; .
+define colon ::= ":"; . // actually with SPOFF/SPON
+define label_id ::= anynumber | id; .
+define anynumber ::= hexnumber | number; .
+// NB: the term is suboptimal here: we actually remove the connection between this grammar and the main Delphi module
+// What is meant here is that the components of this grammar are connected to form a whole.
+export BGF |home:///projects/webzoo-prep/zoo/assembly/delphi/txl/cangas/connected/grammar.bgf|.
