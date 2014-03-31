@@ -120,6 +120,7 @@ BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
 	// Too bad we don't have 'where' or 'let' in Rascal...
 	dir = txtbykey(zs,"dir");
 	pdir = "<parent>/<dir>";
+	hyper = "<pdir>/index.html";
 	dirloc = framework::BackEnd::basedir+pdir;
 	anch = safe4anchor(pdir);
 	return ul( (),
@@ -130,7 +131,8 @@ BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
 			_text(") The "),
 			strong( (), _text(dir)),
 			_text(" grammar is "),
-			makelinks(link2allfiles(dirloc))
+			makelinks(link2allfiles(dirloc)),
+			*(exists(framework::BackEnd::outdir+hyper)?[ span( ("class":"red"), makelinks([<"Browse it!",hyper>]))]:[])
 		])),
 		*displayfiles(parent,zs,debug),
 		li( (), _seq([displaytag(parent,k,v) | keyvalue(str k, str v) <- zs])),
