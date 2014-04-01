@@ -1,0 +1,22 @@
+importG
+	csvFile ::= (csvRecord)* "EOF" ;
+	csvRecord ::= csvStringList ("\n" | "EOF") ;
+	csvStringList ::= rawString ("," csvStringList)? ;
+	// Typo here: "[rawField optionalSpaces)]" fixed as "[rawField optionalSpaces]"
+	// Another typo: ":=" instead of "::="
+	rawString ::= optionalSpaces (rawField optionalSpaces)? ;
+	optionalSpaces ::= whitespace* ;
+	whitespace ::= " " | "\t" ;
+	rawField ::= simpleField | quotedField ; 
+	// Too verbal: "(any char except \n, EOF, \t, space, comma or double quote)+"
+	simpleField ::= (¬("\n" | EOF | "\t" | " " | "," | DQUOTE))+;
+	quotedField ::= DQUOTE escapedField DQUOTE ;
+	escapedField ::= subField (DQUOTE DQUOTE escapedField)? ;
+	// Too verbal: "(any char except double quote or EOF)+"
+	subField ::= (¬(DQUOTE | EOF))+ ;
+.
+export BGF |home:///projects/webzoo-prep/zoo/markup/textual/csv/bucknall/extracted/grammar.bgf|.
+reroot to csvFile.
+replace "EOF" with EOF in csvFile.
+replace "EOF" with EOF in csvRecord.
+export BGF |home:///projects/webzoo-prep/zoo/markup/textual/csv/bucknall/connected/grammar.bgf|.
