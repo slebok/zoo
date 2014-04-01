@@ -5,9 +5,11 @@ import IO;
 import List;
 import framework::Types;
 import framework::BackEnd;
+import grammarlab::lib::Profiler;
 
 void cmain()
 {
+	X = startTheClock();
 	visit(traversebase())
 	{
 		case z:zentry(str where, list[ZooValue] meta, _):
@@ -15,8 +17,10 @@ void cmain()
 			validateReadmes(z);
 			validateContents(z);
 			validateGrammars(z);
+			validateOfs(z);
 		}
 	}
+	println("Running time: <formatDuration(X)>");
 }
 
 void validateReadmes(ZooEntry z)
@@ -62,4 +66,15 @@ void validateGrammars(ZooEntry z)
 			println("GRAMMAR <x.file> empty in <z.where>");
 		//else
 		//	println("GRAMMAR <x.file> validated in <z.where>");
+}
+
+void validateOfs(ZooEntry z)
+{
+	for (struct("grammar",L) <- z.meta)
+	{
+		dir = txtbykey(L,"dir");
+		of =  txtbykey(L,"of");
+		if (dir != "fetched" && of == "")
+			println("At <z.where>, <dir> is a grammar OF WHAT?");
+	}
 }

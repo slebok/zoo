@@ -19,7 +19,8 @@ public BodyElement colouredDots(ZooEntry z)
 	set[str] gs = allUsedTypes(z);
 	if ("fetched" in gs) res += onedot("red"); 
 	if ("extracted" in gs) res += onedot("yellow");
-	if ("corrected" in gs || "recovered" in gs) res += onedot("green");
+	if ("connected" in gs || "recovered" in gs) res += onedot("green");
+	if ("corrected" in gs || "imported" in gs) res += onedot("orange");
 	if ("adapted" in gs) res += onedot("purple");
 	if (res == [])
 		return onedot("cyan");
@@ -31,7 +32,8 @@ public BodyElement colouredDots(ZooEntry z)
 
 BodyElement colouredArrow("fetched") = onearrow("red");
 BodyElement colouredArrow("extracted") = onearrow("yellow");
-BodyElement colouredArrow("corrected") = onearrow("green");
+BodyElement colouredArrow("connected") = onearrow("green");
+BodyElement colouredArrow("corrected") = onearrow("orange");
 BodyElement colouredArrow("recovered") = onearrow("green");
 BodyElement colouredArrow("adapted") = onearrow("purple");
 default BodyElement colouredArrow(str dir) = onearrow("black");
@@ -52,19 +54,21 @@ default tuple[str,str] makelink(list[ZooValue] kvs) = <"<kvs>","#">;
 
 public lrel[str,str] getlinks(list[ZooValue] zs) = [makelink(inner) | struct("link", list[ZooValue] inner) <- zs];
 
-public str namemonth(1) = "January";
-public str namemonth(2) = "February";
-public str namemonth(3) = "March";
-public str namemonth(4) = "April";
-public str namemonth(5) = "May";
-public str namemonth(6) = "June";
-public str namemonth(7) = "July";
-public str namemonth(8) = "August";
-public str namemonth(9) = "September";
-public str namemonth(10) = "October";
-public str namemonth(11) = "November";
-public str namemonth(12) = "December";
-public default str namemonth(int n) = "The <n>th Month";
+public BodyElement lastupdated() = _text(" Last updated in <namemonth(now().month)> <now().year>. ");
+
+str namemonth(1) = "January";
+str namemonth(2) = "February";
+str namemonth(3) = "March";
+str namemonth(4) = "April";
+str namemonth(5) = "May";
+str namemonth(6) = "June";
+str namemonth(7) = "July";
+str namemonth(8) = "August";
+str namemonth(9) = "September";
+str namemonth(10) = "October";
+str namemonth(11) = "November";
+str namemonth(12) = "December";
+default str namemonth(int n) = "The <n>th Month";
 
 public str th("1", str k) = "1st <k>";
 public str th("2", str k) = "2nd <k>";
@@ -84,7 +88,8 @@ public BodyElement footer()
 		ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
 		_text(" a.k.a. @"),
 		ahref( ("href":"http://twitter.com/grammarware"), _text("grammarware")),
-		_text(". Last updated in <namemonth(now().month)> <now().year>."),
+		_text("."),
+		lastupdated(),
 		makelinks([<"↑","#TOP">]),
 		br(),
 		ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img("cc-by.png","CC-BY") ),

@@ -9,11 +9,11 @@ import IO;
 import grammarlab::io::Grammar;
 import grammarlab::io::XHTML;
 import lang::xml::DOM;
+import grammarlab::lib::Profiler;
 
 import framework::FrontEnd;
 import framework::BackEnd;
 import framework::FancyHTML;
-import DateTime;
 import grammarlab::analyse::Metrics;
 import List;
 import IO;
@@ -21,9 +21,9 @@ import String;
 
 str pathtoroot(str w, str f) = "../../<intercalate("/",[".." | x <- findAll(w,"/")])>/<f>";
 
-void qmain()
+void rmain()
 {
-	S = now();
+	S = startTheClock();
 	zoo = traversebase();
 	for (/z:zentry(str where, list[ZooValue] meta, list[ZooEntry] inner) := zoo)
 		for (struct("grammar",list[ZooValue] zvs) <- meta)
@@ -43,20 +43,8 @@ void qmain()
 				println(z);
 			}
 		}
-	I = createDuration(S,now());
-	println("Running time: <I.hours>:<I.minutes>:<I.seconds>.<I.milliseconds>");
+	println("Running time: <formatDuration(S)>");
 }
-
-void rmain()
-{
-	bgf = readBGF(|home:///projects/webzoo-prep/zoo/dsl/abs/hats/rascal/extracted/grammar.bgf|);
-	zoo = traverse("",|home:///projects/webzoo-prep/zoo/dsl/abs/hats/rascal/|);
-	println("<zoo>");
-	htm = bgf2html("ABS", "extracted", bgf, zoo );
-	writeHTML(htm, |project://zoo/web/test.html|); 
-}	
-
-//runbgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 
 HTML bgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 		//("xmlns":"http://www.w3.org/1999/xhtml"),
@@ -88,12 +76,13 @@ HTML bgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 			hpp(g),
 			hr(),
 			div( ("class":"b"), _seq([
-				ahref( ("href":"http://grammarware.github.io/lab"), img( "grammarlab.png", "Powered by GrammarLab" ) ),
+				ahref( ("href":"http://grammarware.github.io/lab"), img( pathtoroot(z.where,"grammarlab.png"), "Powered by GrammarLab" ) ),
 				_text("Maintained by Dr. "),
 				ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
 				_text(" a.k.a. @"),
 				ahref( ("href":"http://twitter.com/grammarware"), _text("grammarware")),
-				_text(". Last updated in <namemonth(now().month)> <now().year>."),
+				_text("."),
+				lastupdated(),
 				makelinks([<"↑","#TOP">])
 			]) )
 	]) );
@@ -109,6 +98,13 @@ BodyElement hpprhs(GExpr rhs)
 	? _seq([*[_text("\n\t"),hpp(e)] | e <- L])
 	: _seq([_text("\n\t"),hpp(rhs)]);
 
+// possibly parenthesized
+BodyElement PPhpp(e:sequence(_)) = _seq([mmeta("("), hpp(e), mmeta(")")]);
+BodyElement PPhpp(e:choice(_)) = _seq([mmeta("("), hpp(e), mmeta(")")]);
+BodyElement PPhpp(e:allof(_)) = _seq([mmeta("("), hpp(e), mmeta(")")]);
+BodyElement PPhpp(e:except(_,_)) = _seq([mmeta("("), hpp(e), mmeta(")")]);
+default BodyElement PPhpp(GExpr e) = hpp(e);
+
 //data GExpr
 BodyElement hpp(epsilon()) = _text("ε");
 BodyElement hpp(empty()) = _text("φ");
@@ -118,20 +114,20 @@ BodyElement hpp(val(integer())) = _text("integer");
 BodyElement hpp(val(boolean())) = _text("boolean");
 BodyElement hpp(nonterminal(str t)) = ahref( ("class":"nt", "href":"#<t>"), _text(t) );
 BodyElement hpp(terminal(str t)) = span( ("class":"t"), _text("\"<t>\"") );
-BodyElement hpp(label(str name, GExpr expr)) = _seq([_text("["),ahref( ("class":"lbl", "name":name), _text(name) ),_text("]::"),hpp(expr)]);
-BodyElement hpp(mark(str name, GExpr expr)) = _seq([_text("⟨"),ahref( ("class":"lbl", "name":name), _text(name) ),_text("⟩:"),span(("class":"marked"),hpp(expr))]);
+BodyElement hpp(label(str name, GExpr expr)) = _seq([_text("["),ahref( ("class":"lbl", "name":name), _text(name) ),_text("]::"),PPhpp(expr)]);
+BodyElement hpp(mark(str name, GExpr expr)) = _seq([_text("⟨"),ahref( ("class":"lbl", "name":name), _text(name) ),_text("⟩:"),span(("class":"marked"),PPhpp(expr))]);
 //BodyElement hpp(sequence(GExprList exprs)) = _seq([mmeta("("), _seq([*[hpp(e),_text(" ")] | e <- exprs][..-1]), mmeta(")")]);
-BodyElement hpp(sequence(GExprList exprs)) = _seq([*[hpp(e),_text(" ")] | e <- exprs][..-1]);
-//BodyElement hpp(choice(GExprList exprs)) = _seq([*[hpp(e),mmeta(" | ")] | e <- exprs][..-1]);
-BodyElement hpp(choice(GExprList exprs)) = _seq([mmeta("("), _seq([*[hpp(e),mmeta(" | ")] | e <- exprs][..-1]), mmeta(")")]);
+BodyElement hpp(sequence(GExprList exprs)) = _seq([*[PPhpp(e),_text(" ")] | e <- exprs][..-1]);
+BodyElement hpp(choice(GExprList exprs)) = _seq([*[hpp(e),mmeta(" | ")] | e <- exprs][..-1]);
+//BodyElement hpp(choice(GExprList exprs)) = _seq([mmeta("("), _seq([*[hpp(e),mmeta(" | ")] | e <- exprs][..-1]), mmeta(")")]);
 BodyElement hpp(allof(GExprList exprs)) = _seq([*[hpp(e),mmeta(" &amp; ")] | e <- exprs][..-1]);
-BodyElement hpp(not(GExpr expr)) = _seq([mmeta("¬"), hpp(expr)]);
-BodyElement hpp(except(GExpr expr1, GExpr expr2)) = _seq([hpp(expr1), mmeta("\\"), hpp(expr2)]);
-BodyElement hpp(optional(GExpr expr)) = _seq([hpp(expr), mmeta("?")]);
-BodyElement hpp(star(GExpr expr)) = _seq([hpp(expr), mmeta("*")]);
-BodyElement hpp(plus(GExpr expr)) = _seq([hpp(expr), mmeta("+")]);
-BodyElement hpp(sepliststar(GExpr expr, GExpr sep)) = _seq([mmeta("{"), hpp(expr), _text(" "), hpp(sep), mmeta("}*")]);
-BodyElement hpp(seplistplus(GExpr expr, GExpr sep)) = _seq([mmeta("{"), hpp(expr), _text(" "), hpp(sep), mmeta("}+")]);
+BodyElement hpp(not(GExpr expr)) = _seq([mmeta("¬"), PPhpp(expr)]);
+BodyElement hpp(except(GExpr expr1, GExpr expr2)) = _seq([PPhpp(expr1), mmeta("\\"), PPhpp(expr2)]);
+BodyElement hpp(optional(GExpr expr)) = _seq([PPhpp(expr), mmeta("?")]);
+BodyElement hpp(star(GExpr expr)) = _seq([PPhpp(expr), mmeta("*")]);
+BodyElement hpp(plus(GExpr expr)) = _seq([PPhpp(expr), mmeta("+")]);
+BodyElement hpp(sepliststar(GExpr expr, GExpr sep)) = _seq([mmeta("{"), PPhpp(expr), _text(" "), PPhpp(sep), mmeta("}*")]);
+BodyElement hpp(seplistplus(GExpr expr, GExpr sep)) = _seq([mmeta("{"), PPhpp(expr), _text(" "), PPhpp(sep), mmeta("}+")]);
 BodyElement hpp(nothing()) = _text("∅");
 default BodyElement hpp(GExpr e) = _text("NYI");
 

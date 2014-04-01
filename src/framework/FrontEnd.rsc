@@ -7,13 +7,16 @@ import grammarlab::io::XHTML;
 import framework::Types;
 import framework::BackEnd;
 import framework::FancyHTML;
+import grammarlab::lib::Profiler;
 
 void main()
 {
+	X = startTheClock();
 	writeHTML(
 		zooval2html(traversebase(), false),
 		|project://zoo/web/index.html|
 	);
+	println("Running time: <formatDuration(X)>");
 }
 
 HTML zooval2html(ZooEntry ze, bool debug)
@@ -132,7 +135,7 @@ BodyElement grammar2be(str parent, list[ZooValue] zs, bool debug)
 			strong( (), _text(dir)),
 			_text(" grammar is "),
 			makelinks(link2allfiles(dirloc)),
-			*(exists(framework::BackEnd::outdir+hyper)?[ span( ("class":"red"), makelinks([<"Browse it!",hyper>]))]:[])
+			*(exists(framework::BackEnd::outdir+hyper)?[ span( ("class":"red"), makelinks([<"Browse now!",hyper>]))]:[])
 		])),
 		*displayfiles(parent,zs,debug),
 		li( (), _seq([displaytag(parent,k,v) | keyvalue(str k, str v) <- zs])),
