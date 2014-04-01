@@ -1,0 +1,305 @@
+importG
+	// 2.3
+	identifier ::= letter (underscore? letter_or_digit)*;
+	letter_or_digit ::= letter | digit;
+	letter ::= upper_case_letter | lower_case_letter;
+	// 2.4
+	number ::= integer_number | approximate_number;
+	integer_number ::= integer | based_integer;
+	integer ::= digit (underscore? digit)*;
+	based_integer ::= base "#" extended_digit (underscore? extended_digit)*;
+	base ::= integer;
+	extended_digit ::= digit | letter;
+	approximate_number ::= integer "." integer ("E" exponent)?
+		| integer "E" exponent;
+	exponent ::= "+"? integer | "-" integer;
+	// 2.5
+	character_string ::= DQUOTE character* DQUOTE;
+	// 2.7
+	pragma ::= "pragma" identifier ("(" argument ("," argument)* ")")? ";";
+	argument ::= identifier | character_string | number;
+	// 3.1
+	declaration ::=
+		  object_declaration      | type_declaration
+		| subtype_declaration     | private_type_declaration
+		| subprogram_declaration  | module_declaration
+		| entry_declaration       | exception_declaration
+		| renaming_declaration;
+	// 3.2
+	object_declaration ::= identifier_list ":" "constant"? type (":=" expression)? ";";
+	identifier_list ::= identifier ("," identifier)*;
+	// 3.3
+	type ::= type_definition | type_mark constraint?;
+	type_definition ::=
+		  enumeration_type_definition  | integer_type_definition
+		| real_type_definition         | array_type_definition
+		| record_type_definition       | access_type_definition
+		| derived_type_definition;
+	type_mark ::= type_name | subtype_name;
+	constraint ::=
+		  range_constraint   | accuracy_constraint
+		| index_constraint   | discriminant_constraint;
+	type_declaration ::= "type" identifier ("is" type_definition)? ";";
+	subtype_declaration ::= "subtype" identifier "is" type_mark constraint? ";";
+	// 3.4
+	derived_type_definition ::= "new" type_mark constraint?;
+	// 3.5
+	range_constraint ::= "range" range;
+	range ::= simple_expression ".." simple_expression;
+	// 3.5.1
+	enumeration_type_definition ::= "(" enumeration_literal ("," enumeration_literal)* ")";
+	enumeration_literal ::= identifier | character_literal;
+	// 3.5.4
+	integer_type_definition ::= range_constraint;
+	// 3.5.5
+	real_type_definition ::= accuracy_constraint;
+	accuracy_constraint ::=
+		  "digits" simple_expression range_constraint?
+		| "delta"  simple_expression range_constraint?;
+	// 3.6
+	array_type_definition ::= "array" "(" index ("," index)* ")" "of" type_mark constraint?;
+	index ::= discrete_range | type_mark;
+	discrete_range ::= (type_mark "range")? range;
+	index_constraint ::= "(" discrete_range ("," discrete_range)* ")";
+	// 3.6.2
+	aggregate ::= "(" component_association ("," component_association)* ")";
+	component_association ::= ("choice" ("|" choice)* "=>")? expression;
+	choice ::= simple_expression | discrete_range | "others";
+	// 3.7
+	record_type_definition ::= "record" component_list "end" "record";
+	component_list ::= object_declaration* variant_part? | "null" ";";
+	variant_part ::= "case" discriminant "of" ("when" choice ("|" choice)* "=>" component_list)* "end" "case" ";";
+	discriminant ::= constant_name ".." component_name; // looks like "...." but it’s not
+	// 3.7.3
+	discriminant_constraint ::= aggregate;
+	// 3.8
+	access_type_definition ::= "access" type;
+	// 4.1
+	name ::=
+		  identifier          | indexed_component
+		| selected_component  | predefined_attribute;
+	indexed_component ::= name "(" expression ("," expression)* ")";
+	selected_component ::= name "." identifier;
+	predefined_attribute ::= name "'" identifier;
+	// 4.2
+	literal ::= number | enumeration_literal | character_string | "null";
+	// 4.3
+	variable ::= name ("(" discrete_range ")")? | name "." "all";
+	// 4.4
+	expression ::=
+		  relation ("and" relation)*
+		| relation ("or" relation)*
+		| relation ("xor" relation)*;
+	relation ::=
+		  simple_expression (relational_operator simple_expression)?
+		| simple_expression "not"? "in" range
+		| simple_expression "not"? "in" type_mark constraint?;
+	simple_expression ::= unary_operator? term (adding_operator term)*;
+	term ::= factor (multiplying_operator factor)*;
+	factor ::= primary ("**" primary)?;
+	primary ::=
+		  literal | aggregate | variable | allocator
+		| subprogram_call | qualified_expression | "(" expression ")";
+	// 4.5
+	logical_operator ::= "and" | "or" | "xor";
+	relational_operator ::= "=" | "/=" | "<" | "<=" | ">" | ">=";
+	adding_operator ::= "+" | "-" | "&";
+	unary_operator ::= "+" | "-" | "not";
+	multiplying_operator ::= "*" | "/" | "mod";
+	exponentiating_operator ::= "**"; // TODO: fold
+	// 4.6
+	qualified_expression ::= type_mark "(" expression ")" | type_mark aggregate;
+	// 4.7
+	allocator ::= "new" qualified_expression;
+	// 5
+	seqence_of_statements ::= statement*;
+	statement ::= simple_statement | compound_statement | "<<" identifier ">>" statement;
+	simple_statement ::=
+		  assignment_statement  | subprogram_call_statement
+		| exit_statement        | return_statement
+		| goto_statement        | assert_statement
+		| initiate_statement    | delay_statement
+		| raise_statement       | abort_statement
+		| code_statement        | "null" ";";
+	compound_statement ::=
+		  if_statement       | case_statement
+		| loop_statement     | accept_statement
+		| select_statement   | block;
+	// 5.1
+	assignment_statement ::= variable ":=" expression;
+	// 5.2
+	subprogram_call_statement ::= subprogram_call;
+	subprogram_call ::= subprogram_name ("(" parameter_association ("," parameter_association)* ")")?;
+	parameter_association ::=
+		  (formal_parameter ":=")? actual_parameter
+		| (formal_parameter "=:")? actual_parameter
+		| (formal_parameter ":=:")? actual_parameter;
+	formal_parameter ::= identifier;
+	actual_parameter ::= expression;
+	// 5.3
+	return_statement ::= "return" expression? ";";
+	// 5.4
+	if_statement ::=
+		"if" condition "then" seqence_of_statements
+		("elseif" condition "then" seqence_of_statements)*
+		("else" seqence_of_statements)?
+		"end" "if" ";";
+	condition ::=
+		  expression ("and" "then" expression)*
+		| expression ("or" "else" expression)*;
+	// 5.5
+	case_statement ::= "case" expression "of" ("when" choice ("|" choice)* "=>" seqence_of_statements)* "end" "case" ";";
+	// 5.6
+	loop_statement ::= iteration_specification? basic_loop;
+	basic_loop ::= "loop" seqence_of_statements "end" "loop" identifier? ";";
+	iteration_specification ::= "for" loop_parameter "in" "reverse"? discrete_range | "while" condition;
+	loop_parameter ::= identifier;
+	// 5.7
+	exit_statement ::= "exit" identifier? ("when" condition)? ";";
+	// 5.8
+	goto_statement ::= "goto" identifier ";";
+	// 5.9
+	assert_statement ::= "assert" condition ";";
+	// 6.1
+	declarative_part ::= use_clause? declaration* representation_specification* body*;
+	body ::= visibility_restriction? unit_body | body_stub;
+	unit_body ::= subprogram_body | module_specification | module_body;
+	// 6.2
+	subprogram_declaration ::= subprogram_specification ";" | subprogram_nature designator "is" generic_instantiation ";";
+	subprogram_specification ::= generic_clause? subprogram_nature designator formal_part? ("return" type_mark constraint?)?;
+	subprogram_nature ::= "function" | "procedure";
+	designator ::= identifier | character_string;
+	formal_part ::= "(" parameter_declaration (";" parameter_declaration)* ")";
+	parameter_declaration ::= identifier_list ":" mode type_mark constraint? (":=" expression)?;
+	mode ::= "in"? | "out" | "in" "out";
+	// 6.4
+	subprogram_body ::=
+		subprogram_specification "is" declarative_part "begin" seqence_of_statements
+		("exception" exception_handler*)? "end" designator? ";";
+	// 6.7
+	block ::=
+		("declare" declarative_part)?
+		"begin" seqence_of_statements
+		("exception" exception_handler*)?
+		"end" identifier? ";";
+	// 7.1
+	module_declaration ::=
+		visibility_restriction? module_declaration
+		| module_nature identifier ("(" discrete_range ")")? "is" generic_instantiation ";";
+	module_specification ::=
+		generic_clause?
+		module_nature identifier_list ("(" discrete_range ")")?
+		(
+			"is" declarative_part
+			("private" declarative_part)?
+			"end" identifier
+		)? ";";
+	module_nature ::= "package" | "task";
+	module_body ::= module_nature "body" identifier "is" declarative_part
+		("begin" seqence_of_statements)? ("exception" exception_handler*)? "end" identifier? ";";
+	// 7.4
+	private_type_declaration ::= "restricted"? "type" identifier "is" "private" ";";
+	// 8.3
+	visibility_restriction ::= "restricted" visibility_list?;
+	visibility_list ::= "(" unit_name ("," unit_name)* ")";
+	// 8.4
+	use_clause ::= "use" module_name ("," module_name)* ";";
+	// 8.5
+	renaming_declaration ::=
+		  identifier ":" type_mark "renames" name ";"
+		| identifier ":" "exception" "renames" name ";"
+		| subprogram_nature designator "renames" (name ".")? designator ";"
+		| module_nature identifier "renames" name ";";
+	// 9.3
+	initiate_statement ::= "initiate" task_designator ("," task_designator)* ";";
+	task_designator ::= task_name ("(" discrete_range ")")?;
+	// 9.5
+	entry_declaration ::= "entry" identifier ("(" discrete_range ")")? formal_part? ";";
+	accept_statement ::= "accept" entry_name formal_part? ("do" seqence_of_statements "end" identifier?)? ";";
+	// 9.6
+	delay_statement ::= "delay" simple_expression ";";
+	// 9.7
+	select_statement ::=
+		"select" ("when" condition "=>")? select_alternative
+		("or" ("when" condition "=>")? select_alternative)*
+		("else" seqence_of_statements)?
+		"end" "select" ";";
+	select_alternative ::=
+		  accept_statement seqence_of_statements?
+		| delay_statement seqence_of_statements?;
+	// 9.10
+	abort_statement ::= "abort" task_designator ("," task_designator)* ";";
+	// 10.1
+	compilation ::= compilation_unit*;
+	compilation_unit ::= visibility_restriction? "separate"? unit_body;
+	// 10.2
+	body_stub ::=
+		subprogram_specification "is" "separate" ";"
+		| module_nature "body" identifier "is" "separate" ";";
+	// 11.1
+	exception_declaration ::= identifier_list ":" "exception" ";";
+	// 11.2
+	exception_handler ::= "when" exception_choice ("|" exception_choice)* "=>" seqence_of_statements;
+	exception_choice ::= exception_name | "others";
+	// 11.3
+	raise_statement ::= "rause" exception_name? ";";
+	// 12.1
+	generic_clause ::= "generic" ("(" generic_parameter (";" generic_parameter)* ")")?;
+	generic_parameter ::=
+		parameter_declaration
+		| subprogram_specification ("is" (name ".")? designator)?
+		| "restricted"? "type" identifier;
+	// 12.2
+	generic_instantiation ::= "new" name ("(" generic_association ("," generic_association)*)?;
+	generic_association ::=
+		parameter_association
+		| (formal_parameter "is")? (name ".")? designator
+		| (formal_parameter "is")? type_mark;
+	// 13
+	representation_specification ::=
+		  packing_specification       | length_specification
+		| record_type_representation  | address_specification
+		| enumeration_type_representation;
+	// 13.1
+	packing_specification ::= "for" type_name "use" "packing" ";";
+	// 13.2
+	length_specification ::= "for" name "use" static_expression ";";
+	// 13.3
+	enumeration_type_representation ::= "for" type_name "use" aggregate ";";
+	// 13.4
+	record_type_representation ::=
+		"for" type_name "use" "record" (alignment_clause ";")?
+		(component_name location ";")*
+		"end" "record" ";";
+	location ::= "at" static_expression "range" range;
+	alignment_clause ::= "at" "mod" static_expression;
+	// 13.5
+	address_specification ::= "for" name "use" "at" static_expression ";";
+	// 13.8
+	code_statement ::= qualified_expression ";";
+.
+export BGF |home:///projects/webzoo-prep/zoo/ada/ada83/ichbiah/extracted/grammar.bgf|.
+reroot to compilation.
+fold exponentiating_operator everywhere.
+eliminate logical_operator.
+// As described in §4.8, a static_expression can be detected at compile time and must only contain
+// (a) literals
+// (b) aggregates whose components are static expressions
+// (c) constants initialised by static expressions
+// (d) predefined operators, functions and attributes
+// (e) qualified static expressions
+// (f) indexed and selected components of constants 
+// There are two ways to solve this: either duplicate a grammar fragment and make these changes or use the easy way:
+define static_expression ::= expression ; .
+// This is a convention they used (italics)_(name) to mean (name) with some annotation
+replace task_name with <task_name>:name everywhere.
+replace subtype_name with <subtype_name>:name everywhere.
+replace entry_name with <entry_name>:name everywhere.
+replace constant_name with <constant_name>:name everywhere.
+replace unit_name with <unit_name>:name everywhere.
+replace type_name with <type_name>:name everywhere.
+replace exception_name with <exception_name>:name everywhere.
+replace module_name with <module_name>:name everywhere.
+replace component_name with <component_name>:name everywhere.
+replace subprogram_name with <subprogram_name>:name everywhere.
+export BGF |home:///projects/webzoo-prep/zoo/ada/ada83/ichbiah/connected/grammar.bgf|.
