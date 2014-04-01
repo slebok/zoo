@@ -21,26 +21,40 @@ import String;
 
 str pathtoroot(str w, str f) = "../../<intercalate("/",[".." | x <- findAll(w,"/")])>/<f>";
 
-void rmain()
+void rmain() = rmain(false);
+void rmain(bool force)
 {
 	S = startTheClock();
 	zoo = traversebase();
 	for (/z:zentry(str where, list[ZooValue] meta, list[ZooEntry] inner) := zoo)
 		for (struct("grammar",list[ZooValue] zvs) <- meta)
 		{
-			println("Found <txtbykey(zvs,"dir")> grammar in <where>.");
-			if (txtbykey(zvs,"dir") == "fetched") continue;
-			mydir = "<where>/<txtbykey(zvs,"dir")>";
+			// if (lastModified(gfile) > lastModified(gfile[file=replaceAll(gfile.file,".glue","ed/grammar.bgf")]))
+			dir = txtbykey(zvs,"dir");
+			println("Found <dir> grammar in <where>.");
+			if (dir == "fetched") continue;
+			mydir = "<where>/<dir>";
 			if (!exists(framework::BackEnd::outdir+mydir)) mkDirectory(framework::BackEnd::outdir+mydir);
 			if (exists(framework::BackEnd::basedir+(mydir+"/grammar.bgf")))
 			{
 				// BUG! could not reproduce in a simpler example
-				mydir = "<where>/<txtbykey(zvs,"dir")>";
+				mydir = "<where>/<dir>";
+				if (!force &&
+					exists(framework::BackEnd::outdir+"<mydir>/index.html") &&
+					exists(framework::BackEnd::basedir+"<where>/zoo.xml") &&
+					lastModified(framework::BackEnd::basedir+"<mydir>/grammar.bgf") <
+					lastModified(framework::BackEnd::outdir+"<mydir>/index.html") &&
+					lastModified(framework::BackEnd::basedir+"<where>/zoo.xml") <
+					lastModified(framework::BackEnd::outdir+"<mydir>/index.html")
+				){
+					println("\tNo need to refresh the rendered version.");
+					continue;
+				}
 				writeHTML(
-					bgf2html(txtbykey(zvs,"of"), txtbykey(zvs,"dir"), readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf"), z ),
+					bgf2html(txtbykey(zvs,"of"), dir, readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf"), z ),
 					framework::BackEnd::outdir+"<mydir>/index.html"
 				);
-				println(z);
+				//println(z);
 			}
 		}
 	println("Running time: <formatDuration(S)>");
@@ -133,15 +147,19 @@ default BodyElement hpp(GExpr e) = _text("NYI");
 
 BodyElement mmeta(str s) = span( ("class":"meta"), _text(s) );
 
-// comma-separated nonterminal list
-BodyElement csntl([]) = _text("—");
-BodyElement csntl(list[str] nts)
-	= _seq([*[code((),hpp(nonterminal(nt))), _text(", ")] | nt <- nts][..-1]);
+// comma-separated lists of nonterminals, terminals, labels and markers
+BodyElement wrapn(str x) = code((),hpp(nonterminal(x)));
+BodyElement wrapt(str x) = hpp(terminal(x));
+BodyElement wrapl(str x) = code((),_seq([_text("["),span( ("class":"lbl"), _text(x) ),_text("]")]));
+BodyElement wrapm(str x) = code((),_seq([_text("⟨"),span( ("class":"lbl"), _text(x) ),_text("⟩")]));
 
-// comma-separated terminal list
-BodyElement cstl([]) = _text("—");
-BodyElement cstl(list[str] ts)
-	= _seq([*[hpp(terminal(t)), _text(", ")] | t <- ts][..-1]);
+BodyElement csl([], _) = _text("—");
+BodyElement csl(list[str] xs, BodyElement(str) f) = _seq([*[f(x), _text(", ")] | x <- xs][..-1]);
+
+BodyElement csnl(list[str] xs) = csl(xs, wrapn);
+BodyElement cstl(list[str] xs) = csl(xs, wrapt);
+BodyElement csll(list[str] xs) = csl(xs, wrapl);
+BodyElement csml(list[str] xs) = csl(xs, wrapm);
 
 list[BodyElement] metricSummary(GGrammar g)
 	= [
@@ -166,7 +184,7 @@ list[BodyElement] metricSummary(GGrammar g)
 			strong( (), _text("<MAR(g)>")),
 			_text(" marks.")
 			])),
-		li( (), _seq([
+		*(VAR(g)==0?[]:[li( (), _seq([
 			_text("Total "),
 			strong( (), _text("<VAR(g)>")),
 			_text(" nonterminal symbols: "),
@@ -174,18 +192,18 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text(" defined (see below), "),
 			strong( (), _text("<ROOT(g)>")),
 			_text(" root ("),
-			csntl(listROOT(g)),
+			csnl(listROOT(g)),
 			_text("), "),
 			strong( (), _text("<TOP(g)>")),
 			_text(" top ("),
-			csntl(listTOP(g)),
+			csnl(listTOP(g)),
 			_text("), "),
 			strong( (), _text("<BOTTOM(g)>")),
 			_text(" bottom ("),
-			csntl(listBOTTOM(g)),
+			csnl(listBOTTOM(g)),
 			_text(").")
-			])),
-		li( (), _seq([
+			]))]),
+		*(TERM(g)==0?[]:[li( (), _seq([
 			_text("Total "),
 			strong( (), _text("<TERM(g)>")),
 			_text(" terminal symbols: "),
@@ -201,5 +219,19 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text(" signs ("),
 			cstl(listSIGN(g)),
 			_text(").")
-			]))
+			]))]),
+		*(LAB(g)==0?[]:[li( (), _seq([
+			_text("Total "),
+			strong( (), _text("<LAB(g)>")),
+			_text(" labels: "),
+			csll(listLAB(g)),
+			_text(".")
+			]))]),
+		*(MAR(g)==0?[]:[li( (), _seq([
+			_text("Total "),
+			strong( (), _text("<MAR(g)>")),
+			_text(" markers: "),
+			csml(listMAR(g)),
+			_text(".")
+			]))])
 	];

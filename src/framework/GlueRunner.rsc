@@ -3,6 +3,7 @@ module framework::GlueRunner
 
 import IO;
 import List;
+import String;
 import framework::Types;
 import framework::BackEnd;
 import grammarlab::lib::Profiler;
@@ -29,7 +30,12 @@ void listGlues(ZooEntry z)
 	for(gfile <- [d | loc d <- (framework::BackEnd::basedir + z.where).ls, d.extension == "glue"])
 	{
 		println("<z.where> HAS <gfile>");
-		glue = loadGlue(gfile);
-		execute(glue);
+		if (lastModified(gfile) > lastModified(gfile[file=replaceAll(gfile.file,".glue","ed/grammar.bgf")]))
+		{
+			glue = loadGlue(gfile);
+			execute(glue);
+		}
+		else
+			println("\tNo need for an update, skipped.");
 	}
 }
