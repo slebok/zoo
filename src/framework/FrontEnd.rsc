@@ -166,7 +166,7 @@ BodyElement zooval2be(ZooEntry ze, bool debug)
 
 list[BodyElement] listsources(ZooEntry z)
 	= (struct("source", _) <- z.meta)
-	? [dd((), ul((), [li((), src2be("Source: ",zin)) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source" || key == "item"]))]
+	? [dd((), ul((), [li((), src2be((key=="source")?"Source: ":"See also: ",zin)) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source" || key == "item"]))]
 	: []
 	;
 

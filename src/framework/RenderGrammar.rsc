@@ -149,17 +149,26 @@ BodyElement mmeta(str s) = span( ("class":"meta"), _text(s) );
 
 // comma-separated lists of nonterminals, terminals, labels and markers
 BodyElement wrapn(str x) = code((),hpp(nonterminal(x)));
-BodyElement wrapt(str x) = hpp(terminal(x));
-BodyElement wrapl(str x) = code((),_seq([_text("["),span( ("class":"lbl"), _text(x) ),_text("]")]));
-BodyElement wrapm(str x) = code((),_seq([_text("⟨"),span( ("class":"lbl"), _text(x) ),_text("⟩")]));
+BodyElement wrapn(tuple[str x,int n] xn) = posnr(code((),hpp(nonterminal(xn.x))), xn.n);
+BodyElement wrapt(tuple[str x,int n] xn) = posnr(hpp(terminal(xn.x)), xn.n);
+BodyElement wrapl(tuple[str x,int n] xn) = posnr(code((),_seq([_text("["),span( ("class":"lbl"), _text(xn.x) ),_text("]")])), xn.n);
+BodyElement wrapm(tuple[str x,int n] xn) = posnr(code((),_seq([_text("⟨"),span( ("class":"lbl"), _text(xn.x) ),_text("⟩")])), xn.n);
+
+BodyElement posnr(BodyElement x, int n)
+	= n == 1
+	? x
+	: _seq([x,sup( (), _text(" <n>"))]);
 
 BodyElement csl([], _) = _text("—");
-BodyElement csl(list[str] xs, BodyElement(str) f) = _seq([*[f(x), _text(", ")] | x <- xs][..-1]);
+BodyElement csl(list[&T] xs, BodyElement(&T) f) = _seq([*[f(x), _text(", ")] | x <- xs][..-1]);
 
 BodyElement csnl(list[str] xs) = csl(xs, wrapn);
-BodyElement cstl(list[str] xs) = csl(xs, wrapt);
-BodyElement csll(list[str] xs) = csl(xs, wrapl);
-BodyElement csml(list[str] xs) = csl(xs, wrapm);
+BodyElement csnl(lrel[str,int] xs) = csl(xs, wrapn);
+//BodyElement cstl(list[str] xs) = csl(xs, wrapt);
+BodyElement cstl(lrel[str,int] xs) = csl(xs, wrapt);
+//BodyElement csll(list[str] xs) = csl(xs, wrapl);
+BodyElement csll(lrel[str,int] xs) = csl(xs, wrapl);
+BodyElement csml(lrel[str,int] xs) = csl(xs, wrapm);
 
 list[BodyElement] metricSummary(GGrammar g)
 	= [
@@ -182,7 +191,7 @@ list[BodyElement] metricSummary(GGrammar g)
 			strong( (), _text("<LAB(g)>")),
 			_text(" labels + "),
 			strong( (), _text("<MAR(g)>")),
-			_text(" marks.")
+			_text(" markers.")
 			])),
 		*(VAR(g)==0?[]:[li( (), _seq([
 			_text("Total "),
@@ -200,7 +209,7 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text("), "),
 			strong( (), _text("<BOTTOM(g)>")),
 			_text(" bottom ("),
-			csnl(listBOTTOM(g)),
+			csnl(freqNonterminals(listBOTTOM(g),g)),
 			_text(").")
 			]))]),
 		*(TERM(g)==0?[]:[li( (), _seq([
@@ -209,29 +218,29 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text(" terminal symbols: "),
 			strong( (), _text("<KWDS(g)>")),
 			_text(" keywords ("),
-			cstl(listKWDS(g)),
+			cstl(freqTerminals(listKWDS(g),g)),
 			_text("), "),
 			strong( (), _text("<NUM(g)>")),
 			_text(" numerics ("),
-			cstl(listNUM(g)),
+			cstl(freqTerminals(listNUM(g),g)),
 			_text("), "),
 			strong( (), _text("<SIGN(g)>")),
 			_text(" signs ("),
-			cstl(listSIGN(g)),
+			cstl(freqTerminals(listSIGN(g),g)),
 			_text(").")
 			]))]),
 		*(LAB(g)==0?[]:[li( (), _seq([
 			_text("Total "),
 			strong( (), _text("<LAB(g)>")),
 			_text(" labels: "),
-			csll(listLAB(g)),
+			csll(freqLAB(g)),
 			_text(".")
 			]))]),
 		*(MAR(g)==0?[]:[li( (), _seq([
 			_text("Total "),
 			strong( (), _text("<MAR(g)>")),
 			_text(" markers: "),
-			csml(listMAR(g)),
+			csml(freqMAR(g)),
 			_text(".")
 			]))])
 	];
