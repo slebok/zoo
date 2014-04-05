@@ -1,0 +1,54 @@
+module languages/modula-3/syntax/Statements
+
+imports languages/modula-3/syntax/Expressions
+imports languages/modula-3/syntax/Types
+
+exports
+sorts AssignStmt Stmt Block CallStmt CaseStmt ExitStmt EvalStmt ForStmt IfStmt
+      LockStmt LoopStmt RaiseStmt RepeatStmt ReturnStmt TryFinStmt TryXptStmt
+      TCaseStmt WhileStmt WithStmt Stmts Case TCase Handler Label Actual
+      Binding
+
+context-free syntax
+  AssignStmt                                                                -> Stmt        
+  Block                                                                     -> Stmt        
+  CallStmt                                                                  -> Stmt        
+  CaseStmt                                                                  -> Stmt        
+  ExitStmt                                                                  -> Stmt        
+  EvalStmt                                                                  -> Stmt        
+  ForStmt                                                                   -> Stmt        
+  IfStmt                                                                    -> Stmt        
+  LockStmt                                                                  -> Stmt        
+  LoopStmt                                                                  -> Stmt        
+  RaiseStmt                                                                 -> Stmt        
+  RepeatStmt                                                                -> Stmt        
+  ReturnStmt                                                                -> Stmt        
+  TryFinStmt                                                                -> Stmt        
+  TryXptStmt                                                                -> Stmt        
+  TCaseStmt                                                                 -> Stmt        
+  WhileStmt                                                                 -> Stmt        
+  WithStmt                                                                  -> Stmt        
+  ({Stmt ";"}+ ";"?)?                                                       -> Stmts       
+  Expr ":=" Expr                                                            -> AssignStmt  
+  Expr "(" {Actual ","}* ")"                                                -> CallStmt    
+  "CASE" Expr "OF" "|"? {Case "|"}+ ("ELSE" Stmts)? "END"                   -> CaseStmt    
+  "EXIT"                                                                    -> ExitStmt    
+  "EVAL" Expr                                                               -> EvalStmt    
+  "FOR" Id ":=" Expr "TO" Expr ("BY" Expr)? "DO" Stmts "END"                -> ForStmt     
+  "IF" Expr "THEN" Stmts ("ELSIF" Expr "THEN" Stmts)* ("ELSE" Stmts)? "END" -> IfStmt      
+  "LOCK" Expr "DO" Stmts "END"                                              -> LockStmt    
+  "LOOP" Stmts "END"                                                        -> LoopStmt    
+  "RAISE" QualId ("(" Expr ")")?                                            -> RaiseStmt   
+  "REPEAT" Stmts "UNTIL" Expr                                               -> RepeatStmt  
+  "RETURN" Expr?                                                            -> ReturnStmt  
+  "TYPECASE" Expr "OF" "|"? {TCase "|"}+ ("ELSE" Stmts)? "END"              -> TCaseStmt   
+  "TRY" Stmts "EXCEPT" "|"? {Handler "|"}+ ("ELSE" Stmts)? "END"            -> TryXptStmt  
+  "TRY" Stmts "FINALLY" Stmts "END"                                         -> TryFinStmt  
+  "WHILE" Expr "DO" Stmts "END"                                             -> WhileStmt   
+  "WITH" {Binding ","}+ "DO" Stmts "END"                                    -> WithStmt    
+  {Label ","}+ "=>" Stmts                                                   -> Case        
+  Expr (".." Expr)?                                                         -> Label       
+  {QualId ","}+ ("(" Id ")")? "=>" Stmts                                    -> Handler     
+  {Type ","}+ ("(" Id ")")? "=>" Stmts                                      -> TCase       
+  Id "=" Expr                                                               -> Binding     
+  TypeLiteral | ((Id ":=")? Expr)                                           -> Actual      

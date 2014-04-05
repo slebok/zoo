@@ -1,0 +1,47 @@
+module languages/modula-3/syntax/CompilationUnits
+
+imports languages/modula-3/syntax/Expressions
+imports languages/modula-3/syntax/Statements
+imports languages/modula-3/syntax/Types
+
+exports
+sorts Compilation Interface Module GenInf GenMod Import Decl GenActls AsImport
+      FromImport ImportItem Block GenFmls ConstDecl TypeDecl ExceptionDecl
+      VariableDecl ProcedureHead Signature Formal Formals Mode Raises
+
+context-free syntax
+  "UNSAFE"? Interface | Module | GenInf | GenMod                  -> Compilation    
+  "INTERFACE" Id ";" Import* Decl* "END" Id "."                   -> Interface      
+  "INTERFACE" Id "=" Id GenActls "END" Id "."                     -> Interface      
+  "MODULE" Id ("EXPORTS" IdList)? ";" Import* Block Id "."        -> Module         
+  "MODULE" Id ("EXPORTS" IdList)? "=" Id GenActls "END" Id "."    -> Module         
+  "GENERIC" "INTERFACE" Id GenFmls ";" Import* Decl* "END" Id "." -> GenInf         
+  "GENERIC" "MODULE" Id GenFmls ";" Import* Block Id "."          -> GenMod         
+  AsImport                                                        -> Import         
+  FromImport                                                      -> Import         
+  "IMPORT" {ImportItem ","}+ ";"                                  -> AsImport       
+  "FROM" Id "IMPORT" IdList ";"                                   -> FromImport     
+  Decl* "BEGIN" Stmts "END"                                       -> Block          
+  "CONST" (ConstDecl ";")*                                        -> Decl           
+  "TYPE" (TypeDecl ";")*                                          -> Decl           
+  "EXCEPTION" (ExceptionDecl ";")*                                -> Decl           
+  "VAR" (VariableDecl ";")*                                       -> Decl           
+  ProcedureHead ("=" Block Id)? ";"                               -> Decl           
+  "REVEAL" (QualId "=" | "<:" Type ";")*                          -> Decl           
+  "(" IdList? ")"                                                 -> GenFmls        
+  "(" IdList? ")"                                                 -> GenActls       
+  Id | (Id "AS" Id)                                               -> ImportItem     
+  Id (":" Type)? "=" Expr                                         -> ConstDecl      
+  Id "=" | "<:" Type                                              -> TypeDecl       
+  Id ("(" Type ")")?                                              -> ExceptionDecl  
+  IdList ":" Type ":=" Expr                                       -> VariableDecl   
+  IdList ":" Type                                                 -> VariableDecl   
+  IdList ":=" Expr                                                -> VariableDecl   
+  "PROCEDURE" Id Signature                                        -> ProcedureHead  
+  "(" Formals ")" (":" Type)? ("RAISES" Raises)?                  -> Signature      
+  ({Formal ";"}+ ";"?)?                                           -> Formals        
+  Mode? IdList ":" Type ":=" Expr                                 -> Formal         
+  Mode? IdList ":" Type                                           -> Formal         
+  Mode? IdList ":=" Expr                                          -> Formal         
+  "VALUE" | "VAR" | "READONLY"                                    -> Mode           
+  ("{" {QualId ","}* "}") | "ANY"                                 -> Raises         

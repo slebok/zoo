@@ -1,0 +1,29 @@
+module languages/modula-3/syntax/Layout
+
+imports languages/modula-3/syntax/Pragma
+
+exports
+sorts CAsterisk Comment CommentChar CommentTail CParen
+
+lexical syntax
+  [\ \t\n] -> LAYOUT  
+  Comment  -> LAYOUT  {category("Comment")}
+
+lexical syntax
+  "(*" CommentChar* CommentTail* "*)" -> Comment      
+  Comment CommentChar*                -> CommentTail  
+
+lexical syntax
+  [\*]      -> CAsterisk    
+  [\(]      -> CParen       
+  ~[\*\(]   -> CommentChar  
+  CAsterisk -> CommentChar  
+  CParen    -> CommentChar  
+
+lexical restrictions
+  CAsterisk -/- [\)]
+  CParen -/- [\*]
+
+context-free restrictions
+  LAYOUT? -/- [\ \t\n]
+  LAYOUT? -/- [\(].[\*]

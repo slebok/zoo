@@ -1,0 +1,61 @@
+module languages/modula-3/syntax/Types
+
+imports languages/modula-3/syntax/Statements
+
+exports
+sorts TypeName TypeLiteral Type ArrayType PackedType EnumType ObjectType
+      ProcedureType RecordType RefType SetType SubrangeType Brand Fields Field
+      Overrides IdList Ancestor Method Methods Signature Override
+
+context-free syntax
+  "ROOT" | ("UNTRACED" "ROOT")                                                         -> TypeName                                                                                                                                                    
+  "ROOT"                                                                               -> Id            {reject} %% NB: TypeLiteral is injected into Actual.
+ %% QualId types occurring in actuals are thus
+ %% parsed as selectors on expressions...
+
+  TypeLiteral                                                                          -> Type                                                                                                                                                        
+  QualId                                                                               -> Type                                                                                                                                                        
+  ArrayType                                                                            -> TypeLiteral                                                                                                                                                 
+  PackedType                                                                           -> TypeLiteral                                                                                                                                                 
+  EnumType                                                                             -> TypeLiteral                                                                                                                                                 
+  ObjectType                                                                           -> TypeLiteral                                                                                                                                                 
+  ProcedureType                                                                        -> TypeLiteral                                                                                                                                                 
+  RecordType                                                                           -> TypeLiteral                                                                                                                                                 
+  RefType                                                                              -> TypeLiteral                                                                                                                                                 
+  SetType                                                                              -> TypeLiteral                                                                                                                                                 
+  SubrangeType                                                                         -> TypeLiteral                                                                                                                                                 
+  "(" Type ")"                                                                         -> TypeLiteral                                                                                                                                                 
+  TypeName                                                                             -> TypeLiteral                                                                                                                                                 
+  "ARRAY" {Type ","}* "OF" Type                                                        -> ArrayType                                                                                                                                                   
+  "BITS" Expr "FOR" Type                                                               -> PackedType                                                                                                                                                  
+  "{" IdList? "}"                                                                      -> EnumType                                                                                                                                                    
+  TypeName | ObjectType | QualId                                                       -> Ancestor                                                                                                                                                    
+  Ancestor? Brand? "OBJECT" Fields ("METHODS" Methods)? ("OVERRIDES" Overrides)? "END" -> ObjectType                                                                                                                                                  
+  "PROCEDURE" Signature                                                                -> ProcedureType                                                                                                                                               
+  "RECORD" Fields "END"                                                                -> RecordType                                                                                                                                                  
+  "UNTRACED"? Brand? "REF" Type                                                        -> RefType                                                                                                                                                     
+  "SET" "OF" Type                                                                      -> SetType                                                                                                                                                     
+  "[" Expr ".." Expr "]"                                                               -> SubrangeType                                                                                                                                                
+  "BRANDED" TextLiteral?                                                               -> Brand                                                                                                                                                       
+  ({Field ";"}+ ";"?)?                                                                 -> Fields                                                                                                                                                      
+  IdList ":" Type ":=" Expr                                                            -> Field                                                                                                                                                       
+  IdList ":" Type                                                                      -> Field                                                                                                                                                       
+  IdList ":=" Expr                                                                     -> Field                                                                                                                                                       
+  ({Method ";"}+ ";"?)?                                                                -> Methods                                                                                                                                                     
+  Id Signature (":=" Expr)?                                                            -> Method                                                                                                                                                      
+  ({Override ";"}+ ";"?)?                                                              -> Overrides                                                                                                                                                   
+  Id ":=" Expr                                                                         -> Override                                                                                                                                                    
+
+context-free restrictions
+  "REF" -/- [A-Za-z\_0-9]
+  "SET" -/- [A-Za-z\_0-9]
+  "END" -/- [A-Za-z\_0-9]
+  "OF" -/- [A-Za-z\_0-9]
+  "UNTRACED" -/- [A-Za-z\_0-9]
+  "RECORD" -/- [A-Za-z\_0-9]
+  "OBJECT" -/- [A-Za-z\_0-9]
+  "BRANDED" -/- [A-Za-z\_0-9]
+  "ARRAY" -/- [A-Za-z\_0-9]
+  "BITS" -/- [A-Za-z\_0-9]
+  "FOR" -/- [A-Za-z\_0-9]
+  "PROCEDURE" -/- [A-Za-z\_0-9]

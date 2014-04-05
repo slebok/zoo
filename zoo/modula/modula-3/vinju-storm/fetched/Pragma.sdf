@@ -1,0 +1,20 @@
+module languages/modula-3/syntax/Pragma
+
+exports
+
+sorts PAsterisk Pragma
+
+lexical syntax
+	[\*] -> PAsterisk
+	"<*" ( PAsterisk | ~[\*] )* "*>" -> Pragma
+	Pragma -> LAYOUT
+
+lexical restrictions
+	PAsterisk -/- [\>]
+
+
+context-free restrictions
+	LAYOUT? -/- [\<].[\*]
+
+
+

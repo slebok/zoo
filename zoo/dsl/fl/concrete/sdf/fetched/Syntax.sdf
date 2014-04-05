@@ -1,0 +1,35 @@
+module Syntax
+
+imports Numbers
+imports basic/Whitespace
+
+exports
+	sorts 
+		Program Function Expr Ops Name Newline
+
+	context-free syntax
+		Function+			-> Program
+		Name Name+ "=" Expr Newline+	-> Function
+		Expr Ops Expr 			-> Expr {left,prefer,cons(binary)}
+		Name Expr+			-> Expr {avoid,cons(apply)}
+		"if" Expr "then" Expr "else" Expr	-> Expr {cons(ifThenElse)}
+		"(" Expr ")"			-> Expr {bracket}
+		Name				-> Expr {cons(argument)}
+		Int				-> Expr {cons(literal)}
+
+	context-free syntax
+		"-"		-> Ops {cons(minus)}
+		"+"		-> Ops {cons(plus)}
+		"=="		-> Ops {cons(equal)}
+
+	lexical syntax
+		[a-z]+			-> Name
+		"if" | "then" | "else"	-> Name {reject}
+		";"			-> Newline
+
+	lexical restrictions
+		Name -/- [a-z]
+
+hiddens
+	context-free start-symbols 
+		Program

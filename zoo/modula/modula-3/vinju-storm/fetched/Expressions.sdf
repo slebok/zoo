@@ -1,0 +1,58 @@
+module languages/modula-3/syntax/Expressions
+
+imports languages/modula-3/syntax/Tokens
+        languages/modula-3/syntax/Layout
+        languages/modula-3/syntax/Statements
+
+exports
+sorts Expr Constructor AnyCons Addop Relop Mulop Selector Elt
+
+context-free syntax
+  Expr "OR" Expr                             -> Expr        {left}    
+  Expr "AND" Expr                            -> Expr        {left}    
+  "NOT" Expr                                 -> Expr                  
+  "NOT"                                      -> Id          {reject}  
+  Expr Relop Expr                            -> Expr        {left}    
+  Expr Addop Expr                            -> Expr        {left}    
+  Expr Mulop Expr                            -> Expr        {left}    
+  "+" Expr                                   -> Expr                  
+  "-" Expr                                   -> Expr                  
+  Expr Selector                              -> Expr                  
+  Id | Literal | Constructor                 -> Expr                  
+  "(" Expr ")"                               -> Expr        {bracket} 
+  "=" | "#" | "<" | "<=" | ">" | ">=" | "IN" -> Relop                 
+  "+" | "-" | "&"                            -> Addop                 
+  "*" | "/" | "DIV" | "MOD"                  -> Mulop                 
+  "^"                                        -> Selector              
+  "." Id                                     -> Selector              
+  "[" {Expr ","}+ "]"                        -> Selector              
+  "(" {Actual ","}* ")"                      -> Selector              
+  Expr ".." Expr                             -> Elt                   
+  Expr                                       -> Elt                   
+  Id ":=" Expr                               -> Elt                   
+  {Elt ","}+ ("," "..")?                     -> AnyCons               
+  Type "{" AnyCons? "}"                      -> Constructor           
+
+context-free restrictions
+  "IN" -/- [a-zA-Z0-9\_]
+  "DIV" -/- [a-zA-Z0-9\_]
+  "MOD" -/- [a-zA-Z0-9\_]
+  "AND" -/- [a-zA-Z0-9\_]
+  "OR" -/- [a-zA-Z0-9\_]
+  "NOT" -/- [a-zA-Z0-9\_]
+
+context-free priorities
+  Expr Selector -> Expr >
+  {
+    "+" Expr    ->   
+    Expr             
+             "-" Expr
+    ->         Expr  
+                     
+  } >
+  Expr Mulop Expr -> Expr {left} >
+  Expr Addop Expr -> Expr {left} >
+  Expr Relop Expr -> Expr {left} >
+  "NOT" Expr -> Expr >
+  Expr "AND" Expr -> Expr {left} >
+  Expr "OR" Expr -> Expr {left}

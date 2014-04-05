@@ -1,0 +1,40 @@
+module languages/modula-3/syntax/Tokens
+
+exports
+sorts Literal Id Escape Number FloatNumber CharLiteral TextLiteral Letter Digit
+      DQUOTE PrintingChar TextContents IdList OctalDigit Exponent HexDigit
+      OtherChar QualId
+
+lexical syntax
+  Number | FloatNumber | CharLiteral | TextLiteral             -> Literal       
+  Letter (Letter | Digit | "_")*                                 -> Id            
+  "'" PrintingChar | Escape | DQUOTE "'"                       -> CharLiteral   
+  "\""                                                         -> DQUOTE        
+  (PrintingChar | Escape)*                                       -> TextContents  
+  DQUOTE TextContents DQUOTE                                   -> TextLiteral   
+  "\\n"                                                        -> Escape        
+  "\\t"                                                        -> Escape        
+  "\\r"                                                        -> Escape        
+  "\\f"                                                        -> Escape        
+  "\\\\"                                                       -> Escape        
+  "'"                                                     -> Escape        
+  "\\" DQUOTE                                                  -> Escape        
+  "\\" OctalDigit OctalDigit OctalDigit                        -> Escape        
+  Digit Digit*                                                 -> Number        
+  Digit Digit* "_" HexDigit HexDigit*                          -> Number        
+  Digit Digit* "." Digit Digit* Exponent?                      -> FloatNumber   
+  [EeDdXx] [\+\-]? Digit Digit*                                -> Exponent      
+  Letter | Digit | OtherChar                                   -> PrintingChar  
+  Digit | [A-Fa-f]                                             -> HexDigit      
+  [0-9]                                                        -> Digit         
+  [0-7]                                                        -> OctalDigit    
+  [A-Za-z]                                                     -> Letter        
+  [\<\>\ \!\?\#\$\%\&\(\)\*\+\,\-\.\/\:\;\_\`\{\}\~\[\]\|\^\=] -> OtherChar     
+
+lexical restrictions
+  Number -/- [0-9]
+  Id -/- [a-zA-Z0-9\_]
+
+context-free syntax
+  Id ("." Id)? -> QualId  
+  {Id ","}+    -> IdList  
