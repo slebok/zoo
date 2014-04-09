@@ -1,0 +1,21 @@
+extract BGF |home:///projects/webzoo-prep/zoo/modula/modula-3/src-052/extracted/grammar.bgf|.
+reroot to Compilation.
+// Compensating for the lack of non-reflexive transitive closure in the source notation:
+massage	(Digit Digit*) to Digit+ everywhere.
+massage	(HexDigit HexDigit*) to HexDigit+ everywhere.
+// DQUOTE is not "DQUOTE", it is """
+//		to cite page 59:
+//			In the following grammar, terminals are characters surrounded by double-quotes
+//			and the special terminal DQUOTE represents double-quote itself.
+// TODO: replace by an actual double quote (now it’s the GrammarLab double quote)
+replace "DQUOTE" with DQUOTE everywhere.
+// Fix misspellings:
+unite Repeatstmt with RepeatStmt.
+unite Expt with Expr.
+unite UtherChar with OtherChar.
+unite TypeID with TypeName.
+// Needed only for explanation, but not as a part of the actual grammar:
+eliminate Operator.
+// Seems unused otherwise:
+fold Literal in E8.
+export BGF |home:///projects/webzoo-prep/zoo/modula/modula-3/src-052/connected/grammar.bgf|.
