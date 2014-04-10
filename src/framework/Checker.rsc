@@ -18,6 +18,7 @@ void cmain()
 			validateContents(z);
 			validateGrammars(z);
 			validateOfs(z);
+			validateFileUsed(z);
 		}
 	}
 	println("Running time: <formatDuration(X)>");
@@ -76,5 +77,16 @@ void validateOfs(ZooEntry z)
 		of =  txtbykey(L,"of");
 		if (dir != "fetched" && of == "")
 			println("At <z.where>, <dir> is a grammar OF WHAT?");
+	}
+}
+
+void validateFileUsed(ZooEntry z)
+{
+	for (f <- [framework::BackEnd::basedir + z.where + d | xs:struct("grammar",kvs) <- z.meta, keyvalue("fileused",d) <- kvs])
+	{
+		if (!exists(f))
+			println("FILE USED in <z.where> does NOT exist: <f>");
+		if(f.extension=="xbgf")
+			println("FILE USED in <z.where> is XBGF — why not GLUE?");
 	}
 }

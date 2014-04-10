@@ -50,8 +50,12 @@ void rmain(bool force)
 					println("\tNo need to refresh the rendered version.");
 					continue;
 				}
+				g = readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf");
+				// NB: HACK!
+				// TODO: workaround - escaping in GrammarLab concrete syntax
+				g = visit(g){case nonterminal("DQUOTE") => terminal("\"")};
 				writeHTML(
-					bgf2html(txtbykey(zvs,"of"), dir, readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf"), z ),
+					bgf2html(txtbykey(zvs,"of"), dir, g, z ),
 					framework::BackEnd::outdir+"<mydir>/index.html"
 				);
 				//println(z);
@@ -148,10 +152,13 @@ default BodyElement hpp(GExpr e) = _text("NYI");
 BodyElement mmeta(str s) = span( ("class":"meta"), _text(s) );
 
 // comma-separated lists of nonterminals, terminals, labels and markers
-BodyElement wrapn(str x) = code((),hpp(nonterminal(x)));
-BodyElement wrapn(tuple[str x,int n] xn) = posnr(code((),hpp(nonterminal(xn.x))), xn.n);
+BodyElement wrapnL(str x) = code((), ahref( ("class":"nt", "href":"#<x>"), _text(x) ) );
+BodyElement wrapnN(str x) = code(("class":"nt"), _text(x));
+BodyElement wrapnL(tuple[str x,int n] xn) = posnr(code((), ahref( ("class":"nt", "href":"#<xn.x>"), _text(xn.x) ) ), xn.n);
+BodyElement wrapnN(tuple[str x,int n] xn) = posnr(code(("class":"nt"), _text(xn.x)), xn.n);
 BodyElement wrapt(tuple[str x,int n] xn) = posnr(hpp(terminal(xn.x)), xn.n);
-BodyElement wrapl(tuple[str x,int n] xn) = posnr(code((),_seq([_text("["),span( ("class":"lbl"), _text(xn.x) ),_text("]")])), xn.n);
+BodyElement wraplL(tuple[str x,int n] xn) = posnr(code((),_seq([_text("["),ahref(("class":"lbl", "href":"#<xn.x>"), _text(xn.x) ),_text("]")])), xn.n);
+BodyElement wraplN(tuple[str x,int n] xn) = posnr(code((),_seq([_text("["),span( ("class":"lbl"), _text(xn.x) ),_text("]")])), xn.n);
 BodyElement wrapm(tuple[str x,int n] xn) = posnr(code((),_seq([_text("⟨"),span( ("class":"lbl"), _text(xn.x) ),_text("⟩")])), xn.n);
 
 BodyElement posnr(BodyElement x, int n)
@@ -162,12 +169,13 @@ BodyElement posnr(BodyElement x, int n)
 BodyElement csl([], _) = _text("—");
 BodyElement csl(list[&T] xs, BodyElement(&T) f) = _seq([*[f(x), _text(", ")] | x <- xs][..-1]);
 
-BodyElement csnl(list[str] xs) = csl(xs, wrapn);
-BodyElement csnl(lrel[str,int] xs) = csl(xs, wrapn);
-//BodyElement cstl(list[str] xs) = csl(xs, wrapt);
+// ...L means Link; ...N means No link
+BodyElement csnlL(list[str] xs) = csl(xs, wrapnL);
+BodyElement csnlL(lrel[str,int] xs) = csl(xs, wrapnL);
+BodyElement csnlN(lrel[str,int] xs) = csl(xs, wrapnN);
 BodyElement cstl(lrel[str,int] xs) = csl(xs, wrapt);
-//BodyElement csll(list[str] xs) = csl(xs, wrapl);
-BodyElement csll(lrel[str,int] xs) = csl(xs, wrapl);
+BodyElement csllL(lrel[str,int] xs) = csl(xs, wraplL);
+BodyElement csllN(lrel[str,int] xs) = csl(xs, wraplN);
 BodyElement csml(lrel[str,int] xs) = csl(xs, wrapm);
 
 list[BodyElement] metricSummary(GGrammar g)
@@ -201,15 +209,15 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text(" defined (see below), "),
 			strong( (), _text("<ROOT(g)>")),
 			_text(" root ("),
-			csnl(listROOT(g)),
+			csnlL(listROOT(g)),
 			_text("), "),
 			strong( (), _text("<TOP(g)>")),
 			_text(" top ("),
-			csnl(listTOP(g)),
+			csnlL(listTOP(g)),
 			_text("), "),
 			strong( (), _text("<BOTTOM(g)>")),
 			_text(" bottom ("),
-			csnl(freqNonterminals(listBOTTOM(g),g)),
+			csnlN(freqNonterminals(listBOTTOM(g),g)),
 			_text(").")
 			]))]),
 		*(TERM(g)==0?[]:[li( (), _seq([
@@ -233,7 +241,7 @@ list[BodyElement] metricSummary(GGrammar g)
 			_text("Total "),
 			strong( (), _text("<LAB(g)>")),
 			_text(" labels: "),
-			csll(freqLAB(g)),
+			csllL(freqLAB(g)),
 			_text(".")
 			]))]),
 		*(MAR(g)==0?[]:[li( (), _seq([
