@@ -1,0 +1,25 @@
+extract BGF |home:///projects/webzoo-prep/zoo/modula/modula-3/vinju-storm/extracted/grammar.bgf|.
+// Explicit starting symbol:
+reroot to Compilation.
+// The {reject} annotation (marker) is incorrectly processed by the extractor anyway:
+eliminate Ident.
+// In SDF, all nonterminals are defined vertically, but the horizontal style is more readable:
+HorizontalAll.
+// Lexical part from languages/modula-3/syntax/Tokens:
+define Literal ::= Number | FloatNumber | CharLiteral | TextLiteral;.
+undefine Id. // was defined as "ROOT" | "NOT"
+define Id ::= ( Letter (Letter | Digit | "_")* )  & ¬"NOT" & ¬"ROOT" ; .
+define CharLiteral ::= "'" PrintingChar | Escape | DQUOTE "'"; .   
+define TextLiteral ::= DQUOTE TextContents DQUOTE ;.
+define TextContents ::= (PrintingChar | Escape)* ;.
+define Escape ::= "\\n" | "\\t" | "\\r" | "\\f" | "\\\\" | "'" | "\\" | "\\" OctalDigit OctalDigit OctalDigit;.
+define Number ::= Digit Digit* | Digit Digit* "_" HexDigit HexDigit*;.
+define FloatNumber ::= Digit Digit* "." Digit Digit* Exponent?;.
+define Exponent ::= ("E" | "e" | "D" | "d" | "X" | "x") ("+" | "-")? Digit Digit*;.
+define PrintingChar ::= Letter | Digit | OtherChar;.
+define HexDigit ::=  Digit | "A" | "B" | "C" | "D" | "E" | "F" | "a" | "b" | "c" | "d" | "e" | "f";.
+define Digit ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;.
+define OctalDigit ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" ;.
+define Letter ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z" | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z";.
+define OtherChar ::= "\<" | "\>" | "\ " | "\!" | "\?" | "\#" | "\$" | "\%" | "\&" | "\(" | "\)" | "\*" | "\+" | "\," | "\-" | "\." | "\/" | "\:" | "\;" | "\_" | "\`" | "\{" | "\}" | "\~" | "\[" | "\]" | "\|" | "\^" | "\=";.     
+export BGF |home:///projects/webzoo-prep/zoo/modula/modula-3/vinju-storm/connected/grammar.bgf|.
