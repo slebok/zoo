@@ -1,0 +1,97 @@
+module languages/logo/syntax/Logo
+
+  imports basic/Whitespace
+  imports basic/IntCon
+  imports basic/ColorOperations
+
+  exports
+
+    context-free start-symbols Program
+
+    sorts Id QuotedId Formal Exp  BasicCommand Call 
+          FunctionDef Command Commands  Block Program
+
+    lexical syntax
+       [a-z][a-z0-9]*                 -> Id
+       ":" Id                         -> Formal
+       "\"" Id                        -> QuotedId
+       ";" ~[\n]*                     -> LAYOUT
+
+    context-free restrictions
+       Id -/- [a-z0-9]
+       Formal -/- [a-z0-9]
+
+    context-free syntax %% Define reserved words
+
+     "xcor" | "ycor" | "heading" | "towards" | "pendown?" |
+     "sum" | "difference" | "product" | "quotient" |
+     "remainder" | "minus" | "less?" | "greater?" | "equal?" |
+     "notequal?" | "to" | "if" | "ifelse" | "repeat" | "forward" |
+     "back" | "left" | "right" | "setxy" | "setx" | "sety" |
+     "home" | "showturtle" | "hideturtle" | "clean" | 
+     "clearscreen" | "pendown" | "penup" | "local" | "make"  -> Id {reject}
+       
+    context-free syntax
+       Integer                        -> Exp
+       Formal                         -> Exp
+
+       "xcor"                         -> Exp
+       "ycor"                         -> Exp
+       "heading"                      -> Exp
+       "towards" Exp Exp              -> Exp
+       "pendown?"                     -> Exp
+       "sum" Exp Exp                  -> Exp
+       "difference" Exp Exp           -> Exp
+       "product" Exp Exp              -> Exp
+       "quotient" Exp Exp             -> Exp
+       "remainder" Exp Exp            -> Exp
+       "minus" Exp                    -> Exp
+       "less?" Exp Exp                -> Exp
+       "greater?" Exp Exp             -> Exp
+       "equal?" Exp Exp               -> Exp
+       "notequal?" Exp Exp            -> Exp
+
+       "to" Id Formal* Block          -> FunctionDef
+
+       "[" Command* "]"               -> Block
+
+       "if" Exp Block                 -> BasicCommand
+       "ifelse" Exp Block Block       -> BasicCommand
+       "repeat" Exp Block             -> BasicCommand
+
+       "forward" Exp                  -> BasicCommand
+       "back" Exp                     -> BasicCommand
+       "left" Exp                     -> BasicCommand
+       "right" Exp                    -> BasicCommand
+       "setxy" Exp Exp                -> BasicCommand
+       "setx" Exp                     -> BasicCommand
+       "sety" Exp                     -> BasicCommand
+       "home"                         -> BasicCommand
+
+       "showturtle"                   -> BasicCommand
+       "hideturtle"                   -> BasicCommand
+       "clean"                        -> BasicCommand
+       "clearscreen"                  -> BasicCommand
+       "pendown"                      -> BasicCommand
+       "penup"                        -> BasicCommand
+       "pencolor" Color               -> BasicCommand
+
+       "local" QuotedId               -> BasicCommand
+       "make" QuotedId Exp            -> BasicCommand
+
+       Id  Exp*                       -> Call
+       BasicCommand                   -> Command
+       FunctionDef                    -> Command
+       Call                           -> Command 
+
+       Command*                       -> Commands
+
+       Commands                       -> Program
+
+  context-free priorities
+       { BasicCommand  -> Command
+         FunctionDef   -> Command } >
+         Call -> Command
+
+       
+
