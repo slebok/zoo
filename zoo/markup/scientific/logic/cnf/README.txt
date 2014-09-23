@@ -3,7 +3,7 @@ http://www.rascal-mpl.org/:
    ↳  http://github.com/cwi-swat/rascal/tree/master/src/org/rascalmpl/library/lang
      ↳  dimacs/syntax/Dimacs.rsc
 
-CSV from the Rascal language workbench standard library.
+CNF from the Rascal language workbench standard library.
 
 Author: Jurgen Vinju
 
