@@ -1,0 +1,367 @@
+      
+%%%%%%%%%%
+%%Fortran ISO/IEC 1539:1991 section R5xx Data Object declarations and Specifications
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/R500DataDeclarations
+module R500DataDeclarations
+
+imports
+  %% languages/fortran/syntax/FortranLex
+  %% languages/fortran/syntax/R400DataTypes
+  %% languages/fortran/syntax/R700Expressions
+
+  FortranLex
+  R400DataTypes
+  R700Expressions
+
+exports
+
+sorts
+  AccessId AccessIdList AccessSpec AccessStmt
+  AllocatableDecl AllocatableDeclList AllocatableStmt ArraySpec
+  AssumedShapeSpec AsynchronousStmt AssumedShapeSpecList AssumedSizeSpec AttrSpec CharLength
+  BindEntity BindEntityList BindStmt
+  CharSelector %%TODO Comblock CommonBlockObject CommonBlockObjectList
+  CommonStmt %%TODO Constant DataIDoObject DataIDoObjectList DataImpliedDo
+  DataStmt DataStmtObject DataStmtObjectList DataStmtSet DataStmtSetList
+  DataStmtValue DataStmtValueList %%TODO DeferredShapeSpec DeferredShapeSpecList
+  DimensionDecl DimensionDeclList DimensionStmt
+  DummyArgNameList
+  EntityDecl EquivalenceObject EquivalenceSet EquivalenceSetList EquivalenceStmt
+  EntityName
+  ExplicitShapeSpec ExplicitShapeSpecList ImplicitSpec ImplicitSpecList ImplicitStmt
+  Initialization IntentSpec IntentStmt KindSelector LengthSelector
+  LetterSpec LetterSpecList LowerBound NamedConstant NamedConstantDef NamedConstantDefList
+%%TODO   NamedConstantUse
+  NamelistGroup NamelistGroupObject NamelistGroupObjectList NamelistStmt
+  NullInit ObjectNameList OptionalStmt ParameterStmt PointerStmt
+  PointerDecl PointerDeclList SavedEntity SavedEntityList SaveStmt
+  TargetDecl TargetDeclList TargetStmt TypeDeclarationStmt TypeParamValue
+  UpperBound ValueStmt VolatileStmt
+
+%%TODO - replace with above
+  DataIDoObject DataIDoObjectList DataImpliedDo DataStmtConstant DataStmtRepeat
+  CommonBlockObjectList  Comblock CommonBlockObject SpecificationStmt
+  DeferredShapeSpec DeferredShapeSpecList
+  NamedConstantUse
+  LanguageBindingSpec
+
+context-free syntax
+
+%%R307
+  Ident                         -> NamedConstant
+  Ident                         -> NamedConstantUse
+
+%%R501
+  LblDef DeclarationTypeSpec (',' AttrSpec)* '::'
+            {EntityDecl ","}+           EOS -> TypeDeclarationStmt  {cons("type-declaration-stmt")}
+  LblDef DeclarationTypeSpec
+            {EntityDecl ","}+           EOS -> TypeDeclarationStmt  {cons("type-declaration-stmt")}
+
+%%R502
+   AccessSpec                    -> AttrSpec
+  'ALLOCATABLE'                  -> AttrSpec
+  'ASYNCHRONOUS'                 -> AttrSpec
+  'CONTIGUOUS'                   -> AttrSpec
+%%TODO-F08  DimensionSpec                  -> AttrSpec
+  'DIMENSION' '(' ArraySpec ')'  -> AttrSpec
+  'EXTERNAL'                     -> AttrSpec
+  'INTENT' '(' IntentSpec ')'    -> AttrSpec
+  'INTRINSIC'                    -> AttrSpec
+   LanguageBindingSpec           -> AttrSpec
+  'OPTIONAL'                     -> AttrSpec
+  'PARAMETER'                    -> AttrSpec
+  'POINTER'                      -> AttrSpec
+  'PROTECTED'                    -> AttrSpec
+  'SAVE'                         -> AttrSpec
+  'TARGET'                       -> AttrSpec
+  'VALUE'                        -> AttrSpec
+  'VOLATILE'                     -> AttrSpec
+
+%%R503
+%%TODO-F08: co-array-spec
+  ObjectName    ( '(' ArraySpec ')' )?
+                ( '*' CharLength    )?
+                   Initialization?                       -> EntityDecl
+%%Ambiguous with object-name
+%%FunctionName  ( '*' CharLength    )?                   -> EntityDecl
+
+%%TODO-DELETE   ObjectName '=' Expr                                   -> EntityDecl
+%%TODO-DELETE   ObjectName '(' ArraySpec ')' '=' Expr                 -> EntityDecl
+%%TODO-DELETE   ObjectName '*' CharLength '=' Expr                    -> EntityDecl
+%%TODO-DELETE   ObjectName '*' CharLength '(' ArraySpec ')' '=' Expr  -> EntityDecl
+%%F77
+%%TODO-DELETE   ObjectName                                            -> EntityDecl
+%%TODO-DELETE   ObjectName '*' CharLength                             -> EntityDecl
+%%TODO-DELETE   ObjectName '(' ArraySpec ')'                          -> EntityDecl
+%%TODO-DELETE   ObjectName '(' ArraySpec ')' '*' CharLength           -> EntityDecl
+
+%%R504
+%%Name                                                  -> ObjectName
+%% see lexical syntax
+
+%%R505
+  '='   InitializationExpr                              -> Initialization
+  '=>'  NullInit                                        -> Initialization
+  '=>'  InitialDataTarget                               -> Initialization
+
+%%R506
+  FunctionReference                                     -> NullInit
+
+%%R505
+%% expr used as scalar-int-initialization-expr 
+  '(' ('KIND' '=')? Expr ')'                            -> KindSelector
+%%TODO: remove this often used in complex declarations like Integer*8 Complex*8 Complex*16 (IBM standard, not ISO!?)
+  '*' Icon                                              -> KindSelector
+
+%%R425
+%%TODO - move to R400...
+  LengthSelector                                        -> CharSelector
+  '(' 'LEN' '=' TypeParamValue ',' 'KIND' '=' Expr ')'  -> CharSelector
+  '('           TypeParamValue ',' 'KIND' '=' Expr ')'  -> CharSelector
+  '('           TypeParamValue ','            Expr ')'  -> CharSelector
+
+  '(' 'KIND' '=' Expr ',' 'LEN' '=' TypeParamValue ')'  -> CharSelector
+  '(' 'KIND' '=' Expr                              ')'  -> CharSelector
+
+%%R426
+  '(' ('LEN' '=')? TypeParamValue ')'                   -> LengthSelector
+  '*' CharLength ','?                                   -> LengthSelector
+
+%%R427
+  '(' TypeParamValue ')'                                -> CharLength
+  Icon                                                  -> CharLength
+
+%%R508
+%%TODO-DELETE   '(' TypeParamValue ')'        -> CharLength
+%%TODO????   ScalarIntLiteralConstant      -> CharLength
+
+%%R508
+  'BIND' '(' 'C' (',' 'NAME' '=' Scon)? ')'  -> LanguageBindingSpec
+
+%%R401
+  SpecificationExpr                    -> TypeParamValue
+  '*'                                  -> TypeParamValue
+  ':'                                  -> TypeParamValue
+
+%%R507
+  'PUBLIC'                             -> AccessSpec
+  'PRIVATE'                            -> AccessSpec
+
+%%R510
+%%TODO-F08 - fix assumed-rank-spec
+  '..'                                 -> ArraySpec
+  AssumedShapeSpecList                 -> ArraySpec
+  DeferredShapeSpecList                -> ArraySpec
+  ExplicitShapeSpecList                -> ArraySpec
+  AssumedSizeSpec                      -> ArraySpec
+
+%%R511
+%%TODO-F08 co-array-spec
+
+%%R523
+  'IN'                 -> IntentSpec
+  'OUT'                -> IntentSpec
+  'INOUT'              -> IntentSpec
+  'IN OUT'             -> IntentSpec
+
+%%R512
+  {ExplicitShapeSpec ","}+                      -> ExplicitShapeSpecList
+  (LowerBound ':')? UpperBound                  -> ExplicitShapeSpec
+
+%%R513
+  SpecificationExpr                             -> LowerBound
+
+%%R514
+  SpecificationExpr                             -> UpperBound
+
+%%R516
+  LowerBound? ':'                               -> AssumedShapeSpec
+  LowerBound ':'                                -> AssumedShapeSpecList
+  DeferredShapeSpecList ',' LowerBound ':'      -> AssumedShapeSpecList
+  AssumedShapeSpecList ',' AssumedShapeSpec     -> AssumedShapeSpecList
+
+%%R517
+  {DeferredShapeSpec ","}+                      -> DeferredShapeSpecList
+  ':'                                           -> DeferredShapeSpec
+
+%%R518
+  (LowerBound ':')? '*'                         -> AssumedSizeSpec
+  ExplicitShapeSpecList ',' '*'                 -> AssumedSizeSpec
+  ExplicitShapeSpecList ',' LowerBound ':' '*'  -> AssumedSizeSpec
+
+%%R545
+  LblDef 'INTENT' '(' IntentSpec ')' '::'? DummyArgNameList   EOS -> IntentStmt  {cons("intent-stmt")}
+  {DummyArgName ','}+                                             -> DummyArgNameList
+
+%%R520
+  LblDef 'OPTIONAL' '::'? DummyArgNameList                 EOS -> OptionalStmt {cons("optional-stmt")}
+
+%%R524
+  LblDef AccessSpec '::' AccessIdList                      EOS -> AccessStmt   {cons("access-stmt")}
+  LblDef AccessSpec      AccessIdList?                     EOS -> AccessStmt   {cons("access-stmt")}
+
+%%R525
+%%Ambiguous with generic-spec
+%%UseName                                                      -> AccessId
+  GenericSpec                                                  -> AccessId
+  {AccessId ","}+                                              -> AccessIdList
+
+%%R552
+  LblDef 'SAVE' ('::'? SavedEntityList)?                   EOS -> SaveStmt     {const("save-stmt")}
+
+%%R553
+  ObjectName                                                   -> SavedEntity
+  %% proc-pointer-name is Name
+  '/' CommonBlockName '/'                                      -> SavedEntity
+  {SavedEntity ","}+                                           -> SavedEntityList
+
+%%R543
+  LblDef 'DIMENSION' '::'? DimensionDeclList               EOS -> DimensionStmt  {cons("dimension-stmt")}
+
+%%R544
+%%TODO-F08 co-array-spec
+  VariableName '(' ArraySpec ')'                               -> DimensionDecl
+  {DimensionDecl ","}+                                         -> DimensionDeclList
+
+%%R526
+  LblDef 'ALLOCATABLE' '::'? AllocatableDeclList       EOS -> AllocatableStmt   {cons("allocatable-stmt")}
+
+%%R527
+%%TODO-F08 co-array-spec
+  ObjectName ( '(' ArraySpec ')' )?                        -> AllocatableDecl
+  {AllocatableDecl ","}+                                   -> AllocatableDeclList
+
+%%R528
+  LblDef 'ASYNCHRONOUS' '::'? ObjectNameList           EOS -> AsynchronousStmt   {cons("asynchronous-stmt")}
+
+%%R549
+  LblDef 'POINTER' '::'? PointerDeclList               EOS -> PointerStmt   {cons("pointer-stmt")}
+
+%%R550
+%%TODO-F08: proc-entity-name
+  ObjectName                                               -> PointerDecl
+  ObjectName '(' DeferredShapeSpecList ')'                 -> PointerDecl
+  {PointerDecl ","}+                                       -> PointerDeclList
+
+%%R555
+%%TODO-F08: co-array-spec
+  LblDef 'TARGET' '::'? TargetDeclList                 EOS -> TargetStmt   {cons("target-stmt")}
+  ObjectName ('(' ArraySpec ')')?                          -> TargetDecl
+  {TargetDecl ","}+                                        -> TargetDeclList
+
+%%R529
+  LblDef LanguageBindingSpec '::'? BindEntityList      EOS -> BindStmt   {cons("bind-stmt")}
+
+%%R530
+  EntityName                                               -> BindEntity
+  '/' CommonBlockName '/'                                  -> BindEntity
+  {BindEntity ','}+                                        -> BindEntityList
+  Ident                                                    -> EntityName
+
+%%R532
+  LblDef 'DATA' DataStmtSetList                        EOS -> DataStmt   {cons("data-stmt")}
+  {DataStmtSet ','?}+                                      -> DataStmtSetList
+
+%%R533
+  DataStmtObjectList '/' DataStmtValueList '/'             -> DataStmtSet
+
+%%R534
+  Variable                                                 -> DataStmtObject
+  DataImpliedDo                                            -> DataStmtObject
+  {DataStmtObject ","}+                                    -> DataStmtObjectList
+
+%%R535
+  '(' DataIDoObjectList ',' ImpliedDoVariable '=' Expr ',' Expr (',' Expr)? ')' -> DataImpliedDo
+
+%%R538
+  (DataStmtRepeat '*')? DataStmtConstant                   -> DataStmtValue
+  {DataStmtValue ","}+                                     -> DataStmtValueList
+  
+%%539
+%%TODO-F08: scalar-int-constant-subobject
+  Icon                                                     -> DataStmtRepeat
+
+%%540
+%%TODO-F08: long list of constants
+  Constant                                                 -> DataStmtConstant
+%%TODO-DELETE @<Scalar Integer Literal Constant@> '*' Constant          -> DataStmtConstant
+%%TODO-DELETE  NamedConstantUse '*' Constant                            -> DataStmtConstant
+
+%%R533 see 100
+%%TODO   StructureConstructor                  -> Constant
+%%TODO   BozLiteralConstant                    -> Constant
+
+%%R536
+  ArrayElement                          -> DataIDoObject
+  StructureComponent                    -> DataIDoObject
+  DataImpliedDo                         -> DataIDoObject
+  {DataIDoObject ","}+                  -> DataIDoObjectList
+
+%%R547
+  LblDef 'PARAMETER' '(' NamedConstantDefList ')'  EOS -> ParameterStmt
+
+%%R548
+%% original iso: named-constant-def is named-constant = initialization-expr
+  NamedConstant '=' Expr                        -> NamedConstantDef
+  {NamedConstantDef ","}+                       -> NamedConstantDefList
+
+%%R557
+  LblDef 'VALUE' '::'? DummyArgNameList            EOS -> ValueStmt       {cons("value-stmt")}
+  {DummyArgName ','}+                                  -> DummyArgNameList
+
+%%R558
+  LblDef 'VOLATILE' '::'? ObjectNameList           EOS -> VolatileStmt    {cons("volatile-stmt")}
+  {ObjectName ','}+                                    -> ObjectNameList
+
+%%R559
+  LblDef 'IMPLICIT' ImplicitSpecList               EOS -> ImplicitStmt    {cons("implicit-stmt")}
+  LblDef 'IMPLICIT' 'NONE'                         EOS -> ImplicitStmt    {cons("implicit-stmt")}
+
+%%560
+  DeclarationTypeSpec '(' LetterSpecList ')'           -> ImplicitSpec
+  {ImplicitSpec ','}+                                  -> ImplicitSpecList
+
+%%561
+  Letter ('-' Letter)?                                 -> LetterSpec
+  {LetterSpec ','}+                                    -> LetterSpecList
+
+%%R562
+  LblDef 'NAMELIST' NamelistGroup (','? NamelistGroup)*  EOS -> NamelistStmt      {cons("namelist-stmt")}
+  '/' NamelistGroupName '/' NamelistGroupObjectList          -> NamelistGroup
+
+%%R563
+  VariableName                                               -> NamelistGroupObject
+  {NamelistGroupObject ','}+                                 -> NamelistGroupObjectList
+
+%%R564
+  LblDef 'EQUIVALENCE' EquivalenceSetList                EOS -> EquivalenceStmt   {cons("equivalence-stmt")}
+
+%%R565
+  {EquivalenceSet ","}+                                      -> EquivalenceSetList
+  '(' EquivalenceObject "," {EquivalenceObject ","}+ ')'     -> EquivalenceSet
+
+%%R566
+%%Note: Variable includes array-element and substring
+  Variable                                                   -> EquivalenceObject
+%%TODO  ArrayName                                                  -> EquivalenceObject
+
+%%R567
+%%TODO-DELETE   LblDef 'COMMON' Comlist                                 EOS -> CommonStmt  {cons("common-stmt")}
+  LblDef 'COMMON'       Comblock? CommonBlockObjectList
+                  (','? Comblock  CommonBlockObjectList)*  EOS -> CommonStmt  {cons("common-stmt")}
+
+%%TODO-DELETE   CommonBlockObject                              -> Comlist
+%%TODO-DELETE   Comblock CommonBlockObject                     -> Comlist
+%%TODO-DELETE   Comlist ',' CommonBlockObject                  -> Comlist
+%%TODO-DELETE   Comlist Comblock CommonBlockObject             -> Comlist
+%%TODO-DELETE   Comlist ',' Comblock CommonBlockObject         -> Comlist
+%%TODO-DELETE  '/' '/'                                         -> Comblock
+%%TODO-DELETE  '/' CommonBlockName  '/'                        -> Comblock
+  '/' CommonBlockName? '/'                                     -> Comblock
+
+%%R568
+  VariableName ( '(' ArraySpec ')' )?                          -> CommonBlockObject
+%%TODO-DELETE   ArrayDeclarator                                -> CommonBlockObject
+  {CommonBlockObject ","}+                                     -> CommonBlockObjectList

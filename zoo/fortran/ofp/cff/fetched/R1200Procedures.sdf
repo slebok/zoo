@@ -1,0 +1,249 @@
+      
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section 12xx Procedures section
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/R1200Procedures
+module R1200Procedures
+
+imports
+  %% languages/fortran/syntax/FortranLex
+  %% languages/fortran/syntax/Fortran90
+  FortranLex
+  Fortran
+
+exports
+
+sorts
+
+  ActualArg CallStmt ContainsStmt DtioGenericSpec EndFunctionStmt EndInterfaceStmt
+  EndSubroutineStmt EntryStmt ExternalStmt FunctionArg FunctionArgList
+  FunctionInterfaceRange FunctionPar FunctionParList FunctionPrefix FunctionRange
+  FunctionReference FunctionStmt FunctionSubprogram GenericSpec InterfaceBlock
+  InterfaceBlockPart InterfaceBody InterfaceStmt IntrinsicStmt ProcedureStmt
+  ProcedureName ProcedureNameList ReturnStmt %%TODO SFDummyArgNameList 
+  SubprogramInterfaceBody SubroutineInterfaceRange DummyArg OptSubroutineParList SubroutineRange
+  SubroutineStmt SubroutineSubprogram
+
+%%F2008
+  PrefixSpec
+  OptProcLanguageBindingSpec
+  ProcedureEntityName InterfaceName ProcedureDeclarationStmt ProcDeclList ProcInterface
+
+%%2008 experimental
+  SubroutinePrefix
+  OptSubroutineName
+
+%%TODO SubroutineStmt not used?
+%%TODO StmtFunctionStmt ambiguous obsolescant/deleted
+
+context-free syntax
+
+%%R1201 %% note: iso says interfacebody allways precedes moduleprocstmt.
+  InterfaceStmt                     EndInterfaceStmt   -> InterfaceBlock
+  InterfaceStmt InterfaceBlockPart+ EndInterfaceStmt   -> InterfaceBlock
+
+  InterfaceBody                                        -> InterfaceBlockPart
+  ProcedureStmt                                        -> InterfaceBlockPart
+
+%%R1203
+%%TODO-F08 abstract
+%%REMOVE-F90   LblDef 'INTERFACE' GenericName                   EOS -> InterfaceStmt       {cons("interface-stmt")}
+  LblDef 'INTERFACE' GenericSpec?                   EOS -> InterfaceStmt       {cons("interface-stmt")}
+%%REMOVE-F90   LblDef 'INTERFACE'                               EOS -> InterfaceStmt       {cons("interface-stmt")}
+
+%%R1204
+%%TODO-F08 generic-spec replaces generic-name ENDINTERFACE
+%%REMOVE-F90  LblDef 'END' 'INTERFACE' GenericName?            EOS -> EndInterfaceStmt    {cons("end-interface-stmt")}
+  LblDef 'END' 'INTERFACE' GenericSpec?            EOS -> EndInterfaceStmt    {cons("end-interface-stmt")}
+
+%%R1205
+  LblDef FunctionPrefix FunctionName FunctionInterfaceRange           -> InterfaceBody
+  LblDef 'SUBROUTINE' SubroutineName SubroutineInterfaceRange         -> InterfaceBody
+
+  FunctionParList      EOS  SubprogramInterfaceBody EndFunctionStmt   -> FunctionInterfaceRange
+  FunctionParList      EOS  EndFunctionStmt                           -> FunctionInterfaceRange
+
+  OptSubroutineParList OptProcLanguageBindingSpec
+                       EOS  SubprogramInterfaceBody EndSubroutineStmt -> SubroutineInterfaceRange
+  OptSubroutineParList OptProcLanguageBindingSpec
+                       EOS  EndSubroutineStmt                         -> SubroutineInterfaceRange
+
+  SpecificationPartConstruct                                -> SubprogramInterfaceBody
+  SubprogramInterfaceBody SpecificationPartConstruct        -> SubprogramInterfaceBody
+
+%%R1206
+  LblDef 'MODULE'? 'PROCEDURE' "::"? ProcedureNameList  EOS -> ProcedureStmt  {cons("procedure-stmt")}
+  {ProcedureName ","}+                                      -> ProcedureNameList
+  Ident                                                     -> ProcedureName
+
+%%R1207
+  GenericName                                               -> GenericSpec
+  'OPERATOR'   "(" DefinedOperator ")"                      -> GenericSpec
+  'ASSIGNMENT' "(" '='             ")"                      -> GenericSpec
+  DtioGenericSpec                                           -> GenericSpec
+
+%%R1208
+  'READ'  '(' 'FORMATTED'   ')'                             -> DtioGenericSpec
+  'READ'  '(' 'UNFORMATTED' ')'                             -> DtioGenericSpec
+  'WRITE' '(' 'FORMATTED'   ')'                             -> DtioGenericSpec
+  'WRITE' '(' 'UNFORMATTED' ')'                             -> DtioGenericSpec
+
+%%R1209
+%%TODO-F08 import-stmt
+
+%%R1210
+  LblDef 'EXTERNAL' "::"? {ExternalName ","}+              EOS -> ExternalStmt   {cons("external-stmt")}
+
+%%R1211
+%%TODO-F08 - add proc-attr-spec
+  LblDef 'PROCEDURE' "(" ProcInterface ")" "::"? ProcDeclList  EOS -> ProcedureDeclarationStmt
+                                                                        {cons("procedure-declaration-stmt")}
+
+%%R1212
+%%TODO-F08 - add declaration-type-spec
+  InterfaceName                                             -> ProcInterface
+
+%%R1214
+%%TODO-f08 - add proc-pointer-init
+  {ProcedureEntityName ","}+                                -> ProcDeclList
+  Ident                                                     -> ProcedureEntityName
+
+%%R1215
+  Ident                                                     -> InterfaceName
+
+%%R1218
+  LblDef 'INTRINSIC' "::"? {IntrinsicProcedureName ","}+   EOS -> IntrinsicStmt  {cons("intrinsic-stmt")}
+
+%%R1219
+%%TODO-F08 - procedure-designator
+%%TODO-F08 - this is also ambiguous with array reference so perhaps FunctionArgList is not complete
+  Name "(" FunctionArgList? ")"                        -> FunctionReference   {cons("function-reference")}
+
+%%R1220
+  LblDef 'CALL' SubroutineNameUse                          EOS -> CallStmt   {cons("call-stmt")}
+  LblDef 'CALL' SubroutineNameUse "(" {ActualArg ","}* ")" EOS -> CallStmt   {cons("call-stmt")}
+
+%%1221
+%%TODO-F08 - procedure-designator
+
+%%1222
+%%TODO-F08 - actual-arg-spec
+%% [ keyword = ] actual-arg
+  FunctionArg                                          -> FunctionArgList
+  FunctionArgList "," FunctionArg                      -> FunctionArgList
+%%TODO  SectionSubscriptList "," FunctionArg           -> FunctionArgList
+
+%%R1223
+%%TODO-F08
+  (Name '=')? Expr                                     -> ActualArg
+  (Name '=')? '*' LblRef                               -> ActualArg
+
+  Name '=' Expr                                        -> FunctionArg
+
+%%1224
+%%TODO-F08 - alt-return-spec
+
+%%1225
+  PrefixSpec*                                          -> SubroutinePrefix       {cons("prefix")}
+
+%%1226
+  DeclarationTypeSpec                                  -> PrefixSpec
+  'ELEMENTAL'                                          -> PrefixSpec
+  'IMPURE'                                             -> PrefixSpec
+  'MODULE'                                             -> PrefixSpec
+  'PURE'                                               -> PrefixSpec
+  'RECURSIVE'                                          -> PrefixSpec
+
+%%R1227
+  LblDef FunctionPrefix FunctionName FunctionRange     -> FunctionSubprogram  {cons("function-subprogram")}
+  FunctionStmt EndFunctionStmt                         -> FunctionSubprogram  {cons("function-subprogram")}
+  FunctionParList EOS Body? EndFunctionStmt            -> FunctionRange
+
+%%R1228
+%%TODO-F08 - add prefix, dummy-arg-name-list, suffix
+  LblDef 'FUNCTION' FunctionName "(" ")"           EOS -> FunctionStmt        {cons("function-stmt")}
+
+%%R1215
+  FunctionParList 'result' "(" Name ")" EOS InternalSubProgPart EndFunctionStmt         -> FunctionRange
+  FunctionParList 'result' "(" Name ")" EOS Body EndFunctionStmt                        -> FunctionRange
+  FunctionParList 'result' "(" Name ")" EOS EndFunctionStmt                             -> FunctionRange
+  FunctionParList EOS InternalSubProgPart EndFunctionStmt                               -> FunctionRange
+
+%%R1216
+%%R1217
+  'RECURSIVE' 'FUNCTION'                       -> FunctionPrefix
+  'recursive' TypeSpec 'function'              -> FunctionPrefix
+  TypeSpec 'recursive' 'function'              -> FunctionPrefix
+
+%%R1229
+  LanguageBindingSpec?                   -> OptProcLanguageBindingSpec  {cons("proc-language-binding-spec")}
+
+%%R1232
+%% endfunction (without spaces) is allowed
+  LblDef 'END'                              EOS -> EndFunctionStmt       {cons("end-function-stmt")}
+  LblDef 'END' 'FUNCTION' FunctionName?     EOS -> EndFunctionStmt       {cons("end-function-stmt")}
+
+%%R1233
+%%TODO  LblDef 'RECURSIVE'? 'SUBROUTINE' SubroutineName SubroutineRange  -> SubroutineSubprogram
+%%TODO                                                                         {cons("subroutine-subprogram")}
+  OptSubroutineParList OptProcLanguageBindingSpec
+                       EOS Body? EndSubroutineStmt                       -> SubroutineRange
+  OptSubroutineParList OptProcLanguageBindingSpec
+                       EOS InternalSubProgPart EndSubroutineStmt         -> SubroutineRange
+%% split subroutineStmt/subroutineSubprogram needed? (ELI legacy)
+
+
+  SubroutineStmt Body? EndSubroutineStmt                                 -> SubroutineSubprogram
+                                                                               {cons("subroutine-subprogram")}
+
+%%1234
+%%TODO-F08 - add prefix and proc-language-binding-spec
+  LblDef SubroutinePrefix 'SUBROUTINE' SubroutineName
+         OptSubroutineParList OptProcLanguageBindingSpec  EOS -> SubroutineStmt {cons("subroutine-stmt")}
+  Ident                                                       -> SubroutineName {cons("subroutine-name")}
+  Ident?                                                      -> OptSubroutineName {cons("subroutine-name")}
+
+%%R1235
+%%TODO-F08 dummy-arg-name-list and move proc-language-binding-spec
+   ( "(" {DummyArg ","}* ")" )?                      -> OptSubroutineParList  {cons("dummy-arg-list")}
+
+%%R1235
+   DummyArgName         -> DummyArg
+   '*'                  -> DummyArg
+
+%%/* Must be split on semantic grounds, due to the different scopes for the
+   LblDef FunctionPrefix Name FunctionParList? EOS       -> FunctionStmt
+   TypeSpec? 'function'                                  -> FunctionPrefix
+
+   "(" {FunctionPar ","}* ")" OptProcLanguageBindingSpec -> FunctionParList {cons("function-par-list")}
+   DummyArgName                                          -> FunctionPar
+
+%%R1236
+  LblDef 'END' 'SUBROUTINE' OptSubroutineName EOS -> EndSubroutineStmt   {cons("end-subroutine-stmt")}
+  LblDef 'END'                                EOS -> EndSubroutineStmt   {cons("end-subroutine-stmt")}
+
+%%R1240
+%%TODO-F08 add suffix
+  LblDef 'ENTRY' EntryName OptSubroutineParList
+                           OptProcLanguageBindingSpec                       EOS -> EntryStmt
+                                                                                     {cons("entry-stmt")}
+  LblDef 'ENTRY' EntryName OptSubroutineParList
+                           OptProcLanguageBindingSpec 'RESULT' "(" Name ")" EOS -> EntryStmt
+                                                                                     {cons("entry-stmt")}
+
+
+%%R1241
+  LblDef 'RETURN' Expr?                     EOS -> ReturnStmt          {cons("return-stmt")}
+
+%%R1242
+  LblDef 'CONTAINS'                         EOS -> ContainsStmt        {cons("contains-stmt")}
+
+%%-R1226 
+%% statement-functions are obsolete in fortran 95. 
+%% The following rule causes ambiguity with assignment statements like
+%% FOO(NOARG) = IN2-IN3
+%% If you're ok with ambig rules then uncomment the next line.
+%% LblDef  Name "(" SFDummyArgNameList? ")" "=" Expr EOS        -> StmtFunctionStmt
+
+%%TODO   {SFDummyArgName ","}+                 -> SFDummyArgNameList

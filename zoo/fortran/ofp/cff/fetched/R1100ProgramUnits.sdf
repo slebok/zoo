@@ -1,0 +1,319 @@
+
+%%%%%%%%%%
+%% This Fortran grammar is structured according to document ISO/IEC 1539:1991. 
+%% Rulenumbers are named R2xx - R12xx as in Annex D of 1539:1991
+%% The grammar is adapted from an ELI project grammer, http://eli-project.cvs.sourceforge.net/eli-project
+%%
+%%%%%%%%%%
+%% ISO/IEC 1539:1991 section R2xx Fortran terms and concepts
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/Fortran90
+module R1100ProgramUnits
+
+%%imports languages/fortran/syntax/FortranLex
+%%imports languages/fortran/syntax/R400DataTypes
+%%imports languages/fortran/syntax/R500DataDeclarations
+%%imports languages/fortran/syntax/R600UseDataObjects
+%%imports languages/fortran/syntax/R700Expressions
+%%imports languages/fortran/syntax/R800ExecutionControl
+%%imports languages/fortran/syntax/R900IOStatements
+%%imports languages/fortran/syntax/R1000_IOEditing
+%%imports languages/fortran/syntax/R1100ProgramUnits
+%%imports languages/fortran/syntax/R1200Procedures
+
+imports FortranLex
+%%TODO imports R400DataTypes
+imports R500DataDeclarations
+%%TODO imports R600UseDataObjects
+%%TODO imports R700Expressions
+imports R800ExecutionControl
+imports R900IOStatements
+imports R1000_IOEditing
+%%TODO imports R1100ProgramUnits
+imports R1200Procedures
+
+exports
+
+sorts
+  ActionStmt ArrayName Body
+  BodyConstruct CommonBlockName ComponentName DeclarationConstruct DefinedOperator
+  ExtendedIntrinsicOp
+%%TODO   DummyArgName EndName EntryName ExecutableConstruct ExecutableProgram
+  ExecutionPartConstruct %%TODO ExternalName FunctionName GenericName %%TODO ImpliedDoVariable
+  InternalSubProgPart InternalSubprogram %%TODO IntrinsicProcedureName  MainProgram
+  MainRange ModuleNature ModuleSubprogram ModuleSubprogramPartConstruct %%TODO Name
+%%TODO   NamelistGroupName ObjectName ProgramName ProgramUnit SFDummyArgName
+  SpecificationPartConstruct %%TODO SpecificationStmt SubroutineName SubroutineNameUse TypeName
+%%TODO   VariableName   
+
+%%TODO - replace with above
+  KeywordEqual OptKeywordEqual
+  IntrinsicOperator
+  ExecutableConstruct
+  UseStmt UseName Only OnlyList Rename RenameList
+  BlockDataSubprogram BlockDataStmt EndBlockDataStmt BlockDataBodyConstruct BlockDataName BlockDataBody
+  
+  Program                             %%R201   (originally ExecutableProgram F90)
+  ProgramUnit                         %%R202
+
+  MainProgram                         %%R1101
+  ProgramStmt                         %%R1102
+  EndProgramStmt                      %%R1103
+
+  Module                              %%R1104
+  ModuleStmt                          %%R1105
+  EndModuleStmt                       %%R1105
+  ModuleBody
+
+context-free start-symbols 
+  Program
+
+context-free syntax
+
+%%R201 JD: the optional startcommentblock is needed to parse comment lines in 1st lines of a file.
+%% original: ExecutableProgram ProgramUnit -> ExecutableProgram
+
+%%R201
+  StartCommentBlock?  ProgramUnit+              -> Program          {cons("program")}
+
+%%R202
+  MainProgram                                  -> ProgramUnit
+  FunctionSubprogram                           -> ProgramUnit
+  SubroutineSubprogram                         -> ProgramUnit
+  Module                                       -> ProgramUnit
+  BlockDataSubprogram                          -> ProgramUnit
+
+
+%%R1101
+  ProgramStmt? MainRange                       -> MainProgram      {cons("main-program")}
+  BodyConstruct+       EndProgramStmt          -> MainRange
+  InternalSubProgPart  EndProgramStmt          -> MainRange
+  EndProgramStmt                               -> MainRange
+
+  SpecificationPartConstruct                   -> BodyConstruct
+  ExecutableConstruct                          -> BodyConstruct
+  BodyConstruct+                               -> Body
+
+%%R1102
+  LblDef 'PROGRAM'       ProgramName       EOS -> ProgramStmt      {cons("program-stmt")}
+
+%%R1103
+  LblDef 'END'                             EOS -> EndProgramStmt   {cons("end-program-stmt")}
+  LblDef 'END' 'PROGRAM' ProgramName?      EOS -> EndProgramStmt   {cons("end-program-stmt")}
+
+%%R1104
+  ModuleStmt ModuleBody EndModuleStmt          -> Module           {cons("module")}
+  ModuleStmt            EndModuleStmt          -> Module           {cons("module")}
+
+%%R1105
+  LblDef 'MODULE' ModuleName               EOS -> ModuleStmt       {cons("module-stmt")}
+
+%%R1106
+  LblDef 'END'                             EOS -> EndModuleStmt    {cons("end-module-stmt")}
+  LblDef 'END' 'MODULE' ModuleName?        EOS -> EndModuleStmt    {cons("end-module-stmt")}
+
+  SpecificationPartConstruct                   -> ModuleBody
+  ModuleSubprogramPartConstruct                -> ModuleBody
+  ModuleBody SpecificationPartConstruct        -> ModuleBody
+  ModuleBody ModuleSubprogramPartConstruct     -> ModuleBody
+
+%%R1108
+  ContainsStmt                                 -> ModuleSubprogramPartConstruct
+  ModuleSubprogram                             -> ModuleSubprogramPartConstruct
+
+%%R1108
+  FunctionSubprogram                           -> ModuleSubprogram
+  SubroutineSubprogram                         -> ModuleSubprogram
+
+%%R1109
+  LblDef 'USE' (("," ModuleNature)? "::")? ModuleName ("," RenameList)?        EOS -> UseStmt
+                                                                                        {cons("use-stmt")}
+  LblDef 'USE' (("," ModuleNature)? "::")? ModuleName "," 'ONLY' ":" OnlyList? EOS -> UseStmt
+                                                                                        {cons("use-stmt")}
+
+%%R1110
+  'INTRINSIC'                                  -> ModuleNature
+  'NON_INTRINSIC'                              -> ModuleNature
+
+%%1111
+%%TODO-F08 - add OPERATORs
+  Ident "=>" UseName                           -> Rename
+  Rename ("," Rename)*                         -> RenameList
+
+  Ident                                        -> UseName
+
+%%R1112
+%%TODO-F08 - add rename and only-use-name
+  GenericSpec                                  -> Only
+  (Ident "=>")? UseName                        -> Only
+
+  Only ("," Only)*                             -> OnlyList
+
+
+%%R1120
+  BlockDataStmt BlockDataBody EndBlockDataStmt   -> BlockDataSubprogram
+  BlockDataStmt EndBlockDataStmt                 -> BlockDataSubprogram
+
+%%R1121
+  LblDef 'BLOCK' 'DATA' BlockDataName?       EOS -> BlockDataStmt     {cons("block-data-stmt")}
+
+%%R1122
+  LblDef 'END' 'BLOCK' 'DATA' BlockDataName? EOS -> EndBlockDataStmt  {cons("end-block-data-stmt")}
+  LblDef 'END'                               EOS -> EndBlockDataStmt  {cons("end-block-data-stmt")}
+
+  Ident -> BlockDataName
+
+  BlockDataBodyConstruct+ -> BlockDataBody
+
+  SpecificationPartConstruct -> BlockDataBodyConstruct
+
+
+%%R204
+%%TODO-F08 specification-part
+  ImplicitStmt                                 -> SpecificationPartConstruct
+  ParameterStmt                                -> SpecificationPartConstruct
+  FormatStmt                                   -> SpecificationPartConstruct
+  EntryStmt                                    -> SpecificationPartConstruct
+  DeclarationConstruct                         -> SpecificationPartConstruct
+  UseStmt                                      -> SpecificationPartConstruct
+
+%%R205
+%%TODO-F08 implicit-part
+
+%%R205
+%%TODO-F08 implicit-part-stmt
+
+%%R207
+  DerivedTypeDef                               -> DeclarationConstruct
+  InterfaceBlock                               -> DeclarationConstruct
+  ProcedureDeclarationStmt                     -> DeclarationConstruct
+  SpecificationStmt                            -> DeclarationConstruct
+  TypeDeclarationStmt                          -> DeclarationConstruct
+%%TODO-F08 entry-stmt enum-stmt format-stmt parameter-stmt stmt-function-stmt
+
+%%R208
+%%TODO-F08 execution-part
+
+%%R209
+  ExecutableConstruct                          -> ExecutionPartConstruct
+  FormatStmt                                   -> ExecutionPartConstruct
+  EntryStmt                                    -> ExecutionPartConstruct
+  DataStmt                                     -> ExecutionPartConstruct
+
+%%R210
+  Body ContainsStmt   InternalSubprogram       -> InternalSubProgPart
+  ContainsStmt        InternalSubprogram       -> InternalSubProgPart
+  InternalSubProgPart InternalSubprogram       -> InternalSubProgPart
+
+%%R211
+  FunctionSubprogram                   -> InternalSubprogram
+  SubroutineSubprogram                 -> InternalSubprogram
+
+%%R212
+  AccessStmt                                   -> SpecificationStmt
+  AllocatableStmt                              -> SpecificationStmt
+  AsynchronousStmt                             -> SpecificationStmt
+  BindStmt                                     -> SpecificationStmt
+  CommonStmt                                   -> SpecificationStmt
+  DataStmt                                     -> SpecificationStmt
+  DimensionStmt                                -> SpecificationStmt
+  EquivalenceStmt                              -> SpecificationStmt
+  ExternalStmt                                 -> SpecificationStmt
+  IntrinsicStmt                                -> SpecificationStmt
+  SaveStmt                                     -> SpecificationStmt
+  IntentStmt                                   -> SpecificationStmt
+  NamelistStmt                                 -> SpecificationStmt
+  OptionalStmt                                 -> SpecificationStmt
+  PointerStmt                                  -> SpecificationStmt
+  TargetStmt                                   -> SpecificationStmt
+  VolatileStmt                                 -> SpecificationStmt
+  ValueStmt                                    -> SpecificationStmt
+
+%%R213
+  ActionStmt                    -> ExecutableConstruct
+  AssociateConstruct            -> ExecutableConstruct
+%%TODO-F08 block-construct
+  CaseConstruct                 -> ExecutableConstruct
+%%TODO-F08 critical-construct
+%%TODO-F08 forall-construct
+  IfConstruct                   -> ExecutableConstruct
+  SelectTypeConstruct           -> ExecutableConstruct
+%%TODO   WhereConstruct                -> ExecutableConstruct
+
+%%AMB do-construct is problematic because a labeled statement
+%%       may terminate it not necessarily an end-do-stmt.
+%%       Replace by do-stmt and end-do-stmt and resolve
+%%       the construct end at a latter stage.
+%%AMB DoConstruct               -> ExecutableConstruct
+  DoStmt                        -> ExecutableConstruct
+  EndDoStmt                     -> ExecutableConstruct
+
+%%R214
+  AllocateStmt                  -> ActionStmt
+  AllstopStmt                   -> ActionStmt
+  CycleStmt                     -> ActionStmt
+  DeallocateStmt                -> ActionStmt
+  ExitStmt                      -> ActionStmt
+  FlushStmt                     -> ActionStmt
+  NullifyStmt                   -> ActionStmt
+%%TODO   PointerAssignmentStmt         -> ActionStmt
+  WhereStmt                     -> ActionStmt
+  ArithmeticIfStmt              -> ActionStmt
+  AssignmentStmt                -> ActionStmt
+%%TODO   AssignStmt                    -> ActionStmt
+  BackspaceStmt                 -> ActionStmt
+  CallStmt                      -> ActionStmt
+  CloseStmt                     -> ActionStmt
+  ContinueStmt                  -> ActionStmt
+  EndfileStmt                   -> ActionStmt
+  GotoStmt                      -> ActionStmt
+  ComputedGotoStmt              -> ActionStmt
+  AssignedGotoStmt              -> ActionStmt
+  IfStmt                        -> ActionStmt
+  InquireStmt                   -> ActionStmt
+  OpenStmt                      -> ActionStmt
+  PauseStmt                     -> ActionStmt
+  PrintStmt                     -> ActionStmt
+  ReadStmt                      -> ActionStmt
+  ReturnStmt                    -> ActionStmt
+  RewindStmt                    -> ActionStmt
+%%  StmtFunctionStmt            -> ActionStmt see R1226 comment
+  StopStmt                      -> ActionStmt
+  WaitStmt                      -> ActionStmt
+  WriteStmt                     -> ActionStmt
+
+%%R212
+  ContainsStmt                         -> ModuleSubprogramPartConstruct
+  ModuleSubprogram                     -> ModuleSubprogramPartConstruct
+
+%%R213
+  FunctionSubprogram                   -> ModuleSubprogram
+  SubroutineSubprogram                 -> ModuleSubprogram
+
+%%R215
+  Ident '='                     -> KeywordEqual            {cons("keyword")}
+  KeywordEqual?                 -> OptKeywordEqual
+
+%%R310
+  PowerOp                       -> IntrinsicOperator
+  MultOp                        -> IntrinsicOperator
+  AddOp                         -> IntrinsicOperator
+  ConcatOp                      -> IntrinsicOperator
+  RelOp                         -> IntrinsicOperator
+  NotOp                         -> IntrinsicOperator
+  AndOp                         -> IntrinsicOperator
+  OrOp                          -> IntrinsicOperator
+  EquivOp                       -> IntrinsicOperator
+
+%%R311
+
+  DefinedUnaryOp                -> DefinedOperator
+  DefinedBinaryOp               -> DefinedOperator
+  ExtendedIntrinsicOp           -> DefinedOperator
+
+%%TODO - see lex syntax  Dop                           -> DefinedOperator
+
+%%R312
+
+  IntrinsicOperator             -> ExtendedIntrinsicOp

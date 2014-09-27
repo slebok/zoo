@@ -1,0 +1,241 @@
+      
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R8xx Execution Control
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/R800ExecutionControl
+module R800ExecutionControl
+
+imports
+  %% languages/fortran/syntax/FortranLex
+  %% languages/fortran/syntax/Fortran90
+  FortranLex
+  Fortran
+
+exports
+
+sorts
+  AllstopStmt ArithmeticIfStmt AssignedGotoStmt AssignStmt AssociateName
+  AssociateConstruct AssociateStmt Association Block
+  CaseBodyConstruct CaseConstruct CaseSelector CaseStmt CaseValueRange
+  ComputedGotoStmt ContinueStmt CycleStmt DoBlock DoConstructName DoVariable
+  ElseIfStmt
+  ElseStmt EndAssociateStmt EndDoStmt EndIfStmt EndSelectStmt EndSelectTypeStmt
+  ExitStmt GoToKw GotoStmt IfConstruct  IfConstructName IfStmt IfThenStmt LabelDoStmt
+  LblRef LoopControl OptAssociateConstructName OptAssociateConstructNameColon
+  OptAssociateName OptSelectConstructName OptSelectConstructNameColon PauseStmt
+  ScalarIntExpr ScalarLogicalExpr ScalarNumericExpr SelectCaseBody SelectCaseRange
+  Selector SelectTypeConstruct SelectTypeStmt StopStmt StopCode
+  TypeGuardConstruct TypeGuardStmt
+
+  NonlabelDoStmt DoStmt
+
+%%AMBiguous BlockDoConstruct DoConstruct EndDo
+
+context-free syntax
+
+%%R801
+  ExecutionPartConstruct*                          -> Block     {cons("block")}
+
+%%R802
+  AssociateStmt Block EndAssociateStmt             -> AssociateConstruct
+                                                                {cons("associate-construct")}
+
+%%R803
+  LblDef OptAssociateConstructNameColon
+     'ASSOCIATE' '(' {Association ','}+ ')'    EOS -> AssociateStmt
+                                                                {cons("associate-stmt")}
+  (Ident ':')?                                     -> OptAssociateConstructNameColon
+                                                                {cons("associate-construct-name")}
+
+%%R804
+  AssociateName '=>' Selector                      -> Association     {cons("associatiation")}
+  Ident                                            -> AssociateName   {cons("associate-name")}
+
+%%R805
+  Expr                                             -> Selector        {cons("selector")}
+
+%%R806
+  LblDef 'END' 'ASSOCIATE'
+         OptAssociateConstructName    EOS -> EndAssociateStmt   {cons("end-associate-stmt")}
+  Ident?                                  -> OptAssociateConstructName
+                                                                {cons("associate-construct-name")}
+
+%%R802
+  IfThenStmt ExecutionPartConstruct* 
+                (ElseIfStmt ExecutionPartConstruct*)* 
+                (ElseStmt   ExecutionPartConstruct*)? 
+         EndIfStmt                                                              -> IfConstruct 
+
+%%R803
+  LblDef (IfConstructName ":")? 'if' '(' ScalarLogicalExpr ')' 'then' EOS       -> IfThenStmt
+  Ident -> IfConstructName
+
+%%R804
+  LblDef 'else' 'if' '(' ScalarLogicalExpr ')' 'then' IfConstructName? EOS      -> ElseIfStmt
+
+%%R805
+  LblDef 'else' IfConstructName? EOS                                            -> ElseStmt
+
+%%R806
+  LblDef 'end' 'if' IfConstructName? EOS                                        -> EndIfStmt
+
+%%R807
+%% JD: removed EOS at end since its part of ActionStmt 
+  LblDef 'if' '(' ScalarLogicalExpr ')' ActionStmt                              -> IfStmt
+%% JD: simplification 
+  Expr -> ScalarLogicalExpr
+
+%%R810
+  LblDef Name ':' 'SELECT' 'CASE' '(' Expr ')' EOS SelectCaseRange   -> CaseConstruct
+  LblDef          'SELECT' 'CASE' '(' Expr ')' EOS SelectCaseRange   -> CaseConstruct
+
+  SelectCaseBody EndSelectStmt                  -> SelectCaseRange
+  EndSelectStmt                                 -> SelectCaseRange
+
+  CaseBodyConstruct+                            -> SelectCaseBody
+  CaseStmt                                      -> CaseBodyConstruct
+  ExecutionPartConstruct                        -> CaseBodyConstruct
+
+%%R812
+  LblDef 'CASE' CaseSelector Name?          EOS -> CaseStmt        {cons("case-stmt")}
+
+%%R813
+  LblDef 'END' 'SELECT' EndName?            EOS -> EndSelectStmt   {cons("end-case-stmt")}
+
+%%R815
+  '(' { CaseValueRange "," }+  ')'              -> CaseSelector
+  'default'                                     -> CaseSelector
+
+%%R816
+  Expr                                          -> CaseValueRange
+  Expr ':'                                      -> CaseValueRange
+  ':' Expr                                      -> CaseValueRange
+  Expr ':' Expr                                 -> CaseValueRange
+
+%%R821
+%%AMB BlockDoConstruct                          -> DoConstruct
+%%AMB NonblockDoConstruct                       -> DoConstruct
+
+%%R822
+%%/* Block DO constructs cannot be recognized syntactically because there is
+%% * no requirement that there is an end do statement. (A do loop may use label+continue construct)
+%%   DoStmt Block EndDoStmt  -> BlockDoConstruct
+%%   DoStmt Block  -> BlockDoConstruct
+%% JD: endo IS compulsory in cases where LblRef is missing. Can we use this to locate Do-blocks?
+
+%%R822
+%%TODO-DELETE   LblDef 'DO' LblRef                                EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef 'do' LoopControl                           EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef 'do'                                       EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef Name ':' 'do' LblRef LoopControl           EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef Name ':' 'do' LblRef                       EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef Name ':' 'do' LoopControl                  EOS -> BlockDoConstruct
+%%TODO-DELETE   LblDef Name ':' 'do'                              EOS -> BlockDoConstruct
+
+%%R822
+%%AMB DoStmt DoBlock EndDo                           -> BlockDoConstruct {cons("block-do-construct")}
+
+%%823
+  LabelDoStmt                                        -> DoStmt
+  NonlabelDoStmt                                     -> DoStmt
+
+%%R824
+  LblDef (DoConstructName ':')? 'DO' LblRef LoopControl?  EOS -> LabelDoStmt    {cons("label-do-stmt")}
+  Name                                                        -> DoConstructName
+
+%%R825
+  LblDef (DoConstructName ':')? 'DO'        LoopControl?  EOS -> NonlabelDoStmt {cons("nonlabel-do-stmt")}
+
+%%R826
+  ','? DoVariable '=' Expr ',' Expr (',' Expr)?               -> LoopControl    {cons("loop-control")}
+  ','? 'WHILE' '(' Expr ')'                                   -> LoopControl    {cons("loop-control")}
+  ','? 'CONCURRENT' ForallHeader                              -> LoopControl    {cons("loop-control")}
+
+%%R827
+  VariableName                                                -> DoVariable
+
+%%828
+  Block                                                       -> DoBlock
+
+%%829
+%%AMB EndDoStmt                                               -> EndDo
+%%AMB ContinueStmt                                            -> EndDo
+
+%%R830
+  LblDef 'END' 'DO' DoConstructName?                      EOS -> EndDoStmt      {cons("end-do-stmt")}
+
+%%R834
+  LblDef 'CYCLE' EndName?                                 EOS -> CycleStmt      {cons("cycle-stmt")}
+
+%%R850
+  LblDef 'EXIT' EndName?                                  EOS -> ExitStmt       {cons("exit-stmt")}
+
+%%R836
+ 'go' 'to'                                              -> GoToKw
+  LblDef GoToKw LblRef EOS                              -> GotoStmt
+
+%%R837
+  LblDef GoToKw '(' {LblRef ","}+ ')' ","? ScalarIntExpr EOS -> ComputedGotoStmt
+                                                                   {cons("computed-goto-stmt")}
+  Icon  ->  LblRef
+  Expr   -> ScalarIntExpr
+
+%%R838
+  LblDef 'assign' LblRef 'to' VariableName EOS  -> AssignStmt
+
+%%Deleted Feature
+  LblDef GoToKw VariableName                             EOS -> AssignedGotoStmt
+                                                                   {cons("assigned-goto-stmt")}
+  LblDef GoToKw VariableName ','? '(' {LblRef ","}+ ')'  EOS -> AssignedGotoStmt
+                                                                   {cons("assigned-goto-stmt")}
+
+%%R840
+  LblDef 'if' '(' ScalarNumericExpr ')' LblRef ',' LblRef ',' LblRef
+                                                         EOS -> ArithmeticIfStmt
+                                                                   {cons("arithmetic-if-stmt")}
+  Expr -> ScalarNumericExpr
+
+%%R846
+  SelectTypeStmt TypeGuardConstruct* EndSelectTypeStmt       -> SelectTypeConstruct
+                                                                   {cons("select-type-construct")}
+  TypeGuardStmt Block                                        -> TypeGuardConstruct
+                                                                   {cons("type-guard-construct")}
+
+%%R847
+  OptSelectConstructNameColon
+     'SELECT' 'TYPE' '(' OptAssociateName Selector ')'   EOS -> SelectTypeStmt
+                                                                   {cons("select-type-stmt")}
+  (Ident ':')?                                               -> OptSelectConstructNameColon
+                                                                   {cons("select-construct-name")}
+  (Ident '=>')?                                              -> OptAssociateName
+                                                                   {cons("associate-name")}
+
+%%848
+  'TYPE'  'IS' '(' TypeSpec ')'
+                    OptSelectConstructName    EOS -> TypeGuardStmt {cons("type-guard-stmt")}
+  'CLASS' 'IS' '(' DerivedTypeSpec ')'
+                    OptSelectConstructName    EOS -> TypeGuardStmt {cons("type-guard-stmt")}
+  'CLASS' 'DEFAULT' OptSelectConstructName    EOS -> TypeGuardStmt {cons("type-guard-stmt")}
+  Ident?                                          -> OptSelectConstructName
+                                                                   {cons("select-construct-name")}
+
+%%R849
+  'END' 'SELECT' OptSelectConstructName        EOS -> EndSelectTypeStmt
+                                                                   {cons("end-select-type-stmt")}
+
+%%R854
+  LblDef 'CONTINUE'                            EOS -> ContinueStmt {cons("continue-stmt")}
+
+%%R855
+  LblDef       'STOP' StopCode?                EOS -> StopStmt     {cons("stop-stmt")}
+
+%%R856
+  LblDef 'ALL' 'STOP' StopCode?            EOS -> AllstopStmt    {cons("allstop-stmt")}
+
+%%R857
+  Icon                                         -> StopCode
+  Scon                                         -> StopCode
+
+%% Deleted Feature
+  LblDef 'PAUSE' (Icon | Scon)?            EOS -> PauseStmt

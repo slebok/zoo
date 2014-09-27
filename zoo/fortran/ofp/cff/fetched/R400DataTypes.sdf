@@ -1,0 +1,236 @@
+      
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 4xx DataTypes
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/R400DataTypes
+module R400DataTypes
+
+imports
+%%  languages/fortran/syntax/FortranLex
+%%  languages/fortran/syntax/R500DataDeclarations
+  FortranLex
+  R500DataDeclarations
+
+exports
+
+sorts
+
+  AcImpliedDo AcImpliedDoControl AcDoVariable AcSpec AcValue AcValueList ArrayConstructor
+  BozLiteralConstant ComponentArraySpec ComponentAttrSpec ComponentAttrSpecList ComponentDecl
+  ComponentDeclList ComponentDefStmt Constant DeclarationTypeSpec DerivedTypeBody 
+  DerivedTypeDef DerivedTypeSpec DerivedTypeStmt EndTypeStmt InitialDataTarget
+  IntrinsicTypeSpec KindParam LogicalConstant OptTypeParameterSpecList ParentTypeName
+  PrivateComponentsStmt PrivateOrSequence SequenceStmt StructureConstructor
+  TypeAttrSpec TypeAttrSpecList TypeParamAttrSpec TypeParamDefStmt TypeParamName
+  TypeParamDecl TypeParamDeclList TypeParamNameList TypeParamSpec TypeSpec
+  UnsignedArithmeticConstant
+
+context-free syntax
+
+%%-R401 lex: signed-digit-string is [sign] digit-string
+%%-R402 lex: digit-string is digit [digit]...
+
+%%R402
+  IntrinsicTypeSpec                   -> TypeSpec              {cons("type-spec")}
+  DerivedTypeSpec                     -> TypeSpec              {cons("type-spec")}
+
+%%R404
+  'INTEGER'   KindSelector?           -> IntrinsicTypeSpec
+  'REAL'      KindSelector?           -> IntrinsicTypeSpec
+  'COMPLEX'   KindSelector?           -> IntrinsicTypeSpec
+  'CHARACTER' CharSelector?           -> IntrinsicTypeSpec
+  'LOGICAL'   KindSelector?           -> IntrinsicTypeSpec
+
+  'DOUBLE' 'PRECISION'                -> IntrinsicTypeSpec
+  'DOUBLE' 'COMPLEX'                  -> IntrinsicTypeSpec
+
+%%R403
+  IntrinsicTypeSpec                   -> DeclarationTypeSpec
+%%AMBIGUOS - change to intrinsic-type-spec at later stage
+%%'TYPE'  '(' IntrinsicTypeSpec ')'   -> DeclarationTypeSpec
+  'TYPE'  '(' DerivedTypeSpec   ')'   -> DeclarationTypeSpec
+  'CLASS' '(' DerivedTypeSpec   ')'   -> DeclarationTypeSpec
+  'CLASS' '(' '*'               ')'   -> DeclarationTypeSpec
+  'TYPE'  '(' '*'               ')'   -> DeclarationTypeSpec
+
+%%R404
+  Icon '_' KindParam                    -> UnsignedArithmeticConstant
+
+%%R405
+  Icon                                  -> KindParam
+  NamedConstantUse                      -> KindParam
+
+%%R406
+  NamedConstantUse                      -> Constant
+  UnsignedArithmeticConstant            -> Constant
+  '+' UnsignedArithmeticConstant        -> Constant
+  '-' UnsignedArithmeticConstant        -> Constant
+  Scon                                  -> Constant
+%%  Hcon                                  -> Constant
+  LogicalConstant                       -> Constant
+
+%%R420 char-literal-constant
+  Icon '_' Scon                         -> Constant
+  NamedConstantUse '_' Scon             -> Constant
+
+%%R407
+  BinaryConstant                        -> BozLiteralConstant
+  OctalConstant                         -> BozLiteralConstant
+  HexConstant                           -> BozLiteralConstant
+
+%%R413
+  Rcon '_' KindParam                    -> UnsignedArithmeticConstant
+
+%%R421
+  '.true.' '_' KindParam                -> LogicalConstant
+  '.false.' '_' KindParam               -> LogicalConstant
+
+%%R430
+%% TODO: iso defines order: privateseq, componentdef.
+%%TODO-F08: add private-or-sequence, component-part, type-bound-procedure-part
+  DerivedTypeStmt DerivedTypeBody* EndTypeStmt          -> DerivedTypeDef
+  TypeParamDefStmt                                      -> DerivedTypeBody
+  PrivateOrSequence                                     -> DerivedTypeBody
+  ComponentDefStmt                                      -> DerivedTypeBody
+
+%%R431
+  LblDef 'TYPE'
+             ((',' TypeAttrSpecList)? '::')?
+             TypeName
+             ('(' TypeParamNameList ')')?                  EOS -> DerivedTypeStmt
+
+  Ident                                                        -> ParentTypeName
+  Ident                                                        -> TypeName
+  Ident                                                        -> TypeParamName
+
+  {TypeParamName ","}+                                         -> TypeParamNameList
+
+%%R432
+  'ABSTRACT'                                                   -> TypeAttrSpec
+   AccessSpec                                                  -> TypeAttrSpec
+  'BIND'     '(' 'C'            ')'                            -> TypeAttrSpec
+  'EXTENDS'  '(' ParentTypeName ')'                            -> TypeAttrSpec
+
+  {TypeAttrSpec ","}+                                          -> TypeAttrSpecList
+
+%%R433
+  PrivateComponentsStmt                                        -> PrivateOrSequence
+  SequenceStmt                                                 -> PrivateOrSequence
+
+%%R434
+  LblDef 'END' 'TYPE' TypeName?                            EOS -> EndTypeStmt   {cons("end-type-stmt")}
+
+%%R435
+  LblDef 'SEQUENCE'                                        EOS -> SequenceStmt  {cons("sequence-stmt")}
+
+%%R436
+  LblDef 'INTEGER' KindSelector? ','  TypeParamAttrSpec
+                                 '::' TypeParamDeclList    EOS -> TypeParamDefStmt {cons("type-param-def-stmt")}
+
+%%R437
+  TypeParamName ( '=' Expr )?                                  -> TypeParamDecl
+  {TypeParamDecl ','}+                                         -> TypeParamDeclList
+
+%%R438
+  'KIND'                                                       -> TypeParamAttrSpec
+  'LEN'                                                        -> TypeParamAttrSpec
+
+%%R440
+%%TODO-F08: data-component-def-stmt or proc-component-def-stmt
+  LblDef DeclarationTypeSpec ( ',' ComponentAttrSpecList )? '::' ComponentDeclList EOS   -> ComponentDefStmt
+  LblDef DeclarationTypeSpec ComponentDeclList EOS                                       -> ComponentDefStmt
+
+%%R441
+%%TODO-F08: add data-component-def-stmt
+
+%%R442
+%%TODO-F08 - add co-array-spec to dimension
+  {ComponentAttrSpec ","}+                              -> ComponentAttrSpecList
+  AccessSpec                                            -> ComponentAttrSpec
+  'ALLOCATABLE'                                         -> ComponentAttrSpec
+  'DIMENSION' '(' ComponentArraySpec ')'                -> ComponentAttrSpec
+  'CONTIGUOUS'                                          -> ComponentAttrSpec
+  'POINTER'                                             -> ComponentAttrSpec
+
+%%R443
+%%TODO-F08 co-array-spec, component-initialization
+  ComponentName ('(' ComponentArraySpec ')')? ('*' CharLength)?      -> ComponentDecl
+  {ComponentDecl ","}+                                               -> ComponentDeclList
+
+%%R444
+  ExplicitShapeSpecList                                 -> ComponentArraySpec
+  DeferredShapeSpecList                                 -> ComponentArraySpec
+
+%%R445
+%%TODO-F08 proc-component-def-stmt
+
+%%R446
+%%TODO-F08 proc-component-attr-spec
+
+%%R447
+%%TODO-F08 component-initialization
+
+%%R448
+%%Designator replaced by variable
+  Variable                                              -> InitialDataTarget
+
+%%R449
+  LblDef 'PRIVATE'                                  EOS -> PrivateComponentsStmt
+
+%%R454
+%%TODO-F08 type-bound-generic-stmt
+
+%%R455
+%%TODO-F08 binding-attr
+
+%%R457
+  TypeName OptTypeParameterSpecList             -> DerivedTypeSpec      {cons("derived-type-spec")}
+  ( '(' {TypeParamSpec ','}+ ')' )?             -> OptTypeParameterSpecList
+
+%%458
+  OptKeywordEqual TypeParamValue                -> TypeParamSpec        {cons("type-param-spec")}
+
+%%R459
+%%TODO-F08 component-spec-list
+  TypeName '(' {Expr ","}+ ')'                  -> StructureConstructor
+
+%%R467
+  '(/' AcSpec '/)'                              -> ArrayConstructor
+  '['  AcSpec  ']'                              -> ArrayConstructor
+
+%%R468
+  TypeSpec '::'                                 -> AcSpec
+  (TypeSpec '::')? AcValueList                  -> AcSpec
+
+%%R432
+%%TODO-REMOVE
+%%  Expr                                        -> AcValueList
+%%  AcValueList1                                -> AcValueList
+%%  Expr ',' Expr                               -> AcValueList1
+%%  Expr ',' AcImpliedDo                        -> AcValueList1
+%%  AcImpliedDo                                 -> AcValueList1
+%%  AcValueList1 ',' Expr                       -> AcValueList1
+%%  AcValueList1 ',' AcImpliedDo                -> AcValueList1
+
+%%R471
+  Expr                                          -> AcValue
+  AcImpliedDo                                   -> AcValue
+  {AcValue ","}+                                -> AcValueList
+   
+%%R433
+%%TODO-REMOVE
+%%TODO   '(' Expr ',' ImpliedDoVariable '=' Expr ',' Expr ')'                  -> AcImpliedDo
+%%TODO   '(' Expr ',' ImpliedDoVariable '=' Expr ',' Expr ',' Expr ')'         -> AcImpliedDo
+%%TODO   '(' AcImpliedDo ',' ImpliedDoVariable '=' Expr ',' Expr ')'           -> AcImpliedDo
+%%TODO   '(' AcImpliedDo ',' ImpliedDoVariable '=' Expr ',' Expr ',' Expr ')'  -> AcImpliedDo
+%%TODO   '(' Expr ',' ImpliedDoVariable '=' Expr ',' Expr ')'                  -> AcImpliedDo
+
+%%R472
+  '(' AcValueList ',' AcImpliedDoControl ')'    -> AcImpliedDo
+
+%%R473
+  AcDoVariable '=' ScalarIntExpr ',' ScalarIntExpr (',' ScalarIntExpr)?    -> AcImpliedDoControl
+
+%%R474
+  DoVariable                                    -> AcDoVariable

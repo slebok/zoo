@@ -1,0 +1,135 @@
+      
+%%%%%%%%%%
+%% Fortran ISO/IEC 1539:1991 section R6xx Use of Data Objects
+%%%%%%%%%%
+
+%%module languages/fortran/syntax/R600UseDataObjects
+module R600UseDataObjects
+
+imports
+  %%  languages/fortran/syntax/FortranLex
+  %%  languages/fortran/syntax/R700Expressions
+  FortranLex
+  R700Expressions
+
+exports
+
+sorts
+  AllocatedShape AllocateObject AllocateObjectList AllocateShapeSpec AllocateStmt
+  Allocation AllocationList AllocOpt AllocOptList
+  ArrayElement DataRef DeallocateStmt DeallocOpt DeallocOptList ErrmsgVariable
+  FieldSelector NullifyStmt PointerField PointerObject PointerObjectList
+  ScalarDefaultCharVariable ScalarIntVariable ScalarVariable 
+  SectionSubscript SectionSubscriptList SourceExpr StatVariable
+  StructureComponent Subscript
+  SubscriptTriplet SubstringRange Variable  
+
+context-free syntax
+
+%%R601
+  VariableName | ArrayElement                                   -> ScalarVariable
+  VariableName                                                  -> Variable
+  VariableName '(' {Subscript ","}+ ')'                         -> Variable
+  VariableName SubstringRange                                   -> Variable
+  VariableName '(' {Subscript ","}+ ')' SubstringRange          -> Variable
+  Expr                                                          -> Subscript
+
+%%R612
+  Name '%' Name                                                 -> DataRef
+  DataRef '%' Name                                              -> DataRef
+  Name '(' SectionSubscriptList ')'                             -> DataRef
+  DataRef '(' SectionSubscriptList ')'                          -> DataRef
+
+  {SectionSubscript ","}+                                       -> SectionSubscriptList
+  Expr                                                          -> SectionSubscript
+  SubscriptTriplet                                              -> SectionSubscript
+
+%%R609
+%%R610
+%%R611
+  '(' SubscriptTriplet ')'                                      -> SubstringRange
+
+%%R614
+  VariableName FieldSelector                                    -> StructureComponent
+  StructureComponent FieldSelector                              -> StructureComponent
+  '(' SectionSubscriptList ')' '%' Name                         -> FieldSelector
+  '%' Name                                                      -> FieldSelector
+
+%%R615
+  StructureComponent '(' SectionSubscriptList ')'               -> ArrayElement
+  VariableName '(' SectionSubscriptList ')'                     -> ArrayElement
+
+%%619
+  ScalarIntExpr                                                 -> Subscript
+
+%%R619
+  Expr? ':' Expr? (':' Expr)?                                   -> SubscriptTriplet
+
+%%R622
+  ScalarIntExpr                                                 -> Stride
+
+%%R626
+  LblDef 'ALLOCATE' '(' (TypeSpec '::')? 
+                    AllocationList (',' AllocOptList)? ')'  EOS -> AllocateStmt  {cons("allocate-stmt")}
+
+%%R627
+  'ERRMSG' '=' ErrmsgVariable                                   -> AllocOpt
+  'MOLD'   '=' SourceExpr                                       -> AllocOpt
+  'SOURCE' '=' SourceExpr                                       -> AllocOpt
+  'STAT'   '=' StatVariable                                     -> AllocOpt
+  {AllocOpt ','}+                                               -> AllocOptList
+
+%%R628
+  ScalarIntVariable                                             -> StatVariable
+  ScalarVariable                                                -> ScalarIntVariable %%TODO-FIXME
+
+%%R620
+  ScalarDefaultCharVariable                                     -> ErrmsgVariable
+  ScalarVariable                                                -> ScalarDefaultCharVariable %%TODO-FIXME
+
+%%R630
+  Expr                                                          -> SourceExpr
+
+%%R623 chain rule deleted
+
+%%R631
+%%TODO-F08 allocate-co-array-spec
+   {Allocation ","}+                            -> AllocationList
+   AllocateObject AllocatedShape?               -> Allocation
+   '(' SectionSubscriptList ')'                 -> AllocatedShape
+%%/* From ELI: Need to use SectionSubscriptList here to solve an LALR(1) conflict with the
+%% * FieldSelector in R625.  (Can't tell which we have until the character
+%% * following the right paren, but we must reduce WITHIN the parens.)
+%% */
+
+%%R625
+  {AllocateObject ","}+                         -> AllocateObjectList
+  VariableName                                  -> AllocateObject
+  AllocateObject FieldSelector                  -> AllocateObject
+
+%%R626
+%% JD is this correct??/* Omitted to solve LALR(1) conflict.  see R624
+  {Expr ":" }+                                  -> AllocateShapeSpec
+
+%%R638
+  LblDef 'NULLIFY' '(' PointerObjectList ')'   EOS -> NullifyStmt       {cons("nullify-stmt")}
+
+%%R639
+%%TODO-F08 make sure structure-component works
+  Name                                          -> PointerObject
+  PointerField                                  -> PointerObject
+  Name '(' SFExprList ')' '%' Name              -> PointerField
+%%TODO   Name '(' SFDummyArgNameList ')' '%' Name      -> PointerField
+  Name '%' Name                                 -> PointerField
+  PointerField FieldSelector                    -> PointerField
+  {PointerObject ","}+                          -> PointerObjectList
+
+%%R640
+  LblDef 'DEALLOCATE' '('
+             AllocateObjectList (',' DeallocOptList)?
+                      ')'                               EOS -> DeallocateStmt  {cons("deallocate-stmt")}
+
+%%641
+  'STAT'   '=' StatVariable                                     -> DeallocOpt
+  'ERRMSG' '=' ErrmsgVariable                                   -> DeallocOpt
+  {AllocOpt ','}+                                               -> DeallocOptList
