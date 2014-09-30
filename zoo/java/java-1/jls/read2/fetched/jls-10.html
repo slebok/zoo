@@ -1,0 +1,794 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapter&nbsp;10.&nbsp;Arrays</title>
+      <link rel="stylesheet" type="text/css" href="../../../javaspec.css">
+      <meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1">
+      <link rel="home" href="index.html" title="The Java&reg; Language Specification">
+      <link rel="up" href="index.html" title="The Java&reg; Language Specification">
+      <link rel="prev" href="jls-9.html" title="Chapter&nbsp;9.&nbsp;Interfaces">
+      <link rel="next" href="jls-11.html" title="Chapter&nbsp;11.&nbsp;Exceptions">
+      <link rel="copyright" href="jls-0-front.html" title="Legal Notice">
+   </head>
+   <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+      <div xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:rx="http://www.renderx.com/XSL/Extensions" id="logo"><img src="http://www.oracleimg.com/us/assets/oralogo-small.gif" alt="Oracle Logo"><br><p><a target="_blank" href="http://www.oracle.com/us/technologies/java/">Oracle
+               Technology Network</a> &gt; <a target="_blank" href="http://docs.oracle.com/javase/">Java SE</a>
+                &gt; <a href="index.html">Java Language Specification</a></p>
+      </div>
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapter&nbsp;10.&nbsp;Arrays</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="jls-9.html">Prev</a>&nbsp;
+               </td>
+               <th width="60%" align="center">&nbsp;</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="jls-11.html">Next</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div lang="en" class="chapter" title="Chapter&nbsp;10.&nbsp;Arrays">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="jls-10"></a>Chapter&nbsp;10.&nbsp;Arrays
+                  </h2>
+               </div>
+            </div>
+         </div>
+         <div class="toc">
+            <p><b>Table of Contents</b></p>
+            <dl>
+               <dt><span class="section"><a href="jls-10.html#jls-10.1">10.1. Array Types</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.2">10.2. Array Variables</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.3">10.3. Array Creation</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.4">10.4. Array Access</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.5">10.5. Array Store Exception</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.6">10.6. Array Initializers</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.7">10.7. Array Members</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.8">10.8. <code class="literal">Class</code> Objects for Arrays</a></span></dt>
+               <dt><span class="section"><a href="jls-10.html#jls-10.9">10.9. An Array of Characters is Not a <code class="literal">String</code></a></span></dt>
+            </dl>
+         </div>
+         <p class="norm"><a name="jls-10-100"></a>In the
+            Java programming language, <span class="emphasis"><em>arrays</em></span> are objects
+            (<a class="xref" href="jls-4.html#jls-4.3.1" title="4.3.1.&nbsp;Objects">&sect;4.3.1</a>), are dynamically created, and may be
+            assigned to variables of type <code class="literal">Object</code>
+            (<a class="xref" href="jls-4.html#jls-4.3.2" title="4.3.2.&nbsp;The Class Object">&sect;4.3.2</a>). All methods of class <code class="literal">Object</code> may be
+            invoked on an array.
+         </p>
+         <p class="norm"><a name="jls-10-110"></a>An array object contains a
+            number of variables. The number of variables may be zero, in which
+            case the array is said to be <span class="emphasis"><em>empty</em></span>. The variables
+            contained in an array have no names; instead they are referenced by
+            array access expressions that use non-negative integer index
+            values. These variables are called the <span class="emphasis"><em>components</em></span>
+            of the array. If an array has <span class="emphasis"><em>n</em></span> components, we say <span class="emphasis"><em>n</em></span> is the
+            length of the array; the components of the array are referenced using
+            integer indices from 0 to <span class="emphasis"><em>n</em></span> - 1, inclusive.
+         </p>
+         <p class="norm"><a name="jls-10-120"></a>All the components of an array
+            have the same type, called the <span class="emphasis"><em>component type</em></span> of
+            the array. If the component type of an array is <span class="type">T</span>, then the type of
+            the array itself is written <span class="type">T</span><code class="literal">[]</code>.
+         </p>
+         <p class="norm"><a name="jls-10-130"></a>The value of an array component
+            of type <code class="literal">float</code> is always an element of the float value set
+            (<a class="xref" href="jls-4.html#jls-4.2.3" title="4.2.3.&nbsp;Floating-Point Types, Formats, and Values">&sect;4.2.3</a>); similarly, the value of an array
+            component of type <code class="literal">double</code> is always an element of the double value
+            set. It is not permitted for the value of an array component of type
+            <code class="literal">float</code> to be an element of the float-extended-exponent value set that
+            is not also an element of the float value set, nor for the value of an
+            array component of type <code class="literal">double</code> to be an element of the
+            double-extended-exponent value set that is not also an element of the
+            double value set.
+         </p>
+         <p class="norm"><a name="jls-10-140"></a>The component type of an array
+            may itself be an array type. The components of such an array may
+            contain references to subarrays. If, starting from any array type, one
+            considers its component type, and then (if that is also an array type)
+            the component type of that type, and so on, eventually one must reach
+            a component type that is not an array type; this is called
+            the <span class="emphasis"><em>element type</em></span> of the original array, and the
+            components at this level of the data structure are called
+            the <span class="emphasis"><em>elements</em></span> of the original array.
+         </p>
+         <p class="norm"><a name="jls-10-150"></a>There are some situations in
+            which an element of an array can be an array: if the element type is
+            <code class="literal">Object</code> or <code class="literal">Cloneable</code> or <code class="literal">java.io.Serializable</code>, then some or all of the
+            elements may be arrays, because any array object can be assigned to
+            any variable of these types.
+         </p>
+         <div class="section" title="10.1.&nbsp;Array Types">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.1"></a>10.1.&nbsp;Array Types
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-10.1-100"></a>Array types
+               are used in declarations and in cast expressions
+               (<a class="xref" href="jls-15.html#jls-15.16" title="15.16.&nbsp;Cast Expressions">&sect;15.16</a>).
+            </p>
+            <p class="norm-static"><a name="jls-10.1-120"></a>An array
+               type is written as the name of an element type followed by some number
+               of empty pairs of square brackets <code class="literal">[]</code>. The number of bracket
+               pairs indicates the depth of array nesting.
+            </p>
+            <p class="norm-static"><a name="jls-10.1-130"></a>An array's
+               length is not part of its type.
+            </p>
+            <p class="norm-static"><a name="jls-10.1-200"></a>The element
+               type of an array may be any type, whether primitive or reference. In
+               particular:
+            </p>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.1-200-A"></a>Arrays with an interface type as
+                              the  element type are
+                              allowed.
+                     </p>
+                     <p class="norm-dynamic"><a name="jls-10.1-200-A.1"></a>An
+                              element of such an array may have as its value a null reference
+                              or an instance of any type that implements the interface.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.1-200-B"></a>Arrays with an <code class="literal">abstract</code> class type as
+                              the  element type are
+                              allowed.
+                     </p>
+                     <p class="norm-dynamic"><a name="jls-10.1-200-B.1"></a>An
+                              element of such an array may have as its value a null reference
+                              or an instance of any subclass of the <code class="literal">abstract</code> class that is
+                              not itself <code class="literal">abstract</code>.
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p class="norm"><a name="jls-10.1-300"></a>The supertypes of an array
+               type are specified in <a class="xref" href="jls-4.html#jls-4.10.3" title="4.10.3.&nbsp;Subtyping among Array Types">&sect;4.10.3</a>.
+            </p>
+            <p class="note">The supertype relation for array types is not the
+               same as the superclass relation. The direct supertype of
+               <code class="literal">Integer</code><code class="literal">[]</code> is <code class="literal">Number</code><code class="literal">[]</code> according
+               to <a class="xref" href="jls-4.html#jls-4.10.3" title="4.10.3.&nbsp;Subtyping among Array Types">&sect;4.10.3</a>, but the direct superclass of
+               <code class="literal">Integer</code><code class="literal">[]</code> is <code class="literal">Object</code> according to the <code class="literal">Class</code> object for
+               <code class="literal">Integer</code><code class="literal">[]</code> (<a class="xref" href="jls-10.html#jls-10.8" title="10.8.&nbsp;Class Objects for Arrays">&sect;10.8</a>). This does not matter
+               in practice, because <code class="literal">Object</code> is also a supertype of all array
+               types.
+            </p>
+         </div>
+         <div class="section" title="10.2.&nbsp;Array Variables">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.2"></a>10.2.&nbsp;Array Variables
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-dynamic"><a name="jls-10.2-100"></a>A variable
+               of array type holds a reference to an object. Declaring a variable of
+               array type does not create an array object or allocate any space for
+               array components. It creates only the variable itself, which can
+               contain a reference to an array.
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.2-110"></a>However,
+               the initializer part of a declarator (<a class="xref" href="jls-8.html#jls-8.3" title="8.3.&nbsp;Field Declarations">&sect;8.3</a>,
+               <a class="xref" href="jls-9.html#jls-9.3" title="9.3.&nbsp;Field (Constant) Declarations">&sect;9.3</a>, <a class="xref" href="jls-14.html#jls-14.4.1" title="14.4.1.&nbsp;Local Variable Declarators and Types">&sect;14.4.1</a>) may create an
+               array, a reference to which then becomes the initial value of the
+               variable.
+            </p>
+            <div class="example"><a name="d5e17065"></a><p class="title"><b>Example&nbsp;10.2-1.&nbsp;Declarations of Array Variables</b></p>
+               <div class="example-contents"><pre class="programlisting">
+
+int[]     ai;        // array of int
+short[][] as;        // array of array of short
+short     s,         // scalar short
+          aas[][];   // array of array of short
+Object[]  ao,        // array of Object
+          otherAo;   // array of Object
+Collection&lt;?&gt;[] ca;  // array of Collection of unknown type
+
+</pre><p class="note">The declarations above do not create array
+                     objects. The following are examples of declarations of array variables
+                     that do create array objects:
+                  </p><pre class="programlisting">
+
+Exception ae[]  = new Exception[3];
+Object aao[][]  = new Exception[2][3];
+int[] factorial = { 1, 1, 2, 6, 24, 120, 720, 5040 };
+char ac[]       = { 'n', 'o', 't', ' ', 'a', ' ',
+                    'S', 't', 'r', 'i', 'n', 'g' };
+String[] aas    = { "array", "of", "String", };
+
+</pre></div>
+            </div><br class="example-break"><p class="norm-static"><a name="jls-10.2-200"></a>The
+               <code class="literal">[]</code> may appear as part of the type at the beginning of the
+               declaration, or as part of the declarator for a particular variable,
+               or both.
+            </p>
+            <div class="informalexample">
+               <p class="note">For example:</p><pre class="screen">
+byte[] rowvector, colvector, matrix[];
+</pre><p class="note">This declaration is equivalent to:</p><pre class="screen">
+byte rowvector[], colvector[], matrix[][];
+</pre></div>
+            <p class="norm-static"><a name="jls-10.2-210"></a>In a variable
+               declaration (<a class="xref" href="jls-8.html#jls-8.3" title="8.3.&nbsp;Field Declarations">&sect;8.3</a>, <a class="xref" href="jls-8.html#jls-8.4.1" title="8.4.1.&nbsp;Formal Parameters">&sect;8.4.1</a>,
+               <a class="xref" href="jls-9.html#jls-9.3" title="9.3.&nbsp;Field (Constant) Declarations">&sect;9.3</a>, <a class="xref" href="jls-14.html#jls-14.14" title="14.14.&nbsp;The for Statement">&sect;14.14</a>,
+               <a class="xref" href="jls-14.html#jls-14.20" title="14.20.&nbsp;The try statement">&sect;14.20</a>) except for a variable arity parameter,
+               the array type of a variable is denoted by the array type that appears
+               at the beginning of the declaration, followed by any bracket pairs
+               that follow the variable's <span class="emphasis"><em>Identifier</em></span> in the declarator.
+            </p>
+            <div class="informalexample">
+               <p class="note">For example, the local variable declaration:</p><pre class="screen">
+int a, b[], c[][];
+</pre><p class="note">is equivalent to the series of declarations:</p><pre class="screen">
+int a;
+int[] b;
+int[][] c;
+</pre><p class="note">Brackets are allowed in declarators as a nod to the
+                  tradition of C and C++. The general rules for variable declaration,
+                  however, permit brackets to appear on both the type and in
+                  declarators, so that the local variable declaration:
+               </p><pre class="screen">
+float[][] f[][], g[][][], h[];  // Yechh!
+</pre><p class="note">is equivalent to the series of declarations:</p><pre class="screen">
+float[][][][] f;
+float[][][][][] g;
+float[][][] h;
+</pre></div>
+            <p class="norm"><a name="jls-10.2-220"></a>We do not recommend "mixed
+               notation" in an array variable declaration, where brackets appear on
+               both the type and in declarators.
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.2-300"></a>Once an
+               array object is created, its length never changes. To make an array
+               variable refer to an array of different length, a reference to a
+               different array must be assigned to the variable.
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.2-310"></a>A single
+               variable of array type may contain references to arrays of different
+               lengths, because an array's length is not part of its type.
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.2-320"></a>If an
+               array variable <code class="varname">v</code> has type <span class="type">A</span><code class="literal">[]</code>,
+               where <span class="type">A</span> is a reference type, then <code class="varname">v</code>
+               can hold a reference to an instance of any array
+               type <span class="type">B</span><code class="literal">[]</code>, provided <span class="type">B</span> can be assigned
+               to <span class="type">A</span> (<a class="xref" href="jls-5.html#jls-5.2" title="5.2.&nbsp;Assignment Contexts">&sect;5.2</a>). This may result in a
+               run-time exception on a <span class="emphasis"><em>later</em></span> assignment; see
+               <a class="xref" href="jls-10.html#jls-10.5" title="10.5.&nbsp;Array Store Exception">&sect;10.5</a> for a discussion.
+            </p>
+         </div>
+         <div class="section" title="10.3.&nbsp;Array Creation">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.3"></a>10.3.&nbsp;Array Creation
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm"><a name="jls-10.3-100"></a>An array is created by an
+               array creation expression (<a class="xref" href="jls-15.html#jls-15.10.1" title="15.10.1.&nbsp;Array Creation Expressions">&sect;15.10.1</a>) or an array
+               initializer (<a class="xref" href="jls-10.html#jls-10.6" title="10.6.&nbsp;Array Initializers">&sect;10.6</a>).
+            </p>
+            <p class="norm"><a name="jls-10.3-110"></a>An array creation expression
+               specifies the element type, the number of levels of nested arrays, and
+               the length of the array for at least one of the levels of nesting. The
+               array's length is available as a <code class="literal">final</code> instance
+               variable <code class="literal">length</code>.
+            </p>
+            <p class="norm"><a name="jls-10.3-120"></a>An array initializer creates
+               an array and provides initial values for all its components.
+            </p>
+         </div>
+         <div class="section" title="10.4.&nbsp;Array Access">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.4"></a>10.4.&nbsp;Array Access
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm"><a name="jls-10.4-100"></a>A component of an array is
+               accessed by an array access expression (<a class="xref" href="jls-15.html#jls-15.10.3" title="15.10.3.&nbsp;Array Access Expressions">&sect;15.10.3</a>)
+               that consists of an expression whose value is an array reference
+               followed by an indexing expression enclosed by <code class="literal">[</code> and <code class="literal">]</code>,
+               as in <code class="literal">A[i]</code>.
+            </p>
+            <p class="norm-static"><a name="jls-10.4-110"></a>All arrays
+               are <code class="literal">0</code>-origin. An array with length <span class="emphasis"><em>n</em></span> can be indexed by the
+               integers <code class="literal">0</code> to <span class="emphasis"><em>n</em></span>-1.
+            </p>
+            <div class="example"><a name="d5e17130"></a><p class="title"><b>Example&nbsp;10.4-1.&nbsp;Array Access</b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Gauss {
+    public static void main(String[] args) {
+        int[] ia = new int[101];
+        for (int i = 0; i &lt; ia.length; i++) ia[i] = i;
+        int sum = 0;
+        for (int e : ia) sum += e;
+        System.out.println(sum);
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+5050
+</pre><p class="note">The program declares a
+                     variable <code class="literal">ia</code> that has type array of <code class="literal">int</code>, that
+                     is, <code class="literal">int[]</code>. The variable <code class="literal">ia</code> is
+                     initialized to reference a newly created array object, created by an
+                     array creation expression (<a class="xref" href="jls-15.html#jls-15.10.1" title="15.10.1.&nbsp;Array Creation Expressions">&sect;15.10.1</a>). The array
+                     creation expression specifies that the array should
+                     have <code class="literal">101</code> components. The length of the array is
+                     available using the field <code class="literal">length</code>, as shown. The program fills the
+                     array with the integers from <code class="literal">0</code> to <code class="literal">100</code>, sums
+                     these integers, and prints the result.
+                  </p>
+               </div>
+            </div><br class="example-break"><p class="norm"><a name="jls-10.4-120"></a>Arrays must be indexed by
+               <code class="literal">int</code> values; <code class="literal">short</code>, <code class="literal">byte</code>, or <code class="literal">char</code> values may also be used as
+               index values because they are subjected to unary numeric promotion
+               (<a class="xref" href="jls-5.html#jls-5.6.1" title="5.6.1.&nbsp;Unary Numeric Promotion">&sect;5.6.1</a>) and become <code class="literal">int</code> values.
+            </p>
+            <p class="norm"><a name="jls-10.4-130"></a>An attempt to access an array
+               component with a <code class="literal">long</code> index value results in a compile-time
+               error.
+            </p>
+            <p class="norm"><a name="jls-10.4-140"></a>All array accesses are checked
+               at run time; an attempt to use an index that is less than zero or
+               greater than or equal to the length of the array causes an <code class="literal">ArrayIndexOutOfBoundsException</code> to
+               be thrown (<a class="xref" href="jls-15.html#jls-15.10.4" title="15.10.4.&nbsp;Run-Time Evaluation of Array Access Expressions">&sect;15.10.4</a>).
+            </p>
+         </div>
+         <div class="section" title="10.5.&nbsp;Array Store Exception">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.5"></a>10.5.&nbsp;Array Store Exception
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-dynamic"><a name="jls-10.5-100"></a>For an
+               array whose type is <span class="type">A</span><code class="literal">[]</code>, where <span class="type">A</span> is
+               a reference type, an assignment to a component of the array is checked
+               at run time to ensure that the value being assigned is assignable to
+               the component.
+            </p>
+            <p class="norm-error"><a name="jls-10.5-110"></a>If the type
+               of the value being assigned is not assignment-compatible
+               (<a class="xref" href="jls-5.html#jls-5.2" title="5.2.&nbsp;Assignment Contexts">&sect;5.2</a>) with the component type, an <code class="literal">ArrayStoreException</code> is
+               thrown.
+            </p>
+            <p class="note">If the component type of an array were not reifiable
+               (<a class="xref" href="jls-4.html#jls-4.7" title="4.7.&nbsp;Reifiable Types">&sect;4.7</a>), the Java Virtual Machine could not perform the store
+               check described in the preceding paragraph. This is why an array
+               creation expression with a non-reifiable element type is forbidden
+               (<a class="xref" href="jls-15.html#jls-15.10.1" title="15.10.1.&nbsp;Array Creation Expressions">&sect;15.10.1</a>). One may declare a variable of an array
+               type whose element type is non-reifiable, but assignment of the result
+               of an array creation expression to the variable will necessarily cause an
+               unchecked warning (<a class="xref" href="jls-5.html#jls-5.1.9" title="5.1.9.&nbsp;Unchecked Conversion">&sect;5.1.9</a>).
+            </p>
+            <div class="example"><a name="d5e17170"></a><p class="title"><b>Example&nbsp;10.5-1.&nbsp;<code class="literal">ArrayStoreException</code></b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Point { int x, y; }
+class ColoredPoint extends Point { int color; }
+class Test {
+    public static void main(String[] args) {
+        ColoredPoint[] cpa = new ColoredPoint[10];
+        Point[] pa = cpa;
+        System.out.println(pa[1] == null);
+        try {
+            pa[0] = new Point();
+        } catch (ArrayStoreException e) {
+            System.out.println(e);
+        }
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+true
+java.lang.ArrayStoreException: Point
+</pre><p class="note">The variable <code class="literal">pa</code> has
+                     type <code class="literal">Point[]</code> and the
+                     variable <code class="literal">cpa</code> has as its value a reference to an
+                     object of type <code class="literal">ColoredPoint[]</code>. A
+                     <code class="literal">ColoredPoint</code> can be assigned to
+                     a <code class="literal">Point</code>; therefore, the value
+                     of <code class="literal">cpa</code> can be assigned
+                     to <code class="literal">pa</code>.
+                  </p>
+                  <p class="note">A reference to this array <code class="literal">pa</code>, for
+                     example, testing whether <code class="literal">pa[1]</code>
+                     is <code class="literal">null</code>, will not result in a run-time type
+                     error. This is because the element of the array of
+                     type <code class="literal">ColoredPoint[]</code> is a<code class="literal">
+                        ColoredPoint</code>, and every <code class="literal">ColoredPoint</code> can
+                     stand in for a <code class="literal">Point</code>,
+                     since <code class="literal">Point</code> is the superclass
+                     of <code class="literal">ColoredPoint</code>.
+                  </p>
+                  <p class="note">On the other hand, an assignment to the
+                     array <code class="literal">pa</code> can result in a run-time error. At compile
+                     time, an assignment to an element of <code class="literal">pa</code> is checked
+                     to make sure that the value assigned is
+                     a <code class="literal">Point</code>. But since <code class="literal">pa</code> holds a
+                     reference to an array of <code class="literal">ColoredPoint</code>, the
+                     assignment is valid only if the type of the value assigned at run time
+                     is, more specifically, a <code class="literal">ColoredPoint</code>.
+                  </p>
+                  <p class="note">The Java Virtual Machine checks for such a situation at run time to
+                     ensure that the assignment is valid; if not, an <code class="literal">ArrayStoreException</code> is
+                     thrown.
+                  </p>
+               </div>
+            </div><br class="example-break"></div>
+         <div class="section" title="10.6.&nbsp;Array Initializers">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.6"></a>10.6.&nbsp;Array Initializers
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-10.6-100"></a>An <span class="emphasis"><em>array initializer</em></span> may be
+               specified in a field declaration (<a class="xref" href="jls-8.html#jls-8.3" title="8.3.&nbsp;Field Declarations">&sect;8.3</a>,
+               <a class="xref" href="jls-9.html#jls-9.3" title="9.3.&nbsp;Field (Constant) Declarations">&sect;9.3</a>) or local variable declaration
+               (<a class="xref" href="jls-14.html#jls-14.4" title="14.4.&nbsp;Local Variable Declaration Statements">&sect;14.4</a>), or as part of an array creation
+               expression (<a class="xref" href="jls-15.html#jls-15.10.1" title="15.10.1.&nbsp;Array Creation Expressions">&sect;15.10.1</a>), to create an array and
+               provide some initial values.
+            </p>
+            <div id="jls-10.6-110" class="productionset"><a name="jls-10.6-110"></a>
+                 
+               <div class="production"><a name="jls-ArrayInitializer"></a>
+                      
+                  <div class="lhs">ArrayInitializer:</div>
+                      
+                  <div class="rhs">
+                           <code class="literal">{</code> [<a href="jls-10.html#jls-VariableInitializerList" title="VariableInitializerList">VariableInitializerList</a>] [<code class="literal">,</code>] <code class="literal">}</code>
+                         
+                  </div>
+                    
+               </div>
+               
+                 
+               <div class="production"><a name="jls-VariableInitializerList"></a>
+                      
+                  <div class="lhs">VariableInitializerList:</div>
+                      
+                  <div class="rhs">
+                           <a href="jls-8.html#jls-VariableInitializer" title="VariableInitializer">VariableInitializer</a> {<code class="literal">,</code> <a href="jls-8.html#jls-VariableInitializer" title="VariableInitializer">VariableInitializer</a>}
+                         
+                  </div>
+                    
+               </div>
+               
+            </div>
+            <p class="note">The following production from
+               <a class="xref" href="jls-8.html#jls-8.3" title="8.3.&nbsp;Field Declarations">&sect;8.3</a> is shown here for convenience:
+            </p>
+            <div id="d5e17228" class="productionset"><a name="d5e17228"></a>
+                 
+               <div class="productionrecap-note">
+                  <div class="production">
+                         
+                     <div class="lhs">VariableInitializer:</div>
+                         
+                     <div class="rhs">
+                              <a href="jls-15.html#jls-Expression" title="Expression">Expression</a> <br>
+                              <a href="jls-10.html#jls-ArrayInitializer" title="ArrayInitializer">ArrayInitializer</a>
+                            
+                     </div>
+                       
+                  </div>
+               </div>
+               
+            </div>
+            <p class="norm-static"><a name="jls-10.6-120"></a>An array
+               initializer is written as a comma-separated list of expressions,
+               enclosed by braces <code class="literal">{</code> and <code class="literal">}</code>.
+            </p>
+            <p class="norm-static"><a name="jls-10.6-130"></a>A trailing
+               comma may appear after the last expression in an array initializer and
+               is ignored.
+            </p>
+            <p class="norm-error"><a name="jls-10.6-200"></a>Each  variable initializer
+               must be assignment-compatible (<a class="xref" href="jls-5.html#jls-5.2" title="5.2.&nbsp;Assignment Contexts">&sect;5.2</a>) with the
+               array's component type, or a compile-time error occurs.
+            </p>
+            <p class="norm-error"><a name="jls-10.6-210"></a>It is a
+               compile-time error if the component type of the array being
+               initialized is not reifiable (<a class="xref" href="jls-4.html#jls-4.7" title="4.7.&nbsp;Reifiable Types">&sect;4.7</a>).
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.6-300"></a>The length
+               of the array to be constructed is equal to the number of variable
+               initializers immediately enclosed by the braces of the array
+               initializer. Space is allocated for a new array of that length. If
+               there is insufficient space to allocate the array, evaluation of the
+               array initializer completes abruptly by throwing an <code class="literal">OutOfMemoryError</code>. Otherwise,
+               a one-dimensional array is created of the specified length, and each
+               component of the array is initialized to its default value
+               (<a class="xref" href="jls-4.html#jls-4.12.5" title="4.12.5.&nbsp;Initial Values of Variables">&sect;4.12.5</a>).
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.6-310"></a>The variable
+               initializers immediately enclosed by the braces of the array
+               initializer are then executed from left to right in the textual order
+               they occur in the source code. The <span class="emphasis"><em>n</em></span>'th variable initializer
+               specifies the value of the <span class="emphasis"><em>n</em></span>-1'th array component. If execution
+               of a variable initializer completes abruptly, then execution of the
+               array initializer completes abruptly for the same reason. If all the
+               variable initializer expressions complete normally, the array
+               initializer completes normally, with the value of the newly
+               initialized array.
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.6-320"></a>If the component type is an array
+               type, then the  variable initializer specifying a
+               component may itself be an array initializer; that is, array
+               initializers may be nested.  In this case, execution of
+               the nested array initializer constructs and initializes an array
+               object by recursive application of the algorithm above, and assigns it
+               to the component.
+            </p>
+            <div class="example"><a name="d5e17245"></a><p class="title"><b>Example&nbsp;10.6-1.&nbsp;Array Initializers</b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Test {
+    public static void main(String[] args) {
+        int ia[][] = { {1, 2}, null };
+        for (int[] ea : ia) {
+            for (int e: ea) {
+                System.out.println(e);
+            }
+        }
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+1
+2
+</pre><p class="note">before causing a <code class="literal">NullPointerException</code> in trying to index the second
+                     component of the array <code class="literal">ia</code>, which is a null
+                     reference.
+                  </p>
+               </div>
+            </div><br class="example-break"></div>
+         <div class="section" title="10.7.&nbsp;Array Members">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.7"></a>10.7.&nbsp;Array Members
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-10.7-100"></a>The members
+               of an array type are all of the following:
+            </p>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.7-100-A"></a>The
+                             <code class="literal">public</code> <code class="literal">final</code> field <code class="literal">length</code>, which contains
+                             the number of components of the array. <code class="literal">length</code>
+                             may be positive or zero.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.7-100-B"></a>The
+                             <code class="literal">public</code> method <code class="literal">clone</code>, which overrides the
+                             method of the same name in class <code class="literal">Object</code> and throws no checked
+                             exceptions. The return type of the <code class="literal">clone</code>
+                             method of an array type <span class="type">T</span><code class="literal">[]</code> is <span class="type">T</span><code class="literal">[]</code>.
+                     </p>
+                     <p class="norm-static"><a name="jls-10.7-100-B.1"></a>A
+                              clone of a multidimensional array is shallow, which is to say
+                              that it creates only a single new array. Subarrays are
+                              shared.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.7-100-C"></a>All
+                              the members inherited from class <code class="literal">Object</code>; the only method of
+                              <code class="literal">Object</code> that is not inherited is its <code class="literal">clone</code>
+                              method.
+                     </p>
+                     <p class="note">See <a class="xref" href="jls-9.html#jls-9.6.4.4" title="9.6.4.4.&nbsp;@Override">&sect;9.6.4.4</a> for another
+                              situation where the difference between <code class="literal">public</code> and non-<code class="literal">public</code>
+                              methods of <code class="literal">Object</code> requires special care.
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p class="norm-static"><a name="jls-10.7-110"></a>An array
+               thus has the same <code class="literal">public</code> fields and methods as the following
+               class:
+            </p><a name="jls-10.7-110-A"></a><pre class="programlisting">
+
+class A&lt;T&gt; implements Cloneable, java.io.Serializable {
+    public final int length = X;
+    public T[] clone() {
+        try {
+            return (T[])super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new InternalError(e.getMessage());
+        }
+    }
+}
+
+</pre><p class="note">Note that the cast to <code class="literal">T[]</code> in the
+               code above would generate an unchecked warning
+               (<a class="xref" href="jls-5.html#jls-5.1.9" title="5.1.9.&nbsp;Unchecked Conversion">&sect;5.1.9</a>) if arrays were really implemented this
+               way.
+            </p>
+            <div class="example"><a name="d5e17290"></a><p class="title"><b>Example&nbsp;10.7-1.&nbsp;Arrays Are Cloneable</b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Test1 {
+    public static void main(String[] args) {
+        int ia1[] = { 1, 2 };
+        int ia2[] = ia1.clone();
+        System.out.print((ia1 == ia2) + " ");
+        ia1[1]++;
+        System.out.println(ia2[1]);
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+false 2
+</pre><p class="note">showing that the components of the arrays referenced
+                     by <code class="literal">ia1</code> and <code class="literal">ia2</code> are different
+                     variables.
+                  </p>
+               </div>
+            </div><br class="example-break"><div class="example"><a name="d5e17298"></a><p class="title"><b>Example&nbsp;10.7-2.&nbsp;Shared Subarrays After A Clone</b></p>
+               <div class="example-contents">
+                  <p class="note">The fact that subarrays are shared when a
+                     multidimensional array is cloned is shown by this program:
+                  </p><pre class="programlisting">
+class Test2 {
+    public static void main(String[] args) throws Throwable {
+        int ia[][] = { {1,2}, null };
+        int ja[][] = ia.clone();
+        System.out.print((ia == ja) + " ");
+        System.out.println(ia[0] == ja[0] &amp;&amp; ia[1] == ja[1]);
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+false true
+</pre><p class="note">showing that the <code class="literal">int[]</code> array that
+                     is <code class="literal">ia[0]</code> and the <code class="literal">int[]</code> array
+                     that is <code class="literal">ja[0]</code> are the same array.
+                  </p>
+               </div>
+            </div><br class="example-break"></div>
+         <div class="section" title="10.8.&nbsp;Class Objects for Arrays">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.8"></a>10.8.&nbsp;<code class="literal">Class</code> Objects for Arrays
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-10.8-100"></a>Every array
+               has an associated <code class="literal">Class</code> object, shared with all other arrays with
+               the same component type.
+            </p>
+            <p class="norm-static"><a name="jls-10.8-110"></a>Although an
+               array type is not a class, the <code class="literal">Class</code> object of every array acts as
+               if:
+            </p>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.8-110-A"></a>The
+                              direct superclass of every array type is <code class="literal">Object</code>.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm-static"><a name="jls-10.8-110-B"></a>Every
+                              array type implements the interfaces <code class="literal">Cloneable</code> and
+                              <code class="literal">java.io.Serializable</code>.
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <div class="example"><a name="d5e17324"></a><p class="title"><b>Example&nbsp;10.8-1.&nbsp;<code class="literal">Class</code> Object Of Array</b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Test1 {
+    public static void main(String[] args) {
+        int[] ia = new int[3];
+        System.out.println(ia.getClass());
+        System.out.println(ia.getClass().getSuperclass());
+        for (Class&lt;?&gt; c : ia.getClass().getInterfaces())
+            System.out.println("Superinterface: " + c);
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+class [I
+class java.lang.Object
+Superinterface: interface java.lang.Cloneable
+Superinterface: interface java.io.Serializable
+</pre><p class="note">where the string "<code class="literal">[I</code>" is the
+                     run-time type signature for the <code class="literal">Class</code> object "array with component
+                     type <code class="literal">int</code>".
+                  </p>
+               </div>
+            </div><br class="example-break"><div class="example"><a name="d5e17334"></a><p class="title"><b>Example&nbsp;10.8-2.&nbsp;Array <code class="literal">Class</code> Objects Are Shared</b></p>
+               <div class="example-contents"><pre class="programlisting">
+class Test2 {
+    public static void main(String[] args) {
+        int[] ia = new int[3];
+        int[] ib = new int[6];
+        System.out.println(ia == ib);
+        System.out.println(ia.getClass() == ib.getClass());
+    }
+}
+</pre><p class="note">This program produces the output:</p><pre class="screen">
+false
+true
+</pre><p class="note">While <code class="literal">ia</code>
+                     and <code class="literal">ib</code> refer to different arrays, the result of the
+                     comparison of the <code class="literal">Class</code> objects demonstrates that all arrays whose
+                     components are of type <code class="literal">int</code> are instances of the same array type
+                     (namely <code class="literal">int</code><code class="literal">[]</code>).
+                  </p>
+               </div>
+            </div><br class="example-break"></div>
+         <div class="section" title="10.9.&nbsp;An Array of Characters is Not a String">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-10.9"></a>10.9.&nbsp;An Array of Characters is Not a <code class="literal">String</code></h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-10.9-100"></a>In the
+               Java programming language, unlike C, an array of <code class="literal">char</code> is not a <code class="literal">String</code>, and
+               neither a <code class="literal">String</code> nor an array of <code class="literal">char</code> is terminated by
+               '<code class="literal">\u0000</code>' (the NUL character).
+            </p>
+            <p class="norm-dynamic"><a name="jls-10.9-110"></a>A <code class="literal">String</code>
+               object is immutable, that is, its contents never change, while an
+               array of <code class="literal">char</code> has mutable elements.
+            </p>
+            <p class="note">The method <code class="literal">toCharArray</code> in class
+               <code class="literal">String</code> returns an array of characters containing the same character
+               sequence as a <code class="literal">String</code>. The class <code class="literal">StringBuffer</code>
+               implements useful methods on mutable arrays of characters.
+            </p>
+         </div>
+      </div>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="jls-9.html">Prev</a>&nbsp;
+               </td>
+               <td width="20%" align="center">&nbsp;</td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="jls-11.html">Next</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapter&nbsp;9.&nbsp;Interfaces&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;11.&nbsp;Exceptions</td>
+            </tr>
+         </table>
+      </div>
+      <div xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:rx="http://www.renderx.com/XSL/Extensions" class="navfooter">
+         <hr><a href="jls-0-front.html">
+                Legal Notice
+              </a></div>
+   </body>
+</html>

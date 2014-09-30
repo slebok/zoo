@@ -1,0 +1,1330 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapter&nbsp;7.&nbsp;Packages</title>
+      <link rel="stylesheet" type="text/css" href="../../../javaspec.css">
+      <meta name="generator" content="DocBook XSL-NS Stylesheets V1.76.1">
+      <link rel="home" href="index.html" title="The Java&reg; Language Specification">
+      <link rel="up" href="index.html" title="The Java&reg; Language Specification">
+      <link rel="prev" href="jls-6.html" title="Chapter&nbsp;6.&nbsp;Names">
+      <link rel="next" href="jls-8.html" title="Chapter&nbsp;8.&nbsp;Classes">
+      <link rel="copyright" href="jls-0-front.html" title="Legal Notice">
+   </head>
+   <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+      <div xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:rx="http://www.renderx.com/XSL/Extensions" id="logo"><img src="http://www.oracleimg.com/us/assets/oralogo-small.gif" alt="Oracle Logo"><br><p><a target="_blank" href="http://www.oracle.com/us/technologies/java/">Oracle
+                Technology Network</a> &gt; <a target="_blank" href="http://docs.oracle.com/javase/">Java SE</a>
+                &gt; <a href="index.html">Java Language Specification</a></p>
+      </div>
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapter&nbsp;7.&nbsp;Packages</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="jls-6.html">Prev</a>&nbsp;
+               </td>
+               <th width="60%" align="center">&nbsp;</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="jls-8.html">Next</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div lang="en" class="chapter" title="Chapter&nbsp;7.&nbsp;Packages">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="jls-7"></a>Chapter&nbsp;7.&nbsp;Packages
+                  </h2>
+               </div>
+            </div>
+         </div>
+         <div class="toc">
+            <p><b>Table of Contents</b></p>
+            <dl>
+               <dt><span class="section"><a href="jls-7.html#jls-7.1">7.1. Package Members</a></span></dt>
+               <dt><span class="section"><a href="jls-7.html#jls-7.2">7.2. Host Support for Packages</a></span></dt>
+               <dt><span class="section"><a href="jls-7.html#jls-7.3">7.3. Compilation Units</a></span></dt>
+               <dt><span class="section"><a href="jls-7.html#jls-7.4">7.4. Package Declarations</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.4.1">7.4.1. Named Packages</a></span></dt>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.4.2">7.4.2. Unnamed Packages</a></span></dt>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.4.3">7.4.3. Observability of a Package</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="jls-7.html#jls-7.5">7.5. Import Declarations</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.5.1">7.5.1. Single-Type-Import Declarations</a></span></dt>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.5.2">7.5.2. Type-Import-on-Demand Declarations</a></span></dt>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.5.3">7.5.3. Single-Static-Import Declarations</a></span></dt>
+                     <dt><span class="section"><a href="jls-7.html#jls-7.5.4">7.5.4. Static-Import-on-Demand Declarations</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="jls-7.html#jls-7.6">7.6. Top Level Type Declarations</a></span></dt>
+            </dl>
+         </div>
+         <p class="norm"><a name="jls-7-100"></a>Programs are organized as sets of
+            packages. Each package has its own set of names for types, which helps
+            to prevent name conflicts.
+         </p>
+         <p class="norm"><a name="jls-7-110"></a>A top level type is accessible
+            (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>) outside the package that declares it only
+            if the type is declared <code class="literal">public</code>.
+         </p>
+         <p class="norm"><a name="jls-7-120"></a>The naming structure for packages
+            is hierarchical (<a class="xref" href="jls-7.html#jls-7.1" title="7.1.&nbsp;Package Members">&sect;7.1</a>). The members of a package
+            are class and interface types (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>), which are
+            declared in compilation units of the package, and subpackages, which
+            may contain compilation units and subpackages of their own.
+         </p>
+         <p class="norm"><a name="jls-7-130"></a>A package can be stored in a file
+            system or in a database (<a class="xref" href="jls-7.html#jls-7.2" title="7.2.&nbsp;Host Support for Packages">&sect;7.2</a>). Packages that are
+            stored in a file system may have certain constraints on the
+            organization of their compilation units to allow a simple
+            implementation to find classes easily.
+         </p>
+         <p class="norm"><a name="jls-7-140"></a>A package consists of a number of
+            compilation units (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>). A compilation unit
+            automatically has access to all types declared in its package and also
+            automatically imports all of the <code class="literal">public</code> types declared in the
+            predefined package <code class="literal">java.lang</code>.
+         </p>
+         <p class="norm"><a name="jls-7-150"></a>For small programs and casual
+            development, a package can be unnamed (<a class="xref" href="jls-7.html#jls-7.4.2" title="7.4.2.&nbsp;Unnamed Packages">&sect;7.4.2</a>) or
+            have a simple name, but if code is to be widely distributed, unique
+            package names should be chosen using qualified names. This can prevent
+            the conflicts that would otherwise occur if two development groups
+            happened to pick the same package name and these packages were later
+            to be used in a single program.
+         </p>
+         <div class="section" title="7.1.&nbsp;Package Members">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.1"></a>7.1.&nbsp;Package Members
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-7.1-100"></a>The members
+               of a package are its subpackages and all the top level class types
+               (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>, <a class="xref" href="jls-8.html" title="Chapter&nbsp;8.&nbsp;Classes">&sect;8 (<i>Classes</i>)</a>) and top level
+               interface types (<a class="xref" href="jls-9.html" title="Chapter&nbsp;9.&nbsp;Interfaces">&sect;9 (<i>Interfaces</i>)</a>) declared in all the
+               compilation units (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>) of the package.
+            </p>
+            <div class="informalexample">
+               <p class="note">For example, in the Java SE platform API:</p>
+               <div class="note">
+                  <ul class="note" type="disc">
+                     <li class="listitem">
+                        <p class="note">The package <code class="literal">java</code> has
+                                 subpackages <code class="literal">awt</code>, <code class="literal">applet</code>, 
+                                 <code class="literal">io</code>, <code class="literal">lang</code>, <code class="literal">net</code>,
+                                 and <code class="literal">util</code>, but no compilation units.
+                        </p>
+                     </li>
+                     <li class="listitem">
+                        <p class="note">The package <code class="literal">java.awt</code> has a
+                                 subpackage named <code class="literal">image</code>, as well as a number
+                                 of compilation units containing declarations of class and
+                                 interface types.
+                        </p>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-7.1-110"></a>If the fully qualified name
+               (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>) of a package is <code class="varname">P</code>,
+               and <code class="varname">Q</code> is a subpackage of <code class="varname">P</code>,
+               then <code class="varname">P.Q</code> is the fully qualified name of the
+               subpackage, and furthermore denotes a
+               package.
+            </p>
+            <p class="norm-error"><a name="jls-7.1-120"></a>A package may
+               not contain two members of the same name, or a compile-time error
+               results.
+            </p>
+            <div class="informalexample">
+               <p class="note">Here are some examples:</p>
+               <div class="note">
+                  <ul class="note" type="disc">
+                     <li class="listitem">
+                        <p class="note">Because the package <code class="literal">java.awt</code>
+                                 has a subpackage <code class="literal">image</code>, it cannot (and does
+                                 not) contain a declaration of a class or interface type
+                                 named <code class="literal">image</code>.
+                        </p>
+                     </li>
+                     <li class="listitem">
+                        <p class="note">If there is a package
+                                 named <code class="literal">mouse</code> and a member
+                                 type <code class="literal">Button</code> in that package (which then might
+                                 be referred to as <code class="literal">mouse.Button</code>), then there
+                                 cannot be any package with the fully qualified
+                                 name <code class="literal">mouse.Button</code>
+                                 or <code class="literal">mouse.Button.Click</code>.
+                        </p>
+                     </li>
+                     <li class="listitem">
+                        <p class="note">If <code class="literal">com.nighthacks.java.jag</code> is
+                                 the fully qualified name of a type, then there cannot be any
+                                 package whose fully qualified name is
+                                 either <code class="literal">com.nighthacks.java.jag</code>
+                                 or <code class="literal">com.nighthacks.java.jag.scrabble</code>.
+                        </p>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="informalexample">
+               <p class="note">It is however possible for members of different
+                  packages to have the same simple name. For example, it is possible to
+                  declare a package:
+               </p><pre class="programlisting">
+
+package vector;
+public class Vector { Object[] vec; }
+
+</pre><p class="note">that has as a member a <code class="literal">public</code> class
+                  named <code class="literal">Vector</code>, even though the package <code class="literal">java.util</code>
+                  also declares a class named <code class="literal">Vector</code>. These two class
+                  types are different, reflected by the fact that they have different
+                  fully qualified names (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>). The fully qualified
+                  name of this example <code class="literal">Vector</code>
+                  is <code class="literal">vector.Vector</code>,
+                  whereas <code class="literal">java.util.Vector</code> is the fully qualified
+                  name of the <code class="literal">Vector</code> class included in the
+                  Java SE platform. Because the package <code class="literal">vector</code> contains a
+                  class named <code class="literal">Vector</code>, it cannot also have a
+                  subpackage named <code class="literal">Vector</code>.
+               </p>
+            </div>
+            <p class="norm-static"><a name="jls-7.1-200"></a>The
+               hierarchical naming structure for packages is intended to be
+               convenient for organizing related packages in a conventional manner,
+               but has no significance in itself other than the prohibition against a
+               package having a subpackage with the same simple name as a top level
+               type (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>) declared in that package.
+            </p>
+            <p class="note">For example, there is no special access relationship
+               between a package named <code class="literal">oliver</code> and another package
+               named <code class="literal">oliver.twist</code>, or between packages
+               named <code class="literal">evelyn.wood</code>
+               and <code class="literal">evelyn.waugh</code>. That is, the code in a package
+               named <code class="literal">oliver.twist</code> has no better access to the
+               types declared within package <code class="literal">oliver</code> than code in
+               any other package.
+            </p>
+         </div>
+         <div class="section" title="7.2.&nbsp;Host Support for Packages">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.2"></a>7.2.&nbsp;Host Support for Packages
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm"><a name="jls-7.2-100"></a>Each host system determines how
+               packages and compilation units are created and stored.
+            </p>
+            <p class="norm"><a name="jls-7.2-110"></a>Each host system also
+               determines which compilation units are observable
+               (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>) in a particular compilation. The
+               observability of compilation units in turn determines which packages
+               are observable, and which packages are in scope.
+            </p>
+            <p class="norm"><a name="jls-7.2-120"></a>In simple implementations of
+               the Java SE platform, packages and compilation units may be stored in a
+               local file system. Other implementations may store them using a
+               distributed file system or some form of database.
+            </p>
+            <p class="norm"><a name="jls-7.2-130"></a>If a host system stores
+               packages and compilation units in a database, then the database must
+               not impose the optional restrictions (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>) on
+               compilation units permissible in file-based implementations.
+            </p>
+            <p class="note">For example, a system that uses a database to store
+               packages may not enforce a maximum of one public class or interface
+               per compilation unit.
+            </p>
+            <p class="norm"><a name="jls-7.2-140"></a>Systems that use a database
+               must, however, provide an option to convert a program to a form that
+               obeys the restrictions, for purposes of export to file-based
+               implementations.
+            </p>
+            <div class="informalexample">
+               <p class="note">As an extremely simple example of storing packages
+                  in a file system, all the packages and source and binary code in a project might be stored in a single
+                  directory and its subdirectories. Each immediate subdirectory of this
+                  directory would represent a top level package, that is, one whose
+                  fully qualified name consists of a single simple name. Each further
+                  level of subdirectory would represent a subpackage of the package
+                  represented by the containing directory, and so on.
+               </p>
+               <p class="note">The directory might contain the following immediate
+                  subdirectories:
+               </p><pre class="screen">
+com
+gls
+jag
+java
+wnj
+</pre><p class="note">where directory <code class="literal">java</code> would
+                  contain the Java SE platform packages; the
+                  directories <code class="literal">jag</code>, <code class="literal">gls</code>,
+                  and <code class="literal">wnj</code> might contain packages that three of the
+                  authors of this specification created for their personal use and to
+                  share with each other within this small group; and the
+                  directory <code class="literal">com</code> would contain packages procured from
+                  companies that used the conventions described in
+                  <a class="xref" href="jls-6.html#jls-6.1" title="6.1.&nbsp;Declarations">&sect;6.1</a> to generate unique names for their
+                  packages.
+               </p>
+               <p class="note">Continuing the example, the
+                  directory <code class="literal">java</code> would contain, among others, the
+                  following subdirectories:
+               </p><pre class="screen">
+applet
+awt
+io
+lang
+net
+util
+</pre><p class="note">corresponding to the
+                  packages <code class="literal">java.applet</code>, <code class="literal">java.awt</code>,
+                  <code class="literal">java.io</code>, <code class="literal">java.lang</code>,
+                  <code class="literal">java.net</code>, and <code class="literal">java.util</code> that are defined as part
+                  of the Java SE platform API.
+               </p>
+               <p class="note">Still continuing the example, if we were to look
+                  inside the directory <code class="literal">util</code>, we might see the
+                  following files:
+               </p><pre class="screen">
+BitSet.java        Observable.java
+BitSet.class       Observable.class
+Date.java          Observer.java
+Date.class         Observer.class
+...
+</pre><p class="note">where each of the <code class="literal">.java</code> files
+                  contains the source for a compilation unit (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>)
+                  that contains the definition of a class or interface whose binary
+                  compiled form is contained in the
+                  corresponding <code class="literal">.class</code> file.
+               </p>
+               <p class="note">Under this simple organization of packages, an
+                  implementation of the Java SE platform would transform a package name into a
+                  pathname by concatenating the components of the package name, placing
+                  a file name separator (directory indicator) between adjacent
+                  components.
+               </p>
+               <p class="note">For example, if this simple organization were used
+                  on an operating system where the file name separator
+                  is <code class="literal">/</code>, the package name:
+               </p><pre class="screen">
+jag.scrabble.board
+</pre><p class="note">would be transformed into the directory name:</p><pre class="screen">
+jag/scrabble/board
+</pre><p class="note">A package name component or class name might contain
+                  a character that cannot correctly appear in a host file system's
+                  ordinary directory name, such as a Unicode character on a system that
+                  allows only ASCII characters in file names. As a convention, the
+                  character can be escaped by using, say, the <code class="literal">@</code>
+                  character followed by four hexadecimal digits giving the numeric value
+                  of the character, as in
+                  the <code class="literal">\u<span class="emphasis"><em>xxxx</em></span></code> escape
+                  (<a class="xref" href="jls-3.html#jls-3.3" title="3.3.&nbsp;Unicode Escapes">&sect;3.3</a>).
+               </p>
+               <p class="note">Under this convention, the package name:</p><pre class="screen">
+children.activities.crafts.papierM\u00e2ch\u00e9
+</pre><p class="note">which can also be written using full Unicode
+                  as:
+               </p><pre class="screen">
+children.activities.crafts.papierM&acirc;ch&eacute;
+</pre><p class="note">might be mapped to the directory name:</p><pre class="screen">
+children/activities/crafts/papierM@00e2ch@00e9
+</pre><p class="note">If the <code class="literal">@</code> character is not a valid
+                  character in a file name for some given host file system, then some
+                  other character that is not valid in a identifier could be used
+                  instead.
+               </p>
+            </div>
+         </div>
+         <div class="section" title="7.3.&nbsp;Compilation Units">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.3"></a>7.3.&nbsp;Compilation Units
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-7.3-100"></a>
+               <span class="emphasis"><em>CompilationUnit</em></span> is the goal symbol
+               (<a class="xref" href="jls-2.html#jls-2.1" title="2.1.&nbsp;Context-Free Grammars">&sect;2.1</a>) for the syntactic grammar
+               (<a class="xref" href="jls-2.html#jls-2.3" title="2.3.&nbsp;The Syntactic Grammar">&sect;2.3</a>) of Java programs. It is defined by the
+               following productions:
+            </p>
+            <div id="jls-7.3-110" class="productionset"><a name="jls-7.3-110"></a>
+                 
+               <div class="production"><a name="jls-CompilationUnit"></a>
+                      
+                  <div class="lhs">CompilationUnit:</div>
+                      
+                  <div class="rhs">
+                           [<a href="jls-7.html#jls-PackageDeclaration" title="PackageDeclaration">PackageDeclaration</a>] 
+                           {<a href="jls-7.html#jls-ImportDeclaration" title="ImportDeclaration">ImportDeclaration</a>} 
+                           {<a href="jls-7.html#jls-TypeDeclaration" title="TypeDeclaration">TypeDeclaration</a>}
+                         
+                  </div>
+                    
+               </div>
+               
+            </div>
+            <p class="norm-static"><a name="jls-7.3-120"></a>A 
+               <span class="emphasis"><em>compilation unit</em></span> consists of three parts, each of
+               which is optional:
+            </p>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.3-120-A"></a>A <code class="literal">package</code> declaration
+                            (<a class="xref" href="jls-7.html#jls-7.4" title="7.4.&nbsp;Package Declarations">&sect;7.4</a>), giving the fully qualified name
+                            (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>) of the package to which the
+                            compilation unit belongs.
+                     </p>
+                     <p class="norm"><a name="jls-7.3-120-A.1"></a>A compilation unit that
+                            has no <code class="literal">package</code> declaration is part of an unnamed package
+                            (<a class="xref" href="jls-7.html#jls-7.4.2" title="7.4.2.&nbsp;Unnamed Packages">&sect;7.4.2</a>).
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.3-120-B"></a><code class="literal">import</code> declarations
+                            (<a class="xref" href="jls-7.html#jls-7.5" title="7.5.&nbsp;Import Declarations">&sect;7.5</a>) that allow types from other packages
+                            and <code class="literal">static</code> members of types to be referred to using their simple
+                            names.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.3-120-C"></a>Top level type
+                            declarations (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>) of class and interface
+                            types.
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p class="norm-static"><a name="jls-7.3-200"></a>Every
+               compilation unit implicitly imports every <code class="literal">public</code> type name declared
+               in the predefined package <code class="literal">java.lang</code>, as if the
+               declaration <code class="literal">import java.lang.*;</code> appeared at the
+               beginning of each compilation unit immediately after any <code class="literal">package</code>
+               statement. As a result, the names of all those types are available as
+               simple names in every compilation unit.
+            </p>
+            <p class="norm-static"><a name="jls-7.3-210"></a>All the compilation units of
+               the predefined package <code class="literal">java</code> and
+               its subpackages <code class="literal">lang</code>
+               and <code class="literal">io</code> are always
+               <span class="emphasis"><em>observable</em></span>.
+            </p>
+            <p class="norm-static"><a name="jls-7.3-220"></a>For all other packages, the host
+               system determines which compilation units are observable.
+            </p>
+            <p class="note">The observability of a compilation unit influences
+               the observability of its package (<a class="xref" href="jls-7.html#jls-7.4.3" title="7.4.3.&nbsp;Observability of a Package">&sect;7.4.3</a>).
+            </p>
+            <p class="norm-static"><a name="jls-7.3-300"></a>Types
+               declared in different compilation units can depend on each other,
+               circularly. A Java compiler must arrange to compile all such types at
+               the same time.
+            </p>
+         </div>
+         <div class="section" title="7.4.&nbsp;Package Declarations">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.4"></a>7.4.&nbsp;Package Declarations
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm"><a name="jls-7.4-100"></a>A <code class="literal">package</code> declaration appears
+               within a compilation unit to indicate the package to which the
+               compilation unit belongs.
+            </p>
+            <div class="section" title="7.4.1.&nbsp;Named Packages">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.4.1"></a>7.4.1.&nbsp;Named Packages
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.4.1-100"></a>A <span class="emphasis"><em>package declaration</em></span> in a
+                  compilation unit specifies the name (<a class="xref" href="jls-6.html#jls-6.2" title="6.2.&nbsp;Names and Identifiers">&sect;6.2</a>) of the
+                  package to which the compilation unit belongs.
+               </p>
+               <div id="jls-7.4.1-110" class="productionset"><a name="jls-7.4.1-110"></a>
+                    
+                    
+                  <div class="production"><a name="jls-PackageDeclaration"></a>
+                         
+                     <div class="lhs">PackageDeclaration:</div>
+                         
+                     <div class="rhs">
+                              {<a href="jls-7.html#jls-PackageModifier" title="PackageModifier">PackageModifier</a>}
+                              <code class="literal">package</code> 
+                              <a href="jls-3.html#jls-Identifier" title="Identifier">Identifier</a> {<code class="literal">.</code> <a href="jls-3.html#jls-Identifier" title="Identifier">Identifier</a>}
+                              <code class="literal">;</code>
+                            
+                     </div>
+                       
+                  </div>
+                  
+                    
+                  <div class="production"><a name="jls-PackageModifier"></a>
+                         
+                     <div class="lhs">PackageModifier:</div>
+                         
+                     <div class="rhs">
+                              <a href="jls-9.html#jls-Annotation" title="Annotation">Annotation</a>
+                            
+                     </div>
+                       
+                  </div>
+                  
+               </div>
+               <p class="norm-static"><a name="jls-7.4.1-120"></a>The
+                  package name mentioned in a <code class="literal">package</code> declaration must be the fully
+                  qualified name of the package (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>).
+               </p>
+               <p class="norm-static"><a name="jls-7.4.1-200"></a>The scope
+                  and shadowing of a package declaration is specified in
+                  <a class="xref" href="jls-6.html#jls-6.3" title="6.3.&nbsp;Scope of a Declaration">&sect;6.3</a> and <a class="xref" href="jls-6.html#jls-6.4" title="6.4.&nbsp;Shadowing and Obscuring">&sect;6.4</a>.
+               </p>
+               <p class="norm-error"><a name="jls-7.4.1-300"></a>The rules for
+                  annotation modifiers on a package declaration are specified in
+                  <a class="xref" href="jls-9.html#jls-9.7.4" title="9.7.4.&nbsp;Where Annotations May Appear">&sect;9.7.4</a> and <a class="xref" href="jls-9.html#jls-9.7.5" title="9.7.5.&nbsp;Multiple Annotations Of The Same Type">&sect;9.7.5</a>.
+               </p>
+               <p class="norm-static"><a name="jls-7.4.1-310"></a>At most
+                  one annotated <code class="literal">package</code> declaration is permitted for a given
+                  package.
+               </p>
+               <p class="note">The manner in which this restriction is enforced
+                  must, of necessity, vary from implementation to implementation. The
+                  following scheme is strongly recommended for file-system-based
+                  implementations: The sole annotated <code class="literal">package</code> declaration, if it
+                  exists, is placed in a source file
+                  called <code class="literal">package-info.java</code> in the directory
+                  containing the source files for the package. This file does not
+                  contain the source for a class called
+                  <code class="literal">package-info.java</code>; indeed it would be illegal for
+                  it to do so, as <code class="literal">package-info</code> is not a legal
+                  identifier. Typically <code class="literal">package-info.java</code> contains
+                  only a <code class="literal">package</code> declaration, preceded immediately by the annotations
+                  on the package. While the file could technically contain the source
+                  code for one or more classes with package access, it would be very bad
+                  form.
+               </p>
+               <p class="note">It is recommended
+                  that <code class="literal">package-info.java</code>, if it is present, take the
+                  place of <code class="literal">package.html</code>
+                  for <code class="literal">javadoc</code> and other similar documentation
+                  generation systems. If this file is present, the documentation
+                  generation tool should look for the package documentation comment
+                  immediately preceding the (possibly annotated) <code class="literal">package</code> declaration
+                  in <code class="literal">package-info.java</code>. In this
+                  way, <code class="literal">package-info.java</code> becomes the sole repository
+                  for package-level annotations and documentation. If, in future, it
+                  becomes desirable to add any other package-level information, this
+                  file should prove a convenient home for this information.
+               </p>
+            </div>
+            <div class="section" title="7.4.2.&nbsp;Unnamed Packages">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.4.2"></a>7.4.2.&nbsp;Unnamed Packages
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.4.2-100"></a>A
+                  compilation unit that has no <code class="literal">package</code> declaration is part of
+                  an <span class="emphasis"><em>unnamed package</em></span>.
+               </p>
+               <p class="norm"><a name="jls-7.4.2-110"></a>Unnamed packages are provided
+                  by the Java SE platform principally for convenience when developing small or
+                  temporary applications or when just beginning development.
+               </p>
+               <p class="norm"><a name="jls-7.4.2-120"></a>An unnamed package cannot
+                  have subpackages, since the syntax of a <code class="literal">package</code> declaration always
+                  includes a reference to a named top level package.
+               </p>
+               <p class="norm-static"><a name="jls-7.4.2-200"></a>An
+                  implementation of the Java SE platform must support at least one unnamed
+                  package. An implementation may support more than one unnamed package,
+                  but is not required to do so. Which compilation units are in each
+                  unnamed package is determined by the host system.
+               </p>
+               <div class="example"><a name="d5e10378"></a><p class="title"><b>Example&nbsp;7.4.2-1.&nbsp;</b></p>
+                  <div class="example-contents">
+                     <p class="note">The compilation unit:</p><pre class="programlisting">
+class FirstCall {
+    public static void main(String[] args) {
+        System.out.println("Mr. Watson, come here. "
+                           + "I want you.");
+    }
+}
+</pre><p class="note">defines a very simple compilation unit as part of an
+                        unnamed package.
+                     </p>
+                  </div>
+               </div><br class="example-break"><p class="note">In implementations of the Java SE platform that use a
+                  hierarchical file system for storing packages, one typical strategy is
+                  to associate an unnamed package with each directory; only one unnamed
+                  package is observable at a time, namely the one that is associated
+                  with the "current working directory". The precise meaning of "current
+                  working directory" depends on the host system.
+               </p>
+            </div>
+            <div class="section" title="7.4.3.&nbsp;Observability of a Package">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.4.3"></a>7.4.3.&nbsp;Observability of a Package
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.4.3-100"></a>A package
+                  is <span class="emphasis"><em>observable</em></span> if and only if either:
+               </p>
+               <div class="norm">
+                  <ul class="norm" type="disc">
+                     <li class="listitem">
+                        <p class="norm"><a name="jls-7.4.3-100-A"></a>A compilation unit
+                                 containing a declaration of the package is observable
+                                 (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>).
+                        </p>
+                     </li>
+                     <li class="listitem">
+                        <p class="norm"><a name="jls-7.4.3-100-B"></a>A subpackage of the
+                                 package is observable.
+                        </p>
+                     </li>
+                  </ul>
+               </div>
+               <p class="norm-static"><a name="jls-7.4.3-200"></a>The
+                  packages <code class="literal">java</code>, <code class="literal">java.lang</code>, and <code class="literal">java.io</code> are always
+                  observable.
+               </p>
+               <p class="note">One can conclude this from the rule above and from
+                  the rules of observable compilation units, as follows. The predefined
+                  package <code class="literal">java.lang</code> declares the class <code class="literal">Object</code>, so the compilation
+                  unit for <code class="literal">Object</code> is always observable
+                  (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>). Hence, the <code class="literal">java.lang</code> package is
+                  observable (<a class="xref" href="jls-7.html#jls-7.4.3" title="7.4.3.&nbsp;Observability of a Package">&sect;7.4.3</a>), and
+                  the <code class="literal">java</code> package also. Furthermore, since <code class="literal">Object</code>
+                  is observable, the array type <code class="literal">Object</code><code class="literal">[]</code> implicitly
+                  exists. Its superinterface <code class="literal">java.io.Serializable</code> (<a class="xref" href="jls-10.html#jls-10.1" title="10.1.&nbsp;Array Types">&sect;10.1</a>)
+                  also exists, hence the <code class="literal">java.io</code> package is observable.
+               </p>
+            </div>
+         </div>
+         <div class="section" title="7.5.&nbsp;Import Declarations">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.5"></a>7.5.&nbsp;Import Declarations
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-7.5-100"></a>An <span class="emphasis"><em>import declaration</em></span> allows
+               a named type or a <code class="literal">static</code> member to be referred to by a simple name
+               (<a class="xref" href="jls-6.html#jls-6.2" title="6.2.&nbsp;Names and Identifiers">&sect;6.2</a>) that consists of a single
+               identifier.
+            </p>
+            <p class="norm"><a name="jls-7.5-110"></a>Without the use of an
+               appropriate import declaration, the only way to refer to a type
+               declared in another package, or a <code class="literal">static</code> member of another type, is
+               to use a fully qualified name (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>).
+            </p>
+            <div id="jls-7.5-120" class="productionset"><a name="jls-7.5-120"></a>
+                 
+               <div class="production"><a name="jls-ImportDeclaration"></a>
+                      
+                  <div class="lhs">ImportDeclaration:</div>
+                      
+                  <div class="rhs">
+                           <a href="jls-7.html#jls-SingleTypeImportDeclaration" title="SingleTypeImportDeclaration">SingleTypeImportDeclaration</a> <br>
+                           <a href="jls-7.html#jls-TypeImportOnDemandDeclaration" title="TypeImportOnDemandDeclaration">TypeImportOnDemandDeclaration</a> <br>
+                           <a href="jls-7.html#jls-SingleStaticImportDeclaration" title="SingleStaticImportDeclaration">SingleStaticImportDeclaration</a> <br>
+                           <a href="jls-7.html#jls-StaticImportOnDemandDeclaration" title="StaticImportOnDemandDeclaration">StaticImportOnDemandDeclaration</a>
+                         
+                  </div>
+                    
+               </div>
+               
+            </div>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.5-120-A"></a>A single-type-import
+                              declaration (<a class="xref" href="jls-7.html#jls-7.5.1" title="7.5.1.&nbsp;Single-Type-Import Declarations">&sect;7.5.1</a>) imports a single named
+                              type, by mentioning its canonical name
+                              (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>).
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.5-120-B"></a>A type-import-on-demand
+                              declaration (<a class="xref" href="jls-7.html#jls-7.5.2" title="7.5.2.&nbsp;Type-Import-on-Demand Declarations">&sect;7.5.2</a>) imports all the
+                              accessible types (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>) of a named type or
+                              named package as needed, by mentioning the canonical name of a
+                              type or package.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.5-120-C"></a>A single-static-import
+                              declaration (<a class="xref" href="jls-7.html#jls-7.5.3" title="7.5.3.&nbsp;Single-Static-Import Declarations">&sect;7.5.3</a>) imports all accessible
+                              <code class="literal">static</code> members with a given name from a type, by giving its
+                              canonical name.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm"><a name="jls-7.5-120-D"></a>A static-import-on-demand
+                              declaration (<a class="xref" href="jls-7.html#jls-7.5.4" title="7.5.4.&nbsp;Static-Import-on-Demand Declarations">&sect;7.5.4</a>) imports all accessible
+                              <code class="literal">static</code> members of a named type as needed, by mentioning the
+                              canonical name of a type.
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p class="norm-static"><a name="jls-7.5-200"></a>The scope
+               and shadowing of a type or member imported by these declarations is
+               specified in <a class="xref" href="jls-6.html#jls-6.3" title="6.3.&nbsp;Scope of a Declaration">&sect;6.3</a> and
+               <a class="xref" href="jls-6.html#jls-6.4" title="6.4.&nbsp;Shadowing and Obscuring">&sect;6.4</a>.
+            </p>
+            <p class="note">An <code class="literal">import</code> declaration makes types or members
+               available by their simple names only within the compilation unit that
+               actually contains the <code class="literal">import</code> declaration. The scope of the type(s)
+               or member(s) introduced by an <code class="literal">import</code> declaration specifically does
+               not include other compilation units in the same package, other
+               <code class="literal">import</code> declarations in the current compilation unit, or a <code class="literal">package</code>
+               declaration in the current compilation unit (except for the
+               annotations of a <code class="literal">package</code> declaration).
+            </p>
+            <div class="section" title="7.5.1.&nbsp;Single-Type-Import Declarations">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.5.1"></a>7.5.1.&nbsp;Single-Type-Import Declarations
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.5.1-100"></a>A <span class="emphasis"><em>single-type-import
+                        declaration</em></span> imports a single type by giving its canonical
+                  name, making it available under a simple name in the class and
+                  interface declarations of the compilation unit in which the
+                  single-type-import declaration appears.
+               </p>
+               <div id="jls-7.5.1-110" class="productionset"><a name="jls-7.5.1-110"></a>
+                    
+                  <div class="production"><a name="jls-SingleTypeImportDeclaration"></a>
+                         
+                     <div class="lhs">SingleTypeImportDeclaration:</div>
+                         
+                     <div class="rhs">
+                              <code class="literal">import</code> <a href="jls-6.html#jls-TypeName" title="TypeName">TypeName</a> <code class="literal">;</code>
+                            
+                     </div>
+                       
+                  </div>
+                  
+               </div>
+               <p class="norm-static"><a name="jls-7.5.1-200"></a>The <span class="emphasis"><em>TypeName</em></span>
+                  must be the canonical name of a class type, interface type, enum type,
+                  or annotation type (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>).
+               </p>
+               <p class="norm-error"><a name="jls-7.5.1-210"></a>The name must
+                  be qualified (<a class="xref" href="jls-6.html#jls-6.5.5.2" title="6.5.5.2.&nbsp;Qualified Type Names">&sect;6.5.5.2</a>), or a compile-time error
+                  occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.1-220"></a>It is a
+                  compile-time error if the named type is not accessible
+                  (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>).
+               </p>
+               <p class="norm-error"><a name="jls-7.5.1-300"></a>If two
+                  single-type-import declarations in the same compilation unit attempt
+                  to import types with the same simple name, then a compile-time error
+                  occurs, unless the two types are the same type, in which case the
+                  duplicate declaration is ignored.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.1-310"></a>If the
+                  type imported by the single-type-import declaration is declared in the
+                  compilation unit that contains the <code class="literal">import</code> declaration, the <code class="literal">import</code>
+                  declaration is ignored.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.1-320"></a>If a
+                  single-type-import declaration imports a type whose simple name
+                  is <span class="type">n</span>, and the compilation unit also declares a top level
+                  type (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>) whose simple name is <span class="type">n</span>,
+                  a compile-time error occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.1-330"></a>If a
+                  compilation unit contains both a single-type-import declaration that
+                  imports a type whose simple name is <span class="type">n</span>, and a
+                  single-static-import declaration (<a class="xref" href="jls-7.html#jls-7.5.3" title="7.5.3.&nbsp;Single-Static-Import Declarations">&sect;7.5.3</a>) that
+                  imports a type whose simple name is <span class="type">n</span>, a compile-time
+                  error occurs.
+               </p>
+               <div class="example"><a name="d5e10485"></a><p class="title"><b>Example&nbsp;7.5.1-1.&nbsp;Single-Type-Import</b></p>
+                  <div class="example-contents"><pre class="programlisting">
+
+import java.util.Vector;
+
+</pre><p class="note">causes the simple name <code class="literal">Vector</code> to
+                        be available within the class and interface declarations in a
+                        compilation unit. Thus, the simple name <code class="literal">Vector</code>
+                        refers to the type declaration <code class="literal">Vector</code> in the
+                        package <code class="literal">java.util</code> in all places where it is not shadowed
+                        (<a class="xref" href="jls-6.html#jls-6.4.1" title="6.4.1.&nbsp;Shadowing">&sect;6.4.1</a>) or obscured
+                        (<a class="xref" href="jls-6.html#jls-6.4.2" title="6.4.2.&nbsp;Obscuring">&sect;6.4.2</a>) by a declaration of a field, parameter,
+                        local variable, or nested type declaration with the same name.
+                     </p>
+                     <p class="note">Note that the actual declaration
+                        of <code class="literal">java.util.Vector</code> is generic
+                        (<a class="xref" href="jls-8.html#jls-8.1.2" title="8.1.2.&nbsp;Generic Classes and Type Parameters">&sect;8.1.2</a>). Once imported, the
+                        name <code class="literal">Vector</code> can be used without qualification in a
+                        parameterized type such as <code class="literal">Vector&lt;String&gt;</code>, or
+                        as the raw type <code class="literal">Vector</code>. A related limitation of the
+                        <code class="literal">import</code> declaration is that a nested type declared inside a generic
+                        type declaration can be imported, but its outer type is always
+                        erased.
+                     </p>
+                  </div>
+               </div><br class="example-break"><div class="example"><a name="d5e10502"></a><p class="title"><b>Example&nbsp;7.5.1-2.&nbsp;Duplicate Type Declarations</b></p>
+                  <div class="example-contents">
+                     <p class="note">This program:</p><pre class="programlisting">
+
+import java.util.Vector;
+class Vector { Object[] vec; }
+
+</pre><p class="note">causes a compile-time error because of the duplicate
+                        declaration of <code class="literal">Vector</code>, as does:
+                     </p><pre class="programlisting">
+
+import java.util.Vector;
+import myVector.Vector;
+
+</pre><p class="note">where <code class="literal">myVector</code> is a package
+                        containing the compilation unit:
+                     </p><pre class="programlisting">
+
+package myVector;
+public class Vector { Object[] vec; }
+
+</pre></div>
+               </div><br class="example-break"><div class="example"><a name="d5e10512"></a><p class="title"><b>Example&nbsp;7.5.1-3.&nbsp;No Import of a Subpackage</b></p>
+                  <div class="example-contents">
+                     <p class="note">Note that an <code class="literal">import</code> statement cannot import a
+                        subpackage, only a type.
+                     </p>
+                     <p class="note">For example, it does not work to try to import
+                        <code class="literal">java.util</code> and then use the name <code class="literal">util.Random</code> to
+                        refer to the type <code class="literal">java.util.Random</code>:
+                     </p><pre class="programlisting">
+
+import java.util;
+class Test { util.Random generator; }
+  // incorrect: compile-time error
+
+</pre></div>
+               </div><br class="example-break"><div class="example"><a name="d5e10521"></a><p class="title"><b>Example&nbsp;7.5.1-4.&nbsp;Importing a Type Name that is also a Package Name</b></p>
+                  <div class="example-contents">
+                     <p class="note">Package names and type names are usually different
+                        under the naming conventions described in
+                        <a class="xref" href="jls-6.html#jls-6.1" title="6.1.&nbsp;Declarations">&sect;6.1</a>. Nevertheless, in a contrived example where
+                        there is an unconventionally-named package <code class="literal">Vector</code>,
+                        which declares a public class whose name
+                        is <code class="literal">Mosquito</code>:
+                     </p><pre class="programlisting">
+package Vector;
+public class Mosquito { int capacity; }
+</pre><p class="note">and then the compilation unit:</p><pre class="programlisting">
+package strange;
+import java.util.Vector;
+import Vector.Mosquito;
+class Test {
+    public static void main(String[] args) {
+        System.out.println(new Vector().getClass());
+        System.out.println(new Mosquito().getClass());
+    }
+}
+</pre><p class="note">the single-type-import declaration importing
+                        class <code class="literal">Vector</code> from package <code class="literal">java.util</code> does not
+                        prevent the package name <code class="literal">Vector</code> from appearing and
+                        being correctly recognized in subsequent <code class="literal">import</code> declarations. The
+                        example compiles and produces the output:
+                     </p><pre class="screen">
+class java.util.Vector
+class Vector.Mosquito
+</pre></div>
+               </div><br class="example-break"></div>
+            <div class="section" title="7.5.2.&nbsp;Type-Import-on-Demand Declarations">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.5.2"></a>7.5.2.&nbsp;Type-Import-on-Demand Declarations
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.5.2-100"></a>A <span class="emphasis"><em>type-import-on-demand
+                        declaration</em></span> allows all accessible types  of a named package or type to be imported as needed.
+               </p>
+               <div id="jls-7.5.2-110" class="productionset"><a name="jls-7.5.2-110"></a>
+                    
+                  <div class="production"><a name="jls-TypeImportOnDemandDeclaration"></a>
+                         
+                     <div class="lhs">TypeImportOnDemandDeclaration:</div>
+                         
+                     <div class="rhs">
+                              <code class="literal">import</code> <a href="jls-6.html#jls-PackageOrTypeName" title="PackageOrTypeName">PackageOrTypeName</a> <code class="literal">.</code> <code class="literal">*</code> <code class="literal">;</code>
+                            
+                     </div>
+                       
+                  </div>
+                  
+               </div>
+               <p class="norm-static"><a name="jls-7.5.2-200"></a>The <span class="emphasis"><em>PackageOrTypeName</em></span> must
+                  be the canonical name (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>) of a package, a
+                  class type, an interface type, an enum type, or an annotation
+                  type.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.2-210"></a>If the
+                  <span class="emphasis"><em>PackageOrTypeName</em></span> denotes a type
+                  (<a class="xref" href="jls-6.html#jls-6.5.4" title="6.5.4.&nbsp;Meaning of PackageOrTypeNames">&sect;6.5.4</a>), then the name must be qualified
+                  (<a class="xref" href="jls-6.html#jls-6.5.5.2" title="6.5.5.2.&nbsp;Qualified Type Names">&sect;6.5.5.2</a>), or a compile-time error
+                  occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.2-220"></a>It is a
+                  compile-time error if the named package or type is not accessible
+                  (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>).
+               </p>
+               <p class="norm-static"><a name="jls-7.5.2-230"></a>It is not
+                  a compile-time error to name either <code class="literal">java.lang</code> or the named package of
+                  the current compilation unit in a type-import-on-demand
+                  declaration. The type-import-on-demand declaration is ignored in such
+                  cases.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.2-300"></a>Two or
+                  more type-import-on-demand declarations in the same compilation unit
+                  may name the same type or package. All but one of these declarations
+                  are considered redundant; the effect is as if that type was imported
+                  only once.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.2-310"></a>If a
+                  compilation unit contains both a type-import-on-demand declaration and
+                  a static-import-on-demand declaration (<a class="xref" href="jls-7.html#jls-7.5.4" title="7.5.4.&nbsp;Static-Import-on-Demand Declarations">&sect;7.5.4</a>)
+                  that name the same type, the effect is as if the <code class="literal">static</code> member types
+                  of that type (<a class="xref" href="jls-8.html#jls-8.5" title="8.5.&nbsp;Member Type Declarations">&sect;8.5</a>, <a class="xref" href="jls-9.html#jls-9.5" title="9.5.&nbsp;Member Type Declarations">&sect;9.5</a>)
+                  were imported only once.
+               </p>
+               <div class="example"><a name="d5e10566"></a><p class="title"><b>Example&nbsp;7.5.2-1.&nbsp;Type-Import-on-Demand</b></p>
+                  <div class="example-contents"><pre class="programlisting">
+
+import java.util.*;
+
+</pre><p class="note">causes the simple names of all <code class="literal">public</code> types
+                        declared in the package <code class="literal">java.util</code> to be available within the class
+                        and interface declarations of the compilation unit. Thus, the simple
+                        name <code class="literal">Vector</code> refers to the
+                        type <code class="literal">Vector</code> in the package <code class="literal">java.util</code> in all places
+                        in the compilation unit where that type declaration is not shadowed
+                        (<a class="xref" href="jls-6.html#jls-6.4.1" title="6.4.1.&nbsp;Shadowing">&sect;6.4.1</a>) or obscured
+                        (<a class="xref" href="jls-6.html#jls-6.4.2" title="6.4.2.&nbsp;Obscuring">&sect;6.4.2</a>).
+                     </p>
+                     <p class="note">The declaration might be shadowed by a
+                        single-type-import declaration of a type whose simple name
+                        is <code class="literal">Vector</code>; by a type
+                        named <code class="literal">Vector</code> and declared in the package to which
+                        the compilation unit belongs; or any nested classes or
+                        interfaces.
+                     </p>
+                     <p class="note">The declaration might be obscured by a declaration
+                        of a field, parameter, or local variable
+                        named <code class="literal">Vector</code>.
+                     </p>
+                     <p class="note">(It would be unusual for any of these conditions to
+                        occur.)
+                     </p>
+                  </div>
+               </div><br class="example-break"></div>
+            <div class="section" title="7.5.3.&nbsp;Single-Static-Import Declarations">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.5.3"></a>7.5.3.&nbsp;Single-Static-Import Declarations
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.5.3-100"></a>A <span class="emphasis"><em>single-static-import
+                        declaration</em></span> imports all accessible <code class="literal">static</code> members with a
+                  given simple name from a type. This makes these <code class="literal">static</code> members
+                  available under their simple name in the class and interface
+                  declarations of the compilation unit in which the single-static-import
+                  declaration appears.
+               </p>
+               <div id="jls-7.5.3-110" class="productionset"><a name="jls-7.5.3-110"></a>
+                    
+                  <div class="production"><a name="jls-SingleStaticImportDeclaration"></a>
+                         
+                     <div class="lhs">SingleStaticImportDeclaration:</div>
+                         
+                     <div class="rhs">
+                              <code class="literal">import</code> <code class="literal">static</code> <a href="jls-6.html#jls-TypeName" title="TypeName">TypeName</a> <code class="literal">.</code> <a href="jls-3.html#jls-Identifier" title="Identifier">Identifier</a> <code class="literal">;</code>
+                            
+                     </div>
+                       
+                  </div>
+                  
+               </div>
+               <p class="norm-static"><a name="jls-7.5.3-200"></a>The <span class="emphasis"><em>TypeName</em></span> must be the
+                  canonical name (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>) of a class type, interface
+                  type, enum type, or annotation type.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.3-210"></a>The name must
+                  be qualified (<a class="xref" href="jls-6.html#jls-6.5.5.2" title="6.5.5.2.&nbsp;Qualified Type Names">&sect;6.5.5.2</a>), or a compile-time error
+                  occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.3-220"></a>It is a
+                  compile-time error if the named type is not accessible
+                  (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>).
+               </p>
+               <p class="norm-error"><a name="jls-7.5.3-230"></a>The
+                  <span class="emphasis"><em>Identifier</em></span> must name at least one <code class="literal">static</code> member of the named
+                  type. It is a compile-time error if there is
+                  no <code class="literal">static</code> member of that name, or if all of the
+                  named members are not accessible.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.3-300"></a>It is
+                  permissible for one single-static-import declaration to import several
+                  fields or types with the same name, or several methods with the same
+                  name and signature.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.3-310"></a>If a
+                  single-static-import declaration imports a type whose simple name
+                  is <span class="type">n</span>, and the compilation unit also declares a top level
+                  type (<a class="xref" href="jls-7.html#jls-7.6" title="7.6.&nbsp;Top Level Type Declarations">&sect;7.6</a>) whose simple name is <span class="type">n</span>,
+                  a compile-time error occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.3-320"></a>If a
+                  compilation unit contains both a single-static-import declaration that
+                  imports a type whose simple name is <span class="type">n</span>, and a
+                  single-type-import declaration (<a class="xref" href="jls-7.html#jls-7.5.1" title="7.5.1.&nbsp;Single-Type-Import Declarations">&sect;7.5.1</a>) that
+                  imports a type whose simple name is <span class="type">n</span>, a compile-time
+                  error occurs.
+               </p>
+            </div>
+            <div class="section" title="7.5.4.&nbsp;Static-Import-on-Demand Declarations">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="jls-7.5.4"></a>7.5.4.&nbsp;Static-Import-on-Demand Declarations
+                        </h3>
+                     </div>
+                  </div>
+               </div>
+               <p class="norm-static"><a name="jls-7.5.4-100"></a>A <span class="emphasis"><em>static-import-on-demand
+                        declaration</em></span> allows all accessible <code class="literal">static</code>
+                  members  of a named type to be imported as
+                  needed.
+               </p>
+               <div id="jls-7.5.4-110" class="productionset"><a name="jls-7.5.4-110"></a>
+                    
+                  <div class="production"><a name="jls-StaticImportOnDemandDeclaration"></a>
+                         
+                     <div class="lhs">StaticImportOnDemandDeclaration:</div>
+                         
+                     <div class="rhs">
+                              <code class="literal">import</code> <code class="literal">static</code> <a href="jls-6.html#jls-TypeName" title="TypeName">TypeName</a> <code class="literal">.</code> <code class="literal">*</code> <code class="literal">;</code>
+                            
+                     </div>
+                       
+                  </div>
+                  
+               </div>
+               <p class="norm-static"><a name="jls-7.5.4-200"></a>The <span class="emphasis"><em>TypeName</em></span>
+                  must be the canonical name (<a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>) of a class
+                  type, interface type, enum type, or annotation type.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.4-210"></a>The name must
+                  be qualified (<a class="xref" href="jls-6.html#jls-6.5.5.2" title="6.5.5.2.&nbsp;Qualified Type Names">&sect;6.5.5.2</a>), or a compile-time error
+                  occurs.
+               </p>
+               <p class="norm-error"><a name="jls-7.5.4-220"></a>It is a
+                  compile-time error if the named type is not accessible
+                  (<a class="xref" href="jls-6.html#jls-6.6" title="6.6.&nbsp;Access Control">&sect;6.6</a>).
+               </p>
+               <p class="norm-static"><a name="jls-7.5.4-300"></a>Two or more
+                  static-import-on-demand declarations in the same compilation unit may
+                  name the same type; the effect is as if there was
+                  exactly one such declaration.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.4-310"></a>Two or
+                  more static-import-on-demand declarations in the same compilation unit
+                  may name the same member; the effect is as if the member was imported
+                  exactly once.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.4-320"></a>It is
+                  permissible for one static-import-on-demand declaration to import
+                  several fields or types with the same name, or several methods with
+                  the same name and signature.
+               </p>
+               <p class="norm-static"><a name="jls-7.5.4-330"></a>If a
+                  compilation unit contains both a static-import-on-demand declaration
+                  and a type-import-on-demand declaration (<a class="xref" href="jls-7.html#jls-7.5.2" title="7.5.2.&nbsp;Type-Import-on-Demand Declarations">&sect;7.5.2</a>)
+                  that name the same type, the effect is as if the <code class="literal">static</code> member types
+                  of that type (<a class="xref" href="jls-8.html#jls-8.5" title="8.5.&nbsp;Member Type Declarations">&sect;8.5</a>, <a class="xref" href="jls-9.html#jls-9.5" title="9.5.&nbsp;Member Type Declarations">&sect;9.5</a>)
+                  were imported only once.
+               </p>
+            </div>
+         </div>
+         <div class="section" title="7.6.&nbsp;Top Level Type Declarations">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="jls-7.6"></a>7.6.&nbsp;Top Level Type Declarations
+                     </h2>
+                  </div>
+               </div>
+            </div>
+            <p class="norm-static"><a name="jls-7.6-100"></a>
+               A <span class="emphasis"><em>top level type declaration</em></span> declares a top level
+               class type (<a class="xref" href="jls-8.html" title="Chapter&nbsp;8.&nbsp;Classes">&sect;8 (<i>Classes</i>)</a>) or a top level interface type
+               (<a class="xref" href="jls-9.html" title="Chapter&nbsp;9.&nbsp;Interfaces">&sect;9 (<i>Interfaces</i>)</a>).
+            </p>
+            <div id="jls-7.6-110" class="productionset"><a name="jls-7.6-110"></a>
+                 
+               <div class="production"><a name="jls-TypeDeclaration"></a>
+                      
+                  <div class="lhs">TypeDeclaration:</div>
+                      
+                  <div class="rhs">
+                           <a href="jls-8.html#jls-ClassDeclaration" title="ClassDeclaration">ClassDeclaration</a> <br>
+                           <a href="jls-9.html#jls-InterfaceDeclaration" title="InterfaceDeclaration">InterfaceDeclaration</a> <br>
+                           <code class="literal">;</code>
+                         
+                  </div>
+                    
+               </div>
+               
+            </div>
+            <p class="note">Extra "<code class="literal">;</code>" tokens appearing at the level of type
+               declarations in a compilation unit have no effect on the meaning of
+               the compilation unit. Stray semicolons are permitted in the Java programming language
+               solely as a concession to C++ programmers who are used to placing
+               "<code class="literal">;</code>" after a class declaration. They should not be used in new
+               Java code.
+            </p>
+            <p class="norm"><a name="jls-7.6-120"></a>In the absence of an access modifier, a
+               top level type has package access: it is accessible only within
+               compilation units of the package in which it is declared
+               (<a class="xref" href="jls-6.html#jls-6.6.1" title="6.6.1.&nbsp;Determining Accessibility">&sect;6.6.1</a>). A type may be declared <code class="literal">public</code> to
+               grant access to the type from code in other packages.
+            </p>
+            <p class="norm-error"><a name="jls-7.6-200"></a>It is a
+               compile-time error if a top level type declaration contains any one of
+               the following access modifiers: <code class="literal">protected</code>, <code class="literal">private</code>, or
+               <code class="literal">static</code>.
+            </p>
+            <p class="norm-error"><a name="jls-7.6-300"></a>It is a
+               compile-time error if the name of a top level type appears as the name
+               of any other top level class or interface type declared in the same
+               package.
+            </p>
+            <p class="norm-static"><a name="jls-7.6-400"></a>The scope
+               and shadowing of a top level type is specified in
+               <a class="xref" href="jls-6.html#jls-6.3" title="6.3.&nbsp;Scope of a Declaration">&sect;6.3</a> and <a class="xref" href="jls-6.html#jls-6.4" title="6.4.&nbsp;Shadowing and Obscuring">&sect;6.4</a>.
+            </p>
+            <p class="norm-static"><a name="jls-7.6-410"></a>The fully
+               qualified name of a top level type is specified in
+               <a class="xref" href="jls-6.html#jls-6.7" title="6.7.&nbsp;Fully Qualified Names and Canonical Names">&sect;6.7</a>.
+            </p>
+            <div class="example"><a name="d5e10678"></a><p class="title"><b>Example&nbsp;7.6-1.&nbsp;Conflicting Top Level Type Declarations</b></p>
+               <div class="example-contents"><pre class="programlisting">
+package test;
+import java.util.Vector;
+class Point {
+    int x, y;
+}
+interface Point {  // compile-time error #1
+    int getR();
+    int getTheta();
+}
+class Vector { Point[] pts; }  // compile-time error #2
+</pre><p class="note">Here, the first compile-time error is caused by the
+                     duplicate declaration of the name <code class="literal">Point</code> as both a
+                     class and an interface in the same package. A second compile-time
+                     error is the attempt to declare the name
+                     <code class="literal">Vector</code> both by a class type declaration and by a
+                     single-type-import declaration.
+                  </p>
+                  <p class="note">Note, however, that it is not an error for the name
+                     of a class to also name a type that otherwise might be imported by a
+                     type-import-on-demand declaration (<a class="xref" href="jls-7.html#jls-7.5.2" title="7.5.2.&nbsp;Type-Import-on-Demand Declarations">&sect;7.5.2</a>) in the
+                     compilation unit (<a class="xref" href="jls-7.html#jls-7.3" title="7.3.&nbsp;Compilation Units">&sect;7.3</a>) containing the class
+                     declaration. Thus, in this program:
+                  </p><pre class="programlisting">
+package test;
+import java.util.*;
+class Vector {}  // not a compile-time error
+</pre><p class="note">the declaration of the
+                     class <code class="literal">Vector</code> is permitted even though there is also
+                     a class <code class="literal">java.util.Vector</code>. Within this compilation
+                     unit, the simple name <code class="literal">Vector</code> refers to the
+                     class <code class="literal">test.Vector</code>, not
+                     to <code class="literal">java.util.Vector</code> (which can still be referred to
+                     by code within the compilation unit, but only by its fully qualified
+                     name).
+                  </p>
+               </div>
+            </div><br class="example-break"><div class="example"><a name="d5e10694"></a><p class="title"><b>Example&nbsp;7.6-2.&nbsp;Scope of Top Level Types</b></p>
+               <div class="example-contents"><pre class="programlisting">
+package points;
+class Point {
+    int x, y;           // coordinates
+    PointColor color;   // color of this point
+    Point next;         // next point with this color
+    static int nPoints;
+}
+class PointColor {
+    Point first;        // first point with this color
+    PointColor(int color) { this.color = color; }
+    private int color;  // color components
+}
+</pre><p class="note">This program defines two classes that use each other
+                     in the declarations of their class members. Because the class
+                     types <code class="literal">Point</code> and <code class="literal">PointColor</code> have
+                     all the type declarations in package <code class="literal">points</code>,
+                     including all those in the current compilation unit, as their scope,
+                     this program compiles correctly. That is, forward reference is not a
+                     problem.
+                  </p>
+               </div>
+            </div><br class="example-break"><div class="example"><a name="d5e10701"></a><p class="title"><b>Example&nbsp;7.6-3.&nbsp;Fully Qualified Names</b></p>
+               <div class="example-contents"><pre class="programlisting">
+
+class Point { int x, y; }
+
+</pre><p class="note">In this code, the class <code class="literal">Point</code> is
+                     declared in a compilation unit with no <code class="literal">package</code> statement, and
+                     thus <code class="literal">Point</code> is its fully qualified name, whereas in
+                     the code:
+                  </p><pre class="programlisting">
+
+package vista;
+class Point { int x, y; }
+
+</pre><p class="note">the fully qualified name of the
+                     class <code class="literal">Point</code> is <code class="literal">vista.Point</code>. (The
+                     package name <code class="literal">vista</code> is suitable for local or
+                     personal use; if the package were intended to be widely distributed,
+                     it would be better to give it a unique package name
+                     (<a class="xref" href="jls-6.html#jls-6.1" title="6.1.&nbsp;Declarations">&sect;6.1</a>).)
+                  </p>
+               </div>
+            </div><br class="example-break"><p class="norm-static"><a name="jls-7.6-500"></a>An
+               implementation of the Java SE platform must keep track of types within
+               packages by their binary names (<a class="xref" href="jls-13.html#jls-13.1" title="13.1.&nbsp;The Form of a Binary">&sect;13.1</a>). Multiple
+               ways of naming a type must be expanded to binary names to make sure
+               that such names are understood as referring to the same type.
+            </p>
+            <div class="informalexample">
+               <p class="note">For example, if a compilation unit contains the
+                  single-type-import declaration (<a class="xref" href="jls-7.html#jls-7.5.1" title="7.5.1.&nbsp;Single-Type-Import Declarations">&sect;7.5.1</a>):
+               </p><pre class="programlisting">
+
+import java.util.Vector;
+
+</pre><p class="note">then within that compilation unit, the simple
+                  name <code class="literal">Vector</code> and the fully qualified
+                  name <code class="literal">java.util.Vector</code> refer to the same
+                  type.
+               </p>
+            </div>
+            <p class="norm-error"><a name="jls-7.6-510"></a>If and only
+               if packages are stored in a file system (<a class="xref" href="jls-7.html#jls-7.2" title="7.2.&nbsp;Host Support for Packages">&sect;7.2</a>),
+               the host system may choose to enforce the restriction that it is a
+               compile-time error if a type is not found in a file under a name
+               composed of the type name plus an extension (such
+               as <code class="literal">.java</code> or <code class="literal">.jav</code>) if either of
+               the following is true:
+            </p>
+            <div class="norm">
+               <ul class="norm" type="disc">
+                  <li class="listitem">
+                     <p class="norm-error"><a name="jls-7.6-410-A"></a>The
+                              type is referred to by code in other compilation units of the
+                              package in which the type is declared.
+                     </p>
+                  </li>
+                  <li class="listitem">
+                     <p class="norm-error"><a name="jls-7.6-410-B"></a>The
+                              type is declared <code class="literal">public</code> (and therefore is potentially
+                              accessible from code in other packages).
+                     </p>
+                  </li>
+               </ul>
+            </div>
+            <p class="note">This restriction implies that there must be at most
+               one such type per compilation unit. This restriction makes it easy for
+               a Java compiler  to find a
+               named class within a package. In practice, many programmers choose to
+               put each class or interface type in its own compilation unit, whether
+               or not it is <code class="literal">public</code> or is referred to by code in other compilation
+               units.
+            </p>
+            <div class="informalexample">
+               <p class="note">For example, the source code for a <code class="literal">public</code>
+                  type <code class="literal">wet.sprocket.Toad</code> would be found in a
+                  file <code class="literal">Toad.java</code> in the
+                  directory <code class="literal">wet/sprocket</code>, and the corresponding
+                  object code would be found in the file <code class="literal">Toad.class</code>
+                  in the same directory.
+               </p>
+            </div>
+         </div>
+      </div>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="jls-6.html">Prev</a>&nbsp;
+               </td>
+               <td width="20%" align="center">&nbsp;</td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="jls-8.html">Next</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Names&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Classes</td>
+            </tr>
+         </table>
+      </div>
+      <div xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:rx="http://www.renderx.com/XSL/Extensions" class="navfooter">
+         <hr><a href="jls-0-front.html">
+                Legal Notice
+              </a></div>
+   </body>
+</html>
