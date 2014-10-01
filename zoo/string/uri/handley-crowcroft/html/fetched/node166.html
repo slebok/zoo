@@ -1,0 +1,210 @@
+<!DOCTYPE HTML PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!Converted with LaTeX2HTML 95.1 (Fri Jan 20 1995) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds >
+<HEAD>
+<TITLE> Uniform Resource Locator (URL) Grammar</TITLE>
+</HEAD>
+<BODY>
+<meta name="description" value=" Uniform Resource Locator (URL) Grammar">
+<meta name="keywords" value="book">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<P>
+ <BR> <HR><A NAME=tex2html2463 HREF="node167.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/next_motif.gif"></A>   <A NAME=tex2html2461 HREF="node165.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/up_motif.gif"></A>   <A NAME=tex2html2457 HREF="node165.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/previous_motif.gif"></A>   <A NAME=tex2html2465 HREF="node6.html"><IMG ALIGN=BOTTOM ALT="contents" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/contents_motif.gif"></A>      <BR>
+<B> Next:</B> <A NAME=tex2html2464 HREF="node167.html"> Hypertext Transfer Protocol </A>
+<B>Up:</B> <A NAME=tex2html2462 HREF="node165.html"> Uniform Resource Locators: </A>
+<B> Previous:</B> <A NAME=tex2html2458 HREF="node165.html"> Uniform Resource Locators: </A>
+<BR> <HR> <P>
+<H1><A NAME=SECTION001610000000000000000> Uniform Resource Locator (URL) Grammar</A></H1>
+<P>
+BNF syntax
+<P>
+   This is a BNF-like description of the Uniform Resource Locator
+   syntax. A vertical  line &quot;|&quot;  indicates alternatives, and
+   [brackets]  indicate optional parts.  Spaces are represented by
+   the word &quot;space&quot;, and the vertical line character by &quot;vline&quot;.
+   Single letters stand for single letters. All words of more than one
+   letter below are entities described somewhere in this description.
+<P>
+   The &quot;generic&quot; production gives a higher level parsing of the same
+   URLs as the other productions.  The &quot;national&quot; and &quot;punctuation&quot;
+   characters fo not appear in any productions and therefore may not
+   appear in URLs.
+<P>
+   The &quot;afsaddress&quot; is left in as historical note, but is not a url
+   production
+<P>
+<PRE>   
+  fragmentaddress         uri [ # fragmentid ]
+                         
+  uri                     url
+                         
+  url                    generic | httpaddress | ftpaddress |
+                         newsaddress | prosperoaddress | telnetaddress
+                          | gopheraddress | waisaddress
+                         
+  generic                 scheme :  path [ ? search ]
+                         
+  scheme                  ialpha
+                         
+  httpaddress             h t t p :   / / hostport [  / path ] [ ?
+                         search ]
+                         
+  ftpaddress              f t p : / / login / path
+                         
+  afsaddress              a f s : / / cellname / path
+                         
+  newsaddress             n e w s : groupart
+                         
+  waisaddress             waisindex | waisdoc
+                         
+  waisindex               w a i s : / / hostport / database [ ? search
+                         ]
+                         
+  waisdoc                 w a i s : / / hostport / database / wtype /
+                         digits / path
+                         
+  groupart                * | group | article
+                         
+  group                   ialpha [ . group ]
+                         
+  article                 xalphas @ host
+                         
+  database                xalphas
+                         
+  wtype                   xalphas
+                         
+  prosperoaddress         prosperolink
+                         
+  prosperolink            p r o s p e r o : / / hostport / hsoname [ \%
+                          0 0 version [ attributes ] ]
+                         
+  hsoname                 path
+                         
+  version                 digits
+                         
+  attributes              attribute [ attributes ]
+                         
+  attribute               alphanums
+                         
+  telnetaddress           t e l n e t : / / login
+                         
+  gopheraddress           g o p h e r : / / hostport [/ gtype  [
+                         selector ] ] [ ? search ]
+                         
+  login                   [ user [ : password ] @ ] hostport
+                         
+  hostport                host [ : port ]
+                         
+  host                    hostname | hostnumber
+                         
+  cellname                hostname
+                         
+  hostname                ialpha [  .  hostname ]
+                         
+  hostnumber              digits . digits . digits . digits
+
+  port                    digits
+                         
+  selector                path
+                         
+  path                    void |  xpalphas  [  / path ]
+                         
+  search                  xalphas [ + search ]
+                         
+  user                    xalphas
+                         
+  password                xalphas
+                         
+  fragmentid              xalphas
+                         
+  gtype                   xalpha
+                         
+  xalpha                  alpha | digit | safe | extra | escape
+                         
+  xalphas                 xalpha [ xalphas ]
+                         
+  xpalpha                 xalpha | +
+                         
+  xpalphas                xpalpha [ xpalphas ]
+                         
+  ialpha                  alpha [ xalphas ]
+                         
+  alpha                   a | b | c | d | e | f | g | h | i | j | k |
+                         l | m | n | o  | p | q | r | s | t | u | v |
+                         w | x | y | z | A | B | C  | D | E | F | G |
+                         H | I | J | K | L | M | N | O | P |  Q | R |
+                         S | T | U | V | W | X | Y | Z
+                         
+  digit                   0 |1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+                         
+  safe                    $ | - | \_ | @ | . | &amp;
+                         
+  extra                   ! | * | &quot; |  ' | ( | ) | : | ; | , | space
+                         
+  escape                  \% hex hex
+                         
+  hex                     digit | a | b | c | d | e | f | A | B | C |
+                         D | E | F
+                         
+  national                { | } | vline | [ | ] | \ | ^ | ~
+                         
+  punctuation             &lt; | &gt;
+                         
+  digits                  digit [ digits ]
+                         
+  alphanum                alpha | digit
+                         
+  alphanums               alphanum [ alphanums ]
+                         
+  void
+</PRE>
+<P>
+<UL><LI>
+Wrappers for URIs in plain text
+<P>
+   URIs, including URLs, will ideally be transmitted though protocols
+   which accept them and data formats which define a context for them.
+    However, in practice nowadays there are many occasions when URLs
+   are included in plain ASCII non-marked-up text such as electronic
+   mail and usenet news messages.
+<P>
+   In this case, it is convenient to have a separate wrapper syntax to
+   define delimiters which will enable the human or automated reader
+   to recognize that the URI is a URI.
+<P>
+   The recommendation is that the angle brackets (less than and
+   greater than signs) of the ASCII set be used for this purpose.
+<P>
+   These wrappers do not form part of the URL, are not mandatory, and
+   should not be used in contexts (such as SGML parameters, HTTP
+   requests, etc) in which delimiters are already specified.
+<P>
+    Example:
+<P>
+<PRE>    
+                Yes, Jim, I found it under \tt{&lt;ftp://info.cern.ch/pub&gt;} bu
+t
+                you can probably pick it up from \tt{&lt;ftp://ds.internic.net/rfc&gt;}.
+</PRE>
+<P>
+<LI>
+Security considerations
+<P>
+   The URL scheme does not in itself pose a security threat. Users
+   should beware that there is no general guarantee that a URL which
+   at one time points to a given object continues to do so, and does
+   not even at some later time point to a different object due to the
+   movement of objects on servers.
+<P>
+   The use of URLs containing passwords is clearly unwise.
+</UL><BR> <HR><A NAME=tex2html2463 HREF="node167.html"><IMG ALIGN=BOTTOM ALT="next" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/next_motif.gif"></A>   <A NAME=tex2html2461 HREF="node165.html"><IMG ALIGN=BOTTOM ALT="up" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/up_motif.gif"></A>   <A NAME=tex2html2457 HREF="node165.html"><IMG ALIGN=BOTTOM ALT="previous" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/previous_motif.gif"></A>   <A NAME=tex2html2465 HREF="node6.html"><IMG ALIGN=BOTTOM ALT="contents" SRC="http://www.cs.ucl.ac.uk/latex2html/icons/contents_motif.gif"></A>      <BR>
+<B> Next:</B> <A NAME=tex2html2464 HREF="node167.html"> Hypertext Transfer Protocol </A>
+<B>Up:</B> <A NAME=tex2html2462 HREF="node165.html"> Uniform Resource Locators: </A>
+<B> Previous:</B> <A NAME=tex2html2458 HREF="node165.html"> Uniform Resource Locators: </A>
+<BR> <HR> <P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Jon Crowcroft <BR>
+Wed May 10 11:46:29 BST 1995</I>
+</ADDRESS>
+</BODY>
