@@ -1,0 +1,32 @@
+address         =       mailbox / group
+
+mailbox         =       name-addr / addr-spec
+
+name-addr       =       [display-name] angle-addr
+
+angle-addr      =       [CFWS] "<" addr-spec ">" [CFWS] / obs-angle-addr
+
+group           =       display-name ":" [mailbox-list / CFWS] ";"
+                        [CFWS]
+
+display-name    =       phrase
+
+mailbox-list    =       (mailbox *("," mailbox)) / obs-mbox-list
+
+address-list    =       (address *("," address)) / obs-addr-list
+
+addr-spec       =       local-part "@" domain
+
+local-part      =       dot-atom / quoted-string / obs-local-part
+
+domain          =       dot-atom / domain-literal / obs-domain
+
+domain-literal  =       [CFWS] "[" *([FWS] dcontent) [FWS] "]" [CFWS]
+
+dcontent        =       dtext / quoted-pair
+
+dtext           =       NO-WS-CTL /     ; Non white space controls
+
+                        %d33-90 /       ; The rest of the US-ASCII
+                        %d94-126        ;  characters not including "[",
+                                        ;  "]", or "\"
