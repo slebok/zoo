@@ -1,0 +1,40 @@
+module languages/pico/syntax/Pico
+
+imports languages/pico/syntax/Identifiers 
+imports languages/pico/syntax/Types
+imports basic/NatCon 
+imports basic/StrCon 
+imports basic/Whitespace
+
+hiddens
+  context-free start-symbols 
+    PROGRAM
+
+exports
+
+  sorts PROGRAM DECLS ID-TYPE STATEMENT EXP
+
+  context-free syntax
+    
+    "begin" DECLS {STATEMENT";" }* "end"                          -> PROGRAM
+    "declare" {ID-TYPE "," }*";"                                  -> DECLS 
+    PICO-ID ":" TYPE                                              -> ID-TYPE
+
+  context-free syntax
+    PICO-ID ":=" EXP                                              -> STATEMENT
+    "if" EXP "then" {STATEMENT";" }* "else" {STATEMENT";" }* "fi" -> STATEMENT
+    "while" EXP "do" {STATEMENT ";" }* "od"                       -> STATEMENT
+ 
+  context-free syntax 
+    PICO-ID       -> EXP
+    NatCon        -> EXP
+    StrCon        -> EXP
+    EXP "+" EXP   -> EXP {left}
+    EXP "-" EXP   -> EXP {left}
+    EXP "||" EXP  -> EXP {left}
+    "(" EXP ")"   -> EXP {bracket}
+
+  context-free priorities
+    EXP "||" EXP -> EXP >
+    EXP "-" EXP -> EXP >
+    EXP "+" EXP -> EXP
