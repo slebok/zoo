@@ -1,0 +1,528 @@
+#ifndef CLASSIFICATION_MODULE_IDL
+#define CLASSIFICATION_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "MiningCoreModule.idl"
+#include "CoreModule.idl"
+#include "SupervisedModule.idl"
+
+module ClassificationModule
+{
+   typedef sequence<MiningCoreModule::MiningDataModule::Category> CategorySet;
+   interface ApplyTargetValueItemClass;
+   interface ApplyTargetValueItem;
+   typedef sequence<ApplyTargetValueItem> ApplyTargetValueItemSet;
+   interface ClassificationAttributeUsageClass;
+   interface ClassificationAttributeUsage;
+   typedef sequence<ClassificationAttributeUsage> ClassificationAttributeUsageSet;
+   interface ClassificationFunctionSettingsClass;
+   interface ClassificationFunctionSettings;
+   typedef sequence<ClassificationFunctionSettings> ClassificationFunctionSettingsSet;
+   interface ClassificationTestResultClass;
+   interface ClassificationTestResult;
+   typedef sequence<ClassificationTestResult> ClassificationTestResultSet;
+   interface ClassificationTestTaskClass;
+   interface ClassificationTestTask;
+   typedef sequence<ClassificationTestTask> ClassificationTestTaskSet;
+   interface PriorProbabilitiesClass;
+   interface PriorProbabilities;
+   typedef sequence<PriorProbabilities> PriorProbabilitiesSet;
+   interface PriorProbabilitiesEntryClass;
+   interface PriorProbabilitiesEntry;
+   typedef sequence<PriorProbabilitiesEntry> PriorProbabilitiesEntrySet;
+   interface ClassificationModulePackage;
+
+   interface ApplyTargetValueItemClass : MiningCoreModule::MiningTaskModule::ApplyOutputItemClass
+   {
+      readonly attribute ApplyTargetValueItemSet all_of_type_apply_target_value_item;
+      readonly attribute ApplyTargetValueItemSet all_of_class_apply_target_value_item;
+      ApplyTargetValueItem create_apply_target_value_item (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in string display_name,
+         in MiningCoreModule::MiningDataModule::AttributeType attribute_type)
+         raises (Reflective::MofError);
+   };
+
+   interface ApplyTargetValueItem : ApplyTargetValueItemClass, MiningCoreModule::MiningTaskModule::ApplyOutputItem
+   {
+      MiningCoreModule::MiningDataModule::Category target_value ()
+         raises (Reflective::MofError);
+      void set_target_value (in MiningCoreModule::MiningDataModule::Category new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ApplyTargetValueItem
+
+   interface ClassificationAttributeUsageClass : MiningCoreModule::MiningDataModule::AttributeUsageClass
+   {
+      readonly attribute ClassificationAttributeUsageSet all_of_type_classification_attribute_usage;
+      readonly attribute ClassificationAttributeUsageSet all_of_class_classification_attribute_usage;
+      ClassificationAttributeUsage create_classification_attribute_usage (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in MiningCoreModule::MiningDataModule::UsageOption usage,
+         in double weight,
+         in boolean suppress_discretization,
+         in boolean suppress_normalization)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassificationAttributeUsage : ClassificationAttributeUsageClass, MiningCoreModule::MiningDataModule::AttributeUsage
+   {
+      CategorySet positive_category ()
+         raises (Reflective::MofError);
+      void set_positive_category (in CategorySet new_value)
+         raises (Reflective::MofError);
+      void add_positive_category (in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::MofError);
+      void modify_positive_category (
+         in MiningCoreModule::MiningDataModule::Category old_element,
+         in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_positive_category (in MiningCoreModule::MiningDataModule::Category old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      PriorProbabilities priors ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_priors (in PriorProbabilities new_value)
+         raises (Reflective::MofError);
+      void unset_priors ()
+         raises (Reflective::MofError);
+   }; // end of interface ClassificationAttributeUsage
+
+   interface ClassificationFunctionSettingsClass : SupervisedModule::SupervisedFunctionSettingsClass
+   {
+      readonly attribute ClassificationFunctionSettingsSet all_of_type_classification_function_settings;
+      readonly attribute ClassificationFunctionSettingsSet all_of_class_classification_function_settings;
+      ClassificationFunctionSettings create_classification_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassificationFunctionSettings : ClassificationFunctionSettingsClass, SupervisedModule::SupervisedFunctionSettings
+   {
+      MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_cost_matrix (in MiningCoreModule::MiningDataModule::CategoryMatrix new_value)
+         raises (Reflective::MofError);
+      void unset_cost_matrix ()
+         raises (Reflective::MofError);
+   }; // end of interface ClassificationFunctionSettings
+
+   interface ClassificationTestResultClass : SupervisedModule::MiningTestResultClass
+   {
+      readonly attribute ClassificationTestResultSet all_of_type_classification_test_result;
+      readonly attribute ClassificationTestResultSet all_of_class_classification_test_result;
+      ClassificationTestResult create_classification_test_result (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long number_of_test_records,
+         in double accuracy)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassificationTestResult : ClassificationTestResultClass, SupervisedModule::MiningTestResult
+   {
+      MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_confusion_matrix (in MiningCoreModule::MiningDataModule::CategoryMatrix new_value)
+         raises (Reflective::MofError);
+      void unset_confusion_matrix ()
+         raises (Reflective::MofError);
+      double accuracy ()
+         raises (Reflective::MofError);
+      void set_accuracy (in double new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ClassificationTestResult
+
+   interface ClassificationTestTaskClass : SupervisedModule::MiningTestTaskClass
+   {
+      readonly attribute ClassificationTestTaskSet all_of_type_classification_test_task;
+      readonly attribute ClassificationTestTaskSet all_of_class_classification_test_task;
+      ClassificationTestTask create_classification_test_task (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean compute_lift)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassificationTestTask : ClassificationTestTaskClass, SupervisedModule::MiningTestTask
+   {
+      ClassificationTestResult test_result ()
+         raises (Reflective::MofError);
+      void set_test_result (in ClassificationTestResult new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ClassificationTestTask
+
+   interface PriorProbabilitiesClass : CoreModule::ModelElementClass
+   {
+      readonly attribute PriorProbabilitiesSet all_of_type_prior_probabilities;
+      readonly attribute PriorProbabilitiesSet all_of_class_prior_probabilities;
+      PriorProbabilities create_prior_probabilities (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface PriorProbabilities : PriorProbabilitiesClass, CoreModule::ModelElement
+   {
+      PriorProbabilitiesEntrySet prior ()
+         raises (Reflective::MofError);
+      void set_prior (in PriorProbabilitiesEntrySet new_value)
+         raises (Reflective::MofError);
+      void unset_prior ()
+         raises (Reflective::MofError);
+      void add_prior (in PriorProbabilitiesEntry new_element)
+         raises (Reflective::MofError);
+      void modify_prior (
+         in PriorProbabilitiesEntry old_element,
+         in PriorProbabilitiesEntry new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_prior (in PriorProbabilitiesEntry old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface PriorProbabilities
+
+   interface PriorProbabilitiesEntryClass : CoreModule::ModelElementClass
+   {
+      readonly attribute PriorProbabilitiesEntrySet all_of_type_prior_probabilities_entry;
+      readonly attribute PriorProbabilitiesEntrySet all_of_class_prior_probabilities_entry;
+      PriorProbabilitiesEntry create_prior_probabilities_entry (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in double prior_probability)
+         raises (Reflective::MofError);
+   };
+
+   interface PriorProbabilitiesEntry : PriorProbabilitiesEntryClass, CoreModule::ModelElement
+   {
+      MiningCoreModule::MiningDataModule::Category target_value ()
+         raises (Reflective::MofError);
+      void set_target_value (in MiningCoreModule::MiningDataModule::Category new_value)
+         raises (Reflective::MofError);
+      double prior_probability ()
+         raises (Reflective::MofError);
+      void set_prior_probability (in double new_value)
+         raises (Reflective::MofError);
+   }; // end of interface PriorProbabilitiesEntry
+
+   struct ClassificationSettingsRefCostMatrixLink
+   {
+      MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix;
+      ClassificationFunctionSettings settings;
+   };
+   typedef sequence<ClassificationSettingsRefCostMatrixLink> ClassificationSettingsRefCostMatrixLinkSet;
+
+   interface ClassificationSettingsRefCostMatrix : Reflective::RefAssociation
+   {
+      ClassificationSettingsRefCostMatrixLinkSet all_classification_settings_ref_cost_matrix_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix,
+         in ClassificationFunctionSettings settings)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix (in ClassificationFunctionSettings settings)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix,
+         in ClassificationFunctionSettings settings)
+         raises (Reflective::MofError);
+      void modify_cost_matrix (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix,
+         in ClassificationFunctionSettings settings,
+         in MiningCoreModule::MiningDataModule::CategoryMatrix new_cost_matrix)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix cost_matrix,
+         in ClassificationFunctionSettings settings)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassificationSettingsRefCostMatrix
+
+   struct ClassificationAttrUsageRefCategoryLink
+   {
+      MiningCoreModule::MiningDataModule::Category positive_category;
+      ClassificationAttributeUsage usage;
+   };
+   typedef sequence<ClassificationAttrUsageRefCategoryLink> ClassificationAttrUsageRefCategoryLinkSet;
+
+   interface ClassificationAttrUsageRefCategory : Reflective::RefAssociation
+   {
+      ClassificationAttrUsageRefCategoryLinkSet all_classification_attr_usage_ref_category_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category positive_category,
+         in ClassificationAttributeUsage usage)
+         raises (Reflective::MofError);
+      CategorySet positive_category (in ClassificationAttributeUsage usage)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category positive_category,
+         in ClassificationAttributeUsage usage)
+         raises (Reflective::MofError);
+      void modify_positive_category (
+         in MiningCoreModule::MiningDataModule::Category positive_category,
+         in ClassificationAttributeUsage usage,
+         in MiningCoreModule::MiningDataModule::Category new_positive_category)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category positive_category,
+         in ClassificationAttributeUsage usage)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassificationAttrUsageRefCategory
+
+   struct ClassificationAttrUsageHasPriorsLink
+   {
+      ClassificationAttributeUsage usage;
+      PriorProbabilities priors;
+   };
+   typedef sequence<ClassificationAttrUsageHasPriorsLink> ClassificationAttrUsageHasPriorsLinkSet;
+
+   interface ClassificationAttrUsageHasPriors : Reflective::RefAssociation
+   {
+      ClassificationAttrUsageHasPriorsLinkSet all_classification_attr_usage_has_priors_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ClassificationAttributeUsage usage,
+         in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      ClassificationAttributeUsage usage (in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      PriorProbabilities priors (in ClassificationAttributeUsage usage)
+         raises (Reflective::MofError);
+      void add (
+         in ClassificationAttributeUsage usage,
+         in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      void modify_usage (
+         in ClassificationAttributeUsage usage,
+         in PriorProbabilities priors,
+         in ClassificationAttributeUsage new_usage)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_priors (
+         in ClassificationAttributeUsage usage,
+         in PriorProbabilities priors,
+         in PriorProbabilities new_priors)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ClassificationAttributeUsage usage,
+         in PriorProbabilities priors)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassificationAttrUsageHasPriors
+
+   struct PriorProbabilitiesHasEntriesLink
+   {
+      PriorProbabilitiesEntry prior;
+      PriorProbabilities priors;
+   };
+   typedef sequence<PriorProbabilitiesHasEntriesLink> PriorProbabilitiesHasEntriesLinkSet;
+
+   interface PriorProbabilitiesHasEntries : Reflective::RefAssociation
+   {
+      PriorProbabilitiesHasEntriesLinkSet all_prior_probabilities_has_entries_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in PriorProbabilitiesEntry prior,
+         in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      PriorProbabilitiesEntrySet prior (in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      PriorProbabilities priors (in PriorProbabilitiesEntry prior)
+         raises (Reflective::MofError);
+      void add (
+         in PriorProbabilitiesEntry prior,
+         in PriorProbabilities priors)
+         raises (Reflective::MofError);
+      void modify_prior (
+         in PriorProbabilitiesEntry prior,
+         in PriorProbabilities priors,
+         in PriorProbabilitiesEntry new_prior)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_priors (
+         in PriorProbabilitiesEntry prior,
+         in PriorProbabilities priors,
+         in PriorProbabilities new_priors)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in PriorProbabilitiesEntry prior,
+         in PriorProbabilities priors)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface PriorProbabilitiesHasEntries
+
+   struct PriorRefCategoryLink
+   {
+      MiningCoreModule::MiningDataModule::Category target_value;
+      PriorProbabilitiesEntry priors_entry;
+   };
+   typedef sequence<PriorRefCategoryLink> PriorRefCategoryLinkSet;
+
+   interface PriorRefCategory : Reflective::RefAssociation
+   {
+      PriorRefCategoryLinkSet all_prior_ref_category_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in PriorProbabilitiesEntry priors_entry)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::Category target_value (in PriorProbabilitiesEntry priors_entry)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in PriorProbabilitiesEntry priors_entry)
+         raises (Reflective::MofError);
+      void modify_target_value (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in PriorProbabilitiesEntry priors_entry,
+         in MiningCoreModule::MiningDataModule::Category new_target_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in PriorProbabilitiesEntry priors_entry)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface PriorRefCategory
+
+   struct TestResultHasConfusionMatrixLink
+   {
+      MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix;
+      ClassificationTestResult test_result;
+   };
+   typedef sequence<TestResultHasConfusionMatrixLink> TestResultHasConfusionMatrixLinkSet;
+
+   interface TestResultHasConfusionMatrix : Reflective::RefAssociation
+   {
+      TestResultHasConfusionMatrixLinkSet all_test_result_has_confusion_matrix_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix,
+         in ClassificationTestResult test_result)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix (in ClassificationTestResult test_result)
+         raises (Reflective::MofError);
+      ClassificationTestResult test_result (in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix,
+         in ClassificationTestResult test_result)
+         raises (Reflective::MofError);
+      void modify_confusion_matrix (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix,
+         in ClassificationTestResult test_result,
+         in MiningCoreModule::MiningDataModule::CategoryMatrix new_confusion_matrix)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_test_result (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix,
+         in ClassificationTestResult test_result,
+         in ClassificationTestResult new_test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix confusion_matrix,
+         in ClassificationTestResult test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TestResultHasConfusionMatrix
+
+   struct ClassificationTestTaskHasResultLink
+   {
+      ClassificationTestResult test_result;
+      ClassificationTestTask test_task;
+   };
+   typedef sequence<ClassificationTestTaskHasResultLink> ClassificationTestTaskHasResultLinkSet;
+
+   interface ClassificationTestTaskHasResult : Reflective::RefAssociation
+   {
+      ClassificationTestTaskHasResultLinkSet all_classification_test_task_has_result_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ClassificationTestResult test_result,
+         in ClassificationTestTask test_task)
+         raises (Reflective::MofError);
+      ClassificationTestResult test_result (in ClassificationTestTask test_task)
+         raises (Reflective::MofError);
+      ClassificationTestTask test_task (in ClassificationTestResult test_result)
+         raises (Reflective::MofError);
+      void add (
+         in ClassificationTestResult test_result,
+         in ClassificationTestTask test_task)
+         raises (Reflective::MofError);
+      void modify_test_result (
+         in ClassificationTestResult test_result,
+         in ClassificationTestTask test_task,
+         in ClassificationTestResult new_test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_test_task (
+         in ClassificationTestResult test_result,
+         in ClassificationTestTask test_task,
+         in ClassificationTestTask new_test_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ClassificationTestResult test_result,
+         in ClassificationTestTask test_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassificationTestTaskHasResult
+
+   struct TargetValueItemRefCategoryLink
+   {
+      MiningCoreModule::MiningDataModule::Category target_value;
+      ApplyTargetValueItem target_value_item;
+   };
+   typedef sequence<TargetValueItemRefCategoryLink> TargetValueItemRefCategoryLinkSet;
+
+   interface TargetValueItemRefCategory : Reflective::RefAssociation
+   {
+      TargetValueItemRefCategoryLinkSet all_target_value_item_ref_category_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in ApplyTargetValueItem target_value_item)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::Category target_value (in ApplyTargetValueItem target_value_item)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in ApplyTargetValueItem target_value_item)
+         raises (Reflective::MofError);
+      void modify_target_value (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in ApplyTargetValueItem target_value_item,
+         in MiningCoreModule::MiningDataModule::Category new_target_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category target_value,
+         in ApplyTargetValueItem target_value_item)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TargetValueItemRefCategory
+
+   interface ClassificationModulePackageFactory
+   {
+      ClassificationModulePackage create_classification_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface ClassificationModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute MiningCoreModule::MiningCoreModulePackage mining_core_ref;
+      readonly attribute SupervisedModule::SupervisedModulePackage supervised_ref;
+      readonly attribute ApplyTargetValueItemClass apply_target_value_item_ref;
+      readonly attribute ClassificationAttributeUsageClass classification_attribute_usage_ref;
+      readonly attribute ClassificationFunctionSettingsClass classification_function_settings_ref;
+      readonly attribute ClassificationTestResultClass classification_test_result_ref;
+      readonly attribute ClassificationTestTaskClass classification_test_task_ref;
+      readonly attribute PriorProbabilitiesClass prior_probabilities_ref;
+      readonly attribute PriorProbabilitiesEntryClass prior_probabilities_entry_ref;
+      readonly attribute ClassificationSettingsRefCostMatrix classification_settings_ref_cost_matrix_ref;
+      readonly attribute ClassificationAttrUsageRefCategory classification_attr_usage_ref_category_ref;
+      readonly attribute ClassificationAttrUsageHasPriors classification_attr_usage_has_priors_ref;
+      readonly attribute PriorProbabilitiesHasEntries prior_probabilities_has_entries_ref;
+      readonly attribute PriorRefCategory prior_ref_category_ref;
+      readonly attribute TestResultHasConfusionMatrix test_result_has_confusion_matrix_ref;
+      readonly attribute ClassificationTestTaskHasResult classification_test_task_has_result_ref;
+      readonly attribute TargetValueItemRefCategory target_value_item_ref_category_ref;
+   };
+};
+
+#endif

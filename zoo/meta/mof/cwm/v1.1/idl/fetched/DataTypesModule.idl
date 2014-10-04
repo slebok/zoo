@@ -1,0 +1,268 @@
+#ifndef DATA_TYPES_MODULE_IDL
+#define DATA_TYPES_MODULE_IDL
+#pragma prefix "org.omg.cwm.foundation"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module DataTypesModule
+{
+   interface EnumerationClass;
+   interface Enumeration;
+   typedef sequence<Enumeration> EnumerationSet;
+   interface EnumerationLiteralClass;
+   interface EnumerationLiteral;
+   typedef sequence<EnumerationLiteral> EnumerationLiteralSet;
+   interface QueryExpressionClass;
+   interface QueryExpression;
+   typedef sequence<QueryExpression> QueryExpressionSet;
+   interface TypeAliasClass;
+   interface TypeAlias;
+   typedef sequence<TypeAlias> TypeAliasSet;
+   interface CwmUnionClass;
+   interface CwmUnion;
+   typedef sequence<CwmUnion> CwmUnionSet;
+   interface UnionMemberClass;
+   interface UnionMember;
+   typedef sequence<UnionMember> UnionMemberSet;
+   interface DataTypesModulePackage;
+
+   interface EnumerationClass : CoreModule::DataTypeClass
+   {
+      readonly attribute EnumerationSet all_of_type_enumeration;
+      readonly attribute EnumerationSet all_of_class_enumeration;
+      Enumeration create_enumeration (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_ordered)
+         raises (Reflective::MofError);
+   };
+
+   interface Enumeration : EnumerationClass, CoreModule::DataType
+   {
+      boolean is_ordered ()
+         raises (Reflective::MofError);
+      void set_is_ordered (in boolean new_value)
+         raises (Reflective::MofError);
+      EnumerationLiteralSet literal ()
+         raises (Reflective::MofError);
+      void set_literal (in EnumerationLiteralSet new_value)
+         raises (Reflective::MofError);
+      void add_literal (in EnumerationLiteral new_element)
+         raises (Reflective::MofError);
+      void modify_literal (
+         in EnumerationLiteral old_element,
+         in EnumerationLiteral new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_literal (in EnumerationLiteral old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Enumeration
+
+   interface EnumerationLiteralClass : CoreModule::ModelElementClass
+   {
+      readonly attribute EnumerationLiteralSet all_of_type_enumeration_literal;
+      readonly attribute EnumerationLiteralSet all_of_class_enumeration_literal;
+      EnumerationLiteral create_enumeration_literal (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Expression value)
+         raises (Reflective::MofError);
+   };
+
+   interface EnumerationLiteral : EnumerationLiteralClass, CoreModule::ModelElement
+   {
+      CoreModule::Expression value ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_value (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      void unset_value ()
+         raises (Reflective::MofError);
+      DataTypesModule::Enumeration enumeration ()
+         raises (Reflective::MofError);
+      void set_enumeration (in DataTypesModule::Enumeration new_value)
+         raises (Reflective::MofError);
+   }; // end of interface EnumerationLiteral
+
+   interface QueryExpressionClass : CoreModule::ProcedureExpressionClass
+   {
+      readonly attribute QueryExpressionSet all_of_type_query_expression;
+      readonly attribute QueryExpressionSet all_of_class_query_expression;
+      QueryExpression create_query_expression (
+         in string body,
+         in CoreModule::Name language)
+         raises (Reflective::MofError);
+   };
+
+   interface QueryExpression : QueryExpressionClass, CoreModule::ProcedureExpression
+   {
+   }; // end of interface QueryExpression
+
+   interface TypeAliasClass : CoreModule::DataTypeClass
+   {
+      readonly attribute TypeAliasSet all_of_type_type_alias;
+      readonly attribute TypeAliasSet all_of_class_type_alias;
+      TypeAlias create_type_alias (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface TypeAlias : TypeAliasClass, CoreModule::DataType
+   {
+      CoreModule::Classifier type ()
+         raises (Reflective::MofError);
+      void set_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface TypeAlias
+
+   interface CwmUnionClass : CoreModule::ClassifierClass
+   {
+      readonly attribute CwmUnionSet all_of_type_cwm_union;
+      readonly attribute CwmUnionSet all_of_class_cwm_union;
+      CwmUnion create_cwm_union (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface CwmUnion : CwmUnionClass, CoreModule::Classifier
+   {
+      CoreModule::StructuralFeature discriminator ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_discriminator (in CoreModule::StructuralFeature new_value)
+         raises (Reflective::MofError);
+      void unset_discriminator ()
+         raises (Reflective::MofError);
+   }; // end of interface CwmUnion
+
+   interface UnionMemberClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute UnionMemberSet all_of_type_union_member;
+      readonly attribute UnionMemberSet all_of_class_union_member;
+      UnionMember create_union_member (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in CoreModule::Expression member_case,
+         in boolean is_default)
+         raises (Reflective::MofError);
+   };
+
+   interface UnionMember : UnionMemberClass, CoreModule::UmlAttribute
+   {
+      CoreModule::Expression member_case ()
+         raises (Reflective::MofError);
+      void set_member_case (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      boolean is_default ()
+         raises (Reflective::MofError);
+      void set_is_default (in boolean new_value)
+         raises (Reflective::MofError);
+   }; // end of interface UnionMember
+
+   struct ClassifierAliasLink
+   {
+      CoreModule::Classifier type;
+      TypeAlias alias;
+   };
+   typedef sequence<ClassifierAliasLink> ClassifierAliasLinkSet;
+
+   interface ClassifierAlias : Reflective::RefAssociation
+   {
+      ClassifierAliasLinkSet all_classifier_alias_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier type,
+         in TypeAlias alias)
+         raises (Reflective::MofError);
+      CoreModule::Classifier type (in TypeAlias alias)
+         raises (Reflective::MofError);
+      TypeAliasSet alias (in CoreModule::Classifier type)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier type,
+         in TypeAlias alias)
+         raises (Reflective::MofError);
+      void modify_type (
+         in CoreModule::Classifier type,
+         in TypeAlias alias,
+         in CoreModule::Classifier new_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_alias (
+         in CoreModule::Classifier type,
+         in TypeAlias alias,
+         in TypeAlias new_alias)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier type,
+         in TypeAlias alias)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassifierAlias
+
+   struct UnionDiscriminatorLink
+   {
+      CoreModule::StructuralFeature discriminator;
+      CwmUnion discriminated_union;
+   };
+   typedef sequence<UnionDiscriminatorLink> UnionDiscriminatorLinkSet;
+
+   interface UnionDiscriminator : Reflective::RefAssociation
+   {
+      UnionDiscriminatorLinkSet all_union_discriminator_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::StructuralFeature discriminator,
+         in CwmUnion discriminated_union)
+         raises (Reflective::MofError);
+      CoreModule::StructuralFeature discriminator (in CwmUnion discriminated_union)
+         raises (Reflective::MofError);
+      CwmUnionSet discriminated_union (in CoreModule::StructuralFeature discriminator)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::StructuralFeature discriminator,
+         in CwmUnion discriminated_union)
+         raises (Reflective::MofError);
+      void modify_discriminator (
+         in CoreModule::StructuralFeature discriminator,
+         in CwmUnion discriminated_union,
+         in CoreModule::StructuralFeature new_discriminator)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_discriminated_union (
+         in CoreModule::StructuralFeature discriminator,
+         in CwmUnion discriminated_union,
+         in CwmUnion new_discriminated_union)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::StructuralFeature discriminator,
+         in CwmUnion discriminated_union)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface UnionDiscriminator
+
+   interface DataTypesModulePackageFactory
+   {
+      DataTypesModulePackage create_data_types_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface DataTypesModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute EnumerationClass enumeration_ref;
+      readonly attribute EnumerationLiteralClass enumeration_literal_ref;
+      readonly attribute QueryExpressionClass query_expression_ref;
+      readonly attribute TypeAliasClass type_alias_ref;
+      readonly attribute CwmUnionClass cwm_union_ref;
+      readonly attribute UnionMemberClass union_member_ref;
+      readonly attribute ClassifierAlias classifier_alias_ref;
+      readonly attribute UnionDiscriminator union_discriminator_ref;
+   };
+};
+
+#endif

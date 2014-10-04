@@ -1,0 +1,54 @@
+#ifndef ATTRIBUTE_IMPORTANCE_MODULE_IDL
+#define ATTRIBUTE_IMPORTANCE_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+#include "SupervisedModule.idl"
+
+module AttributeImportanceModule
+{
+   interface AttributeImportanceSettingsClass;
+   interface AttributeImportanceSettings;
+   typedef sequence<AttributeImportanceSettings> AttributeImportanceSettingsSet;
+   interface AttributeImportanceModulePackage;
+
+   interface AttributeImportanceSettingsClass : SupervisedModule::SupervisedFunctionSettingsClass
+   {
+      readonly attribute AttributeImportanceSettingsSet all_of_type_attribute_importance_settings;
+      readonly attribute AttributeImportanceSettingsSet all_of_class_attribute_importance_settings;
+      AttributeImportanceSettings create_attribute_importance_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in long maximum_result_size,
+         in boolean return_top)
+         raises (Reflective::MofError);
+   };
+
+   interface AttributeImportanceSettings : AttributeImportanceSettingsClass, SupervisedModule::SupervisedFunctionSettings
+   {
+      long maximum_result_size ()
+         raises (Reflective::MofError);
+      void set_maximum_result_size (in long new_value)
+         raises (Reflective::MofError);
+      boolean return_top ()
+         raises (Reflective::MofError);
+      void set_return_top (in boolean new_value)
+         raises (Reflective::MofError);
+   }; // end of interface AttributeImportanceSettings
+
+   interface AttributeImportanceModulePackageFactory
+   {
+      AttributeImportanceModulePackage create_attribute_importance_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface AttributeImportanceModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute SupervisedModule::SupervisedModulePackage supervised_ref;
+      readonly attribute AttributeImportanceSettingsClass attribute_importance_settings_ref;
+   };
+};
+
+#endif

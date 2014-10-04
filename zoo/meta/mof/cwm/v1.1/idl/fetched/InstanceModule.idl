@@ -1,0 +1,336 @@
+#ifndef INSTANCE_MODULE_IDL
+#define INSTANCE_MODULE_IDL
+#pragma prefix "org.omg.cwm.objectmodel"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module InstanceModule
+{
+   interface SlotClass;
+   interface Slot;
+   typedef sequence<Slot> SlotSet;
+   interface DataSlotClass;
+   interface DataSlot;
+   typedef sequence<DataSlot> DataSlotSet;
+   interface InstanceClass;
+   interface Instance;
+   typedef sequence<Instance> InstanceSet;
+   interface DataValueClass;
+   interface DataValue;
+   typedef sequence<DataValue> DataValueSet;
+   interface ExtentClass;
+   interface Extent;
+   typedef sequence<Extent> ExtentSet;
+   interface UmlObjectClass;
+   interface UmlObject;
+   typedef sequence<UmlObject> UmlObjectSet;
+   interface InstanceModulePackage;
+
+   interface SlotClass : CoreModule::ModelElementClass
+   {
+      readonly attribute SlotSet all_of_type_slot;
+      readonly attribute SlotSet all_of_class_slot;
+      Slot create_slot (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Slot : SlotClass, CoreModule::ModelElement
+   {
+      UmlObject uml_object ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_uml_object (in UmlObject new_value)
+         raises (Reflective::MofError);
+      void unset_uml_object ()
+         raises (Reflective::MofError);
+      Instance value ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_value (in Instance new_value)
+         raises (Reflective::MofError);
+      void unset_value ()
+         raises (Reflective::MofError);
+      CoreModule::StructuralFeature feature ()
+         raises (Reflective::MofError);
+      void set_feature (in CoreModule::StructuralFeature new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Slot
+
+   interface DataSlotClass : SlotClass
+   {
+      readonly attribute DataSlotSet all_of_type_data_slot;
+      readonly attribute DataSlotSet all_of_class_data_slot;
+      DataSlot create_data_slot (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string data_value)
+         raises (Reflective::MofError);
+   };
+
+   interface DataSlot : DataSlotClass, Slot
+   {
+      string data_value ()
+         raises (Reflective::MofError);
+      void set_data_value (in string new_value)
+         raises (Reflective::MofError);
+      CoreModule::DataType data_type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_data_type (in CoreModule::DataType new_value)
+         raises (Reflective::MofError);
+      void unset_data_type ()
+         raises (Reflective::MofError);
+   }; // end of interface DataSlot
+
+   interface InstanceClass : CoreModule::ModelElementClass
+   {
+      readonly attribute InstanceSet all_of_type_instance;
+   };
+
+   interface Instance : InstanceClass, CoreModule::ModelElement
+   {
+      CoreModule::Classifier classifier ()
+         raises (Reflective::MofError);
+      void set_classifier (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Instance
+
+   interface DataValueClass : InstanceClass
+   {
+      readonly attribute DataValueSet all_of_type_data_value;
+      readonly attribute DataValueSet all_of_class_data_value;
+      DataValue create_data_value (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string value)
+         raises (Reflective::MofError);
+   };
+
+   interface DataValue : DataValueClass, Instance
+   {
+      string value ()
+         raises (Reflective::MofError);
+      void set_value (in string new_value)
+         raises (Reflective::MofError);
+   }; // end of interface DataValue
+
+   interface ExtentClass : CoreModule::PackageClass
+   {
+      readonly attribute ExtentSet all_of_type_extent;
+      readonly attribute ExtentSet all_of_class_extent;
+      Extent create_extent (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Extent : ExtentClass, CoreModule::Package
+   {
+   }; // end of interface Extent
+
+   interface UmlObjectClass : InstanceClass
+   {
+      readonly attribute UmlObjectSet all_of_type_uml_object;
+      readonly attribute UmlObjectSet all_of_class_uml_object;
+      UmlObject create_uml_object (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface UmlObject : UmlObjectClass, Instance
+   {
+      SlotSet slot ()
+         raises (Reflective::MofError);
+      void set_slot (in SlotSet new_value)
+         raises (Reflective::MofError);
+      void unset_slot ()
+         raises (Reflective::MofError);
+      void add_slot (in InstanceModule::Slot new_element)
+         raises (Reflective::MofError);
+      void modify_slot (
+         in InstanceModule::Slot old_element,
+         in InstanceModule::Slot new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_slot (in InstanceModule::Slot old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface UmlObject
+
+   struct SlotValueLink
+   {
+      Slot value_slot;
+      Instance cwml_value;
+   };
+   typedef sequence<SlotValueLink> SlotValueLinkSet;
+
+   interface SlotValue : Reflective::RefAssociation
+   {
+      SlotValueLinkSet all_slot_value_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Slot value_slot,
+         in Instance cwml_value)
+         raises (Reflective::MofError);
+      SlotSet value_slot (in Instance cwml_value)
+         raises (Reflective::MofError);
+      Instance cwml_value (in Slot value_slot)
+         raises (Reflective::MofError);
+      void add (
+         in Slot value_slot,
+         in Instance cwml_value)
+         raises (Reflective::MofError);
+      void modify_value_slot (
+         in Slot value_slot,
+         in Instance cwml_value,
+         in Slot new_value_slot)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cwml_value (
+         in Slot value_slot,
+         in Instance cwml_value,
+         in Instance new_cwml_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Slot value_slot,
+         in Instance cwml_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SlotValue
+
+   struct InstanceClassifierLink
+   {
+      InstanceModule::Instance instance;
+      CoreModule::Classifier classifier;
+   };
+   typedef sequence<InstanceClassifierLink> InstanceClassifierLinkSet;
+
+   interface InstanceClassifier : Reflective::RefAssociation
+   {
+      InstanceClassifierLinkSet all_instance_classifier_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in InstanceModule::Instance instance,
+         in CoreModule::Classifier classifier)
+         raises (Reflective::MofError);
+      InstanceSet instance (in CoreModule::Classifier classifier)
+         raises (Reflective::MofError);
+      CoreModule::Classifier classifier (in InstanceModule::Instance instance)
+         raises (Reflective::MofError);
+      void add (
+         in InstanceModule::Instance instance,
+         in CoreModule::Classifier classifier)
+         raises (Reflective::MofError);
+      void modify_instance (
+         in InstanceModule::Instance instance,
+         in CoreModule::Classifier classifier,
+         in InstanceModule::Instance new_instance)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_classifier (
+         in InstanceModule::Instance instance,
+         in CoreModule::Classifier classifier,
+         in CoreModule::Classifier new_classifier)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in InstanceModule::Instance instance,
+         in CoreModule::Classifier classifier)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface InstanceClassifier
+
+   struct FeatureSlotLink
+   {
+      CoreModule::StructuralFeature feature;
+      InstanceModule::Slot slot;
+   };
+   typedef sequence<FeatureSlotLink> FeatureSlotLinkSet;
+
+   interface FeatureSlot : Reflective::RefAssociation
+   {
+      FeatureSlotLinkSet all_feature_slot_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::StructuralFeature feature,
+         in InstanceModule::Slot slot)
+         raises (Reflective::MofError);
+      CoreModule::StructuralFeature feature (in InstanceModule::Slot slot)
+         raises (Reflective::MofError);
+      SlotSet slot (in CoreModule::StructuralFeature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::StructuralFeature feature,
+         in InstanceModule::Slot slot)
+         raises (Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature feature,
+         in InstanceModule::Slot slot,
+         in CoreModule::StructuralFeature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_slot (
+         in CoreModule::StructuralFeature feature,
+         in InstanceModule::Slot slot,
+         in InstanceModule::Slot new_slot)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::StructuralFeature feature,
+         in InstanceModule::Slot slot)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface FeatureSlot
+
+   struct DataSlotTypeLink
+   {
+      CoreModule::DataType data_type;
+      DataSlot data_slot;
+   };
+   typedef sequence<DataSlotTypeLink> DataSlotTypeLinkSet;
+
+   interface DataSlotType : Reflective::RefAssociation
+   {
+      DataSlotTypeLinkSet all_data_slot_type_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::DataType data_type,
+         in DataSlot data_slot)
+         raises (Reflective::MofError);
+      CoreModule::DataType data_type (in DataSlot data_slot)
+         raises (Reflective::MofError);
+      DataSlotSet data_slot (in CoreModule::DataType data_type)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::DataType data_type,
+         in DataSlot data_slot)
+         raises (Reflective::MofError);
+      void modify_data_type (
+         in CoreModule::DataType data_type,
+         in DataSlot data_slot,
+         in CoreModule::DataType new_data_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_data_slot (
+         in CoreModule::DataType data_type,
+         in DataSlot data_slot,
+         in DataSlot new_data_slot)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::DataType data_type,
+         in DataSlot data_slot)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataSlotType
+
+   interface InstanceModulePackageFactory
+   {
+      InstanceModulePackage create_instance_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface InstanceModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute SlotClass slot_ref;
+      readonly attribute DataSlotClass data_slot_ref;
+      readonly attribute InstanceClass instance_ref;
+      readonly attribute DataValueClass data_value_ref;
+      readonly attribute ExtentClass extent_ref;
+      readonly attribute UmlObjectClass uml_object_ref;
+      readonly attribute SlotValue slot_value_ref;
+      readonly attribute InstanceClassifier instance_classifier_ref;
+      readonly attribute FeatureSlot feature_slot_ref;
+      readonly attribute DataSlotType data_slot_type_ref;
+   };
+};
+
+#endif

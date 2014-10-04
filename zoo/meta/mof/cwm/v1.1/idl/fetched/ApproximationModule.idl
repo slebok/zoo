@@ -1,0 +1,159 @@
+#ifndef APPROXIMATION_MODULE_IDL
+#define APPROXIMATION_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "MiningCoreModule.idl"
+#include "CoreModule.idl"
+#include "SupervisedModule.idl"
+
+module ApproximationModule
+{
+   interface ApproximationFunctionSettingsClass;
+   interface ApproximationFunctionSettings;
+   typedef sequence<ApproximationFunctionSettings> ApproximationFunctionSettingsSet;
+   interface ApproximationTestResultClass;
+   interface ApproximationTestResult;
+   typedef sequence<ApproximationTestResult> ApproximationTestResultSet;
+   interface ApproximationTestTaskClass;
+   interface ApproximationTestTask;
+   typedef sequence<ApproximationTestTask> ApproximationTestTaskSet;
+   interface ApproximationModulePackage;
+
+   interface ApproximationFunctionSettingsClass : SupervisedModule::SupervisedFunctionSettingsClass
+   {
+      readonly attribute ApproximationFunctionSettingsSet all_of_type_approximation_function_settings;
+      readonly attribute ApproximationFunctionSettingsSet all_of_class_approximation_function_settings;
+      ApproximationFunctionSettings create_approximation_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in double tolerated_error)
+         raises (Reflective::MofError);
+   };
+
+   interface ApproximationFunctionSettings : ApproximationFunctionSettingsClass, SupervisedModule::SupervisedFunctionSettings
+   {
+      double tolerated_error ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_tolerated_error (in double new_value)
+         raises (Reflective::MofError);
+      void unset_tolerated_error ()
+         raises (Reflective::MofError);
+   }; // end of interface ApproximationFunctionSettings
+
+   interface ApproximationTestResultClass : SupervisedModule::MiningTestResultClass
+   {
+      readonly attribute ApproximationTestResultSet all_of_type_approximation_test_result;
+      readonly attribute ApproximationTestResultSet all_of_class_approximation_test_result;
+      ApproximationTestResult create_approximation_test_result (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long number_of_test_records,
+         in double mean_predicted_value,
+         in double mean_actual_value,
+         in double mean_absolute_error,
+         in double rms_error,
+         in double r_squared)
+         raises (Reflective::MofError);
+   };
+
+   interface ApproximationTestResult : ApproximationTestResultClass, SupervisedModule::MiningTestResult
+   {
+      double mean_predicted_value ()
+         raises (Reflective::MofError);
+      void set_mean_predicted_value (in double new_value)
+         raises (Reflective::MofError);
+      double mean_actual_value ()
+         raises (Reflective::MofError);
+      void set_mean_actual_value (in double new_value)
+         raises (Reflective::MofError);
+      double mean_absolute_error ()
+         raises (Reflective::MofError);
+      void set_mean_absolute_error (in double new_value)
+         raises (Reflective::MofError);
+      double rms_error ()
+         raises (Reflective::MofError);
+      void set_rms_error (in double new_value)
+         raises (Reflective::MofError);
+      double r_squared ()
+         raises (Reflective::MofError);
+      void set_r_squared (in double new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ApproximationTestResult
+
+   interface ApproximationTestTaskClass : SupervisedModule::MiningTestTaskClass
+   {
+      readonly attribute ApproximationTestTaskSet all_of_type_approximation_test_task;
+      readonly attribute ApproximationTestTaskSet all_of_class_approximation_test_task;
+      ApproximationTestTask create_approximation_test_task (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean compute_lift)
+         raises (Reflective::MofError);
+   };
+
+   interface ApproximationTestTask : ApproximationTestTaskClass, SupervisedModule::MiningTestTask
+   {
+      ApproximationTestResult test_result ()
+         raises (Reflective::MofError);
+      void set_test_result (in ApproximationTestResult new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ApproximationTestTask
+
+   struct ApproximationTestResultHasResultLink
+   {
+      ApproximationTestResult test_result;
+      ApproximationTestTask test_task;
+   };
+   typedef sequence<ApproximationTestResultHasResultLink> ApproximationTestResultHasResultLinkSet;
+
+   interface ApproximationTestResultHasResult : Reflective::RefAssociation
+   {
+      ApproximationTestResultHasResultLinkSet all_approximation_test_result_has_result_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ApproximationTestResult test_result,
+         in ApproximationTestTask test_task)
+         raises (Reflective::MofError);
+      ApproximationTestResult test_result (in ApproximationTestTask test_task)
+         raises (Reflective::MofError);
+      ApproximationTestTask test_task (in ApproximationTestResult test_result)
+         raises (Reflective::MofError);
+      void add (
+         in ApproximationTestResult test_result,
+         in ApproximationTestTask test_task)
+         raises (Reflective::MofError);
+      void modify_test_result (
+         in ApproximationTestResult test_result,
+         in ApproximationTestTask test_task,
+         in ApproximationTestResult new_test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_test_task (
+         in ApproximationTestResult test_result,
+         in ApproximationTestTask test_task,
+         in ApproximationTestTask new_test_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ApproximationTestResult test_result,
+         in ApproximationTestTask test_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ApproximationTestResultHasResult
+
+   interface ApproximationModulePackageFactory
+   {
+      ApproximationModulePackage create_approximation_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface ApproximationModulePackage : Reflective::RefPackage
+   {
+      readonly attribute MiningCoreModule::MiningCoreModulePackage mining_core_ref;
+      readonly attribute SupervisedModule::SupervisedModulePackage supervised_ref;
+      readonly attribute ApproximationFunctionSettingsClass approximation_function_settings_ref;
+      readonly attribute ApproximationTestResultClass approximation_test_result_ref;
+      readonly attribute ApproximationTestTaskClass approximation_test_task_ref;
+      readonly attribute ApproximationTestResultHasResult approximation_test_result_has_result_ref;
+   };
+};
+
+#endif

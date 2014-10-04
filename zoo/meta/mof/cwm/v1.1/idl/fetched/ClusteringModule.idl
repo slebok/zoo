@@ -1,0 +1,136 @@
+#ifndef CLUSTERING_MODULE_IDL
+#define CLUSTERING_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "MiningCoreModule.idl"
+#include "CoreModule.idl"
+
+module ClusteringModule
+{
+   interface ClusteringAttributeUsageClass;
+   interface ClusteringAttributeUsage;
+   typedef sequence<ClusteringAttributeUsage> ClusteringAttributeUsageSet;
+   interface ClusteringFunctionSettingsClass;
+   interface ClusteringFunctionSettings;
+   typedef sequence<ClusteringFunctionSettings> ClusteringFunctionSettingsSet;
+   interface ClusteringModulePackage;
+   enum AggregationFunction {euclidean, squaredEuclidean, chebychev, cityBlock, minkovski, simpleMatching, jaccard, tanimoto, binarySimilarity};
+   enum AttributeComparisonFunction {absDiff, gaussSim, delta, equal, table};
+   enum ClusteringModelCBasis {centerBased, probabilityBased, partitionBased, aggregationBased};
+
+   interface ClusteringAttributeUsageClass : MiningCoreModule::MiningDataModule::AttributeUsageClass
+   {
+      readonly attribute ClusteringAttributeUsageSet all_of_type_clustering_attribute_usage;
+      readonly attribute ClusteringAttributeUsageSet all_of_class_clustering_attribute_usage;
+      ClusteringAttributeUsage create_clustering_attribute_usage (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in MiningCoreModule::MiningDataModule::UsageOption usage,
+         in double weight,
+         in boolean suppress_discretization,
+         in boolean suppress_normalization,
+         in AttributeComparisonFunction attribute_comparison_function,
+         in double similarity_scale)
+         raises (Reflective::MofError);
+   };
+
+   interface ClusteringAttributeUsage : ClusteringAttributeUsageClass, MiningCoreModule::MiningDataModule::AttributeUsage
+   {
+      AttributeComparisonFunction attribute_comparison_function ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_attribute_comparison_function (in AttributeComparisonFunction new_value)
+         raises (Reflective::MofError);
+      void unset_attribute_comparison_function ()
+         raises (Reflective::MofError);
+      double similarity_scale ()
+         raises (Reflective::MofError);
+      void set_similarity_scale (in double new_value)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_comparison_matrix (in MiningCoreModule::MiningDataModule::CategoryMatrix new_value)
+         raises (Reflective::MofError);
+      void unset_comparison_matrix ()
+         raises (Reflective::MofError);
+   }; // end of interface ClusteringAttributeUsage
+
+   interface ClusteringFunctionSettingsClass : MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettingsClass
+   {
+      readonly attribute ClusteringFunctionSettingsSet all_of_type_clustering_function_settings;
+      readonly attribute ClusteringFunctionSettingsSet all_of_class_clustering_function_settings;
+      ClusteringFunctionSettings create_clustering_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in long max_number_of_clusters,
+         in long min_cluster_size,
+         in AggregationFunction aggregation_function)
+         raises (Reflective::MofError);
+   };
+
+   interface ClusteringFunctionSettings : ClusteringFunctionSettingsClass, MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettings
+   {
+      long max_number_of_clusters ()
+         raises (Reflective::MofError);
+      void set_max_number_of_clusters (in long new_value)
+         raises (Reflective::MofError);
+      long min_cluster_size ()
+         raises (Reflective::MofError);
+      void set_min_cluster_size (in long new_value)
+         raises (Reflective::MofError);
+      AggregationFunction aggregation_function ()
+         raises (Reflective::MofError);
+      void set_aggregation_function (in AggregationFunction new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ClusteringFunctionSettings
+
+   struct ClusteringAttrUsageRefComparisonMatrixLink
+   {
+      MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix;
+      ClusteringAttributeUsage attribue_usage;
+   };
+   typedef sequence<ClusteringAttrUsageRefComparisonMatrixLink> ClusteringAttrUsageRefComparisonMatrixLinkSet;
+
+   interface ClusteringAttrUsageRefComparisonMatrix : Reflective::RefAssociation
+   {
+      ClusteringAttrUsageRefComparisonMatrixLinkSet all_clustering_attr_usage_ref_comparison_matrix_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix,
+         in ClusteringAttributeUsage attribue_usage)
+         raises (Reflective::MofError);
+      MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix (in ClusteringAttributeUsage attribue_usage)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix,
+         in ClusteringAttributeUsage attribue_usage)
+         raises (Reflective::MofError);
+      void modify_comparison_matrix (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix,
+         in ClusteringAttributeUsage attribue_usage,
+         in MiningCoreModule::MiningDataModule::CategoryMatrix new_comparison_matrix)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::CategoryMatrix comparison_matrix,
+         in ClusteringAttributeUsage attribue_usage)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClusteringAttrUsageRefComparisonMatrix
+
+   interface ClusteringModulePackageFactory
+   {
+      ClusteringModulePackage create_clustering_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface ClusteringModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute MiningCoreModule::MiningCoreModulePackage mining_core_ref;
+      readonly attribute ClusteringAttributeUsageClass clustering_attribute_usage_ref;
+      readonly attribute ClusteringFunctionSettingsClass clustering_function_settings_ref;
+      readonly attribute ClusteringAttrUsageRefComparisonMatrix clustering_attr_usage_ref_comparison_matrix_ref;
+   };
+};
+
+#endif

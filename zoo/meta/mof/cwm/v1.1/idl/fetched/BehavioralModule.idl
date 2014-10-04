@@ -1,0 +1,379 @@
+#ifndef BEHAVIORAL_MODULE_IDL
+#define BEHAVIORAL_MODULE_IDL
+#pragma prefix "org.omg.cwm.objectmodel"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module BehavioralModule
+{
+   interface ArgumentClass;
+   interface Argument;
+   typedef sequence<Argument> ArgumentSet;
+   typedef sequence<Argument> ArgumentUList;
+   interface BehavioralFeatureClass;
+   interface BehavioralFeature;
+   typedef sequence<BehavioralFeature> BehavioralFeatureSet;
+   interface CallActionClass;
+   interface CallAction;
+   typedef sequence<CallAction> CallActionSet;
+   interface EventClass;
+   interface Event;
+   typedef sequence<Event> EventSet;
+   interface UmlInterfaceClass;
+   interface UmlInterface;
+   typedef sequence<UmlInterface> UmlInterfaceSet;
+   interface MethodClass;
+   interface Method;
+   typedef sequence<Method> MethodSet;
+   interface OperationClass;
+   interface Operation;
+   typedef sequence<Operation> OperationSet;
+   interface ParameterClass;
+   interface Parameter;
+   typedef sequence<Parameter> ParameterSet;
+   typedef sequence<Parameter> ParameterUList;
+   interface BehavioralModulePackage;
+   enum ParameterDirectionKind {pdk_in, pdk_inout, pdk_out, pdk_return};
+
+   interface ArgumentClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ArgumentSet all_of_type_argument;
+      readonly attribute ArgumentSet all_of_class_argument;
+      Argument create_argument (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Expression uml_value)
+         raises (Reflective::MofError);
+   };
+
+   interface Argument : ArgumentClass, CoreModule::ModelElement
+   {
+      CoreModule::Expression uml_value ()
+         raises (Reflective::MofError);
+      void set_uml_value (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      CallAction call_action ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_call_action (in CallAction new_value)
+         raises (Reflective::MofError);
+      void unset_call_action ()
+         raises (Reflective::MofError);
+   }; // end of interface Argument
+
+   interface BehavioralFeatureClass : CoreModule::FeatureClass
+   {
+      readonly attribute BehavioralFeatureSet all_of_type_behavioral_feature;
+   };
+
+   interface BehavioralFeature : BehavioralFeatureClass, CoreModule::Feature
+   {
+      boolean is_query ()
+         raises (Reflective::MofError);
+      void set_is_query (in boolean new_value)
+         raises (Reflective::MofError);
+      ParameterUList parameter ()
+         raises (Reflective::MofError);
+      void set_parameter (in ParameterUList new_value)
+         raises (Reflective::MofError);
+      void unset_parameter ()
+         raises (Reflective::MofError);
+      void add_parameter (in BehavioralModule::Parameter new_element)
+         raises (Reflective::MofError);
+      void add_parameter_before (
+         in BehavioralModule::Parameter new_element,
+         in BehavioralModule::Parameter before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_parameter (
+         in BehavioralModule::Parameter old_element,
+         in BehavioralModule::Parameter new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_parameter (in BehavioralModule::Parameter old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface BehavioralFeature
+
+   interface CallActionClass : CoreModule::ModelElementClass
+   {
+      readonly attribute CallActionSet all_of_type_call_action;
+      readonly attribute CallActionSet all_of_class_call_action;
+      CallAction create_call_action (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface CallAction : CallActionClass, CoreModule::ModelElement
+   {
+      BehavioralModule::Operation operation ()
+         raises (Reflective::MofError);
+      void set_operation (in BehavioralModule::Operation new_value)
+         raises (Reflective::MofError);
+      ArgumentUList actual_argument ()
+         raises (Reflective::MofError);
+      void set_actual_argument (in ArgumentUList new_value)
+         raises (Reflective::MofError);
+      void unset_actual_argument ()
+         raises (Reflective::MofError);
+      void add_actual_argument (in Argument new_element)
+         raises (Reflective::MofError);
+      void add_actual_argument_before (
+         in Argument new_element,
+         in Argument before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_actual_argument (
+         in Argument old_element,
+         in Argument new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_actual_argument (in Argument old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CallAction
+
+   interface EventClass : CoreModule::ModelElementClass
+   {
+      readonly attribute EventSet all_of_type_event;
+      readonly attribute EventSet all_of_class_event;
+      Event create_event (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Event : EventClass, CoreModule::ModelElement
+   {
+      ParameterUList parameter ()
+         raises (Reflective::MofError);
+      void set_parameter (in ParameterUList new_value)
+         raises (Reflective::MofError);
+      void unset_parameter ()
+         raises (Reflective::MofError);
+      void add_parameter (in BehavioralModule::Parameter new_element)
+         raises (Reflective::MofError);
+      void add_parameter_before (
+         in BehavioralModule::Parameter new_element,
+         in BehavioralModule::Parameter before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_parameter (
+         in BehavioralModule::Parameter old_element,
+         in BehavioralModule::Parameter new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_parameter (in BehavioralModule::Parameter old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Event
+
+   interface UmlInterfaceClass : CoreModule::ClassifierClass
+   {
+      readonly attribute UmlInterfaceSet all_of_type_uml_interface;
+      readonly attribute UmlInterfaceSet all_of_class_uml_interface;
+      UmlInterface create_uml_interface (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface UmlInterface : UmlInterfaceClass, CoreModule::Classifier
+   {
+   }; // end of interface UmlInterface
+
+   interface MethodClass : BehavioralFeatureClass
+   {
+      readonly attribute MethodSet all_of_type_method;
+      readonly attribute MethodSet all_of_class_method;
+      Method create_method (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in boolean is_query,
+         in CoreModule::ProcedureExpression body)
+         raises (Reflective::MofError);
+   };
+
+   interface Method : MethodClass, BehavioralFeature
+   {
+      CoreModule::ProcedureExpression body ()
+         raises (Reflective::MofError);
+      void set_body (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      Operation specification ()
+         raises (Reflective::MofError);
+      void set_specification (in Operation new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Method
+
+   interface OperationClass : BehavioralFeatureClass
+   {
+      readonly attribute OperationSet all_of_type_operation;
+      readonly attribute OperationSet all_of_class_operation;
+      Operation create_operation (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in boolean is_query,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Operation : OperationClass, BehavioralFeature
+   {
+      boolean is_abstract ()
+         raises (Reflective::MofError);
+      void set_is_abstract (in boolean new_value)
+         raises (Reflective::MofError);
+      MethodSet method ()
+         raises (Reflective::MofError);
+      void set_method (in MethodSet new_value)
+         raises (Reflective::MofError);
+      void unset_method ()
+         raises (Reflective::MofError);
+      void add_method (in BehavioralModule::Method new_element)
+         raises (Reflective::MofError);
+      void modify_method (
+         in BehavioralModule::Method old_element,
+         in BehavioralModule::Method new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_method (in BehavioralModule::Method old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Operation
+
+   interface ParameterClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ParameterSet all_of_type_parameter;
+      readonly attribute ParameterSet all_of_class_parameter;
+      Parameter create_parameter (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Expression default_value,
+         in ParameterDirectionKind kind)
+         raises (Reflective::MofError);
+   };
+
+   interface Parameter : ParameterClass, CoreModule::ModelElement
+   {
+      CoreModule::Expression default_value ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_default_value (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      void unset_default_value ()
+         raises (Reflective::MofError);
+      ParameterDirectionKind kind ()
+         raises (Reflective::MofError);
+      void set_kind (in ParameterDirectionKind new_value)
+         raises (Reflective::MofError);
+      BehavioralFeature behavioral_feature ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_behavioral_feature (in BehavioralFeature new_value)
+         raises (Reflective::MofError);
+      void unset_behavioral_feature ()
+         raises (Reflective::MofError);
+      BehavioralModule::Event event ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_event (in BehavioralModule::Event new_value)
+         raises (Reflective::MofError);
+      void unset_event ()
+         raises (Reflective::MofError);
+      CoreModule::Classifier type ()
+         raises (Reflective::MofError);
+      void set_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Parameter
+
+   struct CalledOperationLink
+   {
+      CallAction call_action;
+      BehavioralModule::Operation operation;
+   };
+   typedef sequence<CalledOperationLink> CalledOperationLinkSet;
+
+   interface CalledOperation : Reflective::RefAssociation
+   {
+      CalledOperationLinkSet all_called_operation_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CallAction call_action,
+         in BehavioralModule::Operation operation)
+         raises (Reflective::MofError);
+      CallActionSet call_action (in BehavioralModule::Operation operation)
+         raises (Reflective::MofError);
+      BehavioralModule::Operation operation (in CallAction call_action)
+         raises (Reflective::MofError);
+      void add (
+         in CallAction call_action,
+         in BehavioralModule::Operation operation)
+         raises (Reflective::MofError);
+      void modify_call_action (
+         in CallAction call_action,
+         in BehavioralModule::Operation operation,
+         in CallAction new_call_action)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_operation (
+         in CallAction call_action,
+         in BehavioralModule::Operation operation,
+         in BehavioralModule::Operation new_operation)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CallAction call_action,
+         in BehavioralModule::Operation operation)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CalledOperation
+
+   struct ParameterTypeLink
+   {
+      BehavioralModule::Parameter parameter;
+      CoreModule::Classifier type;
+   };
+   typedef sequence<ParameterTypeLink> ParameterTypeLinkSet;
+
+   interface ParameterType : Reflective::RefAssociation
+   {
+      ParameterTypeLinkSet all_parameter_type_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BehavioralModule::Parameter parameter,
+         in CoreModule::Classifier type)
+         raises (Reflective::MofError);
+      ParameterSet parameter (in CoreModule::Classifier type)
+         raises (Reflective::MofError);
+      CoreModule::Classifier type (in BehavioralModule::Parameter parameter)
+         raises (Reflective::MofError);
+      void add (
+         in BehavioralModule::Parameter parameter,
+         in CoreModule::Classifier type)
+         raises (Reflective::MofError);
+      void modify_parameter (
+         in BehavioralModule::Parameter parameter,
+         in CoreModule::Classifier type,
+         in BehavioralModule::Parameter new_parameter)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_type (
+         in BehavioralModule::Parameter parameter,
+         in CoreModule::Classifier type,
+         in CoreModule::Classifier new_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BehavioralModule::Parameter parameter,
+         in CoreModule::Classifier type)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ParameterType
+
+   interface BehavioralModulePackageFactory
+   {
+      BehavioralModulePackage create_behavioral_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface BehavioralModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute ArgumentClass argument_ref;
+      readonly attribute BehavioralFeatureClass behavioral_feature_ref;
+      readonly attribute CallActionClass call_action_ref;
+      readonly attribute EventClass event_ref;
+      readonly attribute UmlInterfaceClass uml_interface_ref;
+      readonly attribute MethodClass method_ref;
+      readonly attribute OperationClass operation_ref;
+      readonly attribute ParameterClass parameter_ref;
+      readonly attribute CalledOperation called_operation_ref;
+      readonly attribute ParameterType parameter_type_ref;
+   };
+};
+
+#endif

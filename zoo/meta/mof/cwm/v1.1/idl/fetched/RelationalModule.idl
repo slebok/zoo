@@ -1,0 +1,891 @@
+#ifndef RELATIONAL_MODULE_IDL
+#define RELATIONAL_MODULE_IDL
+#pragma prefix "org.omg.cwm.resource"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+#include "InstanceModule.idl"
+#include "DataTypesModule.idl"
+#include "BehavioralModule.idl"
+#include "KeysIndexesModule.idl"
+
+module RelationalModule
+{
+   interface CatalogClass;
+   interface Catalog;
+   typedef sequence<Catalog> CatalogSet;
+   interface SchemaClass;
+   interface Schema;
+   typedef sequence<Schema> SchemaSet;
+   interface CwmColumnSetClass;
+   interface CwmColumnSet;
+   typedef sequence<CwmColumnSet> CwmColumnSetSet;
+   interface NamedColumnSetClass;
+   interface NamedColumnSet;
+   typedef sequence<NamedColumnSet> NamedColumnSetSet;
+   interface TableClass;
+   interface Table;
+   typedef sequence<Table> TableSet;
+   interface ViewClass;
+   interface View;
+   typedef sequence<View> ViewSet;
+   interface QueryColumnSetClass;
+   interface QueryColumnSet;
+   typedef sequence<QueryColumnSet> QueryColumnSetSet;
+   interface SQLDataTypeClass;
+   interface SQLDataType;
+   typedef sequence<SQLDataType> SQLDataTypeSet;
+   interface SQLDistinctTypeClass;
+   interface SQLDistinctType;
+   typedef sequence<SQLDistinctType> SQLDistinctTypeSet;
+   interface SQLSimpleTypeClass;
+   interface SQLSimpleType;
+   typedef sequence<SQLSimpleType> SQLSimpleTypeSet;
+   interface SQLStructuredTypeClass;
+   interface SQLStructuredType;
+   typedef sequence<SQLStructuredType> SQLStructuredTypeSet;
+   interface ColumnClass;
+   interface Column;
+   typedef sequence<Column> ColumnSet;
+   interface ProcedureClass;
+   interface Procedure;
+   typedef sequence<Procedure> ProcedureSet;
+   interface TriggerClass;
+   interface Trigger;
+   typedef sequence<Trigger> TriggerSet;
+   typedef sequence<Trigger> TriggerUList;
+   interface SQLIndexClass;
+   interface SQLIndex;
+   typedef sequence<SQLIndex> SQLIndexSet;
+   interface UniqueConstraintClass;
+   interface UniqueConstraint;
+   typedef sequence<UniqueConstraint> UniqueConstraintSet;
+   interface ForeignKeyClass;
+   interface ForeignKey;
+   typedef sequence<ForeignKey> ForeignKeySet;
+   interface SQLIndexColumnClass;
+   interface SQLIndexColumn;
+   typedef sequence<SQLIndexColumn> SQLIndexColumnSet;
+   interface PrimaryKeyClass;
+   interface PrimaryKey;
+   typedef sequence<PrimaryKey> PrimaryKeySet;
+   interface RowClass;
+   interface Row;
+   typedef sequence<Row> RowSet;
+   interface ColumnValueClass;
+   interface ColumnValue;
+   typedef sequence<ColumnValue> ColumnValueSet;
+   interface CheckConstraintClass;
+   interface CheckConstraint;
+   typedef sequence<CheckConstraint> CheckConstraintSet;
+   interface CwmRowSetClass;
+   interface CwmRowSet;
+   typedef sequence<CwmRowSet> CwmRowSetSet;
+   interface SQLParameterClass;
+   interface SQLParameter;
+   typedef sequence<SQLParameter> SQLParameterSet;
+   interface RelationalModulePackage;
+
+   module Enumerations
+   {
+      interface EnumerationsPackage;
+      enum ActionOrientationType {row, statement};
+      enum ConditionTimingType {before, after};
+      enum DeferrabilityType {initiallyDeferred, initiallyImmediate, notDeferrable};
+      enum EventManipulationType {insert, delete, update};
+      enum NullableType {columnNoNulls, columnNullable, columnNullableUnknown};
+      enum ProcedureType {procedure, function};
+      enum ReferentialRuleType {importedKeyNoAction, importedKeyCascade, importedKeySetNull, importedKeyRestrict, importedKeySetDefault};
+
+      interface EnumerationsPackage : Reflective::RefPackage
+      {
+      };
+   }; // end of module Enumerations
+
+   interface CatalogClass : CoreModule::PackageClass
+   {
+      readonly attribute CatalogSet all_of_type_catalog;
+      readonly attribute CatalogSet all_of_class_catalog;
+      Catalog create_catalog (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string default_character_set_name,
+         in string default_collation_name)
+         raises (Reflective::MofError);
+   };
+
+   interface Catalog : CatalogClass, CoreModule::Package
+   {
+      string default_character_set_name ()
+         raises (Reflective::MofError);
+      void set_default_character_set_name (in string new_value)
+         raises (Reflective::MofError);
+      string default_collation_name ()
+         raises (Reflective::MofError);
+      void set_default_collation_name (in string new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Catalog
+
+   interface SchemaClass : CoreModule::PackageClass
+   {
+      readonly attribute SchemaSet all_of_type_schema;
+      readonly attribute SchemaSet all_of_class_schema;
+      Schema create_schema (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Schema : SchemaClass, CoreModule::Package
+   {
+   }; // end of interface Schema
+
+   interface CwmColumnSetClass : CoreModule::ClassClass
+   {
+      readonly attribute CwmColumnSetSet all_of_type_cwm_column_set;
+      readonly attribute CwmColumnSetSet all_of_class_cwm_column_set;
+      CwmColumnSet create_cwm_column_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface CwmColumnSet : CwmColumnSetClass, CoreModule::Class
+   {
+   }; // end of interface CwmColumnSet
+
+   interface NamedColumnSetClass : CwmColumnSetClass
+   {
+      readonly attribute NamedColumnSetSet all_of_type_named_column_set;
+      readonly attribute NamedColumnSetSet all_of_class_named_column_set;
+      NamedColumnSet create_named_column_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface NamedColumnSet : NamedColumnSetClass, CwmColumnSet
+   {
+      ColumnSet option_scope_column ()
+         raises (Reflective::MofError);
+      void set_option_scope_column (in ColumnSet new_value)
+         raises (Reflective::MofError);
+      void unset_option_scope_column ()
+         raises (Reflective::MofError);
+      void add_option_scope_column (in Column new_element)
+         raises (Reflective::MofError);
+      void modify_option_scope_column (
+         in Column old_element,
+         in Column new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_option_scope_column (in Column old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      SQLStructuredType type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_type (in SQLStructuredType new_value)
+         raises (Reflective::MofError);
+      void unset_type ()
+         raises (Reflective::MofError);
+      TriggerSet using_trigger ()
+         raises (Reflective::MofError);
+      void set_using_trigger (in TriggerSet new_value)
+         raises (Reflective::MofError);
+      void unset_using_trigger ()
+         raises (Reflective::MofError);
+      void add_using_trigger (in Trigger new_element)
+         raises (Reflective::MofError);
+      void modify_using_trigger (
+         in Trigger old_element,
+         in Trigger new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_using_trigger (in Trigger old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface NamedColumnSet
+
+   interface TableClass : NamedColumnSetClass
+   {
+      readonly attribute TableSet all_of_type_table;
+      readonly attribute TableSet all_of_class_table;
+      Table create_table (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_temporary,
+         in string temporary_scope,
+         in boolean is_system)
+         raises (Reflective::MofError);
+   };
+
+   interface Table : TableClass, NamedColumnSet
+   {
+      boolean is_temporary ()
+         raises (Reflective::MofError);
+      void set_is_temporary (in boolean new_value)
+         raises (Reflective::MofError);
+      string temporary_scope ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_temporary_scope (in string new_value)
+         raises (Reflective::MofError);
+      void unset_temporary_scope ()
+         raises (Reflective::MofError);
+      TriggerUList trigger ()
+         raises (Reflective::MofError);
+      void set_trigger (in TriggerUList new_value)
+         raises (Reflective::MofError);
+      void unset_trigger ()
+         raises (Reflective::MofError);
+      void add_trigger (in RelationalModule::Trigger new_element)
+         raises (Reflective::MofError);
+      void add_trigger_before (
+         in RelationalModule::Trigger new_element,
+         in RelationalModule::Trigger before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_trigger (
+         in RelationalModule::Trigger old_element,
+         in RelationalModule::Trigger new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_trigger (in RelationalModule::Trigger old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      boolean is_system ()
+         raises (Reflective::MofError);
+      void set_is_system (in boolean new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Table
+
+   interface ViewClass : NamedColumnSetClass
+   {
+      readonly attribute ViewSet all_of_type_view;
+      readonly attribute ViewSet all_of_class_view;
+      View create_view (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_read_only,
+         in boolean check_option,
+         in DataTypesModule::QueryExpression query_expression)
+         raises (Reflective::MofError);
+   };
+
+   interface View : ViewClass, NamedColumnSet
+   {
+      boolean is_read_only ()
+         raises (Reflective::MofError);
+      void set_is_read_only (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean check_option ()
+         raises (Reflective::MofError);
+      void set_check_option (in boolean new_value)
+         raises (Reflective::MofError);
+      DataTypesModule::QueryExpression query_expression ()
+         raises (Reflective::MofError);
+      void set_query_expression (in DataTypesModule::QueryExpression new_value)
+         raises (Reflective::MofError);
+   }; // end of interface View
+
+   interface QueryColumnSetClass : CwmColumnSetClass
+   {
+      readonly attribute QueryColumnSetSet all_of_type_query_column_set;
+      readonly attribute QueryColumnSetSet all_of_class_query_column_set;
+      QueryColumnSet create_query_column_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in DataTypesModule::QueryExpression query)
+         raises (Reflective::MofError);
+   };
+
+   interface QueryColumnSet : QueryColumnSetClass, CwmColumnSet
+   {
+      DataTypesModule::QueryExpression query ()
+         raises (Reflective::MofError);
+      void set_query (in DataTypesModule::QueryExpression new_value)
+         raises (Reflective::MofError);
+   }; // end of interface QueryColumnSet
+
+   interface SQLDataTypeClass : CoreModule::ClassifierClass
+   {
+      readonly attribute SQLDataTypeSet all_of_type_sqldata_type;
+   };
+
+   interface SQLDataType : SQLDataTypeClass, CoreModule::Classifier
+   {
+      long type_number ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_type_number (in long new_value)
+         raises (Reflective::MofError);
+      void unset_type_number ()
+         raises (Reflective::MofError);
+   }; // end of interface SQLDataType
+
+   interface SQLDistinctTypeClass : SQLDataTypeClass, DataTypesModule::TypeAliasClass
+   {
+      readonly attribute SQLDistinctTypeSet all_of_type_sqldistinct_type;
+      readonly attribute SQLDistinctTypeSet all_of_class_sqldistinct_type;
+      SQLDistinctType create_sqldistinct_type (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in long type_number,
+         in long length,
+         in long precision,
+         in long scale)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLDistinctType : SQLDistinctTypeClass, SQLDataType, DataTypesModule::TypeAlias
+   {
+      long length ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_length (in long new_value)
+         raises (Reflective::MofError);
+      void unset_length ()
+         raises (Reflective::MofError);
+      long precision ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_precision (in long new_value)
+         raises (Reflective::MofError);
+      void unset_precision ()
+         raises (Reflective::MofError);
+      long scale ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_scale (in long new_value)
+         raises (Reflective::MofError);
+      void unset_scale ()
+         raises (Reflective::MofError);
+      SQLSimpleType sql_simple_type ()
+         raises (Reflective::MofError);
+      void set_sql_simple_type (in SQLSimpleType new_value)
+         raises (Reflective::MofError);
+   }; // end of interface SQLDistinctType
+
+   interface SQLSimpleTypeClass : SQLDataTypeClass, CoreModule::DataTypeClass
+   {
+      readonly attribute SQLSimpleTypeSet all_of_type_sqlsimple_type;
+      readonly attribute SQLSimpleTypeSet all_of_class_sqlsimple_type;
+      SQLSimpleType create_sqlsimple_type (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in long type_number,
+         in long character_maximum_length,
+         in long character_octet_length,
+         in long numeric_precision,
+         in long numeric_precision_radix,
+         in long numeric_scale,
+         in long date_time_precision)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLSimpleType : SQLSimpleTypeClass, SQLDataType, CoreModule::DataType
+   {
+      long character_maximum_length ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_character_maximum_length (in long new_value)
+         raises (Reflective::MofError);
+      void unset_character_maximum_length ()
+         raises (Reflective::MofError);
+      long character_octet_length ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_character_octet_length (in long new_value)
+         raises (Reflective::MofError);
+      void unset_character_octet_length ()
+         raises (Reflective::MofError);
+      long numeric_precision ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_numeric_precision (in long new_value)
+         raises (Reflective::MofError);
+      void unset_numeric_precision ()
+         raises (Reflective::MofError);
+      long numeric_precision_radix ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_numeric_precision_radix (in long new_value)
+         raises (Reflective::MofError);
+      void unset_numeric_precision_radix ()
+         raises (Reflective::MofError);
+      long numeric_scale ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_numeric_scale (in long new_value)
+         raises (Reflective::MofError);
+      void unset_numeric_scale ()
+         raises (Reflective::MofError);
+      long date_time_precision ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_date_time_precision (in long new_value)
+         raises (Reflective::MofError);
+      void unset_date_time_precision ()
+         raises (Reflective::MofError);
+   }; // end of interface SQLSimpleType
+
+   interface SQLStructuredTypeClass : SQLDataTypeClass, CoreModule::ClassClass
+   {
+      readonly attribute SQLStructuredTypeSet all_of_type_sqlstructured_type;
+      readonly attribute SQLStructuredTypeSet all_of_class_sqlstructured_type;
+      SQLStructuredType create_sqlstructured_type (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in long type_number)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLStructuredType : SQLStructuredTypeClass, SQLDataType, CoreModule::Class
+   {
+      ColumnSet referencing_column ()
+         raises (Reflective::MofError);
+      void set_referencing_column (in ColumnSet new_value)
+         raises (Reflective::MofError);
+      void unset_referencing_column ()
+         raises (Reflective::MofError);
+      void add_referencing_column (in Column new_element)
+         raises (Reflective::MofError);
+      void modify_referencing_column (
+         in Column old_element,
+         in Column new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_referencing_column (in Column old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      NamedColumnSetSet column_set ()
+         raises (Reflective::MofError);
+      void set_column_set (in NamedColumnSetSet new_value)
+         raises (Reflective::MofError);
+      void unset_column_set ()
+         raises (Reflective::MofError);
+      void add_column_set (in NamedColumnSet new_element)
+         raises (Reflective::MofError);
+      void modify_column_set (
+         in NamedColumnSet old_element,
+         in NamedColumnSet new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_column_set (in NamedColumnSet old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SQLStructuredType
+
+   interface ColumnClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute ColumnSet all_of_type_column;
+      readonly attribute ColumnSet all_of_class_column;
+      Column create_column (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in long precision,
+         in long scale,
+         in Enumerations::NullableType is_nullable,
+         in long length,
+         in string collation_name,
+         in string character_set_name)
+         raises (Reflective::MofError);
+   };
+
+   interface Column : ColumnClass, CoreModule::UmlAttribute
+   {
+      long precision ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_precision (in long new_value)
+         raises (Reflective::MofError);
+      void unset_precision ()
+         raises (Reflective::MofError);
+      long scale ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_scale (in long new_value)
+         raises (Reflective::MofError);
+      void unset_scale ()
+         raises (Reflective::MofError);
+      Enumerations::NullableType is_nullable ()
+         raises (Reflective::MofError);
+      void set_is_nullable (in Enumerations::NullableType new_value)
+         raises (Reflective::MofError);
+      long length ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_length (in long new_value)
+         raises (Reflective::MofError);
+      void unset_length ()
+         raises (Reflective::MofError);
+      string collation_name ()
+         raises (Reflective::MofError);
+      void set_collation_name (in string new_value)
+         raises (Reflective::MofError);
+      string character_set_name ()
+         raises (Reflective::MofError);
+      void set_character_set_name (in string new_value)
+         raises (Reflective::MofError);
+      NamedColumnSet option_scope_column_set ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_option_scope_column_set (in NamedColumnSet new_value)
+         raises (Reflective::MofError);
+      void unset_option_scope_column_set ()
+         raises (Reflective::MofError);
+      SQLStructuredType referenced_table_type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_referenced_table_type (in SQLStructuredType new_value)
+         raises (Reflective::MofError);
+      void unset_referenced_table_type ()
+         raises (Reflective::MofError);
+   }; // end of interface Column
+
+   interface ProcedureClass : BehavioralModule::MethodClass
+   {
+      readonly attribute ProcedureSet all_of_type_procedure;
+      readonly attribute ProcedureSet all_of_class_procedure;
+      Procedure create_procedure (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in boolean is_query,
+         in CoreModule::ProcedureExpression body,
+         in Enumerations::ProcedureType type)
+         raises (Reflective::MofError);
+   };
+
+   interface Procedure : ProcedureClass, BehavioralModule::Method
+   {
+      Enumerations::ProcedureType type ()
+         raises (Reflective::MofError);
+      void set_type (in Enumerations::ProcedureType new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Procedure
+
+   interface TriggerClass : CoreModule::ModelElementClass
+   {
+      readonly attribute TriggerSet all_of_type_trigger;
+      readonly attribute TriggerSet all_of_class_trigger;
+      Trigger create_trigger (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in Enumerations::EventManipulationType event_manipulation,
+         in CoreModule::BooleanExpression action_condition,
+         in CoreModule::ProcedureExpression action_statement,
+         in Enumerations::ActionOrientationType action_orientation,
+         in Enumerations::ConditionTimingType condition_timing,
+         in string condition_reference_new_table,
+         in string condition_reference_old_table)
+         raises (Reflective::MofError);
+   };
+
+   interface Trigger : TriggerClass, CoreModule::ModelElement
+   {
+      Enumerations::EventManipulationType event_manipulation ()
+         raises (Reflective::MofError);
+      void set_event_manipulation (in Enumerations::EventManipulationType new_value)
+         raises (Reflective::MofError);
+      CoreModule::BooleanExpression action_condition ()
+         raises (Reflective::MofError);
+      void set_action_condition (in CoreModule::BooleanExpression new_value)
+         raises (Reflective::MofError);
+      CoreModule::ProcedureExpression action_statement ()
+         raises (Reflective::MofError);
+      void set_action_statement (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      Enumerations::ActionOrientationType action_orientation ()
+         raises (Reflective::MofError);
+      void set_action_orientation (in Enumerations::ActionOrientationType new_value)
+         raises (Reflective::MofError);
+      Enumerations::ConditionTimingType condition_timing ()
+         raises (Reflective::MofError);
+      void set_condition_timing (in Enumerations::ConditionTimingType new_value)
+         raises (Reflective::MofError);
+      string condition_reference_new_table ()
+         raises (Reflective::MofError);
+      void set_condition_reference_new_table (in string new_value)
+         raises (Reflective::MofError);
+      string condition_reference_old_table ()
+         raises (Reflective::MofError);
+      void set_condition_reference_old_table (in string new_value)
+         raises (Reflective::MofError);
+      RelationalModule::Table table ()
+         raises (Reflective::MofError);
+      void set_table (in RelationalModule::Table new_value)
+         raises (Reflective::MofError);
+      NamedColumnSetSet used_column_set ()
+         raises (Reflective::MofError);
+      void set_used_column_set (in NamedColumnSetSet new_value)
+         raises (Reflective::MofError);
+      void unset_used_column_set ()
+         raises (Reflective::MofError);
+      void add_used_column_set (in NamedColumnSet new_element)
+         raises (Reflective::MofError);
+      void modify_used_column_set (
+         in NamedColumnSet old_element,
+         in NamedColumnSet new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_used_column_set (in NamedColumnSet old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Trigger
+
+   interface SQLIndexClass : KeysIndexesModule::IndexClass
+   {
+      readonly attribute SQLIndexSet all_of_type_sqlindex;
+      readonly attribute SQLIndexSet all_of_class_sqlindex;
+      SQLIndex create_sqlindex (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_partitioning,
+         in boolean is_sorted,
+         in boolean is_unique,
+         in string filter_condition,
+         in boolean is_nullable,
+         in boolean auto_update)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLIndex : SQLIndexClass, KeysIndexesModule::Index
+   {
+      string filter_condition ()
+         raises (Reflective::MofError);
+      void set_filter_condition (in string new_value)
+         raises (Reflective::MofError);
+      boolean is_nullable ()
+         raises (Reflective::MofError);
+      void set_is_nullable (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean auto_update ()
+         raises (Reflective::MofError);
+      void set_auto_update (in boolean new_value)
+         raises (Reflective::MofError);
+   }; // end of interface SQLIndex
+
+   interface UniqueConstraintClass : KeysIndexesModule::UniqueKeyClass
+   {
+      readonly attribute UniqueConstraintSet all_of_type_unique_constraint;
+      readonly attribute UniqueConstraintSet all_of_class_unique_constraint;
+      UniqueConstraint create_unique_constraint (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in Enumerations::DeferrabilityType deferrability)
+         raises (Reflective::MofError);
+   };
+
+   interface UniqueConstraint : UniqueConstraintClass, KeysIndexesModule::UniqueKey
+   {
+      Enumerations::DeferrabilityType deferrability ()
+         raises (Reflective::MofError);
+      void set_deferrability (in Enumerations::DeferrabilityType new_value)
+         raises (Reflective::MofError);
+   }; // end of interface UniqueConstraint
+
+   interface ForeignKeyClass : KeysIndexesModule::KeyRelationshipClass
+   {
+      readonly attribute ForeignKeySet all_of_type_foreign_key;
+      readonly attribute ForeignKeySet all_of_class_foreign_key;
+      ForeignKey create_foreign_key (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in Enumerations::ReferentialRuleType delete_rule,
+         in Enumerations::ReferentialRuleType update_rule,
+         in Enumerations::DeferrabilityType deferrability)
+         raises (Reflective::MofError);
+   };
+
+   interface ForeignKey : ForeignKeyClass, KeysIndexesModule::KeyRelationship
+   {
+      Enumerations::ReferentialRuleType delete_rule ()
+         raises (Reflective::MofError);
+      void set_delete_rule (in Enumerations::ReferentialRuleType new_value)
+         raises (Reflective::MofError);
+      Enumerations::ReferentialRuleType update_rule ()
+         raises (Reflective::MofError);
+      void set_update_rule (in Enumerations::ReferentialRuleType new_value)
+         raises (Reflective::MofError);
+      Enumerations::DeferrabilityType deferrability ()
+         raises (Reflective::MofError);
+      void set_deferrability (in Enumerations::DeferrabilityType new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ForeignKey
+
+   interface SQLIndexColumnClass : KeysIndexesModule::IndexedFeatureClass
+   {
+      readonly attribute SQLIndexColumnSet all_of_type_sqlindex_column;
+      readonly attribute SQLIndexColumnSet all_of_class_sqlindex_column;
+      SQLIndexColumn create_sqlindex_column (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_ascending)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLIndexColumn : SQLIndexColumnClass, KeysIndexesModule::IndexedFeature
+   {
+   }; // end of interface SQLIndexColumn
+
+   interface PrimaryKeyClass : UniqueConstraintClass
+   {
+      readonly attribute PrimaryKeySet all_of_type_primary_key;
+      readonly attribute PrimaryKeySet all_of_class_primary_key;
+      PrimaryKey create_primary_key (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in Enumerations::DeferrabilityType deferrability)
+         raises (Reflective::MofError);
+   };
+
+   interface PrimaryKey : PrimaryKeyClass, UniqueConstraint
+   {
+   }; // end of interface PrimaryKey
+
+   interface RowClass : InstanceModule::UmlObjectClass
+   {
+      readonly attribute RowSet all_of_type_row;
+      readonly attribute RowSet all_of_class_row;
+      Row create_row (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Row : RowClass, InstanceModule::UmlObject
+   {
+   }; // end of interface Row
+
+   interface ColumnValueClass : InstanceModule::DataValueClass
+   {
+      readonly attribute ColumnValueSet all_of_type_column_value;
+      readonly attribute ColumnValueSet all_of_class_column_value;
+      ColumnValue create_column_value (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string value)
+         raises (Reflective::MofError);
+   };
+
+   interface ColumnValue : ColumnValueClass, InstanceModule::DataValue
+   {
+   }; // end of interface ColumnValue
+
+   interface CheckConstraintClass : CoreModule::UmlConstraintClass
+   {
+      readonly attribute CheckConstraintSet all_of_type_check_constraint;
+      readonly attribute CheckConstraintSet all_of_class_check_constraint;
+      CheckConstraint create_check_constraint (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::BooleanExpression body,
+         in Enumerations::DeferrabilityType deferrability)
+         raises (Reflective::MofError);
+   };
+
+   interface CheckConstraint : CheckConstraintClass, CoreModule::UmlConstraint
+   {
+      Enumerations::DeferrabilityType deferrability ()
+         raises (Reflective::MofError);
+      void set_deferrability (in Enumerations::DeferrabilityType new_value)
+         raises (Reflective::MofError);
+   }; // end of interface CheckConstraint
+
+   interface CwmRowSetClass : InstanceModule::ExtentClass
+   {
+      readonly attribute CwmRowSetSet all_of_type_cwm_row_set;
+      readonly attribute CwmRowSetSet all_of_class_cwm_row_set;
+      CwmRowSet create_cwm_row_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface CwmRowSet : CwmRowSetClass, InstanceModule::Extent
+   {
+   }; // end of interface CwmRowSet
+
+   interface SQLParameterClass : BehavioralModule::ParameterClass
+   {
+      readonly attribute SQLParameterSet all_of_type_sqlparameter;
+      readonly attribute SQLParameterSet all_of_class_sqlparameter;
+      SQLParameter create_sqlparameter (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Expression default_value,
+         in BehavioralModule::ParameterDirectionKind kind)
+         raises (Reflective::MofError);
+   };
+
+   interface SQLParameter : SQLParameterClass, BehavioralModule::Parameter
+   {
+   }; // end of interface SQLParameter
+
+   struct DistinctTypeHasSimpleTypeLink
+   {
+      SQLDistinctType sql_distinct_type;
+      SQLSimpleType sql_simple_type;
+   };
+   typedef sequence<DistinctTypeHasSimpleTypeLink> DistinctTypeHasSimpleTypeLinkSet;
+
+   interface DistinctTypeHasSimpleType : Reflective::RefAssociation
+   {
+      DistinctTypeHasSimpleTypeLinkSet all_distinct_type_has_simple_type_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in SQLDistinctType sql_distinct_type,
+         in SQLSimpleType sql_simple_type)
+         raises (Reflective::MofError);
+      SQLDistinctTypeSet sql_distinct_type (in SQLSimpleType sql_simple_type)
+         raises (Reflective::MofError);
+      SQLSimpleType sql_simple_type (in SQLDistinctType sql_distinct_type)
+         raises (Reflective::MofError);
+      void add (
+         in SQLDistinctType sql_distinct_type,
+         in SQLSimpleType sql_simple_type)
+         raises (Reflective::MofError);
+      void modify_sql_distinct_type (
+         in SQLDistinctType sql_distinct_type,
+         in SQLSimpleType sql_simple_type,
+         in SQLDistinctType new_sql_distinct_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_sql_simple_type (
+         in SQLDistinctType sql_distinct_type,
+         in SQLSimpleType sql_simple_type,
+         in SQLSimpleType new_sql_simple_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in SQLDistinctType sql_distinct_type,
+         in SQLSimpleType sql_simple_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DistinctTypeHasSimpleType
+
+   interface RelationalModulePackageFactory
+   {
+      RelationalModulePackage create_relational_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface RelationalModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute BehavioralModule::BehavioralModulePackage behavioral_ref;
+      readonly attribute InstanceModule::InstanceModulePackage instance_ref;
+      readonly attribute DataTypesModule::DataTypesModulePackage data_types_ref;
+      readonly attribute KeysIndexesModule::KeysIndexesModulePackage keys_indexes_ref;
+      readonly attribute Enumerations::EnumerationsPackage enumerations_ref;
+      readonly attribute CatalogClass catalog_ref;
+      readonly attribute SchemaClass schema_ref;
+      readonly attribute CwmColumnSetClass cwm_column_set_ref;
+      readonly attribute NamedColumnSetClass named_column_set_ref;
+      readonly attribute TableClass table_ref;
+      readonly attribute ViewClass view_ref;
+      readonly attribute QueryColumnSetClass query_column_set_ref;
+      readonly attribute SQLDataTypeClass sqldata_type_ref;
+      readonly attribute SQLDistinctTypeClass sqldistinct_type_ref;
+      readonly attribute SQLSimpleTypeClass sqlsimple_type_ref;
+      readonly attribute SQLStructuredTypeClass sqlstructured_type_ref;
+      readonly attribute ColumnClass column_ref;
+      readonly attribute ProcedureClass procedure_ref;
+      readonly attribute TriggerClass trigger_ref;
+      readonly attribute SQLIndexClass sqlindex_ref;
+      readonly attribute UniqueConstraintClass unique_constraint_ref;
+      readonly attribute ForeignKeyClass foreign_key_ref;
+      readonly attribute SQLIndexColumnClass sqlindex_column_ref;
+      readonly attribute PrimaryKeyClass primary_key_ref;
+      readonly attribute RowClass row_ref;
+      readonly attribute ColumnValueClass column_value_ref;
+      readonly attribute CheckConstraintClass check_constraint_ref;
+      readonly attribute CwmRowSetClass cwm_row_set_ref;
+      readonly attribute SQLParameterClass sqlparameter_ref;
+      readonly attribute DistinctTypeHasSimpleType distinct_type_has_simple_type_ref;
+   };
+};
+
+#endif

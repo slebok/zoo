@@ -1,0 +1,904 @@
+#ifndef CORE_MODULE_IDL
+#define CORE_MODULE_IDL
+#pragma prefix "org.omg.cwm.objectmodel"
+#include "Reflective.idl"
+
+module CoreModule
+{
+   interface ElementClass;
+   interface Element;
+   typedef sequence<Element> ElementSet;
+   interface ModelElementClass;
+   interface ModelElement;
+   typedef sequence<ModelElement> ModelElementSet;
+   typedef sequence<ModelElement> ModelElementUList;
+   interface NamespaceClass;
+   interface Namespace;
+   typedef sequence<Namespace> NamespaceSet;
+   interface ClassifierClass;
+   interface Classifier;
+   typedef sequence<Classifier> ClassifierSet;
+   interface ClassClass;
+   interface Class;
+   typedef sequence<Class> ClassSet;
+   interface DataTypeClass;
+   interface DataType;
+   typedef sequence<DataType> DataTypeSet;
+   interface PackageClass;
+   interface Package;
+   typedef sequence<Package> PackageSet;
+   interface SubsystemClass;
+   interface Subsystem;
+   typedef sequence<Subsystem> SubsystemSet;
+   interface ModelClass;
+   interface Model;
+   typedef sequence<Model> ModelSet;
+   interface FeatureClass;
+   interface Feature;
+   typedef sequence<Feature> FeatureSet;
+   typedef sequence<Feature> FeatureUList;
+   interface StructuralFeatureClass;
+   interface StructuralFeature;
+   typedef sequence<StructuralFeature> StructuralFeatureSet;
+   interface UmlAttributeClass;
+   interface UmlAttribute;
+   typedef sequence<UmlAttribute> UmlAttributeSet;
+   interface UmlConstraintClass;
+   interface UmlConstraint;
+   typedef sequence<UmlConstraint> UmlConstraintSet;
+   interface DependencyClass;
+   interface Dependency;
+   typedef sequence<Dependency> DependencySet;
+   interface ExpressionClass;
+   interface Expression;
+   typedef sequence<Expression> ExpressionSet;
+   interface BooleanExpressionClass;
+   interface BooleanExpression;
+   typedef sequence<BooleanExpression> BooleanExpressionSet;
+   interface ProcedureExpressionClass;
+   interface ProcedureExpression;
+   typedef sequence<ProcedureExpression> ProcedureExpressionSet;
+   interface MultiplicityClass;
+   interface Multiplicity;
+   typedef sequence<Multiplicity> MultiplicitySet;
+   interface MultiplicityRangeClass;
+   interface MultiplicityRange;
+   typedef sequence<MultiplicityRange> MultiplicityRangeSet;
+   interface StereotypeClass;
+   interface Stereotype;
+   typedef sequence<Stereotype> StereotypeSet;
+   interface TaggedValueClass;
+   interface TaggedValue;
+   typedef sequence<TaggedValue> TaggedValueSet;
+   interface CoreModulePackage;
+   typedef string Name;
+   typedef string Time;
+   typedef long UnlimitedInteger;
+   enum ChangeableKind {ck_changeable, ck_frozen, ck_addOnly};
+   enum OrderingKind {ok_unordered, ok_ordered};
+   enum ScopeKind {sk_instance, sk_classifier};
+   enum VisibilityKind {vk_public, vk_protected, vk_private, vk_package, vk_notapplicable};
+
+   interface ElementClass : Reflective::RefObject
+   {
+      readonly attribute ElementSet all_of_type_element;
+   };
+
+   interface Element : ElementClass
+   {
+   }; // end of interface Element
+
+   interface ModelElementClass : ElementClass
+   {
+      readonly attribute ModelElementSet all_of_type_model_element;
+   };
+
+   interface ModelElement : ModelElementClass, Element
+   {
+      CoreModule::Name name ()
+         raises (Reflective::MofError);
+      void set_name (in CoreModule::Name new_value)
+         raises (Reflective::MofError);
+      VisibilityKind visibility ()
+         raises (Reflective::MofError);
+      void set_visibility (in VisibilityKind new_value)
+         raises (Reflective::MofError);
+      DependencySet client_dependency ()
+         raises (Reflective::MofError);
+      void set_client_dependency (in DependencySet new_value)
+         raises (Reflective::MofError);
+      void unset_client_dependency ()
+         raises (Reflective::MofError);
+      void add_client_dependency (in Dependency new_element)
+         raises (Reflective::MofError);
+      void modify_client_dependency (
+         in Dependency old_element,
+         in Dependency new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_client_dependency (in Dependency old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      UmlConstraintSet constraint ()
+         raises (Reflective::MofError);
+      void set_constraint (in UmlConstraintSet new_value)
+         raises (Reflective::MofError);
+      void unset_constraint ()
+         raises (Reflective::MofError);
+      void add_constraint (in UmlConstraint new_element)
+         raises (Reflective::MofError);
+      void modify_constraint (
+         in UmlConstraint old_element,
+         in UmlConstraint new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_constraint (in UmlConstraint old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      PackageSet importer ()
+         raises (Reflective::MofError);
+      void set_importer (in PackageSet new_value)
+         raises (Reflective::MofError);
+      void unset_importer ()
+         raises (Reflective::MofError);
+      void add_importer (in Package new_element)
+         raises (Reflective::MofError);
+      void modify_importer (
+         in Package old_element,
+         in Package new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_importer (in Package old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CoreModule::Namespace namespace ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_namespace (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_namespace ()
+         raises (Reflective::MofError);
+      TaggedValueSet tagged_value ()
+         raises (Reflective::MofError);
+      void set_tagged_value (in TaggedValueSet new_value)
+         raises (Reflective::MofError);
+      void unset_tagged_value ()
+         raises (Reflective::MofError);
+      void add_tagged_value (in TaggedValue new_element)
+         raises (Reflective::MofError);
+      void modify_tagged_value (
+         in TaggedValue old_element,
+         in TaggedValue new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_tagged_value (in TaggedValue old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ModelElement
+
+   interface NamespaceClass : ModelElementClass
+   {
+      readonly attribute CoreModule::NamespaceSet all_of_type_namespace;
+   };
+
+   interface Namespace : NamespaceClass, ModelElement
+   {
+      ModelElementSet owned_element ()
+         raises (Reflective::MofError);
+      void set_owned_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_owned_element ()
+         raises (Reflective::MofError);
+      void add_owned_element (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_owned_element (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_owned_element (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Namespace
+
+   interface ClassifierClass : CoreModule::NamespaceClass
+   {
+      readonly attribute ClassifierSet all_of_type_classifier;
+   };
+
+   interface Classifier : ClassifierClass, CoreModule::Namespace
+   {
+      boolean is_abstract ()
+         raises (Reflective::MofError);
+      void set_is_abstract (in boolean new_value)
+         raises (Reflective::MofError);
+      FeatureUList feature ()
+         raises (Reflective::MofError);
+      void set_feature (in FeatureUList new_value)
+         raises (Reflective::MofError);
+      void unset_feature ()
+         raises (Reflective::MofError);
+      void add_feature (in CoreModule::Feature new_element)
+         raises (Reflective::MofError);
+      void add_feature_before (
+         in CoreModule::Feature new_element,
+         in CoreModule::Feature before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature (
+         in CoreModule::Feature old_element,
+         in CoreModule::Feature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_feature (in CoreModule::Feature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Classifier
+
+   interface ClassClass : ClassifierClass
+   {
+      readonly attribute ClassSet all_of_type_class;
+      readonly attribute ClassSet all_of_class_class;
+      Class create_class (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Class : ClassClass, Classifier
+   {
+   }; // end of interface Class
+
+   interface DataTypeClass : ClassifierClass
+   {
+      readonly attribute DataTypeSet all_of_type_data_type;
+      readonly attribute DataTypeSet all_of_class_data_type;
+      DataType create_data_type (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface DataType : DataTypeClass, Classifier
+   {
+   }; // end of interface DataType
+
+   interface PackageClass : CoreModule::NamespaceClass
+   {
+      readonly attribute PackageSet all_of_type_package;
+      readonly attribute PackageSet all_of_class_package;
+      Package create_package (
+         in CoreModule::Name name,
+         in VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Package : PackageClass, CoreModule::Namespace
+   {
+      ModelElementSet imported_element ()
+         raises (Reflective::MofError);
+      void set_imported_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_imported_element ()
+         raises (Reflective::MofError);
+      void add_imported_element (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_imported_element (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_imported_element (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Package
+
+   interface SubsystemClass : PackageClass, ClassifierClass
+   {
+      readonly attribute SubsystemSet all_of_type_subsystem;
+      readonly attribute SubsystemSet all_of_class_subsystem;
+      Subsystem create_subsystem (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Subsystem : SubsystemClass, Package, Classifier
+   {
+   }; // end of interface Subsystem
+
+   interface ModelClass : PackageClass
+   {
+      readonly attribute ModelSet all_of_type_model;
+      readonly attribute ModelSet all_of_class_model;
+      Model create_model (
+         in CoreModule::Name name,
+         in VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Model : ModelClass, Package
+   {
+   }; // end of interface Model
+
+   interface FeatureClass : ModelElementClass
+   {
+      readonly attribute FeatureSet all_of_type_feature;
+   };
+
+   interface Feature : FeatureClass, ModelElement
+   {
+      ScopeKind owner_scope ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_owner_scope (in ScopeKind new_value)
+         raises (Reflective::MofError);
+      void unset_owner_scope ()
+         raises (Reflective::MofError);
+      Classifier owner ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_owner (in Classifier new_value)
+         raises (Reflective::MofError);
+      void unset_owner ()
+         raises (Reflective::MofError);
+   }; // end of interface Feature
+
+   interface StructuralFeatureClass : FeatureClass
+   {
+      readonly attribute StructuralFeatureSet all_of_type_structural_feature;
+   };
+
+   interface StructuralFeature : StructuralFeatureClass, Feature
+   {
+      ChangeableKind changeability ()
+         raises (Reflective::MofError);
+      void set_changeability (in ChangeableKind new_value)
+         raises (Reflective::MofError);
+      CoreModule::Multiplicity multiplicity ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_multiplicity (in CoreModule::Multiplicity new_value)
+         raises (Reflective::MofError);
+      void unset_multiplicity ()
+         raises (Reflective::MofError);
+      OrderingKind ordering ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_ordering (in OrderingKind new_value)
+         raises (Reflective::MofError);
+      void unset_ordering ()
+         raises (Reflective::MofError);
+      ScopeKind target_scope ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_target_scope (in ScopeKind new_value)
+         raises (Reflective::MofError);
+      void unset_target_scope ()
+         raises (Reflective::MofError);
+      Classifier type ()
+         raises (Reflective::MofError);
+      void set_type (in Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface StructuralFeature
+
+   interface UmlAttributeClass : StructuralFeatureClass
+   {
+      readonly attribute UmlAttributeSet all_of_type_uml_attribute;
+      readonly attribute UmlAttributeSet all_of_class_uml_attribute;
+      UmlAttribute create_uml_attribute (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in ScopeKind owner_scope,
+         in ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in OrderingKind ordering,
+         in ScopeKind target_scope,
+         in Expression initial_value)
+         raises (Reflective::MofError);
+   };
+
+   interface UmlAttribute : UmlAttributeClass, StructuralFeature
+   {
+      Expression initial_value ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_initial_value (in Expression new_value)
+         raises (Reflective::MofError);
+      void unset_initial_value ()
+         raises (Reflective::MofError);
+   }; // end of interface UmlAttribute
+
+   interface UmlConstraintClass : ModelElementClass
+   {
+      readonly attribute UmlConstraintSet all_of_type_uml_constraint;
+      readonly attribute UmlConstraintSet all_of_class_uml_constraint;
+      UmlConstraint create_uml_constraint (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in BooleanExpression body)
+         raises (Reflective::MofError);
+   };
+
+   interface UmlConstraint : UmlConstraintClass, ModelElement
+   {
+      BooleanExpression body ()
+         raises (Reflective::MofError);
+      void set_body (in BooleanExpression new_value)
+         raises (Reflective::MofError);
+      ModelElementUList constrained_element ()
+         raises (Reflective::MofError);
+      void set_constrained_element (in ModelElementUList new_value)
+         raises (Reflective::MofError);
+      void unset_constrained_element ()
+         raises (Reflective::MofError);
+      void add_constrained_element (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void add_constrained_element_before (
+         in ModelElement new_element,
+         in ModelElement before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_constrained_element (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_constrained_element (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface UmlConstraint
+
+   interface DependencyClass : ModelElementClass
+   {
+      readonly attribute DependencySet all_of_type_dependency;
+      readonly attribute DependencySet all_of_class_dependency;
+      Dependency create_dependency (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in string kind)
+         raises (Reflective::MofError);
+   };
+
+   interface Dependency : DependencyClass, ModelElement
+   {
+      string kind ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_kind (in string new_value)
+         raises (Reflective::MofError);
+      void unset_kind ()
+         raises (Reflective::MofError);
+      ModelElementSet client ()
+         raises (Reflective::MofError);
+      void set_client (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_client (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_client (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_client (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ModelElementSet supplier ()
+         raises (Reflective::MofError);
+      void set_supplier (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_supplier (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_supplier (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_supplier (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Dependency
+
+   interface ExpressionClass : ElementClass
+   {
+      readonly attribute ExpressionSet all_of_type_expression;
+      readonly attribute ExpressionSet all_of_class_expression;
+      Expression create_expression (
+         in string body,
+         in Name language)
+         raises (Reflective::MofError);
+   };
+
+   interface Expression : ExpressionClass, Element
+   {
+      string body ()
+         raises (Reflective::MofError);
+      void set_body (in string new_value)
+         raises (Reflective::MofError);
+      Name language ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_language (in Name new_value)
+         raises (Reflective::MofError);
+      void unset_language ()
+         raises (Reflective::MofError);
+   }; // end of interface Expression
+
+   interface BooleanExpressionClass : ExpressionClass
+   {
+      readonly attribute BooleanExpressionSet all_of_type_boolean_expression;
+      readonly attribute BooleanExpressionSet all_of_class_boolean_expression;
+      BooleanExpression create_boolean_expression (
+         in string body,
+         in Name language)
+         raises (Reflective::MofError);
+   };
+
+   interface BooleanExpression : BooleanExpressionClass, Expression
+   {
+   }; // end of interface BooleanExpression
+
+   interface ProcedureExpressionClass : ExpressionClass
+   {
+      readonly attribute ProcedureExpressionSet all_of_type_procedure_expression;
+      readonly attribute ProcedureExpressionSet all_of_class_procedure_expression;
+      ProcedureExpression create_procedure_expression (
+         in string body,
+         in Name language)
+         raises (Reflective::MofError);
+   };
+
+   interface ProcedureExpression : ProcedureExpressionClass, Expression
+   {
+   }; // end of interface ProcedureExpression
+
+   interface MultiplicityClass : ElementClass
+   {
+      readonly attribute MultiplicitySet all_of_type_multiplicity;
+      readonly attribute MultiplicitySet all_of_class_multiplicity;
+      Multiplicity create_multiplicity ()
+         raises (Reflective::MofError);
+   };
+
+   interface Multiplicity : MultiplicityClass, Element
+   {
+      MultiplicityRangeSet range ()
+         raises (Reflective::MofError);
+      void set_range (in MultiplicityRangeSet new_value)
+         raises (Reflective::MofError);
+      void add_range (in MultiplicityRange new_element)
+         raises (Reflective::MofError);
+      void modify_range (
+         in MultiplicityRange old_element,
+         in MultiplicityRange new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_range (in MultiplicityRange old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Multiplicity
+
+   interface MultiplicityRangeClass : ElementClass
+   {
+      readonly attribute MultiplicityRangeSet all_of_type_multiplicity_range;
+      readonly attribute MultiplicityRangeSet all_of_class_multiplicity_range;
+      MultiplicityRange create_multiplicity_range (
+         in long lower,
+         in UnlimitedInteger upper)
+         raises (Reflective::MofError);
+   };
+
+   interface MultiplicityRange : MultiplicityRangeClass, Element
+   {
+      long lower ()
+         raises (Reflective::MofError);
+      void set_lower (in long new_value)
+         raises (Reflective::MofError);
+      UnlimitedInteger upper ()
+         raises (Reflective::MofError);
+      void set_upper (in UnlimitedInteger new_value)
+         raises (Reflective::MofError);
+      CoreModule::Multiplicity multiplicity ()
+         raises (Reflective::MofError);
+      void set_multiplicity (in CoreModule::Multiplicity new_value)
+         raises (Reflective::MofError);
+   }; // end of interface MultiplicityRange
+
+   interface StereotypeClass : ModelElementClass
+   {
+      readonly attribute StereotypeSet all_of_type_stereotype;
+      readonly attribute StereotypeSet all_of_class_stereotype;
+      Stereotype create_stereotype (
+         in CoreModule::Name name,
+         in VisibilityKind visibility,
+         in CoreModule::Name base_class)
+         raises (Reflective::MofError);
+   };
+
+   interface Stereotype : StereotypeClass, ModelElement
+   {
+      CoreModule::Name base_class ()
+         raises (Reflective::MofError);
+      void set_base_class (in CoreModule::Name new_value)
+         raises (Reflective::MofError);
+      ModelElementSet extended_element ()
+         raises (Reflective::MofError);
+      void set_extended_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_extended_element ()
+         raises (Reflective::MofError);
+      void add_extended_element (in ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_extended_element (
+         in ModelElement old_element,
+         in ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_extended_element (in ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TaggedValueSet required_tag ()
+         raises (Reflective::MofError);
+      void set_required_tag (in TaggedValueSet new_value)
+         raises (Reflective::MofError);
+      void unset_required_tag ()
+         raises (Reflective::MofError);
+      void add_required_tag (in TaggedValue new_element)
+         raises (Reflective::MofError);
+      void modify_required_tag (
+         in TaggedValue old_element,
+         in TaggedValue new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_required_tag (in TaggedValue old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      UmlConstraintSet stereotype_constraint ()
+         raises (Reflective::MofError);
+      void set_stereotype_constraint (in UmlConstraintSet new_value)
+         raises (Reflective::MofError);
+      void unset_stereotype_constraint ()
+         raises (Reflective::MofError);
+      void add_stereotype_constraint (in UmlConstraint new_element)
+         raises (Reflective::MofError);
+      void modify_stereotype_constraint (
+         in UmlConstraint old_element,
+         in UmlConstraint new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_stereotype_constraint (in UmlConstraint old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Stereotype
+
+   interface TaggedValueClass : ElementClass
+   {
+      readonly attribute TaggedValueSet all_of_type_tagged_value;
+      readonly attribute TaggedValueSet all_of_class_tagged_value;
+      TaggedValue create_tagged_value (
+         in Name tag,
+         in string uml_value)
+         raises (Reflective::MofError);
+   };
+
+   interface TaggedValue : TaggedValueClass, Element
+   {
+      Name tag ()
+         raises (Reflective::MofError);
+      void set_tag (in Name new_value)
+         raises (Reflective::MofError);
+      string uml_value ()
+         raises (Reflective::MofError);
+      void set_uml_value (in string new_value)
+         raises (Reflective::MofError);
+      ModelElement model_element ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_model_element (in ModelElement new_value)
+         raises (Reflective::MofError);
+      void unset_model_element ()
+         raises (Reflective::MofError);
+      CoreModule::Stereotype stereotype ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_stereotype (in CoreModule::Stereotype new_value)
+         raises (Reflective::MofError);
+      void unset_stereotype ()
+         raises (Reflective::MofError);
+   }; // end of interface TaggedValue
+
+   struct DependencySupplierLink
+   {
+      ModelElement supplier;
+      Dependency supplier_dependency;
+   };
+   typedef sequence<DependencySupplierLink> DependencySupplierLinkSet;
+
+   interface DependencySupplier : Reflective::RefAssociation
+   {
+      DependencySupplierLinkSet all_dependency_supplier_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ModelElement supplier,
+         in Dependency supplier_dependency)
+         raises (Reflective::MofError);
+      ModelElementSet supplier (in Dependency supplier_dependency)
+         raises (Reflective::MofError);
+      DependencySet supplier_dependency (in ModelElement supplier)
+         raises (Reflective::MofError);
+      void add (
+         in ModelElement supplier,
+         in Dependency supplier_dependency)
+         raises (Reflective::MofError);
+      void modify_supplier (
+         in ModelElement supplier,
+         in Dependency supplier_dependency,
+         in ModelElement new_supplier)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_supplier_dependency (
+         in ModelElement supplier,
+         in Dependency supplier_dependency,
+         in Dependency new_supplier_dependency)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ModelElement supplier,
+         in Dependency supplier_dependency)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DependencySupplier
+
+   struct StereotypeConstraintsLink
+   {
+      UmlConstraint stereotype_constraint;
+      Stereotype constrained_stereotype;
+   };
+   typedef sequence<StereotypeConstraintsLink> StereotypeConstraintsLinkSet;
+
+   interface StereotypeConstraints : Reflective::RefAssociation
+   {
+      StereotypeConstraintsLinkSet all_stereotype_constraints_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in UmlConstraint stereotype_constraint,
+         in Stereotype constrained_stereotype)
+         raises (Reflective::MofError);
+      UmlConstraintSet stereotype_constraint (in Stereotype constrained_stereotype)
+         raises (Reflective::MofError);
+      Stereotype constrained_stereotype (in UmlConstraint stereotype_constraint)
+         raises (Reflective::MofError);
+      void add (
+         in UmlConstraint stereotype_constraint,
+         in Stereotype constrained_stereotype)
+         raises (Reflective::MofError);
+      void modify_stereotype_constraint (
+         in UmlConstraint stereotype_constraint,
+         in Stereotype constrained_stereotype,
+         in UmlConstraint new_stereotype_constraint)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_constrained_stereotype (
+         in UmlConstraint stereotype_constraint,
+         in Stereotype constrained_stereotype,
+         in Stereotype new_constrained_stereotype)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in UmlConstraint stereotype_constraint,
+         in Stereotype constrained_stereotype)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface StereotypeConstraints
+
+   struct StereotypedElementLink
+   {
+      ModelElement extended_element;
+      CoreModule::Stereotype stereotype;
+   };
+   typedef sequence<StereotypedElementLink> StereotypedElementLinkSet;
+
+   interface StereotypedElement : Reflective::RefAssociation
+   {
+      StereotypedElementLinkSet all_stereotyped_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ModelElement extended_element,
+         in CoreModule::Stereotype stereotype)
+         raises (Reflective::MofError);
+      ModelElementSet extended_element (in CoreModule::Stereotype stereotype)
+         raises (Reflective::MofError);
+      CoreModule::Stereotype stereotype (in ModelElement extended_element)
+         raises (Reflective::MofError);
+      void add (
+         in ModelElement extended_element,
+         in CoreModule::Stereotype stereotype)
+         raises (Reflective::MofError);
+      void modify_extended_element (
+         in ModelElement extended_element,
+         in CoreModule::Stereotype stereotype,
+         in ModelElement new_extended_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_stereotype (
+         in ModelElement extended_element,
+         in CoreModule::Stereotype stereotype,
+         in CoreModule::Stereotype new_stereotype)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ModelElement extended_element,
+         in CoreModule::Stereotype stereotype)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface StereotypedElement
+
+   struct StructuralFeatureTypeLink
+   {
+      StructuralFeature structural_feature;
+      Classifier type;
+   };
+   typedef sequence<StructuralFeatureTypeLink> StructuralFeatureTypeLinkSet;
+
+   interface StructuralFeatureType : Reflective::RefAssociation
+   {
+      StructuralFeatureTypeLinkSet all_structural_feature_type_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in StructuralFeature structural_feature,
+         in Classifier type)
+         raises (Reflective::MofError);
+      StructuralFeatureSet structural_feature (in Classifier type)
+         raises (Reflective::MofError);
+      Classifier type (in StructuralFeature structural_feature)
+         raises (Reflective::MofError);
+      void add (
+         in StructuralFeature structural_feature,
+         in Classifier type)
+         raises (Reflective::MofError);
+      void modify_structural_feature (
+         in StructuralFeature structural_feature,
+         in Classifier type,
+         in StructuralFeature new_structural_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_type (
+         in StructuralFeature structural_feature,
+         in Classifier type,
+         in Classifier new_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in StructuralFeature structural_feature,
+         in Classifier type)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface StructuralFeatureType
+
+   struct TaggedElementLink
+   {
+      ModelElement model_element;
+      TaggedValue tagged_value;
+   };
+   typedef sequence<TaggedElementLink> TaggedElementLinkSet;
+
+   interface TaggedElement : Reflective::RefAssociation
+   {
+      TaggedElementLinkSet all_tagged_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ModelElement model_element,
+         in TaggedValue tagged_value)
+         raises (Reflective::MofError);
+      ModelElement model_element (in TaggedValue tagged_value)
+         raises (Reflective::MofError);
+      TaggedValueSet tagged_value (in ModelElement model_element)
+         raises (Reflective::MofError);
+      void add (
+         in ModelElement model_element,
+         in TaggedValue tagged_value)
+         raises (Reflective::MofError);
+      void modify_model_element (
+         in ModelElement model_element,
+         in TaggedValue tagged_value,
+         in ModelElement new_model_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_tagged_value (
+         in ModelElement model_element,
+         in TaggedValue tagged_value,
+         in TaggedValue new_tagged_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ModelElement model_element,
+         in TaggedValue tagged_value)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TaggedElement
+
+   interface CoreModulePackageFactory
+   {
+      CoreModulePackage create_core_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface CoreModulePackage : Reflective::RefPackage
+   {
+      readonly attribute ElementClass element_ref;
+      readonly attribute ModelElementClass model_element_ref;
+      readonly attribute NamespaceClass namespace_ref;
+      readonly attribute ClassifierClass classifier_ref;
+      readonly attribute ClassClass class_ref;
+      readonly attribute DataTypeClass data_type_ref;
+      readonly attribute PackageClass package_ref;
+      readonly attribute SubsystemClass subsystem_ref;
+      readonly attribute ModelClass model_ref;
+      readonly attribute FeatureClass feature_ref;
+      readonly attribute StructuralFeatureClass structural_feature_ref;
+      readonly attribute UmlAttributeClass uml_attribute_ref;
+      readonly attribute UmlConstraintClass uml_constraint_ref;
+      readonly attribute DependencyClass dependency_ref;
+      readonly attribute ExpressionClass expression_ref;
+      readonly attribute BooleanExpressionClass boolean_expression_ref;
+      readonly attribute ProcedureExpressionClass procedure_expression_ref;
+      readonly attribute MultiplicityClass multiplicity_ref;
+      readonly attribute MultiplicityRangeClass multiplicity_range_ref;
+      readonly attribute StereotypeClass stereotype_ref;
+      readonly attribute TaggedValueClass tagged_value_ref;
+      readonly attribute DependencySupplier dependency_supplier_ref;
+      readonly attribute StereotypeConstraints stereotype_constraints_ref;
+      readonly attribute StereotypedElement stereotyped_element_ref;
+      readonly attribute StructuralFeatureType structural_feature_type_ref;
+      readonly attribute TaggedElement tagged_element_ref;
+   };
+};
+
+#endif

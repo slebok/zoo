@@ -1,0 +1,159 @@
+#ifndef ASSOCIATION_RULES_MODULE_IDL
+#define ASSOCIATION_RULES_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "MiningCoreModule.idl"
+#include "CoreModule.idl"
+
+module AssociationRulesModule
+{
+   typedef sequence<MiningCoreModule::MiningDataModule::Category> CategorySet;
+   interface FrequentItemSetFunctionSettingsClass;
+   interface FrequentItemSetFunctionSettings;
+   typedef sequence<FrequentItemSetFunctionSettings> FrequentItemSetFunctionSettingsSet;
+   interface AssociationRulesFunctionSettingsClass;
+   interface AssociationRulesFunctionSettings;
+   typedef sequence<AssociationRulesFunctionSettings> AssociationRulesFunctionSettingsSet;
+   interface SequenceFunctionSettingsClass;
+   interface SequenceFunctionSettings;
+   typedef sequence<SequenceFunctionSettings> SequenceFunctionSettingsSet;
+   interface AssociationRulesModulePackage;
+
+   interface FrequentItemSetFunctionSettingsClass : MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettingsClass
+   {
+      readonly attribute FrequentItemSetFunctionSettingsSet all_of_type_frequent_item_set_function_settings;
+      readonly attribute FrequentItemSetFunctionSettingsSet all_of_class_frequent_item_set_function_settings;
+      FrequentItemSetFunctionSettings create_frequent_item_set_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in double minimum_support,
+         in long maximum_set_size)
+         raises (Reflective::MofError);
+   };
+
+   interface FrequentItemSetFunctionSettings : FrequentItemSetFunctionSettingsClass, MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettings
+   {
+      double minimum_support ()
+         raises (Reflective::MofError);
+      void set_minimum_support (in double new_value)
+         raises (Reflective::MofError);
+      CategorySet exclusion ()
+         raises (Reflective::MofError);
+      void set_exclusion (in CategorySet new_value)
+         raises (Reflective::MofError);
+      void unset_exclusion ()
+         raises (Reflective::MofError);
+      void add_exclusion (in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::MofError);
+      void modify_exclusion (
+         in MiningCoreModule::MiningDataModule::Category old_element,
+         in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_exclusion (in MiningCoreModule::MiningDataModule::Category old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      long maximum_set_size ()
+         raises (Reflective::MofError);
+      void set_maximum_set_size (in long new_value)
+         raises (Reflective::MofError);
+   }; // end of interface FrequentItemSetFunctionSettings
+
+   interface AssociationRulesFunctionSettingsClass : FrequentItemSetFunctionSettingsClass
+   {
+      readonly attribute AssociationRulesFunctionSettingsSet all_of_type_association_rules_function_settings;
+      readonly attribute AssociationRulesFunctionSettingsSet all_of_class_association_rules_function_settings;
+      AssociationRulesFunctionSettings create_association_rules_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in double minimum_support,
+         in long maximum_set_size,
+         in double minimum_confidence,
+         in long maximum_rule_length)
+         raises (Reflective::MofError);
+   };
+
+   interface AssociationRulesFunctionSettings : AssociationRulesFunctionSettingsClass, FrequentItemSetFunctionSettings
+   {
+      double minimum_confidence ()
+         raises (Reflective::MofError);
+      void set_minimum_confidence (in double new_value)
+         raises (Reflective::MofError);
+      long maximum_rule_length ()
+         raises (Reflective::MofError);
+      void set_maximum_rule_length (in long new_value)
+         raises (Reflective::MofError);
+   }; // end of interface AssociationRulesFunctionSettings
+
+   interface SequenceFunctionSettingsClass : FrequentItemSetFunctionSettingsClass
+   {
+      readonly attribute SequenceFunctionSettingsSet all_of_type_sequence_function_settings;
+      readonly attribute SequenceFunctionSettingsSet all_of_class_sequence_function_settings;
+      SequenceFunctionSettings create_sequence_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes,
+         in double minimum_support,
+         in long maximum_set_size,
+         in long window_size)
+         raises (Reflective::MofError);
+   };
+
+   interface SequenceFunctionSettings : SequenceFunctionSettingsClass, FrequentItemSetFunctionSettings
+   {
+      long window_size ()
+         raises (Reflective::MofError);
+      void set_window_size (in long new_value)
+         raises (Reflective::MofError);
+   }; // end of interface SequenceFunctionSettings
+
+   struct SettingsRefExcludedCategoriesLink
+   {
+      MiningCoreModule::MiningDataModule::Category exclusion;
+      FrequentItemSetFunctionSettings settings;
+   };
+   typedef sequence<SettingsRefExcludedCategoriesLink> SettingsRefExcludedCategoriesLinkSet;
+
+   interface SettingsRefExcludedCategories : Reflective::RefAssociation
+   {
+      SettingsRefExcludedCategoriesLinkSet all_settings_ref_excluded_categories_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category exclusion,
+         in FrequentItemSetFunctionSettings settings)
+         raises (Reflective::MofError);
+      CategorySet exclusion (in FrequentItemSetFunctionSettings settings)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category exclusion,
+         in FrequentItemSetFunctionSettings settings)
+         raises (Reflective::MofError);
+      void modify_exclusion (
+         in MiningCoreModule::MiningDataModule::Category exclusion,
+         in FrequentItemSetFunctionSettings settings,
+         in MiningCoreModule::MiningDataModule::Category new_exclusion)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category exclusion,
+         in FrequentItemSetFunctionSettings settings)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SettingsRefExcludedCategories
+
+   interface AssociationRulesModulePackageFactory
+   {
+      AssociationRulesModulePackage create_association_rules_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface AssociationRulesModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute MiningCoreModule::MiningCoreModulePackage mining_core_ref;
+      readonly attribute FrequentItemSetFunctionSettingsClass frequent_item_set_function_settings_ref;
+      readonly attribute AssociationRulesFunctionSettingsClass association_rules_function_settings_ref;
+      readonly attribute SequenceFunctionSettingsClass sequence_function_settings_ref;
+      readonly attribute SettingsRefExcludedCategories settings_ref_excluded_categories_ref;
+   };
+};
+
+#endif

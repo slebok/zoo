@@ -1,0 +1,369 @@
+#ifndef KEYS_INDEXES_MODULE_IDL
+#define KEYS_INDEXES_MODULE_IDL
+#pragma prefix "org.omg.cwm.foundation"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module KeysIndexesModule
+{
+   typedef sequence<CoreModule::StructuralFeature> StructuralFeatureUList;
+   interface UniqueKeyClass;
+   interface UniqueKey;
+   typedef sequence<UniqueKey> UniqueKeySet;
+   interface IndexClass;
+   interface Index;
+   typedef sequence<Index> IndexSet;
+   interface KeyRelationshipClass;
+   interface KeyRelationship;
+   typedef sequence<KeyRelationship> KeyRelationshipSet;
+   interface IndexedFeatureClass;
+   interface IndexedFeature;
+   typedef sequence<IndexedFeature> IndexedFeatureSet;
+   typedef sequence<IndexedFeature> IndexedFeatureUList;
+   interface KeysIndexesModulePackage;
+
+   interface UniqueKeyClass : CoreModule::ModelElementClass
+   {
+      readonly attribute UniqueKeySet all_of_type_unique_key;
+      readonly attribute UniqueKeySet all_of_class_unique_key;
+      UniqueKey create_unique_key (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface UniqueKey : UniqueKeyClass, CoreModule::ModelElement
+   {
+      StructuralFeatureUList feature ()
+         raises (Reflective::MofError);
+      void set_feature (in StructuralFeatureUList new_value)
+         raises (Reflective::MofError);
+      void add_feature (in CoreModule::StructuralFeature new_element)
+         raises (Reflective::MofError);
+      void add_feature_before (
+         in CoreModule::StructuralFeature new_element,
+         in CoreModule::StructuralFeature before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature old_element,
+         in CoreModule::StructuralFeature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_feature (in CoreModule::StructuralFeature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      KeyRelationshipSet key_relationship ()
+         raises (Reflective::MofError);
+      void set_key_relationship (in KeyRelationshipSet new_value)
+         raises (Reflective::MofError);
+      void unset_key_relationship ()
+         raises (Reflective::MofError);
+      void add_key_relationship (in KeyRelationship new_element)
+         raises (Reflective::MofError);
+      void modify_key_relationship (
+         in KeyRelationship old_element,
+         in KeyRelationship new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_key_relationship (in KeyRelationship old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface UniqueKey
+
+   interface IndexClass : CoreModule::ModelElementClass
+   {
+      readonly attribute IndexSet all_of_type_index;
+      readonly attribute IndexSet all_of_class_index;
+      Index create_index (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_partitioning,
+         in boolean is_sorted,
+         in boolean is_unique)
+         raises (Reflective::MofError);
+   };
+
+   interface Index : IndexClass, CoreModule::ModelElement
+   {
+      boolean is_partitioning ()
+         raises (Reflective::MofError);
+      void set_is_partitioning (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_sorted ()
+         raises (Reflective::MofError);
+      void set_is_sorted (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_unique ()
+         raises (Reflective::MofError);
+      void set_is_unique (in boolean new_value)
+         raises (Reflective::MofError);
+      IndexedFeatureUList indexed_feature ()
+         raises (Reflective::MofError);
+      void set_indexed_feature (in IndexedFeatureUList new_value)
+         raises (Reflective::MofError);
+      void unset_indexed_feature ()
+         raises (Reflective::MofError);
+      void add_indexed_feature (in IndexedFeature new_element)
+         raises (Reflective::MofError);
+      void add_indexed_feature_before (
+         in IndexedFeature new_element,
+         in IndexedFeature before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_indexed_feature (
+         in IndexedFeature old_element,
+         in IndexedFeature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_indexed_feature (in IndexedFeature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CoreModule::Class spanned_class ()
+         raises (Reflective::MofError);
+      void set_spanned_class (in CoreModule::Class new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Index
+
+   interface KeyRelationshipClass : CoreModule::ModelElementClass
+   {
+      readonly attribute KeyRelationshipSet all_of_type_key_relationship;
+      readonly attribute KeyRelationshipSet all_of_class_key_relationship;
+      KeyRelationship create_key_relationship (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface KeyRelationship : KeyRelationshipClass, CoreModule::ModelElement
+   {
+      StructuralFeatureUList feature ()
+         raises (Reflective::MofError);
+      void set_feature (in StructuralFeatureUList new_value)
+         raises (Reflective::MofError);
+      void add_feature (in CoreModule::StructuralFeature new_element)
+         raises (Reflective::MofError);
+      void add_feature_before (
+         in CoreModule::StructuralFeature new_element,
+         in CoreModule::StructuralFeature before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature old_element,
+         in CoreModule::StructuralFeature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_feature (in CoreModule::StructuralFeature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      UniqueKey unique_key ()
+         raises (Reflective::MofError);
+      void set_unique_key (in UniqueKey new_value)
+         raises (Reflective::MofError);
+   }; // end of interface KeyRelationship
+
+   interface IndexedFeatureClass : CoreModule::ModelElementClass
+   {
+      readonly attribute IndexedFeatureSet all_of_type_indexed_feature;
+      readonly attribute IndexedFeatureSet all_of_class_indexed_feature;
+      IndexedFeature create_indexed_feature (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_ascending)
+         raises (Reflective::MofError);
+   };
+
+   interface IndexedFeature : IndexedFeatureClass, CoreModule::ModelElement
+   {
+      boolean is_ascending ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_is_ascending (in boolean new_value)
+         raises (Reflective::MofError);
+      void unset_is_ascending ()
+         raises (Reflective::MofError);
+      CoreModule::StructuralFeature feature ()
+         raises (Reflective::MofError);
+      void set_feature (in CoreModule::StructuralFeature new_value)
+         raises (Reflective::MofError);
+      KeysIndexesModule::Index index ()
+         raises (Reflective::MofError);
+      void set_index (in KeysIndexesModule::Index new_value)
+         raises (Reflective::MofError);
+   }; // end of interface IndexedFeature
+
+   struct IndexedFeaturesLink
+   {
+      CoreModule::StructuralFeature feature;
+      IndexedFeature indexed_feature;
+   };
+   typedef sequence<IndexedFeaturesLink> IndexedFeaturesLinkSet;
+
+   interface IndexedFeatures : Reflective::RefAssociation
+   {
+      IndexedFeaturesLinkSet all_indexed_features_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::StructuralFeature feature,
+         in IndexedFeature indexed_feature)
+         raises (Reflective::MofError);
+      CoreModule::StructuralFeature feature (in IndexedFeature indexed_feature)
+         raises (Reflective::MofError);
+      IndexedFeatureSet indexed_feature (in CoreModule::StructuralFeature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::StructuralFeature feature,
+         in IndexedFeature indexed_feature)
+         raises (Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature feature,
+         in IndexedFeature indexed_feature,
+         in CoreModule::StructuralFeature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_indexed_feature (
+         in CoreModule::StructuralFeature feature,
+         in IndexedFeature indexed_feature,
+         in IndexedFeature new_indexed_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::StructuralFeature feature,
+         in IndexedFeature indexed_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface IndexedFeatures
+
+   struct KeyRelationshipFeaturesLink
+   {
+      CoreModule::StructuralFeature feature;
+      KeyRelationship key_relationship;
+   };
+   typedef sequence<KeyRelationshipFeaturesLink> KeyRelationshipFeaturesLinkSet;
+
+   interface KeyRelationshipFeatures : Reflective::RefAssociation
+   {
+      KeyRelationshipFeaturesLinkSet all_key_relationship_features_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship)
+         raises (Reflective::MofError);
+      StructuralFeatureUList feature (in KeyRelationship key_relationship)
+         raises (Reflective::MofError);
+      KeyRelationshipSet key_relationship (in CoreModule::StructuralFeature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship)
+         raises (Reflective::MofError);
+      void add_before_feature (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship,
+         in CoreModule::StructuralFeature before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship,
+         in CoreModule::StructuralFeature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_key_relationship (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship,
+         in KeyRelationship new_key_relationship)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::StructuralFeature feature,
+         in KeyRelationship key_relationship)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface KeyRelationshipFeatures
+
+   struct UniqueFeatureLink
+   {
+      CoreModule::StructuralFeature feature;
+      UniqueKey unique_key;
+   };
+   typedef sequence<UniqueFeatureLink> UniqueFeatureLinkSet;
+
+   interface UniqueFeature : Reflective::RefAssociation
+   {
+      UniqueFeatureLinkSet all_unique_feature_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key)
+         raises (Reflective::MofError);
+      StructuralFeatureUList feature (in UniqueKey unique_key)
+         raises (Reflective::MofError);
+      UniqueKeySet unique_key (in CoreModule::StructuralFeature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key)
+         raises (Reflective::MofError);
+      void add_before_feature (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key,
+         in CoreModule::StructuralFeature before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key,
+         in CoreModule::StructuralFeature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_unique_key (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key,
+         in UniqueKey new_unique_key)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::StructuralFeature feature,
+         in UniqueKey unique_key)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface UniqueFeature
+
+   struct IndexSpansClassLink
+   {
+      CoreModule::Class spanned_class;
+      KeysIndexesModule::Index index;
+   };
+   typedef sequence<IndexSpansClassLink> IndexSpansClassLinkSet;
+
+   interface IndexSpansClass : Reflective::RefAssociation
+   {
+      IndexSpansClassLinkSet all_index_spans_class_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Class spanned_class,
+         in KeysIndexesModule::Index index)
+         raises (Reflective::MofError);
+      CoreModule::Class spanned_class (in KeysIndexesModule::Index index)
+         raises (Reflective::MofError);
+      IndexSet index (in CoreModule::Class spanned_class)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Class spanned_class,
+         in KeysIndexesModule::Index index)
+         raises (Reflective::MofError);
+      void modify_spanned_class (
+         in CoreModule::Class spanned_class,
+         in KeysIndexesModule::Index index,
+         in CoreModule::Class new_spanned_class)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_index (
+         in CoreModule::Class spanned_class,
+         in KeysIndexesModule::Index index,
+         in KeysIndexesModule::Index new_index)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Class spanned_class,
+         in KeysIndexesModule::Index index)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface IndexSpansClass
+
+   interface KeysIndexesModulePackageFactory
+   {
+      KeysIndexesModulePackage create_keys_indexes_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface KeysIndexesModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute UniqueKeyClass unique_key_ref;
+      readonly attribute IndexClass index_ref;
+      readonly attribute KeyRelationshipClass key_relationship_ref;
+      readonly attribute IndexedFeatureClass indexed_feature_ref;
+      readonly attribute IndexedFeatures indexed_features_ref;
+      readonly attribute KeyRelationshipFeatures key_relationship_features_ref;
+      readonly attribute UniqueFeature unique_feature_ref;
+      readonly attribute IndexSpansClass index_spans_class_ref;
+   };
+};
+
+#endif

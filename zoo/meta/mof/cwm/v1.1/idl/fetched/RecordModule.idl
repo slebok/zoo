@@ -1,0 +1,285 @@
+#ifndef RECORD_MODULE_IDL
+#define RECORD_MODULE_IDL
+#pragma prefix "org.omg.cwm.resource"
+#include "Reflective.idl"
+#include "InstanceModule.idl"
+#include "CoreModule.idl"
+
+module RecordModule
+{
+   interface FieldClass;
+   interface Field;
+   typedef sequence<Field> FieldSet;
+   interface RecordDefClass;
+   interface RecordDef;
+   typedef sequence<RecordDef> RecordDefSet;
+   typedef sequence<RecordDef> RecordDefUList;
+   interface FixedOffsetFieldClass;
+   interface FixedOffsetField;
+   typedef sequence<FixedOffsetField> FixedOffsetFieldSet;
+   interface RecordFileClass;
+   interface RecordFile;
+   typedef sequence<RecordFile> RecordFileSet;
+   interface FieldValueClass;
+   interface FieldValue;
+   typedef sequence<FieldValue> FieldValueSet;
+   interface RecordClass;
+   interface Record;
+   typedef sequence<Record> RecordSet;
+   interface CwmRecordSetClass;
+   interface CwmRecordSet;
+   typedef sequence<CwmRecordSet> CwmRecordSetSet;
+   interface GroupClass;
+   interface Group;
+   typedef sequence<Group> GroupSet;
+   interface RecordModulePackage;
+
+   interface FieldClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute FieldSet all_of_type_field;
+      readonly attribute FieldSet all_of_class_field;
+      Field create_field (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in long length,
+         in long precision,
+         in long scale)
+         raises (Reflective::MofError);
+   };
+
+   interface Field : FieldClass, CoreModule::UmlAttribute
+   {
+      long length ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_length (in long new_value)
+         raises (Reflective::MofError);
+      void unset_length ()
+         raises (Reflective::MofError);
+      long precision ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_precision (in long new_value)
+         raises (Reflective::MofError);
+      void unset_precision ()
+         raises (Reflective::MofError);
+      long scale ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_scale (in long new_value)
+         raises (Reflective::MofError);
+      void unset_scale ()
+         raises (Reflective::MofError);
+   }; // end of interface Field
+
+   interface RecordDefClass : CoreModule::ClassClass
+   {
+      readonly attribute RecordDefSet all_of_type_record_def;
+      readonly attribute RecordDefSet all_of_class_record_def;
+      RecordDef create_record_def (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in string field_delimiter,
+         in boolean is_fixed_width,
+         in string text_delimiter)
+         raises (Reflective::MofError);
+   };
+
+   interface RecordDef : RecordDefClass, CoreModule::Class
+   {
+      string field_delimiter ()
+         raises (Reflective::MofError);
+      void set_field_delimiter (in string new_value)
+         raises (Reflective::MofError);
+      boolean is_fixed_width ()
+         raises (Reflective::MofError);
+      void set_is_fixed_width (in boolean new_value)
+         raises (Reflective::MofError);
+      string text_delimiter ()
+         raises (Reflective::MofError);
+      void set_text_delimiter (in string new_value)
+         raises (Reflective::MofError);
+      RecordFileSet file ()
+         raises (Reflective::MofError);
+      void set_file (in RecordFileSet new_value)
+         raises (Reflective::MofError);
+      void unset_file ()
+         raises (Reflective::MofError);
+      void add_file (in RecordFile new_element)
+         raises (Reflective::MofError);
+      void modify_file (
+         in RecordFile old_element,
+         in RecordFile new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_file (in RecordFile old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RecordDef
+
+   interface FixedOffsetFieldClass : FieldClass
+   {
+      readonly attribute FixedOffsetFieldSet all_of_type_fixed_offset_field;
+      readonly attribute FixedOffsetFieldSet all_of_class_fixed_offset_field;
+      FixedOffsetField create_fixed_offset_field (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in long length,
+         in long precision,
+         in long scale,
+         in long offset,
+         in long offset_unit_bits)
+         raises (Reflective::MofError);
+   };
+
+   interface FixedOffsetField : FixedOffsetFieldClass, Field
+   {
+      long offset ()
+         raises (Reflective::MofError);
+      void set_offset (in long new_value)
+         raises (Reflective::MofError);
+      long offset_unit_bits ()
+         raises (Reflective::MofError);
+      void set_offset_unit_bits (in long new_value)
+         raises (Reflective::MofError);
+   }; // end of interface FixedOffsetField
+
+   interface RecordFileClass : CoreModule::PackageClass
+   {
+      readonly attribute RecordFileSet all_of_type_record_file;
+      readonly attribute RecordFileSet all_of_class_record_file;
+      RecordFile create_record_file (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_self_describing,
+         in long record_delimiter,
+         in long skip_records)
+         raises (Reflective::MofError);
+   };
+
+   interface RecordFile : RecordFileClass, CoreModule::Package
+   {
+      boolean is_self_describing ()
+         raises (Reflective::MofError);
+      void set_is_self_describing (in boolean new_value)
+         raises (Reflective::MofError);
+      long record_delimiter ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_record_delimiter (in long new_value)
+         raises (Reflective::MofError);
+      void unset_record_delimiter ()
+         raises (Reflective::MofError);
+      long skip_records ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_skip_records (in long new_value)
+         raises (Reflective::MofError);
+      void unset_skip_records ()
+         raises (Reflective::MofError);
+      RecordDefUList record ()
+         raises (Reflective::MofError);
+      void set_record (in RecordDefUList new_value)
+         raises (Reflective::MofError);
+      void unset_record ()
+         raises (Reflective::MofError);
+      void add_record (in RecordDef new_element)
+         raises (Reflective::MofError);
+      void add_record_before (
+         in RecordDef new_element,
+         in RecordDef before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_record (
+         in RecordDef old_element,
+         in RecordDef new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_record (in RecordDef old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RecordFile
+
+   interface FieldValueClass : InstanceModule::DataValueClass
+   {
+      readonly attribute FieldValueSet all_of_type_field_value;
+      readonly attribute FieldValueSet all_of_class_field_value;
+      FieldValue create_field_value (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string value)
+         raises (Reflective::MofError);
+   };
+
+   interface FieldValue : FieldValueClass, InstanceModule::DataValue
+   {
+   }; // end of interface FieldValue
+
+   interface RecordClass : InstanceModule::UmlObjectClass
+   {
+      readonly attribute RecordSet all_of_type_record;
+      readonly attribute RecordSet all_of_class_record;
+      Record create_record (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Record : RecordClass, InstanceModule::UmlObject
+   {
+   }; // end of interface Record
+
+   interface CwmRecordSetClass : InstanceModule::ExtentClass
+   {
+      readonly attribute CwmRecordSetSet all_of_type_cwm_record_set;
+      readonly attribute CwmRecordSetSet all_of_class_cwm_record_set;
+      CwmRecordSet create_cwm_record_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface CwmRecordSet : CwmRecordSetClass, InstanceModule::Extent
+   {
+   }; // end of interface CwmRecordSet
+
+   interface GroupClass : CoreModule::ClassifierClass
+   {
+      readonly attribute GroupSet all_of_type_group;
+      readonly attribute GroupSet all_of_class_group;
+      Group create_group (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Group : GroupClass, CoreModule::Classifier
+   {
+   }; // end of interface Group
+
+   interface RecordModulePackageFactory
+   {
+      RecordModulePackage create_record_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface RecordModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute InstanceModule::InstanceModulePackage instance_ref;
+      readonly attribute FieldClass field_ref;
+      readonly attribute RecordDefClass record_def_ref;
+      readonly attribute FixedOffsetFieldClass fixed_offset_field_ref;
+      readonly attribute RecordFileClass record_file_ref;
+      readonly attribute FieldValueClass field_value_ref;
+      readonly attribute RecordClass record_ref;
+      readonly attribute CwmRecordSetClass cwm_record_set_ref;
+      readonly attribute GroupClass group_ref;
+   };
+};
+
+#endif

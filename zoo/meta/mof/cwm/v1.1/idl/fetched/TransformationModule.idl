@@ -1,0 +1,1076 @@
+#ifndef TRANSFORMATION_MODULE_IDL
+#define TRANSFORMATION_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "SoftwareDeploymentModule.idl"
+#include "CoreModule.idl"
+#include "ExpressionsModule.idl"
+
+module TransformationModule
+{
+   typedef sequence<CoreModule::Feature> FeatureSet;
+   typedef sequence<CoreModule::Dependency> DependencySet;
+   typedef sequence<CoreModule::ModelElement> ModelElementSet;
+   typedef sequence<CoreModule::Classifier> ClassifierSet;
+   typedef sequence<CoreModule::UmlConstraint> UmlConstraintSet;
+   interface TransformationClass;
+   interface Transformation;
+   typedef sequence<Transformation> TransformationSet;
+   interface DataObjectSetClass;
+   interface DataObjectSet;
+   typedef sequence<DataObjectSet> DataObjectSetSet;
+   interface TransformationTaskClass;
+   interface TransformationTask;
+   typedef sequence<TransformationTask> TransformationTaskSet;
+   interface TransformationStepClass;
+   interface TransformationStep;
+   typedef sequence<TransformationStep> TransformationStepSet;
+   interface TransformationActivityClass;
+   interface TransformationActivity;
+   typedef sequence<TransformationActivity> TransformationActivitySet;
+   interface PrecedenceConstraintClass;
+   interface PrecedenceConstraint;
+   typedef sequence<PrecedenceConstraint> PrecedenceConstraintSet;
+   interface TransformationUseClass;
+   interface TransformationUse;
+   typedef sequence<TransformationUse> TransformationUseSet;
+   interface TransformationMapClass;
+   interface TransformationMap;
+   typedef sequence<TransformationMap> TransformationMapSet;
+   interface TransformationTreeClass;
+   interface TransformationTree;
+   typedef sequence<TransformationTree> TransformationTreeSet;
+   interface ClassifierMapClass;
+   interface ClassifierMap;
+   typedef sequence<ClassifierMap> ClassifierMapSet;
+   interface FeatureMapClass;
+   interface FeatureMap;
+   typedef sequence<FeatureMap> FeatureMapSet;
+   interface StepPrecedenceClass;
+   interface StepPrecedence;
+   typedef sequence<StepPrecedence> StepPrecedenceSet;
+   interface ClassifierFeatureMapClass;
+   interface ClassifierFeatureMap;
+   typedef sequence<ClassifierFeatureMap> ClassifierFeatureMapSet;
+   interface TransformationModulePackage;
+   enum TreeType {tfm_unary, tfm_binary};
+
+   interface TransformationClass : CoreModule::NamespaceClass
+   {
+      readonly attribute TransformationSet all_of_type_transformation;
+      readonly attribute TransformationSet all_of_class_transformation;
+      Transformation create_transformation (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean is_primary)
+         raises (Reflective::MofError);
+   };
+
+   interface Transformation : TransformationClass, CoreModule::Namespace
+   {
+      CoreModule::ProcedureExpression function ()
+         raises (Reflective::MofError);
+      void set_function (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      string function_description ()
+         raises (Reflective::MofError);
+      void set_function_description (in string new_value)
+         raises (Reflective::MofError);
+      boolean is_primary ()
+         raises (Reflective::MofError);
+      void set_is_primary (in boolean new_value)
+         raises (Reflective::MofError);
+      DataObjectSetSet source ()
+         raises (Reflective::MofError);
+      void set_source (in DataObjectSetSet new_value)
+         raises (Reflective::MofError);
+      void unset_source ()
+         raises (Reflective::MofError);
+      void add_source (in DataObjectSet new_element)
+         raises (Reflective::MofError);
+      void modify_source (
+         in DataObjectSet old_element,
+         in DataObjectSet new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_source (in DataObjectSet old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DataObjectSetSet target ()
+         raises (Reflective::MofError);
+      void set_target (in DataObjectSetSet new_value)
+         raises (Reflective::MofError);
+      void unset_target ()
+         raises (Reflective::MofError);
+      void add_target (in DataObjectSet new_element)
+         raises (Reflective::MofError);
+      void modify_target (
+         in DataObjectSet old_element,
+         in DataObjectSet new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_target (in DataObjectSet old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DependencySet use ()
+         raises (Reflective::MofError);
+      void set_use (in DependencySet new_value)
+         raises (Reflective::MofError);
+      void unset_use ()
+         raises (Reflective::MofError);
+      void add_use (in CoreModule::Dependency new_element)
+         raises (Reflective::MofError);
+      void modify_use (
+         in CoreModule::Dependency old_element,
+         in CoreModule::Dependency new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_use (in CoreModule::Dependency old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Transformation
+
+   interface DataObjectSetClass : CoreModule::ModelElementClass
+   {
+      readonly attribute DataObjectSetSet all_of_type_data_object_set;
+      readonly attribute DataObjectSetSet all_of_class_data_object_set;
+      DataObjectSet create_data_object_set (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface DataObjectSet : DataObjectSetClass, CoreModule::ModelElement
+   {
+      ModelElementSet element ()
+         raises (Reflective::MofError);
+      void set_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_element (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_element (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_element (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TransformationSet source_transformation ()
+         raises (Reflective::MofError);
+      void set_source_transformation (in TransformationSet new_value)
+         raises (Reflective::MofError);
+      void unset_source_transformation ()
+         raises (Reflective::MofError);
+      void add_source_transformation (in Transformation new_element)
+         raises (Reflective::MofError);
+      void modify_source_transformation (
+         in Transformation old_element,
+         in Transformation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_source_transformation (in Transformation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TransformationSet target_transformation ()
+         raises (Reflective::MofError);
+      void set_target_transformation (in TransformationSet new_value)
+         raises (Reflective::MofError);
+      void unset_target_transformation ()
+         raises (Reflective::MofError);
+      void add_target_transformation (in Transformation new_element)
+         raises (Reflective::MofError);
+      void modify_target_transformation (
+         in Transformation old_element,
+         in Transformation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_target_transformation (in Transformation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataObjectSet
+
+   interface TransformationTaskClass : SoftwareDeploymentModule::ComponentClass
+   {
+      readonly attribute TransformationTaskSet all_of_type_transformation_task;
+      readonly attribute TransformationTaskSet all_of_class_transformation_task;
+      TransformationTask create_transformation_task (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationTask : TransformationTaskClass, SoftwareDeploymentModule::Component
+   {
+      TransformationSet transformation ()
+         raises (Reflective::MofError);
+      void set_transformation (in TransformationSet new_value)
+         raises (Reflective::MofError);
+      void add_transformation (in TransformationModule::Transformation new_element)
+         raises (Reflective::MofError);
+      void modify_transformation (
+         in TransformationModule::Transformation old_element,
+         in TransformationModule::Transformation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_transformation (in TransformationModule::Transformation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TransformationTaskSet inverse_task ()
+         raises (Reflective::MofError);
+      void set_inverse_task (in TransformationTaskSet new_value)
+         raises (Reflective::MofError);
+      void unset_inverse_task ()
+         raises (Reflective::MofError);
+      void add_inverse_task (in TransformationTask new_element)
+         raises (Reflective::MofError);
+      void modify_inverse_task (
+         in TransformationTask old_element,
+         in TransformationTask new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_inverse_task (in TransformationTask old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TransformationTaskSet original_task ()
+         raises (Reflective::MofError);
+      void set_original_task (in TransformationTaskSet new_value)
+         raises (Reflective::MofError);
+      void unset_original_task ()
+         raises (Reflective::MofError);
+      void add_original_task (in TransformationTask new_element)
+         raises (Reflective::MofError);
+      void modify_original_task (
+         in TransformationTask old_element,
+         in TransformationTask new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_original_task (in TransformationTask old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationTask
+
+   interface TransformationStepClass : CoreModule::ModelElementClass
+   {
+      readonly attribute TransformationStepSet all_of_type_transformation_step;
+      readonly attribute TransformationStepSet all_of_class_transformation_step;
+      TransformationStep create_transformation_step (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationStep : TransformationStepClass, CoreModule::ModelElement
+   {
+      TransformationTask task ()
+         raises (Reflective::MofError);
+      void set_task (in TransformationTask new_value)
+         raises (Reflective::MofError);
+      CoreModule::Namespace activity ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_activity (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_activity ()
+         raises (Reflective::MofError);
+      UmlConstraintSet precedence ()
+         raises (Reflective::MofError);
+      void set_precedence (in UmlConstraintSet new_value)
+         raises (Reflective::MofError);
+      void unset_precedence ()
+         raises (Reflective::MofError);
+      void add_precedence (in CoreModule::UmlConstraint new_element)
+         raises (Reflective::MofError);
+      void modify_precedence (
+         in CoreModule::UmlConstraint old_element,
+         in CoreModule::UmlConstraint new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_precedence (in CoreModule::UmlConstraint old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DependencySet preceding_step ()
+         raises (Reflective::MofError);
+      void set_preceding_step (in DependencySet new_value)
+         raises (Reflective::MofError);
+      void unset_preceding_step ()
+         raises (Reflective::MofError);
+      void add_preceding_step (in CoreModule::Dependency new_element)
+         raises (Reflective::MofError);
+      void modify_preceding_step (
+         in CoreModule::Dependency old_element,
+         in CoreModule::Dependency new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_preceding_step (in CoreModule::Dependency old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DependencySet succeeding_step ()
+         raises (Reflective::MofError);
+      void set_succeeding_step (in DependencySet new_value)
+         raises (Reflective::MofError);
+      void unset_succeeding_step ()
+         raises (Reflective::MofError);
+      void add_succeeding_step (in CoreModule::Dependency new_element)
+         raises (Reflective::MofError);
+      void modify_succeeding_step (
+         in CoreModule::Dependency old_element,
+         in CoreModule::Dependency new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_succeeding_step (in CoreModule::Dependency old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationStep
+
+   interface TransformationActivityClass : CoreModule::SubsystemClass
+   {
+      readonly attribute TransformationActivitySet all_of_type_transformation_activity;
+      readonly attribute TransformationActivitySet all_of_class_transformation_activity;
+      TransformationActivity create_transformation_activity (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in string creation_date)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationActivity : TransformationActivityClass, CoreModule::Subsystem
+   {
+      string creation_date ()
+         raises (Reflective::MofError);
+      void set_creation_date (in string new_value)
+         raises (Reflective::MofError);
+      ModelElementSet step ()
+         raises (Reflective::MofError);
+      void set_step (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_step ()
+         raises (Reflective::MofError);
+      void add_step (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_step (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_step (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationActivity
+
+   interface PrecedenceConstraintClass : CoreModule::UmlConstraintClass
+   {
+      readonly attribute PrecedenceConstraintSet all_of_type_precedence_constraint;
+      readonly attribute PrecedenceConstraintSet all_of_class_precedence_constraint;
+      PrecedenceConstraint create_precedence_constraint (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::BooleanExpression body)
+         raises (Reflective::MofError);
+   };
+
+   interface PrecedenceConstraint : PrecedenceConstraintClass, CoreModule::UmlConstraint
+   {
+   }; // end of interface PrecedenceConstraint
+
+   interface TransformationUseClass : CoreModule::DependencyClass
+   {
+      readonly attribute TransformationUseSet all_of_type_transformation_use;
+      readonly attribute TransformationUseSet all_of_class_transformation_use;
+      TransformationUse create_transformation_use (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string kind,
+         in string type)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationUse : TransformationUseClass, CoreModule::Dependency
+   {
+      string type ()
+         raises (Reflective::MofError);
+      void set_type (in string new_value)
+         raises (Reflective::MofError);
+      ModelElementSet transformation ()
+         raises (Reflective::MofError);
+      void set_transformation (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_transformation (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_transformation (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_transformation (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ModelElementSet operation ()
+         raises (Reflective::MofError);
+      void set_operation (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_operation (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_operation (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_operation (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationUse
+
+   interface TransformationMapClass : TransformationClass
+   {
+      readonly attribute TransformationMapSet all_of_type_transformation_map;
+      readonly attribute TransformationMapSet all_of_class_transformation_map;
+      TransformationMap create_transformation_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean is_primary)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationMap : TransformationMapClass, Transformation
+   {
+      ModelElementSet classifier_map ()
+         raises (Reflective::MofError);
+      void set_classifier_map (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_classifier_map ()
+         raises (Reflective::MofError);
+      void add_classifier_map (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_classifier_map (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_classifier_map (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationMap
+
+   interface TransformationTreeClass : TransformationClass
+   {
+      readonly attribute TransformationTreeSet all_of_type_transformation_tree;
+      readonly attribute TransformationTreeSet all_of_class_transformation_tree;
+      TransformationTree create_transformation_tree (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean is_primary,
+         in TreeType type,
+         in ExpressionsModule::ExpressionNode body)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationTree : TransformationTreeClass, Transformation
+   {
+      TreeType type ()
+         raises (Reflective::MofError);
+      void set_type (in TreeType new_value)
+         raises (Reflective::MofError);
+      ExpressionsModule::ExpressionNode body ()
+         raises (Reflective::MofError);
+      void set_body (in ExpressionsModule::ExpressionNode new_value)
+         raises (Reflective::MofError);
+   }; // end of interface TransformationTree
+
+   interface ClassifierMapClass : CoreModule::NamespaceClass
+   {
+      readonly attribute ClassifierMapSet all_of_type_classifier_map;
+      readonly attribute ClassifierMapSet all_of_class_classifier_map;
+      ClassifierMap create_classifier_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassifierMap : ClassifierMapClass, CoreModule::Namespace
+   {
+      CoreModule::ProcedureExpression function ()
+         raises (Reflective::MofError);
+      void set_function (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      string function_description ()
+         raises (Reflective::MofError);
+      void set_function_description (in string new_value)
+         raises (Reflective::MofError);
+      ClassifierSet source ()
+         raises (Reflective::MofError);
+      void set_source (in ClassifierSet new_value)
+         raises (Reflective::MofError);
+      void add_source (in CoreModule::Classifier new_element)
+         raises (Reflective::MofError);
+      void modify_source (
+         in CoreModule::Classifier old_element,
+         in CoreModule::Classifier new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_source (in CoreModule::Classifier old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ClassifierSet target ()
+         raises (Reflective::MofError);
+      void set_target (in ClassifierSet new_value)
+         raises (Reflective::MofError);
+      void add_target (in CoreModule::Classifier new_element)
+         raises (Reflective::MofError);
+      void modify_target (
+         in CoreModule::Classifier old_element,
+         in CoreModule::Classifier new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_target (in CoreModule::Classifier old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CoreModule::Namespace transformation_map ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_transformation_map (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_transformation_map ()
+         raises (Reflective::MofError);
+      FeatureMapSet feature_map ()
+         raises (Reflective::MofError);
+      void set_feature_map (in FeatureMapSet new_value)
+         raises (Reflective::MofError);
+      void unset_feature_map ()
+         raises (Reflective::MofError);
+      void add_feature_map (in FeatureMap new_element)
+         raises (Reflective::MofError);
+      void modify_feature_map (
+         in FeatureMap old_element,
+         in FeatureMap new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_feature_map (in FeatureMap old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ClassifierFeatureMapSet cf_map ()
+         raises (Reflective::MofError);
+      void set_cf_map (in ClassifierFeatureMapSet new_value)
+         raises (Reflective::MofError);
+      void unset_cf_map ()
+         raises (Reflective::MofError);
+      void add_cf_map (in ClassifierFeatureMap new_element)
+         raises (Reflective::MofError);
+      void modify_cf_map (
+         in ClassifierFeatureMap old_element,
+         in ClassifierFeatureMap new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cf_map (in ClassifierFeatureMap old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassifierMap
+
+   interface FeatureMapClass : CoreModule::ModelElementClass
+   {
+      readonly attribute FeatureMapSet all_of_type_feature_map;
+      readonly attribute FeatureMapSet all_of_class_feature_map;
+      FeatureMap create_feature_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description)
+         raises (Reflective::MofError);
+   };
+
+   interface FeatureMap : FeatureMapClass, CoreModule::ModelElement
+   {
+      CoreModule::ProcedureExpression function ()
+         raises (Reflective::MofError);
+      void set_function (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      string function_description ()
+         raises (Reflective::MofError);
+      void set_function_description (in string new_value)
+         raises (Reflective::MofError);
+      FeatureSet source ()
+         raises (Reflective::MofError);
+      void set_source (in FeatureSet new_value)
+         raises (Reflective::MofError);
+      void add_source (in CoreModule::Feature new_element)
+         raises (Reflective::MofError);
+      void modify_source (
+         in CoreModule::Feature old_element,
+         in CoreModule::Feature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_source (in CoreModule::Feature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      FeatureSet target ()
+         raises (Reflective::MofError);
+      void set_target (in FeatureSet new_value)
+         raises (Reflective::MofError);
+      void add_target (in CoreModule::Feature new_element)
+         raises (Reflective::MofError);
+      void modify_target (
+         in CoreModule::Feature old_element,
+         in CoreModule::Feature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_target (in CoreModule::Feature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ClassifierMap classifier_map ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_classifier_map (in ClassifierMap new_value)
+         raises (Reflective::MofError);
+      void unset_classifier_map ()
+         raises (Reflective::MofError);
+   }; // end of interface FeatureMap
+
+   interface StepPrecedenceClass : CoreModule::DependencyClass
+   {
+      readonly attribute StepPrecedenceSet all_of_type_step_precedence;
+      readonly attribute StepPrecedenceSet all_of_class_step_precedence;
+      StepPrecedence create_step_precedence (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string kind)
+         raises (Reflective::MofError);
+   };
+
+   interface StepPrecedence : StepPrecedenceClass, CoreModule::Dependency
+   {
+      ModelElementSet preceding_step ()
+         raises (Reflective::MofError);
+      void set_preceding_step (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_preceding_step (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_preceding_step (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_preceding_step (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ModelElementSet succeeding_step ()
+         raises (Reflective::MofError);
+      void set_succeeding_step (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_succeeding_step (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_succeeding_step (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_succeeding_step (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface StepPrecedence
+
+   interface ClassifierFeatureMapClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ClassifierFeatureMapSet all_of_type_classifier_feature_map;
+      readonly attribute ClassifierFeatureMapSet all_of_class_classifier_feature_map;
+      ClassifierFeatureMap create_classifier_feature_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean classifier_to_feature)
+         raises (Reflective::MofError);
+   };
+
+   interface ClassifierFeatureMap : ClassifierFeatureMapClass, CoreModule::ModelElement
+   {
+      CoreModule::ProcedureExpression function ()
+         raises (Reflective::MofError);
+      void set_function (in CoreModule::ProcedureExpression new_value)
+         raises (Reflective::MofError);
+      string function_description ()
+         raises (Reflective::MofError);
+      void set_function_description (in string new_value)
+         raises (Reflective::MofError);
+      boolean classifier_to_feature ()
+         raises (Reflective::MofError);
+      void set_classifier_to_feature (in boolean new_value)
+         raises (Reflective::MofError);
+      ClassifierSet classifier ()
+         raises (Reflective::MofError);
+      void set_classifier (in ClassifierSet new_value)
+         raises (Reflective::MofError);
+      void add_classifier (in CoreModule::Classifier new_element)
+         raises (Reflective::MofError);
+      void modify_classifier (
+         in CoreModule::Classifier old_element,
+         in CoreModule::Classifier new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_classifier (in CoreModule::Classifier old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      FeatureSet feature ()
+         raises (Reflective::MofError);
+      void set_feature (in FeatureSet new_value)
+         raises (Reflective::MofError);
+      void add_feature (in CoreModule::Feature new_element)
+         raises (Reflective::MofError);
+      void modify_feature (
+         in CoreModule::Feature old_element,
+         in CoreModule::Feature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_feature (in CoreModule::Feature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ClassifierMap classifier_map ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_classifier_map (in ClassifierMap new_value)
+         raises (Reflective::MofError);
+      void unset_classifier_map ()
+         raises (Reflective::MofError);
+   }; // end of interface ClassifierFeatureMap
+
+   struct TransformationStepTaskLink
+   {
+      TransformationStep step;
+      TransformationTask task;
+   };
+   typedef sequence<TransformationStepTaskLink> TransformationStepTaskLinkSet;
+
+   interface TransformationStepTask : Reflective::RefAssociation
+   {
+      TransformationStepTaskLinkSet all_transformation_step_task_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in TransformationStep step,
+         in TransformationTask task)
+         raises (Reflective::MofError);
+      TransformationStepSet step (in TransformationTask task)
+         raises (Reflective::MofError);
+      TransformationTask task (in TransformationStep step)
+         raises (Reflective::MofError);
+      void add (
+         in TransformationStep step,
+         in TransformationTask task)
+         raises (Reflective::MofError);
+      void modify_step (
+         in TransformationStep step,
+         in TransformationTask task,
+         in TransformationStep new_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_task (
+         in TransformationStep step,
+         in TransformationTask task,
+         in TransformationTask new_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in TransformationStep step,
+         in TransformationTask task)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationStepTask
+
+   struct DataObjectSetElementLink
+   {
+      CoreModule::ModelElement element;
+      DataObjectSet set;
+   };
+   typedef sequence<DataObjectSetElementLink> DataObjectSetElementLinkSet;
+
+   interface DataObjectSetElement : Reflective::RefAssociation
+   {
+      DataObjectSetElementLinkSet all_data_object_set_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::ModelElement element,
+         in DataObjectSet set)
+         raises (Reflective::MofError);
+      ModelElementSet element (in DataObjectSet set)
+         raises (Reflective::MofError);
+      DataObjectSetSet set (in CoreModule::ModelElement element)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::ModelElement element,
+         in DataObjectSet set)
+         raises (Reflective::MofError);
+      void modify_element (
+         in CoreModule::ModelElement element,
+         in DataObjectSet set,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_set (
+         in CoreModule::ModelElement element,
+         in DataObjectSet set,
+         in DataObjectSet new_set)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::ModelElement element,
+         in DataObjectSet set)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataObjectSetElement
+
+   struct TransformationTaskElementLink
+   {
+      TransformationTask task;
+      TransformationModule::Transformation transformation;
+   };
+   typedef sequence<TransformationTaskElementLink> TransformationTaskElementLinkSet;
+
+   interface TransformationTaskElement : Reflective::RefAssociation
+   {
+      TransformationTaskElementLinkSet all_transformation_task_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in TransformationTask task,
+         in TransformationModule::Transformation transformation)
+         raises (Reflective::MofError);
+      TransformationTaskSet task (in TransformationModule::Transformation transformation)
+         raises (Reflective::MofError);
+      TransformationSet transformation (in TransformationTask task)
+         raises (Reflective::MofError);
+      void add (
+         in TransformationTask task,
+         in TransformationModule::Transformation transformation)
+         raises (Reflective::MofError);
+      void modify_task (
+         in TransformationTask task,
+         in TransformationModule::Transformation transformation,
+         in TransformationTask new_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_transformation (
+         in TransformationTask task,
+         in TransformationModule::Transformation transformation,
+         in TransformationModule::Transformation new_transformation)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in TransformationTask task,
+         in TransformationModule::Transformation transformation)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationTaskElement
+
+   struct ClassifierMapSourceLink
+   {
+      CoreModule::Classifier source;
+      ClassifierMap classifier_map;
+   };
+   typedef sequence<ClassifierMapSourceLink> ClassifierMapSourceLinkSet;
+
+   interface ClassifierMapSource : Reflective::RefAssociation
+   {
+      ClassifierMapSourceLinkSet all_classifier_map_source_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier source,
+         in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      ClassifierSet source (in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      ClassifierMapSet classifier_map (in CoreModule::Classifier source)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier source,
+         in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      void modify_source (
+         in CoreModule::Classifier source,
+         in ClassifierMap classifier_map,
+         in CoreModule::Classifier new_source)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_classifier_map (
+         in CoreModule::Classifier source,
+         in ClassifierMap classifier_map,
+         in ClassifierMap new_classifier_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier source,
+         in ClassifierMap classifier_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassifierMapSource
+
+   struct ClassifierMapTargetLink
+   {
+      CoreModule::Classifier target;
+      ClassifierMap classifier_map;
+   };
+   typedef sequence<ClassifierMapTargetLink> ClassifierMapTargetLinkSet;
+
+   interface ClassifierMapTarget : Reflective::RefAssociation
+   {
+      ClassifierMapTargetLinkSet all_classifier_map_target_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier target,
+         in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      ClassifierSet target (in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      ClassifierMapSet classifier_map (in CoreModule::Classifier target)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier target,
+         in ClassifierMap classifier_map)
+         raises (Reflective::MofError);
+      void modify_target (
+         in CoreModule::Classifier target,
+         in ClassifierMap classifier_map,
+         in CoreModule::Classifier new_target)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_classifier_map (
+         in CoreModule::Classifier target,
+         in ClassifierMap classifier_map,
+         in ClassifierMap new_classifier_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier target,
+         in ClassifierMap classifier_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ClassifierMapTarget
+
+   struct FeatureMapTargetLink
+   {
+      CoreModule::Feature target;
+      FeatureMap feature_map;
+   };
+   typedef sequence<FeatureMapTargetLink> FeatureMapTargetLinkSet;
+
+   interface FeatureMapTarget : Reflective::RefAssociation
+   {
+      FeatureMapTargetLinkSet all_feature_map_target_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Feature target,
+         in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      FeatureSet target (in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      FeatureMapSet feature_map (in CoreModule::Feature target)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Feature target,
+         in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      void modify_target (
+         in CoreModule::Feature target,
+         in FeatureMap feature_map,
+         in CoreModule::Feature new_target)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature_map (
+         in CoreModule::Feature target,
+         in FeatureMap feature_map,
+         in FeatureMap new_feature_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Feature target,
+         in FeatureMap feature_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface FeatureMapTarget
+
+   struct FeatureMapSourceLink
+   {
+      CoreModule::Feature source;
+      FeatureMap feature_map;
+   };
+   typedef sequence<FeatureMapSourceLink> FeatureMapSourceLinkSet;
+
+   interface FeatureMapSource : Reflective::RefAssociation
+   {
+      FeatureMapSourceLinkSet all_feature_map_source_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Feature source,
+         in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      FeatureSet source (in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      FeatureMapSet feature_map (in CoreModule::Feature source)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Feature source,
+         in FeatureMap feature_map)
+         raises (Reflective::MofError);
+      void modify_source (
+         in CoreModule::Feature source,
+         in FeatureMap feature_map,
+         in CoreModule::Feature new_source)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature_map (
+         in CoreModule::Feature source,
+         in FeatureMap feature_map,
+         in FeatureMap new_feature_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Feature source,
+         in FeatureMap feature_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface FeatureMapSource
+
+   struct CFMapClassifierLink
+   {
+      CoreModule::Classifier classifier;
+      ClassifierFeatureMap cf_map;
+   };
+   typedef sequence<CFMapClassifierLink> CFMapClassifierLinkSet;
+
+   interface CFMapClassifier : Reflective::RefAssociation
+   {
+      CFMapClassifierLinkSet all_cfmap_classifier_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier classifier,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      ClassifierSet classifier (in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      ClassifierFeatureMapSet cf_map (in CoreModule::Classifier classifier)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier classifier,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      void modify_classifier (
+         in CoreModule::Classifier classifier,
+         in ClassifierFeatureMap cf_map,
+         in CoreModule::Classifier new_classifier)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cf_map (
+         in CoreModule::Classifier classifier,
+         in ClassifierFeatureMap cf_map,
+         in ClassifierFeatureMap new_cf_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier classifier,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CFMapClassifier
+
+   struct CFMapFeatureLink
+   {
+      CoreModule::Feature feature;
+      ClassifierFeatureMap cf_map;
+   };
+   typedef sequence<CFMapFeatureLink> CFMapFeatureLinkSet;
+
+   interface CFMapFeature : Reflective::RefAssociation
+   {
+      CFMapFeatureLinkSet all_cfmap_feature_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Feature feature,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      FeatureSet feature (in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      ClassifierFeatureMapSet cf_map (in CoreModule::Feature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Feature feature,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::MofError);
+      void modify_feature (
+         in CoreModule::Feature feature,
+         in ClassifierFeatureMap cf_map,
+         in CoreModule::Feature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cf_map (
+         in CoreModule::Feature feature,
+         in ClassifierFeatureMap cf_map,
+         in ClassifierFeatureMap new_cf_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Feature feature,
+         in ClassifierFeatureMap cf_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CFMapFeature
+
+   interface TransformationModulePackageFactory
+   {
+      TransformationModulePackage create_transformation_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute ExpressionsModule::ExpressionsModulePackage expressions_ref;
+      readonly attribute SoftwareDeploymentModule::SoftwareDeploymentModulePackage software_deployment_ref;
+      readonly attribute TransformationClass transformation_ref;
+      readonly attribute DataObjectSetClass data_object_set_ref;
+      readonly attribute TransformationTaskClass transformation_task_ref;
+      readonly attribute TransformationStepClass transformation_step_ref;
+      readonly attribute TransformationActivityClass transformation_activity_ref;
+      readonly attribute PrecedenceConstraintClass precedence_constraint_ref;
+      readonly attribute TransformationUseClass transformation_use_ref;
+      readonly attribute TransformationMapClass transformation_map_ref;
+      readonly attribute TransformationTreeClass transformation_tree_ref;
+      readonly attribute ClassifierMapClass classifier_map_ref;
+      readonly attribute FeatureMapClass feature_map_ref;
+      readonly attribute StepPrecedenceClass step_precedence_ref;
+      readonly attribute ClassifierFeatureMapClass classifier_feature_map_ref;
+      readonly attribute TransformationStepTask transformation_step_task_ref;
+      readonly attribute DataObjectSetElement data_object_set_element_ref;
+      readonly attribute TransformationTaskElement transformation_task_element_ref;
+      readonly attribute ClassifierMapSource classifier_map_source_ref;
+      readonly attribute ClassifierMapTarget classifier_map_target_ref;
+      readonly attribute FeatureMapTarget feature_map_target_ref;
+      readonly attribute FeatureMapSource feature_map_source_ref;
+      readonly attribute CFMapClassifier cfmap_classifier_ref;
+      readonly attribute CFMapFeature cfmap_feature_ref;
+   };
+};
+
+#endif

@@ -1,0 +1,397 @@
+#ifndef XMLMODULE_IDL
+#define XMLMODULE_IDL
+#pragma prefix "org.omg.cwm.resource"
+#include "Reflective.idl"
+#include "InstanceModule.idl"
+#include "CoreModule.idl"
+
+module XMLModule
+{
+   typedef sequence<CoreModule::Feature> FeatureUList;
+   typedef sequence<CoreModule::ModelElement> ModelElementSet;
+   interface SchemaClass;
+   interface Schema;
+   typedef sequence<Schema> SchemaSet;
+   interface ElementTypeClass;
+   interface ElementType;
+   typedef sequence<ElementType> ElementTypeSet;
+   interface XmlAttributeClass;
+   interface XmlAttribute;
+   typedef sequence<XmlAttribute> XmlAttributeSet;
+   interface ContentClass;
+   interface Content;
+   typedef sequence<Content> ContentSet;
+   interface ElementContentClass;
+   interface ElementContent;
+   typedef sequence<ElementContent> ElementContentSet;
+   interface MixedContentClass;
+   interface MixedContent;
+   typedef sequence<MixedContent> MixedContentSet;
+   interface ElementTypeReferenceClass;
+   interface ElementTypeReference;
+   typedef sequence<ElementTypeReference> ElementTypeReferenceSet;
+   interface TextClass;
+   interface Text;
+   typedef sequence<Text> TextSet;
+   interface XmlElementClass;
+   interface XmlElement;
+   typedef sequence<XmlElement> XmlElementSet;
+   interface DocumentClass;
+   interface Document;
+   typedef sequence<Document> DocumentSet;
+   interface XMLModulePackage;
+   enum AttributeDefault {xml_required, xml_implied, xml_default, xml_fixed};
+   enum ContentType {xml_empty, xml_any, xml_mixed, xml_element};
+   enum OccurrenceType {xml_one, xml_zeroOrOne, xml_zeroOrMore, xml_oneOrMore};
+   enum ElementOrderType {xml_choice, xml_sequence};
+
+   interface SchemaClass : CoreModule::PackageClass
+   {
+      readonly attribute SchemaSet all_of_type_schema;
+      readonly attribute SchemaSet all_of_class_schema;
+      Schema create_schema (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string version,
+         in string xml_namespace)
+         raises (Reflective::MofError);
+   };
+
+   interface Schema : SchemaClass, CoreModule::Package
+   {
+      string version ()
+         raises (Reflective::MofError);
+      void set_version (in string new_value)
+         raises (Reflective::MofError);
+      string xml_namespace ()
+         raises (Reflective::MofError);
+      void set_xml_namespace (in string new_value)
+         raises (Reflective::MofError);
+      ModelElementSet element_type ()
+         raises (Reflective::MofError);
+      void set_element_type (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_element_type ()
+         raises (Reflective::MofError);
+      void add_element_type (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_element_type (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_element_type (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Schema
+
+   interface ElementTypeClass : CoreModule::ClassClass
+   {
+      readonly attribute ElementTypeSet all_of_type_element_type;
+      readonly attribute ElementTypeSet all_of_class_element_type;
+      ElementType create_element_type (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface ElementType : ElementTypeClass, CoreModule::Class
+   {
+      CoreModule::Namespace schema ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_schema (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_schema ()
+         raises (Reflective::MofError);
+      FeatureUList xml_attribute ()
+         raises (Reflective::MofError);
+      void set_xml_attribute (in FeatureUList new_value)
+         raises (Reflective::MofError);
+      void unset_xml_attribute ()
+         raises (Reflective::MofError);
+      void add_xml_attribute (in CoreModule::Feature new_element)
+         raises (Reflective::MofError);
+      void add_xml_attribute_before (
+         in CoreModule::Feature new_element,
+         in CoreModule::Feature before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_xml_attribute (
+         in CoreModule::Feature old_element,
+         in CoreModule::Feature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_xml_attribute (in CoreModule::Feature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      XMLModule::Content content ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_content (in XMLModule::Content new_value)
+         raises (Reflective::MofError);
+      void unset_content ()
+         raises (Reflective::MofError);
+   }; // end of interface ElementType
+
+   interface XmlAttributeClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute XmlAttributeSet all_of_type_xml_attribute;
+      readonly attribute XmlAttributeSet all_of_class_xml_attribute;
+      XmlAttribute create_xml_attribute (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in AttributeDefault default_kind)
+         raises (Reflective::MofError);
+   };
+
+   interface XmlAttribute : XmlAttributeClass, CoreModule::UmlAttribute
+   {
+      AttributeDefault default_kind ()
+         raises (Reflective::MofError);
+      void set_default_kind (in AttributeDefault new_value)
+         raises (Reflective::MofError);
+      CoreModule::Classifier element_type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_element_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+      void unset_element_type ()
+         raises (Reflective::MofError);
+   }; // end of interface XmlAttribute
+
+   interface ContentClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ContentSet all_of_type_content;
+      readonly attribute ContentSet all_of_class_content;
+      Content create_content (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in ContentType type,
+         in OccurrenceType occurrence)
+         raises (Reflective::MofError);
+   };
+
+   interface Content : ContentClass, CoreModule::ModelElement
+   {
+      ContentType type ()
+         raises (Reflective::MofError);
+      void set_type (in ContentType new_value)
+         raises (Reflective::MofError);
+      OccurrenceType occurrence ()
+         raises (Reflective::MofError);
+      void set_occurrence (in OccurrenceType new_value)
+         raises (Reflective::MofError);
+      ElementTypeSet element_type ()
+         raises (Reflective::MofError);
+      void set_element_type (in ElementTypeSet new_value)
+         raises (Reflective::MofError);
+      void unset_element_type ()
+         raises (Reflective::MofError);
+      void add_element_type (in ElementType new_element)
+         raises (Reflective::MofError);
+      void modify_element_type (
+         in ElementType old_element,
+         in ElementType new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_element_type (in ElementType old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ElementTypeReferenceSet owned_element_type ()
+         raises (Reflective::MofError);
+      void set_owned_element_type (in ElementTypeReferenceSet new_value)
+         raises (Reflective::MofError);
+      void unset_owned_element_type ()
+         raises (Reflective::MofError);
+      void add_owned_element_type (in ElementTypeReference new_element)
+         raises (Reflective::MofError);
+      void modify_owned_element_type (
+         in ElementTypeReference old_element,
+         in ElementTypeReference new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_owned_element_type (in ElementTypeReference old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Content
+
+   interface ElementContentClass : ContentClass
+   {
+      readonly attribute ElementContentSet all_of_type_element_content;
+      readonly attribute ElementContentSet all_of_class_element_content;
+      ElementContent create_element_content (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in ContentType type,
+         in OccurrenceType occurrence,
+         in ElementOrderType order)
+         raises (Reflective::MofError);
+   };
+
+   interface ElementContent : ElementContentClass, Content
+   {
+      ElementOrderType order ()
+         raises (Reflective::MofError);
+      void set_order (in ElementOrderType new_value)
+         raises (Reflective::MofError);
+      ElementContentSet owned_content ()
+         raises (Reflective::MofError);
+      void set_owned_content (in ElementContentSet new_value)
+         raises (Reflective::MofError);
+      void unset_owned_content ()
+         raises (Reflective::MofError);
+      void add_owned_content (in ElementContent new_element)
+         raises (Reflective::MofError);
+      void modify_owned_content (
+         in ElementContent old_element,
+         in ElementContent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_owned_content (in ElementContent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ElementContentSet owner_content ()
+         raises (Reflective::MofError);
+      void set_owner_content (in ElementContentSet new_value)
+         raises (Reflective::MofError);
+      void unset_owner_content ()
+         raises (Reflective::MofError);
+      void add_owner_content (in ElementContent new_element)
+         raises (Reflective::MofError);
+      void modify_owner_content (
+         in ElementContent old_element,
+         in ElementContent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_owner_content (in ElementContent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ElementContent
+
+   interface MixedContentClass : ContentClass
+   {
+      readonly attribute MixedContentSet all_of_type_mixed_content;
+      readonly attribute MixedContentSet all_of_class_mixed_content;
+      MixedContent create_mixed_content (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in ContentType type,
+         in OccurrenceType occurrence)
+         raises (Reflective::MofError);
+   };
+
+   interface MixedContent : MixedContentClass, Content
+   {
+      XMLModule::Text text ()
+         raises (Reflective::MofError);
+      void set_text (in XMLModule::Text new_value)
+         raises (Reflective::MofError);
+   }; // end of interface MixedContent
+
+   interface ElementTypeReferenceClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute ElementTypeReferenceSet all_of_type_element_type_reference;
+      readonly attribute ElementTypeReferenceSet all_of_class_element_type_reference;
+      ElementTypeReference create_element_type_reference (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value,
+         in OccurrenceType occurrence)
+         raises (Reflective::MofError);
+   };
+
+   interface ElementTypeReference : ElementTypeReferenceClass, CoreModule::UmlAttribute
+   {
+      OccurrenceType occurrence ()
+         raises (Reflective::MofError);
+      void set_occurrence (in OccurrenceType new_value)
+         raises (Reflective::MofError);
+      ContentSet owner_content ()
+         raises (Reflective::MofError);
+      void set_owner_content (in ContentSet new_value)
+         raises (Reflective::MofError);
+      void unset_owner_content ()
+         raises (Reflective::MofError);
+      void add_owner_content (in Content new_element)
+         raises (Reflective::MofError);
+      void modify_owner_content (
+         in Content old_element,
+         in Content new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_owner_content (in Content old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ElementTypeReference
+
+   interface TextClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute TextSet all_of_type_text;
+      readonly attribute TextSet all_of_class_text;
+      Text create_text (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value)
+         raises (Reflective::MofError);
+   };
+
+   interface Text : TextClass, CoreModule::UmlAttribute
+   {
+      MixedContent owner_content ()
+         raises (Reflective::MofError);
+      void set_owner_content (in MixedContent new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Text
+
+   interface XmlElementClass : InstanceModule::UmlObjectClass
+   {
+      readonly attribute XmlElementSet all_of_type_xml_element;
+      readonly attribute XmlElementSet all_of_class_xml_element;
+      XmlElement create_xml_element (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface XmlElement : XmlElementClass, InstanceModule::UmlObject
+   {
+   }; // end of interface XmlElement
+
+   interface DocumentClass : InstanceModule::ExtentClass
+   {
+      readonly attribute DocumentSet all_of_type_document;
+      readonly attribute DocumentSet all_of_class_document;
+      Document create_document (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Document : DocumentClass, InstanceModule::Extent
+   {
+   }; // end of interface Document
+
+   interface XMLModulePackageFactory
+   {
+      XMLModulePackage create_xmlmodule_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface XMLModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute InstanceModule::InstanceModulePackage instance_ref;
+      readonly attribute SchemaClass schema_ref;
+      readonly attribute ElementTypeClass element_type_ref;
+      readonly attribute XmlAttributeClass xml_attribute_ref;
+      readonly attribute ContentClass content_ref;
+      readonly attribute ElementContentClass element_content_ref;
+      readonly attribute MixedContentClass mixed_content_ref;
+      readonly attribute ElementTypeReferenceClass element_type_reference_ref;
+      readonly attribute TextClass text_ref;
+      readonly attribute XmlElementClass xml_element_ref;
+      readonly attribute DocumentClass document_ref;
+   };
+};
+
+#endif

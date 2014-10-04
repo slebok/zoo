@@ -1,0 +1,595 @@
+#ifndef WAREHOUSE_PROCESS_MODULE_IDL
+#define WAREHOUSE_PROCESS_MODULE_IDL
+#pragma prefix "org.omg.cwm.management"
+#include "Reflective.idl"
+#include "BehavioralModule.idl"
+#include "CoreModule.idl"
+#include "TransformationModule.idl"
+
+module WarehouseProcessModule
+{
+   interface WarehouseProcessClass;
+   interface WarehouseProcess;
+   typedef sequence<WarehouseProcess> WarehouseProcessSet;
+   interface WarehouseStepClass;
+   interface WarehouseStep;
+   typedef sequence<WarehouseStep> WarehouseStepSet;
+   typedef sequence<WarehouseStep> WarehouseStepUList;
+   interface ProcessPackageClass;
+   interface ProcessPackage;
+   typedef sequence<ProcessPackage> ProcessPackageSet;
+   interface WarehouseActivityClass;
+   interface WarehouseActivity;
+   typedef sequence<WarehouseActivity> WarehouseActivitySet;
+   interface WarehouseProcessModulePackage;
+
+   module DataType
+   {
+      interface DataTypePackage;
+      enum RecurringType {everyYear, everyMonth, everyWeek, everyDay, everyHour, everyMinute};
+      enum DayOfWeek {monday, tuesday, wednesday, thursday, friday, saturday, sunday, workingDay, nonworkingDay};
+      enum WaitRuleType {waitForAll, waitForAny};
+
+      interface DataTypePackage : Reflective::RefPackage
+      {
+      };
+   }; // end of module DataType
+
+   module Events
+   {
+      interface WarehouseEventClass;
+      interface WarehouseEvent;
+      typedef sequence<WarehouseEvent> WarehouseEventSet;
+      interface ScheduleEventClass;
+      interface ScheduleEvent;
+      typedef sequence<ScheduleEvent> ScheduleEventSet;
+      interface PointInTimeEventClass;
+      interface PointInTimeEvent;
+      typedef sequence<PointInTimeEvent> PointInTimeEventSet;
+      interface CustomCalendarEventClass;
+      interface CustomCalendarEvent;
+      typedef sequence<CustomCalendarEvent> CustomCalendarEventSet;
+      interface CustomCalendarClass;
+      interface CustomCalendar;
+      typedef sequence<CustomCalendar> CustomCalendarSet;
+      interface CalendarDateClass;
+      interface CalendarDate;
+      typedef sequence<CalendarDate> CalendarDateSet;
+      interface IntervalEventClass;
+      interface IntervalEvent;
+      typedef sequence<IntervalEvent> IntervalEventSet;
+      interface ExternalEventClass;
+      interface ExternalEvent;
+      typedef sequence<ExternalEvent> ExternalEventSet;
+      interface InternalEventClass;
+      interface InternalEvent;
+      typedef sequence<InternalEvent> InternalEventSet;
+      interface CascadeEventClass;
+      interface CascadeEvent;
+      typedef sequence<CascadeEvent> CascadeEventSet;
+      interface RetryEventClass;
+      interface RetryEvent;
+      typedef sequence<RetryEvent> RetryEventSet;
+      interface RecurringPointInTimeEventClass;
+      interface RecurringPointInTimeEvent;
+      typedef sequence<RecurringPointInTimeEvent> RecurringPointInTimeEventSet;
+      interface EventsPackage;
+
+      interface WarehouseEventClass : BehavioralModule::EventClass
+      {
+         readonly attribute WarehouseEventSet all_of_type_warehouse_event;
+      };
+
+      interface WarehouseEvent : WarehouseEventClass, BehavioralModule::Event
+      {
+         WarehouseProcess warehouse_process ()
+            raises (Reflective::MofError);
+         void set_warehouse_process (in WarehouseProcess new_value)
+            raises (Reflective::MofError);
+      }; // end of interface WarehouseEvent
+
+      interface ScheduleEventClass : WarehouseEventClass
+      {
+         readonly attribute ScheduleEventSet all_of_type_schedule_event;
+      };
+
+      interface ScheduleEvent : ScheduleEventClass, WarehouseEvent
+      {
+      }; // end of interface ScheduleEvent
+
+      interface PointInTimeEventClass : ScheduleEventClass
+      {
+         readonly attribute PointInTimeEventSet all_of_type_point_in_time_event;
+         readonly attribute PointInTimeEventSet all_of_class_point_in_time_event;
+         PointInTimeEvent create_point_in_time_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility)
+            raises (Reflective::MofError);
+      };
+
+      interface PointInTimeEvent : PointInTimeEventClass, ScheduleEvent
+      {
+      }; // end of interface PointInTimeEvent
+
+      interface CustomCalendarEventClass : PointInTimeEventClass
+      {
+         readonly attribute CustomCalendarEventSet all_of_type_custom_calendar_event;
+         readonly attribute CustomCalendarEventSet all_of_class_custom_calendar_event;
+         CustomCalendarEvent create_custom_calendar_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility)
+            raises (Reflective::MofError);
+      };
+
+      interface CustomCalendarEvent : CustomCalendarEventClass, PointInTimeEvent
+      {
+         CustomCalendar custom_calendar ()
+            raises (Reflective::MofError);
+         void set_custom_calendar (in CustomCalendar new_value)
+            raises (Reflective::MofError);
+      }; // end of interface CustomCalendarEvent
+
+      interface CustomCalendarClass : CoreModule::PackageClass
+      {
+         readonly attribute CustomCalendarSet all_of_type_custom_calendar;
+         readonly attribute CustomCalendarSet all_of_class_custom_calendar;
+         CustomCalendar create_custom_calendar (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility)
+            raises (Reflective::MofError);
+      };
+
+      interface CustomCalendar : CustomCalendarClass, CoreModule::Package
+      {
+         CustomCalendarEventSet custom_calendar_event ()
+            raises (Reflective::MofError);
+         void set_custom_calendar_event (in CustomCalendarEventSet new_value)
+            raises (Reflective::MofError);
+         void unset_custom_calendar_event ()
+            raises (Reflective::MofError);
+         void add_custom_calendar_event (in CustomCalendarEvent new_element)
+            raises (Reflective::MofError);
+         void modify_custom_calendar_event (
+            in CustomCalendarEvent old_element,
+            in CustomCalendarEvent new_element)
+            raises (Reflective::NotFound, Reflective::MofError);
+         void remove_custom_calendar_event (in CustomCalendarEvent old_element)
+            raises (Reflective::NotFound, Reflective::MofError);
+      }; // end of interface CustomCalendar
+
+      interface CalendarDateClass : CoreModule::ModelElementClass
+      {
+         readonly attribute CalendarDateSet all_of_type_calendar_date;
+         readonly attribute CalendarDateSet all_of_class_calendar_date;
+         CalendarDate create_calendar_date (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in CoreModule::Time specific_date)
+            raises (Reflective::MofError);
+      };
+
+      interface CalendarDate : CalendarDateClass, CoreModule::ModelElement
+      {
+         CoreModule::Time specific_date ()
+            raises (Reflective::MofError);
+         void set_specific_date (in CoreModule::Time new_value)
+            raises (Reflective::MofError);
+      }; // end of interface CalendarDate
+
+      interface IntervalEventClass : ScheduleEventClass
+      {
+         readonly attribute IntervalEventSet all_of_type_interval_event;
+         readonly attribute IntervalEventSet all_of_class_interval_event;
+         IntervalEvent create_interval_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in float duration)
+            raises (Reflective::MofError);
+      };
+
+      interface IntervalEvent : IntervalEventClass, ScheduleEvent
+      {
+         float duration ()
+            raises (Reflective::MofError);
+         void set_duration (in float new_value)
+            raises (Reflective::MofError);
+      }; // end of interface IntervalEvent
+
+      interface ExternalEventClass : WarehouseEventClass
+      {
+         readonly attribute ExternalEventSet all_of_type_external_event;
+         readonly attribute ExternalEventSet all_of_class_external_event;
+         ExternalEvent create_external_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in string description)
+            raises (Reflective::MofError);
+      };
+
+      interface ExternalEvent : ExternalEventClass, WarehouseEvent
+      {
+         string description ()
+            raises (Reflective::MofError);
+         void set_description (in string new_value)
+            raises (Reflective::MofError);
+      }; // end of interface ExternalEvent
+
+      interface InternalEventClass : WarehouseEventClass
+      {
+         readonly attribute InternalEventSet all_of_type_internal_event;
+         readonly attribute InternalEventSet all_of_class_internal_event;
+         InternalEvent create_internal_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in CoreModule::BooleanExpression condition)
+            raises (Reflective::MofError);
+      };
+
+      interface InternalEvent : InternalEventClass, WarehouseEvent
+      {
+         CoreModule::BooleanExpression condition ()
+            raises (Reflective::MofError);
+         void set_condition (in CoreModule::BooleanExpression new_value)
+            raises (Reflective::MofError);
+         WarehouseProcessSet triggering_wp ()
+            raises (Reflective::MofError);
+         void set_triggering_wp (in WarehouseProcessSet new_value)
+            raises (Reflective::MofError);
+         void add_triggering_wp (in WarehouseProcess new_element)
+            raises (Reflective::MofError);
+         void modify_triggering_wp (
+            in WarehouseProcess old_element,
+            in WarehouseProcess new_element)
+            raises (Reflective::NotFound, Reflective::MofError);
+         void remove_triggering_wp (in WarehouseProcess old_element)
+            raises (Reflective::NotFound, Reflective::MofError);
+      }; // end of interface InternalEvent
+
+      interface CascadeEventClass : InternalEventClass
+      {
+         readonly attribute CascadeEventSet all_of_type_cascade_event;
+         readonly attribute CascadeEventSet all_of_class_cascade_event;
+         CascadeEvent create_cascade_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in CoreModule::BooleanExpression condition,
+            in DataType::WaitRuleType wait_rule)
+            raises (Reflective::MofError);
+      };
+
+      interface CascadeEvent : CascadeEventClass, InternalEvent
+      {
+         DataType::WaitRuleType wait_rule ()
+            raises (Reflective::MofError);
+         void set_wait_rule (in DataType::WaitRuleType new_value)
+            raises (Reflective::MofError);
+      }; // end of interface CascadeEvent
+
+      interface RetryEventClass : InternalEventClass
+      {
+         readonly attribute RetryEventSet all_of_type_retry_event;
+         readonly attribute RetryEventSet all_of_class_retry_event;
+         RetryEvent create_retry_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in CoreModule::BooleanExpression condition,
+            in float wait_duration,
+            in long max_count)
+            raises (Reflective::MofError);
+      };
+
+      interface RetryEvent : RetryEventClass, InternalEvent
+      {
+         float wait_duration ()
+            raises (Reflective::MofError);
+         void set_wait_duration (in float new_value)
+            raises (Reflective::MofError);
+         long max_count ()
+            raises (Reflective::MofError);
+         void set_max_count (in long new_value)
+            raises (Reflective::MofError);
+      }; // end of interface RetryEvent
+
+      interface RecurringPointInTimeEventClass : PointInTimeEventClass
+      {
+         readonly attribute RecurringPointInTimeEventSet all_of_type_recurring_point_in_time_event;
+         readonly attribute RecurringPointInTimeEventSet all_of_class_recurring_point_in_time_event;
+         RecurringPointInTimeEvent create_recurring_point_in_time_event (
+            in CoreModule::Name name,
+            in CoreModule::VisibilityKind visibility,
+            in DataType::RecurringType recurring_type,
+            in long frequency_factor,
+            in long month,
+            in long day_of_month,
+            in DataType::DayOfWeek day_of_week,
+            in long hour,
+            in long minute,
+            in long second)
+            raises (Reflective::MofError);
+      };
+
+      interface RecurringPointInTimeEvent : RecurringPointInTimeEventClass, PointInTimeEvent
+      {
+         DataType::RecurringType recurring_type ()
+            raises (Reflective::MofError);
+         void set_recurring_type (in DataType::RecurringType new_value)
+            raises (Reflective::MofError);
+         long frequency_factor ()
+            raises (Reflective::MofError);
+         void set_frequency_factor (in long new_value)
+            raises (Reflective::MofError);
+         long month ()
+            raises (Reflective::NotSet, Reflective::MofError);
+         void set_month (in long new_value)
+            raises (Reflective::MofError);
+         void unset_month ()
+            raises (Reflective::MofError);
+         long day_of_month ()
+            raises (Reflective::NotSet, Reflective::MofError);
+         void set_day_of_month (in long new_value)
+            raises (Reflective::MofError);
+         void unset_day_of_month ()
+            raises (Reflective::MofError);
+         DataType::DayOfWeek day_of_week ()
+            raises (Reflective::NotSet, Reflective::MofError);
+         void set_day_of_week (in DataType::DayOfWeek new_value)
+            raises (Reflective::MofError);
+         void unset_day_of_week ()
+            raises (Reflective::MofError);
+         long hour ()
+            raises (Reflective::NotSet, Reflective::MofError);
+         void set_hour (in long new_value)
+            raises (Reflective::MofError);
+         void unset_hour ()
+            raises (Reflective::MofError);
+         long minute ()
+            raises (Reflective::NotSet, Reflective::MofError);
+         void set_minute (in long new_value)
+            raises (Reflective::MofError);
+         void unset_minute ()
+            raises (Reflective::MofError);
+         long second ()
+            raises (Reflective::MofError);
+         void set_second (in long new_value)
+            raises (Reflective::MofError);
+      }; // end of interface RecurringPointInTimeEvent
+
+      interface EventsPackage : Reflective::RefPackage
+      {
+         readonly attribute WarehouseEventClass warehouse_event_ref;
+         readonly attribute ScheduleEventClass schedule_event_ref;
+         readonly attribute PointInTimeEventClass point_in_time_event_ref;
+         readonly attribute CustomCalendarEventClass custom_calendar_event_ref;
+         readonly attribute CustomCalendarClass custom_calendar_ref;
+         readonly attribute CalendarDateClass calendar_date_ref;
+         readonly attribute IntervalEventClass interval_event_ref;
+         readonly attribute ExternalEventClass external_event_ref;
+         readonly attribute InternalEventClass internal_event_ref;
+         readonly attribute CascadeEventClass cascade_event_ref;
+         readonly attribute RetryEventClass retry_event_ref;
+         readonly attribute RecurringPointInTimeEventClass recurring_point_in_time_event_ref;
+      };
+   }; // end of module Events
+
+   interface WarehouseProcessClass : CoreModule::ModelElementClass
+   {
+      readonly attribute WarehouseProcessSet all_of_type_warehouse_process;
+   };
+
+   interface WarehouseProcess : WarehouseProcessClass, CoreModule::ModelElement
+   {
+      boolean static_definition ()
+         raises (Reflective::MofError);
+      void set_static_definition (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_sequential ()
+         raises (Reflective::MofError);
+      void set_is_sequential (in boolean new_value)
+         raises (Reflective::MofError);
+      Events::WarehouseEventSet warehouse_event ()
+         raises (Reflective::MofError);
+      void set_warehouse_event (in Events::WarehouseEventSet new_value)
+         raises (Reflective::MofError);
+      void unset_warehouse_event ()
+         raises (Reflective::MofError);
+      void add_warehouse_event (in Events::WarehouseEvent new_element)
+         raises (Reflective::MofError);
+      void modify_warehouse_event (
+         in Events::WarehouseEvent old_element,
+         in Events::WarehouseEvent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_warehouse_event (in Events::WarehouseEvent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      Events::InternalEventSet internal_event ()
+         raises (Reflective::MofError);
+      void set_internal_event (in Events::InternalEventSet new_value)
+         raises (Reflective::MofError);
+      void unset_internal_event ()
+         raises (Reflective::MofError);
+      void add_internal_event (in Events::InternalEvent new_element)
+         raises (Reflective::MofError);
+      void modify_internal_event (
+         in Events::InternalEvent old_element,
+         in Events::InternalEvent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_internal_event (in Events::InternalEvent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface WarehouseProcess
+
+   interface WarehouseStepClass : WarehouseProcessClass
+   {
+      readonly attribute WarehouseStepSet all_of_type_warehouse_step;
+      readonly attribute WarehouseStepSet all_of_class_warehouse_step;
+      WarehouseStep create_warehouse_step (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean static_definition,
+         in boolean is_sequential)
+         raises (Reflective::MofError);
+   };
+
+   interface WarehouseStep : WarehouseStepClass, WarehouseProcess
+   {
+      TransformationModule::TransformationStep transformation_step ()
+         raises (Reflective::MofError);
+      void set_transformation_step (in TransformationModule::TransformationStep new_value)
+         raises (Reflective::MofError);
+      WarehouseActivity warehouse_activity ()
+         raises (Reflective::MofError);
+      void set_warehouse_activity (in WarehouseActivity new_value)
+         raises (Reflective::MofError);
+   }; // end of interface WarehouseStep
+
+   interface ProcessPackageClass : CoreModule::PackageClass
+   {
+      readonly attribute ProcessPackageSet all_of_type_process_package;
+      readonly attribute ProcessPackageSet all_of_class_process_package;
+      ProcessPackage create_process_package (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface ProcessPackage : ProcessPackageClass, CoreModule::Package
+   {
+   }; // end of interface ProcessPackage
+
+   interface WarehouseActivityClass : WarehouseProcessClass
+   {
+      readonly attribute WarehouseActivitySet all_of_type_warehouse_activity;
+      readonly attribute WarehouseActivitySet all_of_class_warehouse_activity;
+      WarehouseActivity create_warehouse_activity (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean static_definition,
+         in boolean is_sequential)
+         raises (Reflective::MofError);
+   };
+
+   interface WarehouseActivity : WarehouseActivityClass, WarehouseProcess
+   {
+      TransformationModule::TransformationActivity transformation_activity ()
+         raises (Reflective::MofError);
+      void set_transformation_activity (in TransformationModule::TransformationActivity new_value)
+         raises (Reflective::MofError);
+      WarehouseStepUList warehouse_step ()
+         raises (Reflective::MofError);
+      void set_warehouse_step (in WarehouseStepUList new_value)
+         raises (Reflective::MofError);
+      void unset_warehouse_step ()
+         raises (Reflective::MofError);
+      void add_warehouse_step (in WarehouseStep new_element)
+         raises (Reflective::MofError);
+      void add_warehouse_step_before (
+         in WarehouseStep new_element,
+         in WarehouseStep before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_warehouse_step (
+         in WarehouseStep old_element,
+         in WarehouseStep new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_warehouse_step (in WarehouseStep old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface WarehouseActivity
+
+   struct WarehouseStepRunsTransformationStepLink
+   {
+      TransformationModule::TransformationStep transformation_step;
+      WarehouseStep warehouse_step;
+   };
+   typedef sequence<WarehouseStepRunsTransformationStepLink> WarehouseStepRunsTransformationStepLinkSet;
+
+   interface WarehouseStepRunsTransformationStep : Reflective::RefAssociation
+   {
+      WarehouseStepRunsTransformationStepLinkSet all_warehouse_step_runs_transformation_step_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in TransformationModule::TransformationStep transformation_step,
+         in WarehouseStep warehouse_step)
+         raises (Reflective::MofError);
+      TransformationModule::TransformationStep transformation_step (in WarehouseStep warehouse_step)
+         raises (Reflective::MofError);
+      WarehouseStepSet warehouse_step (in TransformationModule::TransformationStep transformation_step)
+         raises (Reflective::MofError);
+      void add (
+         in TransformationModule::TransformationStep transformation_step,
+         in WarehouseStep warehouse_step)
+         raises (Reflective::MofError);
+      void modify_transformation_step (
+         in TransformationModule::TransformationStep transformation_step,
+         in WarehouseStep warehouse_step,
+         in TransformationModule::TransformationStep new_transformation_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_warehouse_step (
+         in TransformationModule::TransformationStep transformation_step,
+         in WarehouseStep warehouse_step,
+         in WarehouseStep new_warehouse_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in TransformationModule::TransformationStep transformation_step,
+         in WarehouseStep warehouse_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface WarehouseStepRunsTransformationStep
+
+   struct WarehouseActivityRunsTransformationActivityLink
+   {
+      WarehouseActivity warehouse_activity;
+      TransformationModule::TransformationActivity transformation_activity;
+   };
+   typedef sequence<WarehouseActivityRunsTransformationActivityLink> WarehouseActivityRunsTransformationActivityLinkSet;
+
+   interface WarehouseActivityRunsTransformationActivity : Reflective::RefAssociation
+   {
+      WarehouseActivityRunsTransformationActivityLinkSet all_warehouse_activity_runs_transformation_activity_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in WarehouseActivity warehouse_activity,
+         in TransformationModule::TransformationActivity transformation_activity)
+         raises (Reflective::MofError);
+      WarehouseActivitySet warehouse_activity (in TransformationModule::TransformationActivity transformation_activity)
+         raises (Reflective::MofError);
+      TransformationModule::TransformationActivity transformation_activity (in WarehouseActivity warehouse_activity)
+         raises (Reflective::MofError);
+      void add (
+         in WarehouseActivity warehouse_activity,
+         in TransformationModule::TransformationActivity transformation_activity)
+         raises (Reflective::MofError);
+      void modify_warehouse_activity (
+         in WarehouseActivity warehouse_activity,
+         in TransformationModule::TransformationActivity transformation_activity,
+         in WarehouseActivity new_warehouse_activity)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_transformation_activity (
+         in WarehouseActivity warehouse_activity,
+         in TransformationModule::TransformationActivity transformation_activity,
+         in TransformationModule::TransformationActivity new_transformation_activity)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in WarehouseActivity warehouse_activity,
+         in TransformationModule::TransformationActivity transformation_activity)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface WarehouseActivityRunsTransformationActivity
+
+   interface WarehouseProcessModulePackageFactory
+   {
+      WarehouseProcessModulePackage create_warehouse_process_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface WarehouseProcessModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute BehavioralModule::BehavioralModulePackage behavioral_ref;
+      readonly attribute TransformationModule::TransformationModulePackage transformation_ref;
+      readonly attribute DataType::DataTypePackage data_type_ref;
+      readonly attribute Events::EventsPackage events_ref;
+      readonly attribute WarehouseProcessClass warehouse_process_ref;
+      readonly attribute WarehouseStepClass warehouse_step_ref;
+      readonly attribute ProcessPackageClass process_package_ref;
+      readonly attribute WarehouseActivityClass warehouse_activity_ref;
+      readonly attribute WarehouseStepRunsTransformationStep warehouse_step_runs_transformation_step_ref;
+      readonly attribute WarehouseActivityRunsTransformationActivity warehouse_activity_runs_transformation_activity_ref;
+   };
+};
+
+#endif

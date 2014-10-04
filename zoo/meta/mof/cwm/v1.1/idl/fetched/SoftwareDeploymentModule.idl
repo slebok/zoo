@@ -1,0 +1,880 @@
+#ifndef SOFTWARE_DEPLOYMENT_MODULE_IDL
+#define SOFTWARE_DEPLOYMENT_MODULE_IDL
+#pragma prefix "org.omg.cwm.foundation"
+#include "Reflective.idl"
+#include "BusinessInformationModule.idl"
+#include "CoreModule.idl"
+#include "TypeMappingModule.idl"
+
+module SoftwareDeploymentModule
+{
+   typedef sequence<string> StringList;
+   typedef sequence<TypeMappingModule::TypeSystem> TypeSystemSet;
+   typedef sequence<CoreModule::Package> PackageSet;
+   interface SiteClass;
+   interface Site;
+   typedef sequence<Site> SiteSet;
+   interface MachineClass;
+   interface Machine;
+   typedef sequence<Machine> MachineSet;
+   interface SoftwareSystemClass;
+   interface SoftwareSystem;
+   typedef sequence<SoftwareSystem> SoftwareSystemSet;
+   interface DeployedComponentClass;
+   interface DeployedComponent;
+   typedef sequence<DeployedComponent> DeployedComponentSet;
+   interface DeployedSoftwareSystemClass;
+   interface DeployedSoftwareSystem;
+   typedef sequence<DeployedSoftwareSystem> DeployedSoftwareSystemSet;
+   interface DataManagerClass;
+   interface DataManager;
+   typedef sequence<DataManager> DataManagerSet;
+   interface DataProviderClass;
+   interface DataProvider;
+   typedef sequence<DataProvider> DataProviderSet;
+   interface ProviderConnectionClass;
+   interface ProviderConnection;
+   typedef sequence<ProviderConnection> ProviderConnectionSet;
+   interface ComponentClass;
+   interface Component;
+   typedef sequence<Component> ComponentSet;
+   interface PackageUsageClass;
+   interface PackageUsage;
+   typedef sequence<PackageUsage> PackageUsageSet;
+   interface SoftwareDeploymentModulePackage;
+
+   interface SiteClass : BusinessInformationModule::LocationClass
+   {
+      readonly attribute SiteSet all_of_type_site;
+      readonly attribute SiteSet all_of_class_site;
+      Site create_site (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string location_type,
+         in string address,
+         in string city,
+         in string post_code,
+         in string area,
+         in string country)
+         raises (Reflective::MofError);
+   };
+
+   interface Site : SiteClass, BusinessInformationModule::Location
+   {
+      SiteSet containing_site ()
+         raises (Reflective::MofError);
+      void set_containing_site (in SiteSet new_value)
+         raises (Reflective::MofError);
+      void unset_containing_site ()
+         raises (Reflective::MofError);
+      void add_containing_site (in Site new_element)
+         raises (Reflective::MofError);
+      void modify_containing_site (
+         in Site old_element,
+         in Site new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_containing_site (in Site old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Site
+
+   interface MachineClass : CoreModule::NamespaceClass
+   {
+      readonly attribute MachineSet all_of_type_machine;
+      readonly attribute MachineSet all_of_class_machine;
+      Machine create_machine (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in StringList ip_address,
+         in StringList host_name,
+         in string machine_id)
+         raises (Reflective::MofError);
+   };
+
+   interface Machine : MachineClass, CoreModule::Namespace
+   {
+      StringList ip_address ()
+         raises (Reflective::MofError);
+      void set_ip_address (in StringList new_value)
+         raises (Reflective::MofError);
+      void unset_ip_address ()
+         raises (Reflective::MofError);
+      void add_ip_address (in string new_element)
+         raises (Reflective::MofError);
+      void add_ip_address_before (
+         in string new_element,
+         in string before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void add_ip_address_at (
+         in string new_element,
+         in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      void modify_ip_address (
+         in string old_element,
+         in string new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_ip_address_at (
+         in string new_element,
+         in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      void remove_ip_address (in string old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_ip_address_at (in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      StringList host_name ()
+         raises (Reflective::MofError);
+      void set_host_name (in StringList new_value)
+         raises (Reflective::MofError);
+      void unset_host_name ()
+         raises (Reflective::MofError);
+      void add_host_name (in string new_element)
+         raises (Reflective::MofError);
+      void add_host_name_before (
+         in string new_element,
+         in string before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void add_host_name_at (
+         in string new_element,
+         in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      void modify_host_name (
+         in string old_element,
+         in string new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_host_name_at (
+         in string new_element,
+         in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      void remove_host_name (in string old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_host_name_at (in unsigned long position)
+         raises (Reflective::BadPosition, Reflective::MofError);
+      string machine_id ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_machine_id (in string new_value)
+         raises (Reflective::MofError);
+      void unset_machine_id ()
+         raises (Reflective::MofError);
+      SoftwareDeploymentModule::Site site ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_site (in SoftwareDeploymentModule::Site new_value)
+         raises (Reflective::MofError);
+      void unset_site ()
+         raises (Reflective::MofError);
+      DeployedComponentSet deployed_component ()
+         raises (Reflective::MofError);
+      void set_deployed_component (in DeployedComponentSet new_value)
+         raises (Reflective::MofError);
+      void unset_deployed_component ()
+         raises (Reflective::MofError);
+      void add_deployed_component (in DeployedComponent new_element)
+         raises (Reflective::MofError);
+      void modify_deployed_component (
+         in DeployedComponent old_element,
+         in DeployedComponent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_deployed_component (in DeployedComponent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Machine
+
+   interface SoftwareSystemClass : CoreModule::SubsystemClass
+   {
+      readonly attribute SoftwareSystemSet all_of_type_software_system;
+      readonly attribute SoftwareSystemSet all_of_class_software_system;
+      SoftwareSystem create_software_system (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in string type,
+         in string subtype,
+         in string supplier,
+         in string version)
+         raises (Reflective::MofError);
+   };
+
+   interface SoftwareSystem : SoftwareSystemClass, CoreModule::Subsystem
+   {
+      string type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_type (in string new_value)
+         raises (Reflective::MofError);
+      void unset_type ()
+         raises (Reflective::MofError);
+      string subtype ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_subtype (in string new_value)
+         raises (Reflective::MofError);
+      void unset_subtype ()
+         raises (Reflective::MofError);
+      string supplier ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_supplier (in string new_value)
+         raises (Reflective::MofError);
+      void unset_supplier ()
+         raises (Reflective::MofError);
+      string version ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_version (in string new_value)
+         raises (Reflective::MofError);
+      void unset_version ()
+         raises (Reflective::MofError);
+      TypeSystemSet typespace ()
+         raises (Reflective::MofError);
+      void set_typespace (in TypeSystemSet new_value)
+         raises (Reflective::MofError);
+      void unset_typespace ()
+         raises (Reflective::MofError);
+      void add_typespace (in TypeMappingModule::TypeSystem new_element)
+         raises (Reflective::MofError);
+      void modify_typespace (
+         in TypeMappingModule::TypeSystem old_element,
+         in TypeMappingModule::TypeSystem new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_typespace (in TypeMappingModule::TypeSystem old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SoftwareSystem
+
+   interface DeployedComponentClass : CoreModule::PackageClass
+   {
+      readonly attribute DeployedComponentSet all_of_type_deployed_component;
+      readonly attribute DeployedComponentSet all_of_class_deployed_component;
+      DeployedComponent create_deployed_component (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string pathname)
+         raises (Reflective::MofError);
+   };
+
+   interface DeployedComponent : DeployedComponentClass, CoreModule::Package
+   {
+      string pathname ()
+         raises (Reflective::MofError);
+      void set_pathname (in string new_value)
+         raises (Reflective::MofError);
+      SoftwareDeploymentModule::Component component ()
+         raises (Reflective::MofError);
+      void set_component (in SoftwareDeploymentModule::Component new_value)
+         raises (Reflective::MofError);
+      SoftwareDeploymentModule::Machine machine ()
+         raises (Reflective::MofError);
+      void set_machine (in SoftwareDeploymentModule::Machine new_value)
+         raises (Reflective::MofError);
+      DeployedComponentSet using_components ()
+         raises (Reflective::MofError);
+      void set_using_components (in DeployedComponentSet new_value)
+         raises (Reflective::MofError);
+      void unset_using_components ()
+         raises (Reflective::MofError);
+      void add_using_components (in DeployedComponent new_element)
+         raises (Reflective::MofError);
+      void modify_using_components (
+         in DeployedComponent old_element,
+         in DeployedComponent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_using_components (in DeployedComponent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DeployedComponentSet used_components ()
+         raises (Reflective::MofError);
+      void set_used_components (in DeployedComponentSet new_value)
+         raises (Reflective::MofError);
+      void unset_used_components ()
+         raises (Reflective::MofError);
+      void add_used_components (in DeployedComponent new_element)
+         raises (Reflective::MofError);
+      void modify_used_components (
+         in DeployedComponent old_element,
+         in DeployedComponent new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_used_components (in DeployedComponent old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeployedComponent
+
+   interface DeployedSoftwareSystemClass : CoreModule::PackageClass
+   {
+      readonly attribute DeployedSoftwareSystemSet all_of_type_deployed_software_system;
+      readonly attribute DeployedSoftwareSystemSet all_of_class_deployed_software_system;
+      DeployedSoftwareSystem create_deployed_software_system (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string fix_level)
+         raises (Reflective::MofError);
+   };
+
+   interface DeployedSoftwareSystem : DeployedSoftwareSystemClass, CoreModule::Package
+   {
+      string fix_level ()
+         raises (Reflective::MofError);
+      void set_fix_level (in string new_value)
+         raises (Reflective::MofError);
+      SoftwareSystem software_system ()
+         raises (Reflective::MofError);
+      void set_software_system (in SoftwareSystem new_value)
+         raises (Reflective::MofError);
+   }; // end of interface DeployedSoftwareSystem
+
+   interface DataManagerClass : DeployedComponentClass
+   {
+      readonly attribute DataManagerSet all_of_type_data_manager;
+      readonly attribute DataManagerSet all_of_class_data_manager;
+      DataManager create_data_manager (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string pathname,
+         in boolean is_case_sensitive)
+         raises (Reflective::MofError);
+   };
+
+   interface DataManager : DataManagerClass, DeployedComponent
+   {
+      boolean is_case_sensitive ()
+         raises (Reflective::MofError);
+      void set_is_case_sensitive (in boolean new_value)
+         raises (Reflective::MofError);
+      PackageSet data_package ()
+         raises (Reflective::MofError);
+      void set_data_package (in PackageSet new_value)
+         raises (Reflective::MofError);
+      void unset_data_package ()
+         raises (Reflective::MofError);
+      void add_data_package (in CoreModule::Package new_element)
+         raises (Reflective::MofError);
+      void modify_data_package (
+         in CoreModule::Package old_element,
+         in CoreModule::Package new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_data_package (in CoreModule::Package old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataManager
+
+   interface DataProviderClass : DataManagerClass
+   {
+      readonly attribute DataProviderSet all_of_type_data_provider;
+      readonly attribute DataProviderSet all_of_class_data_provider;
+      DataProvider create_data_provider (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string pathname,
+         in boolean is_case_sensitive)
+         raises (Reflective::MofError);
+   };
+
+   interface DataProvider : DataProviderClass, DataManager
+   {
+      ProviderConnectionSet resource_connection ()
+         raises (Reflective::MofError);
+      void set_resource_connection (in ProviderConnectionSet new_value)
+         raises (Reflective::MofError);
+      void unset_resource_connection ()
+         raises (Reflective::MofError);
+      void add_resource_connection (in ProviderConnection new_element)
+         raises (Reflective::MofError);
+      void modify_resource_connection (
+         in ProviderConnection old_element,
+         in ProviderConnection new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_resource_connection (in ProviderConnection old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataProvider
+
+   interface ProviderConnectionClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ProviderConnectionSet all_of_type_provider_connection;
+      readonly attribute ProviderConnectionSet all_of_class_provider_connection;
+      ProviderConnection create_provider_connection (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_read_only)
+         raises (Reflective::MofError);
+   };
+
+   interface ProviderConnection : ProviderConnectionClass, CoreModule::ModelElement
+   {
+      boolean is_read_only ()
+         raises (Reflective::MofError);
+      void set_is_read_only (in boolean new_value)
+         raises (Reflective::MofError);
+      DataProvider data_provider ()
+         raises (Reflective::MofError);
+      void set_data_provider (in DataProvider new_value)
+         raises (Reflective::MofError);
+      DataManager data_manager ()
+         raises (Reflective::MofError);
+      void set_data_manager (in DataManager new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ProviderConnection
+
+   interface ComponentClass : CoreModule::ClassifierClass
+   {
+      readonly attribute ComponentSet all_of_type_component;
+      readonly attribute ComponentSet all_of_class_component;
+      Component create_component (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Component : ComponentClass, CoreModule::Classifier
+   {
+      PackageSet design_package ()
+         raises (Reflective::MofError);
+      void set_design_package (in PackageSet new_value)
+         raises (Reflective::MofError);
+      void unset_design_package ()
+         raises (Reflective::MofError);
+      void add_design_package (in CoreModule::Package new_element)
+         raises (Reflective::MofError);
+      void modify_design_package (
+         in CoreModule::Package old_element,
+         in CoreModule::Package new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_design_package (in CoreModule::Package old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Component
+
+   interface PackageUsageClass : CoreModule::DependencyClass
+   {
+      readonly attribute PackageUsageSet all_of_type_package_usage;
+      readonly attribute PackageUsageSet all_of_class_package_usage;
+      PackageUsage create_package_usage (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string kind,
+         in CoreModule::Name package_alias)
+         raises (Reflective::MofError);
+   };
+
+   interface PackageUsage : PackageUsageClass, CoreModule::Dependency
+   {
+      CoreModule::Name package_alias ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_package_alias (in CoreModule::Name new_value)
+         raises (Reflective::MofError);
+      void unset_package_alias ()
+         raises (Reflective::MofError);
+   }; // end of interface PackageUsage
+
+   struct RelatedSitesLink
+   {
+      Site containing_site;
+      Site contained_site;
+   };
+   typedef sequence<RelatedSitesLink> RelatedSitesLinkSet;
+
+   interface RelatedSites : Reflective::RefAssociation
+   {
+      RelatedSitesLinkSet all_related_sites_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Site containing_site,
+         in Site contained_site)
+         raises (Reflective::MofError);
+      SiteSet containing_site (in Site contained_site)
+         raises (Reflective::MofError);
+      SiteSet contained_site (in Site containing_site)
+         raises (Reflective::MofError);
+      void add (
+         in Site containing_site,
+         in Site contained_site)
+         raises (Reflective::MofError);
+      void modify_containing_site (
+         in Site containing_site,
+         in Site contained_site,
+         in Site new_containing_site)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_contained_site (
+         in Site containing_site,
+         in Site contained_site,
+         in Site new_contained_site)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Site containing_site,
+         in Site contained_site)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RelatedSites
+
+   struct SiteMachinesLink
+   {
+      SoftwareDeploymentModule::Site site;
+      SoftwareDeploymentModule::Machine machine;
+   };
+   typedef sequence<SiteMachinesLink> SiteMachinesLinkSet;
+
+   interface SiteMachines : Reflective::RefAssociation
+   {
+      SiteMachinesLinkSet all_site_machines_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in SoftwareDeploymentModule::Site site,
+         in SoftwareDeploymentModule::Machine machine)
+         raises (Reflective::MofError);
+      SoftwareDeploymentModule::Site site (in SoftwareDeploymentModule::Machine machine)
+         raises (Reflective::MofError);
+      MachineSet machine (in SoftwareDeploymentModule::Site site)
+         raises (Reflective::MofError);
+      void add (
+         in SoftwareDeploymentModule::Site site,
+         in SoftwareDeploymentModule::Machine machine)
+         raises (Reflective::MofError);
+      void modify_site (
+         in SoftwareDeploymentModule::Site site,
+         in SoftwareDeploymentModule::Machine machine,
+         in SoftwareDeploymentModule::Site new_site)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_machine (
+         in SoftwareDeploymentModule::Site site,
+         in SoftwareDeploymentModule::Machine machine,
+         in SoftwareDeploymentModule::Machine new_machine)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in SoftwareDeploymentModule::Site site,
+         in SoftwareDeploymentModule::Machine machine)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SiteMachines
+
+   struct DataManagerConnectionsLink
+   {
+      DataManager data_manager;
+      ProviderConnection client_connection;
+   };
+   typedef sequence<DataManagerConnectionsLink> DataManagerConnectionsLinkSet;
+
+   interface DataManagerConnections : Reflective::RefAssociation
+   {
+      DataManagerConnectionsLinkSet all_data_manager_connections_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DataManager data_manager,
+         in ProviderConnection client_connection)
+         raises (Reflective::MofError);
+      DataManager data_manager (in ProviderConnection client_connection)
+         raises (Reflective::MofError);
+      ProviderConnectionSet client_connection (in DataManager data_manager)
+         raises (Reflective::MofError);
+      void add (
+         in DataManager data_manager,
+         in ProviderConnection client_connection)
+         raises (Reflective::MofError);
+      void modify_data_manager (
+         in DataManager data_manager,
+         in ProviderConnection client_connection,
+         in DataManager new_data_manager)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_client_connection (
+         in DataManager data_manager,
+         in ProviderConnection client_connection,
+         in ProviderConnection new_client_connection)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DataManager data_manager,
+         in ProviderConnection client_connection)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataManagerConnections
+
+   struct SoftwareSystemDeploymentsLink
+   {
+      DeployedSoftwareSystem deployment;
+      SoftwareSystem software_system;
+   };
+   typedef sequence<SoftwareSystemDeploymentsLink> SoftwareSystemDeploymentsLinkSet;
+
+   interface SoftwareSystemDeployments : Reflective::RefAssociation
+   {
+      SoftwareSystemDeploymentsLinkSet all_software_system_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DeployedSoftwareSystem deployment,
+         in SoftwareSystem software_system)
+         raises (Reflective::MofError);
+      DeployedSoftwareSystemSet deployment (in SoftwareSystem software_system)
+         raises (Reflective::MofError);
+      SoftwareSystem software_system (in DeployedSoftwareSystem deployment)
+         raises (Reflective::MofError);
+      void add (
+         in DeployedSoftwareSystem deployment,
+         in SoftwareSystem software_system)
+         raises (Reflective::MofError);
+      void modify_deployment (
+         in DeployedSoftwareSystem deployment,
+         in SoftwareSystem software_system,
+         in DeployedSoftwareSystem new_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_software_system (
+         in DeployedSoftwareSystem deployment,
+         in SoftwareSystem software_system,
+         in SoftwareSystem new_software_system)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DeployedSoftwareSystem deployment,
+         in SoftwareSystem software_system)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SoftwareSystemDeployments
+
+   struct DataManagerDataPackageLink
+   {
+      CoreModule::Package data_package;
+      DataManager data_manager;
+   };
+   typedef sequence<DataManagerDataPackageLink> DataManagerDataPackageLinkSet;
+
+   interface DataManagerDataPackage : Reflective::RefAssociation
+   {
+      DataManagerDataPackageLinkSet all_data_manager_data_package_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Package data_package,
+         in DataManager data_manager)
+         raises (Reflective::MofError);
+      PackageSet data_package (in DataManager data_manager)
+         raises (Reflective::MofError);
+      DataManagerSet data_manager (in CoreModule::Package data_package)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Package data_package,
+         in DataManager data_manager)
+         raises (Reflective::MofError);
+      void modify_data_package (
+         in CoreModule::Package data_package,
+         in DataManager data_manager,
+         in CoreModule::Package new_data_package)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_data_manager (
+         in CoreModule::Package data_package,
+         in DataManager data_manager,
+         in DataManager new_data_manager)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Package data_package,
+         in DataManager data_manager)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DataManagerDataPackage
+
+   struct DeployedSoftwareSystemComponentsLink
+   {
+      DeployedSoftwareSystem deployed_software_system;
+      DeployedComponent deployed_component;
+   };
+   typedef sequence<DeployedSoftwareSystemComponentsLink> DeployedSoftwareSystemComponentsLinkSet;
+
+   interface DeployedSoftwareSystemComponents : Reflective::RefAssociation
+   {
+      DeployedSoftwareSystemComponentsLinkSet all_deployed_software_system_components_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DeployedSoftwareSystem deployed_software_system,
+         in DeployedComponent deployed_component)
+         raises (Reflective::MofError);
+      DeployedSoftwareSystemSet deployed_software_system (in DeployedComponent deployed_component)
+         raises (Reflective::MofError);
+      DeployedComponentSet deployed_component (in DeployedSoftwareSystem deployed_software_system)
+         raises (Reflective::MofError);
+      void add (
+         in DeployedSoftwareSystem deployed_software_system,
+         in DeployedComponent deployed_component)
+         raises (Reflective::MofError);
+      void modify_deployed_software_system (
+         in DeployedSoftwareSystem deployed_software_system,
+         in DeployedComponent deployed_component,
+         in DeployedSoftwareSystem new_deployed_software_system)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_deployed_component (
+         in DeployedSoftwareSystem deployed_software_system,
+         in DeployedComponent deployed_component,
+         in DeployedComponent new_deployed_component)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DeployedSoftwareSystem deployed_software_system,
+         in DeployedComponent deployed_component)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeployedSoftwareSystemComponents
+
+   struct ComponentDeploymentsLink
+   {
+      SoftwareDeploymentModule::Component component;
+      DeployedComponent deployment;
+   };
+   typedef sequence<ComponentDeploymentsLink> ComponentDeploymentsLinkSet;
+
+   interface ComponentDeployments : Reflective::RefAssociation
+   {
+      ComponentDeploymentsLinkSet all_component_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in SoftwareDeploymentModule::Component component,
+         in DeployedComponent deployment)
+         raises (Reflective::MofError);
+      SoftwareDeploymentModule::Component component (in DeployedComponent deployment)
+         raises (Reflective::MofError);
+      DeployedComponentSet deployment (in SoftwareDeploymentModule::Component component)
+         raises (Reflective::MofError);
+      void add (
+         in SoftwareDeploymentModule::Component component,
+         in DeployedComponent deployment)
+         raises (Reflective::MofError);
+      void modify_component (
+         in SoftwareDeploymentModule::Component component,
+         in DeployedComponent deployment,
+         in SoftwareDeploymentModule::Component new_component)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_deployment (
+         in SoftwareDeploymentModule::Component component,
+         in DeployedComponent deployment,
+         in DeployedComponent new_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in SoftwareDeploymentModule::Component component,
+         in DeployedComponent deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ComponentDeployments
+
+   struct SystemTypespaceLink
+   {
+      TypeMappingModule::TypeSystem typespace;
+      SoftwareSystem supporting_system;
+   };
+   typedef sequence<SystemTypespaceLink> SystemTypespaceLinkSet;
+
+   interface SystemTypespace : Reflective::RefAssociation
+   {
+      SystemTypespaceLinkSet all_system_typespace_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in TypeMappingModule::TypeSystem typespace,
+         in SoftwareSystem supporting_system)
+         raises (Reflective::MofError);
+      TypeSystemSet typespace (in SoftwareSystem supporting_system)
+         raises (Reflective::MofError);
+      SoftwareSystemSet supporting_system (in TypeMappingModule::TypeSystem typespace)
+         raises (Reflective::MofError);
+      void add (
+         in TypeMappingModule::TypeSystem typespace,
+         in SoftwareSystem supporting_system)
+         raises (Reflective::MofError);
+      void modify_typespace (
+         in TypeMappingModule::TypeSystem typespace,
+         in SoftwareSystem supporting_system,
+         in TypeMappingModule::TypeSystem new_typespace)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_supporting_system (
+         in TypeMappingModule::TypeSystem typespace,
+         in SoftwareSystem supporting_system,
+         in SoftwareSystem new_supporting_system)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in TypeMappingModule::TypeSystem typespace,
+         in SoftwareSystem supporting_system)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SystemTypespace
+
+   struct ComponentDesignLink
+   {
+      CoreModule::Package design_package;
+      SoftwareDeploymentModule::Component component;
+   };
+   typedef sequence<ComponentDesignLink> ComponentDesignLinkSet;
+
+   interface ComponentDesign : Reflective::RefAssociation
+   {
+      ComponentDesignLinkSet all_component_design_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Package design_package,
+         in SoftwareDeploymentModule::Component component)
+         raises (Reflective::MofError);
+      PackageSet design_package (in SoftwareDeploymentModule::Component component)
+         raises (Reflective::MofError);
+      ComponentSet component (in CoreModule::Package design_package)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Package design_package,
+         in SoftwareDeploymentModule::Component component)
+         raises (Reflective::MofError);
+      void modify_design_package (
+         in CoreModule::Package design_package,
+         in SoftwareDeploymentModule::Component component,
+         in CoreModule::Package new_design_package)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_component (
+         in CoreModule::Package design_package,
+         in SoftwareDeploymentModule::Component component,
+         in SoftwareDeploymentModule::Component new_component)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Package design_package,
+         in SoftwareDeploymentModule::Component component)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ComponentDesign
+
+   struct DeployedComponentUsageLink
+   {
+      DeployedComponent used_components;
+      DeployedComponent using_components;
+   };
+   typedef sequence<DeployedComponentUsageLink> DeployedComponentUsageLinkSet;
+
+   interface DeployedComponentUsage : Reflective::RefAssociation
+   {
+      DeployedComponentUsageLinkSet all_deployed_component_usage_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DeployedComponent used_components,
+         in DeployedComponent using_components)
+         raises (Reflective::MofError);
+      DeployedComponentSet used_components (in DeployedComponent using_components)
+         raises (Reflective::MofError);
+      DeployedComponentSet using_components (in DeployedComponent used_components)
+         raises (Reflective::MofError);
+      void add (
+         in DeployedComponent used_components,
+         in DeployedComponent using_components)
+         raises (Reflective::MofError);
+      void modify_used_components (
+         in DeployedComponent used_components,
+         in DeployedComponent using_components,
+         in DeployedComponent new_used_components)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_using_components (
+         in DeployedComponent used_components,
+         in DeployedComponent using_components,
+         in DeployedComponent new_using_components)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DeployedComponent used_components,
+         in DeployedComponent using_components)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeployedComponentUsage
+
+   interface SoftwareDeploymentModulePackageFactory
+   {
+      SoftwareDeploymentModulePackage create_software_deployment_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface SoftwareDeploymentModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute BusinessInformationModule::BusinessInformationModulePackage business_information_ref;
+      readonly attribute TypeMappingModule::TypeMappingModulePackage type_mapping_ref;
+      readonly attribute SiteClass site_ref;
+      readonly attribute MachineClass machine_ref;
+      readonly attribute SoftwareSystemClass software_system_ref;
+      readonly attribute DeployedComponentClass deployed_component_ref;
+      readonly attribute DeployedSoftwareSystemClass deployed_software_system_ref;
+      readonly attribute DataManagerClass data_manager_ref;
+      readonly attribute DataProviderClass data_provider_ref;
+      readonly attribute ProviderConnectionClass provider_connection_ref;
+      readonly attribute ComponentClass component_ref;
+      readonly attribute PackageUsageClass package_usage_ref;
+      readonly attribute RelatedSites related_sites_ref;
+      readonly attribute SiteMachines site_machines_ref;
+      readonly attribute DataManagerConnections data_manager_connections_ref;
+      readonly attribute SoftwareSystemDeployments software_system_deployments_ref;
+      readonly attribute DataManagerDataPackage data_manager_data_package_ref;
+      readonly attribute DeployedSoftwareSystemComponents deployed_software_system_components_ref;
+      readonly attribute ComponentDeployments component_deployments_ref;
+      readonly attribute SystemTypespace system_typespace_ref;
+      readonly attribute ComponentDesign component_design_ref;
+      readonly attribute DeployedComponentUsage deployed_component_usage_ref;
+   };
+};
+
+#endif

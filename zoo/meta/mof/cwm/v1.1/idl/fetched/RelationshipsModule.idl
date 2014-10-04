@@ -1,0 +1,182 @@
+#ifndef RELATIONSHIPS_MODULE_IDL
+#define RELATIONSHIPS_MODULE_IDL
+#pragma prefix "org.omg.cwm.objectmodel"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module RelationshipsModule
+{
+   interface AssociationClass;
+   interface Association;
+   typedef sequence<Association> AssociationSet;
+   interface AssociationEndClass;
+   interface AssociationEnd;
+   typedef sequence<AssociationEnd> AssociationEndSet;
+   interface GeneralizationClass;
+   interface Generalization;
+   typedef sequence<Generalization> GeneralizationSet;
+   interface RelationshipsModulePackage;
+   enum AggregationKind {ak_none, ak_aggregate, ak_composite};
+
+   interface AssociationClass : CoreModule::ClassClass
+   {
+      readonly attribute AssociationSet all_of_type_association;
+      readonly attribute AssociationSet all_of_class_association;
+      Association create_association (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Association : AssociationClass, CoreModule::Class
+   {
+   }; // end of interface Association
+
+   interface AssociationEndClass : CoreModule::StructuralFeatureClass
+   {
+      readonly attribute AssociationEndSet all_of_type_association_end;
+      readonly attribute AssociationEndSet all_of_class_association_end;
+      AssociationEnd create_association_end (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in AggregationKind aggregation,
+         in boolean is_navigable)
+         raises (Reflective::MofError);
+   };
+
+   interface AssociationEnd : AssociationEndClass, CoreModule::StructuralFeature
+   {
+      AggregationKind aggregation ()
+         raises (Reflective::MofError);
+      void set_aggregation (in AggregationKind new_value)
+         raises (Reflective::MofError);
+      boolean is_navigable ()
+         raises (Reflective::MofError);
+      void set_is_navigable (in boolean new_value)
+         raises (Reflective::MofError);
+   }; // end of interface AssociationEnd
+
+   interface GeneralizationClass : CoreModule::ModelElementClass
+   {
+      readonly attribute GeneralizationSet all_of_type_generalization;
+      readonly attribute GeneralizationSet all_of_class_generalization;
+      Generalization create_generalization (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Generalization : GeneralizationClass, CoreModule::ModelElement
+   {
+      CoreModule::Classifier child ()
+         raises (Reflective::MofError);
+      void set_child (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+      CoreModule::Classifier parent ()
+         raises (Reflective::MofError);
+      void set_parent (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Generalization
+
+   struct ChildElementLink
+   {
+      CoreModule::Classifier child;
+      RelationshipsModule::Generalization generalization;
+   };
+   typedef sequence<ChildElementLink> ChildElementLinkSet;
+
+   interface ChildElement : Reflective::RefAssociation
+   {
+      ChildElementLinkSet all_child_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier child,
+         in RelationshipsModule::Generalization generalization)
+         raises (Reflective::MofError);
+      CoreModule::Classifier child (in RelationshipsModule::Generalization generalization)
+         raises (Reflective::MofError);
+      GeneralizationSet generalization (in CoreModule::Classifier child)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier child,
+         in RelationshipsModule::Generalization generalization)
+         raises (Reflective::MofError);
+      void modify_child (
+         in CoreModule::Classifier child,
+         in RelationshipsModule::Generalization generalization,
+         in CoreModule::Classifier new_child)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_generalization (
+         in CoreModule::Classifier child,
+         in RelationshipsModule::Generalization generalization,
+         in RelationshipsModule::Generalization new_generalization)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier child,
+         in RelationshipsModule::Generalization generalization)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ChildElement
+
+   struct ParentElementLink
+   {
+      CoreModule::Classifier parent;
+      Generalization specialization;
+   };
+   typedef sequence<ParentElementLink> ParentElementLinkSet;
+
+   interface ParentElement : Reflective::RefAssociation
+   {
+      ParentElementLinkSet all_parent_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier parent,
+         in Generalization specialization)
+         raises (Reflective::MofError);
+      CoreModule::Classifier parent (in Generalization specialization)
+         raises (Reflective::MofError);
+      GeneralizationSet specialization (in CoreModule::Classifier parent)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier parent,
+         in Generalization specialization)
+         raises (Reflective::MofError);
+      void modify_parent (
+         in CoreModule::Classifier parent,
+         in Generalization specialization,
+         in CoreModule::Classifier new_parent)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_specialization (
+         in CoreModule::Classifier parent,
+         in Generalization specialization,
+         in Generalization new_specialization)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier parent,
+         in Generalization specialization)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ParentElement
+
+   interface RelationshipsModulePackageFactory
+   {
+      RelationshipsModulePackage create_relationships_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface RelationshipsModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute AssociationClass association_ref;
+      readonly attribute AssociationEndClass association_end_ref;
+      readonly attribute GeneralizationClass generalization_ref;
+      readonly attribute ChildElement child_element_ref;
+      readonly attribute ParentElement parent_element_ref;
+   };
+};
+
+#endif

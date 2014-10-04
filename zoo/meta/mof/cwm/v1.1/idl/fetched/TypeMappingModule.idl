@@ -1,0 +1,162 @@
+#ifndef TYPE_MAPPING_MODULE_IDL
+#define TYPE_MAPPING_MODULE_IDL
+#pragma prefix "org.omg.cwm.foundation"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module TypeMappingModule
+{
+   interface TypeMappingClass;
+   interface TypeMapping;
+   typedef sequence<TypeMapping> TypeMappingSet;
+   interface TypeSystemClass;
+   interface TypeSystem;
+   typedef sequence<TypeSystem> TypeSystemSet;
+   interface TypeMappingModulePackage;
+
+   interface TypeMappingClass : CoreModule::ModelElementClass
+   {
+      readonly attribute TypeMappingSet all_of_type_type_mapping;
+      readonly attribute TypeMappingSet all_of_class_type_mapping;
+      TypeMapping create_type_mapping (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_best_match,
+         in boolean is_lossy)
+         raises (Reflective::MofError);
+   };
+
+   interface TypeMapping : TypeMappingClass, CoreModule::ModelElement
+   {
+      boolean is_best_match ()
+         raises (Reflective::MofError);
+      void set_is_best_match (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_lossy ()
+         raises (Reflective::MofError);
+      void set_is_lossy (in boolean new_value)
+         raises (Reflective::MofError);
+      CoreModule::Classifier source_type ()
+         raises (Reflective::MofError);
+      void set_source_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+      CoreModule::Classifier target_type ()
+         raises (Reflective::MofError);
+      void set_target_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+   }; // end of interface TypeMapping
+
+   interface TypeSystemClass : CoreModule::PackageClass
+   {
+      readonly attribute TypeSystemSet all_of_type_type_system;
+      readonly attribute TypeSystemSet all_of_class_type_system;
+      TypeSystem create_type_system (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string version)
+         raises (Reflective::MofError);
+   };
+
+   interface TypeSystem : TypeSystemClass, CoreModule::Package
+   {
+      string version ()
+         raises (Reflective::MofError);
+      void set_version (in string new_value)
+         raises (Reflective::MofError);
+   }; // end of interface TypeSystem
+
+   struct MappingSourceLink
+   {
+      CoreModule::Classifier source_type;
+      TypeMapping mapping_from;
+   };
+   typedef sequence<MappingSourceLink> MappingSourceLinkSet;
+
+   interface MappingSource : Reflective::RefAssociation
+   {
+      MappingSourceLinkSet all_mapping_source_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier source_type,
+         in TypeMapping mapping_from)
+         raises (Reflective::MofError);
+      CoreModule::Classifier source_type (in TypeMapping mapping_from)
+         raises (Reflective::MofError);
+      TypeMappingSet mapping_from (in CoreModule::Classifier source_type)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier source_type,
+         in TypeMapping mapping_from)
+         raises (Reflective::MofError);
+      void modify_source_type (
+         in CoreModule::Classifier source_type,
+         in TypeMapping mapping_from,
+         in CoreModule::Classifier new_source_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_mapping_from (
+         in CoreModule::Classifier source_type,
+         in TypeMapping mapping_from,
+         in TypeMapping new_mapping_from)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier source_type,
+         in TypeMapping mapping_from)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface MappingSource
+
+   struct MappingTargetLink
+   {
+      CoreModule::Classifier target_type;
+      TypeMapping mapping_to;
+   };
+   typedef sequence<MappingTargetLink> MappingTargetLinkSet;
+
+   interface MappingTarget : Reflective::RefAssociation
+   {
+      MappingTargetLinkSet all_mapping_target_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier target_type,
+         in TypeMapping mapping_to)
+         raises (Reflective::MofError);
+      CoreModule::Classifier target_type (in TypeMapping mapping_to)
+         raises (Reflective::MofError);
+      TypeMappingSet mapping_to (in CoreModule::Classifier target_type)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier target_type,
+         in TypeMapping mapping_to)
+         raises (Reflective::MofError);
+      void modify_target_type (
+         in CoreModule::Classifier target_type,
+         in TypeMapping mapping_to,
+         in CoreModule::Classifier new_target_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_mapping_to (
+         in CoreModule::Classifier target_type,
+         in TypeMapping mapping_to,
+         in TypeMapping new_mapping_to)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier target_type,
+         in TypeMapping mapping_to)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface MappingTarget
+
+   interface TypeMappingModulePackageFactory
+   {
+      TypeMappingModulePackage create_type_mapping_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface TypeMappingModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute TypeMappingClass type_mapping_ref;
+      readonly attribute TypeSystemClass type_system_ref;
+      readonly attribute MappingSource mapping_source_ref;
+      readonly attribute MappingTarget mapping_target_ref;
+   };
+};
+
+#endif

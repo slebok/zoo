@@ -1,0 +1,330 @@
+#ifndef SUPERVISED_MODULE_IDL
+#define SUPERVISED_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "MiningCoreModule.idl"
+#include "CoreModule.idl"
+
+module SupervisedModule
+{
+   typedef sequence<MiningCoreModule::MiningDataModule::Category> CategorySet;
+   interface LiftAnalysisPointClass;
+   interface LiftAnalysisPoint;
+   typedef sequence<LiftAnalysisPoint> LiftAnalysisPointSet;
+   interface LiftAnalysisClass;
+   interface LiftAnalysis;
+   typedef sequence<LiftAnalysis> LiftAnalysisSet;
+   interface MiningTestTaskClass;
+   interface MiningTestTask;
+   typedef sequence<MiningTestTask> MiningTestTaskSet;
+   interface SupervisedFunctionSettingsClass;
+   interface SupervisedFunctionSettings;
+   typedef sequence<SupervisedFunctionSettings> SupervisedFunctionSettingsSet;
+   interface MiningTestResultClass;
+   interface MiningTestResult;
+   typedef sequence<MiningTestResult> MiningTestResultSet;
+   interface SupervisedModulePackage;
+
+   interface LiftAnalysisPointClass : CoreModule::ModelElementClass
+   {
+      readonly attribute LiftAnalysisPointSet all_of_type_lift_analysis_point;
+      readonly attribute LiftAnalysisPointSet all_of_class_lift_analysis_point;
+      LiftAnalysisPoint create_lift_analysis_point (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long subset_of_records,
+         in double aggregate_target)
+         raises (Reflective::MofError);
+   };
+
+   interface LiftAnalysisPoint : LiftAnalysisPointClass, CoreModule::ModelElement
+   {
+      long subset_of_records ()
+         raises (Reflective::MofError);
+      void set_subset_of_records (in long new_value)
+         raises (Reflective::MofError);
+      double aggregate_target ()
+         raises (Reflective::MofError);
+      void set_aggregate_target (in double new_value)
+         raises (Reflective::MofError);
+   }; // end of interface LiftAnalysisPoint
+
+   interface LiftAnalysisClass : CoreModule::ModelElementClass
+   {
+      readonly attribute LiftAnalysisSet all_of_type_lift_analysis;
+      readonly attribute LiftAnalysisSet all_of_class_lift_analysis;
+      LiftAnalysis create_lift_analysis (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string target_attribute_name)
+         raises (Reflective::MofError);
+   };
+
+   interface LiftAnalysis : LiftAnalysisClass, CoreModule::ModelElement
+   {
+      LiftAnalysisPointSet point ()
+         raises (Reflective::MofError);
+      void set_point (in LiftAnalysisPointSet new_value)
+         raises (Reflective::MofError);
+      void add_point (in LiftAnalysisPoint new_element)
+         raises (Reflective::MofError);
+      void modify_point (
+         in LiftAnalysisPoint old_element,
+         in LiftAnalysisPoint new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_point (in LiftAnalysisPoint old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      string target_attribute_name ()
+         raises (Reflective::MofError);
+      void set_target_attribute_name (in string new_value)
+         raises (Reflective::MofError);
+      CategorySet positive_target_category ()
+         raises (Reflective::MofError);
+      void set_positive_target_category (in CategorySet new_value)
+         raises (Reflective::MofError);
+      void add_positive_target_category (in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::MofError);
+      void modify_positive_target_category (
+         in MiningCoreModule::MiningDataModule::Category old_element,
+         in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_positive_target_category (in MiningCoreModule::MiningDataModule::Category old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface LiftAnalysis
+
+   interface MiningTestTaskClass : MiningCoreModule::MiningTaskModule::MiningTaskClass
+   {
+      readonly attribute MiningTestTaskSet all_of_type_mining_test_task;
+      readonly attribute MiningTestTaskSet all_of_class_mining_test_task;
+      MiningTestTask create_mining_test_task (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean compute_lift)
+         raises (Reflective::MofError);
+   };
+
+   interface MiningTestTask : MiningTestTaskClass, MiningCoreModule::MiningTaskModule::MiningTask
+   {
+      boolean compute_lift ()
+         raises (Reflective::MofError);
+      void set_compute_lift (in boolean new_value)
+         raises (Reflective::MofError);
+      CategorySet positive_target_category ()
+         raises (Reflective::MofError);
+      void set_positive_target_category (in CategorySet new_value)
+         raises (Reflective::MofError);
+      void add_positive_target_category (in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::MofError);
+      void modify_positive_target_category (
+         in MiningCoreModule::MiningDataModule::Category old_element,
+         in MiningCoreModule::MiningDataModule::Category new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_positive_target_category (in MiningCoreModule::MiningDataModule::Category old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface MiningTestTask
+
+   interface SupervisedFunctionSettingsClass : MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettingsClass
+   {
+      readonly attribute SupervisedFunctionSettingsSet all_of_type_supervised_function_settings;
+      readonly attribute SupervisedFunctionSettingsSet all_of_class_supervised_function_settings;
+      SupervisedFunctionSettings create_supervised_function_settings (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long desired_execution_time_in_minutes)
+         raises (Reflective::MofError);
+   };
+
+   interface SupervisedFunctionSettings : SupervisedFunctionSettingsClass, MiningCoreModule::MiningFunctionSettingsModule::MiningFunctionSettings
+   {
+   }; // end of interface SupervisedFunctionSettings
+
+   interface MiningTestResultClass : MiningCoreModule::MiningResultModule::MiningResultClass
+   {
+      readonly attribute MiningTestResultSet all_of_type_mining_test_result;
+      readonly attribute MiningTestResultSet all_of_class_mining_test_result;
+      MiningTestResult create_mining_test_result (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in long number_of_test_records)
+         raises (Reflective::MofError);
+   };
+
+   interface MiningTestResult : MiningTestResultClass, MiningCoreModule::MiningResultModule::MiningResult
+   {
+      long number_of_test_records ()
+         raises (Reflective::MofError);
+      void set_number_of_test_records (in long new_value)
+         raises (Reflective::MofError);
+      LiftAnalysis lift_analysis ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_lift_analysis (in LiftAnalysis new_value)
+         raises (Reflective::MofError);
+      void unset_lift_analysis ()
+         raises (Reflective::MofError);
+   }; // end of interface MiningTestResult
+
+   struct TestResultHasLiftAnalysisLink
+   {
+      LiftAnalysis lift_analysis;
+      MiningTestResult test_result;
+   };
+   typedef sequence<TestResultHasLiftAnalysisLink> TestResultHasLiftAnalysisLinkSet;
+
+   interface TestResultHasLiftAnalysis : Reflective::RefAssociation
+   {
+      TestResultHasLiftAnalysisLinkSet all_test_result_has_lift_analysis_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in LiftAnalysis lift_analysis,
+         in MiningTestResult test_result)
+         raises (Reflective::MofError);
+      LiftAnalysis lift_analysis (in MiningTestResult test_result)
+         raises (Reflective::MofError);
+      MiningTestResult test_result (in LiftAnalysis lift_analysis)
+         raises (Reflective::MofError);
+      void add (
+         in LiftAnalysis lift_analysis,
+         in MiningTestResult test_result)
+         raises (Reflective::MofError);
+      void modify_lift_analysis (
+         in LiftAnalysis lift_analysis,
+         in MiningTestResult test_result,
+         in LiftAnalysis new_lift_analysis)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_test_result (
+         in LiftAnalysis lift_analysis,
+         in MiningTestResult test_result,
+         in MiningTestResult new_test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in LiftAnalysis lift_analysis,
+         in MiningTestResult test_result)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TestResultHasLiftAnalysis
+
+   struct LiftHasAnalysisPointLink
+   {
+      LiftAnalysis lift_analysis;
+      LiftAnalysisPoint point;
+   };
+   typedef sequence<LiftHasAnalysisPointLink> LiftHasAnalysisPointLinkSet;
+
+   interface LiftHasAnalysisPoint : Reflective::RefAssociation
+   {
+      LiftHasAnalysisPointLinkSet all_lift_has_analysis_point_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in LiftAnalysis lift_analysis,
+         in LiftAnalysisPoint point)
+         raises (Reflective::MofError);
+      LiftAnalysis lift_analysis (in LiftAnalysisPoint point)
+         raises (Reflective::MofError);
+      LiftAnalysisPointSet point (in LiftAnalysis lift_analysis)
+         raises (Reflective::MofError);
+      void add (
+         in LiftAnalysis lift_analysis,
+         in LiftAnalysisPoint point)
+         raises (Reflective::MofError);
+      void modify_lift_analysis (
+         in LiftAnalysis lift_analysis,
+         in LiftAnalysisPoint point,
+         in LiftAnalysis new_lift_analysis)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_point (
+         in LiftAnalysis lift_analysis,
+         in LiftAnalysisPoint point,
+         in LiftAnalysisPoint new_point)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in LiftAnalysis lift_analysis,
+         in LiftAnalysisPoint point)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface LiftHasAnalysisPoint
+
+   struct LiftRefPositiveTargetCategoryLink
+   {
+      MiningCoreModule::MiningDataModule::Category positive_target_category;
+      LiftAnalysis lift_analysis;
+   };
+   typedef sequence<LiftRefPositiveTargetCategoryLink> LiftRefPositiveTargetCategoryLinkSet;
+
+   interface LiftRefPositiveTargetCategory : Reflective::RefAssociation
+   {
+      LiftRefPositiveTargetCategoryLinkSet all_lift_ref_positive_target_category_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in LiftAnalysis lift_analysis)
+         raises (Reflective::MofError);
+      CategorySet positive_target_category (in LiftAnalysis lift_analysis)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in LiftAnalysis lift_analysis)
+         raises (Reflective::MofError);
+      void modify_positive_target_category (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in LiftAnalysis lift_analysis,
+         in MiningCoreModule::MiningDataModule::Category new_positive_target_category)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in LiftAnalysis lift_analysis)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface LiftRefPositiveTargetCategory
+
+   struct TestTaskRefPositiveTargetLink
+   {
+      MiningCoreModule::MiningDataModule::Category positive_target_category;
+      MiningTestTask test_task;
+   };
+   typedef sequence<TestTaskRefPositiveTargetLink> TestTaskRefPositiveTargetLinkSet;
+
+   interface TestTaskRefPositiveTarget : Reflective::RefAssociation
+   {
+      TestTaskRefPositiveTargetLinkSet all_test_task_ref_positive_target_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in MiningTestTask test_task)
+         raises (Reflective::MofError);
+      CategorySet positive_target_category (in MiningTestTask test_task)
+         raises (Reflective::MofError);
+      void add (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in MiningTestTask test_task)
+         raises (Reflective::MofError);
+      void modify_positive_target_category (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in MiningTestTask test_task,
+         in MiningCoreModule::MiningDataModule::Category new_positive_target_category)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MiningCoreModule::MiningDataModule::Category positive_target_category,
+         in MiningTestTask test_task)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TestTaskRefPositiveTarget
+
+   interface SupervisedModulePackageFactory
+   {
+      SupervisedModulePackage create_supervised_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface SupervisedModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute MiningCoreModule::MiningCoreModulePackage mining_core_ref;
+      readonly attribute LiftAnalysisPointClass lift_analysis_point_ref;
+      readonly attribute LiftAnalysisClass lift_analysis_ref;
+      readonly attribute MiningTestTaskClass mining_test_task_ref;
+      readonly attribute SupervisedFunctionSettingsClass supervised_function_settings_ref;
+      readonly attribute MiningTestResultClass mining_test_result_ref;
+      readonly attribute TestResultHasLiftAnalysis test_result_has_lift_analysis_ref;
+      readonly attribute LiftHasAnalysisPoint lift_has_analysis_point_ref;
+      readonly attribute LiftRefPositiveTargetCategory lift_ref_positive_target_category_ref;
+      readonly attribute TestTaskRefPositiveTarget test_task_ref_positive_target_ref;
+   };
+};
+
+#endif

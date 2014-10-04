@@ -1,0 +1,1873 @@
+#ifndef OLAP_MODULE_IDL
+#define OLAP_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+#include "TransformationModule.idl"
+#include "ExpressionsModule.idl"
+
+module OlapModule
+{
+   interface ContentMapClass;
+   interface ContentMap;
+   typedef sequence<ContentMap> ContentMapSet;
+   interface CubeClass;
+   interface Cube;
+   typedef sequence<Cube> CubeSet;
+   interface CubeDeploymentClass;
+   interface CubeDeployment;
+   typedef sequence<CubeDeployment> CubeDeploymentSet;
+   typedef sequence<CubeDeployment> CubeDeploymentUList;
+   interface CubeDimensionAssociationClass;
+   interface CubeDimensionAssociation;
+   typedef sequence<CubeDimensionAssociation> CubeDimensionAssociationSet;
+   interface CubeRegionClass;
+   interface CubeRegion;
+   typedef sequence<CubeRegion> CubeRegionSet;
+   interface DeploymentGroupClass;
+   interface DeploymentGroup;
+   typedef sequence<DeploymentGroup> DeploymentGroupSet;
+   interface DimensionClass;
+   interface Dimension;
+   typedef sequence<Dimension> DimensionSet;
+   interface DimensionDeploymentClass;
+   interface DimensionDeployment;
+   typedef sequence<DimensionDeployment> DimensionDeploymentSet;
+   typedef sequence<DimensionDeployment> DimensionDeploymentUList;
+   interface HierarchyClass;
+   interface Hierarchy;
+   typedef sequence<Hierarchy> HierarchySet;
+   interface HierarchyLevelAssociationClass;
+   interface HierarchyLevelAssociation;
+   typedef sequence<HierarchyLevelAssociation> HierarchyLevelAssociationSet;
+   typedef sequence<HierarchyLevelAssociation> HierarchyLevelAssociationUList;
+   interface LevelBasedHierarchyClass;
+   interface LevelBasedHierarchy;
+   typedef sequence<LevelBasedHierarchy> LevelBasedHierarchySet;
+   interface MemberSelectionGroupClass;
+   interface MemberSelectionGroup;
+   typedef sequence<MemberSelectionGroup> MemberSelectionGroupSet;
+   interface MemberSelectionClass;
+   interface MemberSelection;
+   typedef sequence<MemberSelection> MemberSelectionSet;
+   interface SchemaClass;
+   interface Schema;
+   typedef sequence<Schema> SchemaSet;
+   interface ValueBasedHierarchyClass;
+   interface ValueBasedHierarchy;
+   typedef sequence<ValueBasedHierarchy> ValueBasedHierarchySet;
+   interface LevelClass;
+   interface Level;
+   typedef sequence<Level> LevelSet;
+   interface CodedLevelClass;
+   interface CodedLevel;
+   typedef sequence<CodedLevel> CodedLevelSet;
+   interface MeasureClass;
+   interface Measure;
+   typedef sequence<Measure> MeasureSet;
+   interface StructureMapClass;
+   interface StructureMap;
+   typedef sequence<StructureMap> StructureMapSet;
+   interface HierarchyMemberSelectionGroupClass;
+   interface HierarchyMemberSelectionGroup;
+   typedef sequence<HierarchyMemberSelectionGroup> HierarchyMemberSelectionGroupSet;
+   interface OlapModulePackage;
+
+   interface ContentMapClass : TransformationModule::TransformationMapClass
+   {
+      readonly attribute ContentMapSet all_of_type_content_map;
+      readonly attribute ContentMapSet all_of_class_content_map;
+      ContentMap create_content_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean is_primary)
+         raises (Reflective::MofError);
+   };
+
+   interface ContentMap : ContentMapClass, TransformationModule::TransformationMap
+   {
+      CubeDeployment cube_deployment ()
+         raises (Reflective::MofError);
+      void set_cube_deployment (in CubeDeployment new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ContentMap
+
+   interface CubeClass : CoreModule::ClassClass
+   {
+      readonly attribute CubeSet all_of_type_cube;
+      readonly attribute CubeSet all_of_class_cube;
+      Cube create_cube (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_virtual)
+         raises (Reflective::MofError);
+   };
+
+   interface Cube : CubeClass, CoreModule::Class
+   {
+      boolean is_virtual ()
+         raises (Reflective::MofError);
+      void set_is_virtual (in boolean new_value)
+         raises (Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association ()
+         raises (Reflective::MofError);
+      void set_cube_dimension_association (in CubeDimensionAssociationSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube_dimension_association ()
+         raises (Reflective::MofError);
+      void add_cube_dimension_association (in CubeDimensionAssociation new_element)
+         raises (Reflective::MofError);
+      void modify_cube_dimension_association (
+         in CubeDimensionAssociation old_element,
+         in CubeDimensionAssociation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_dimension_association (in CubeDimensionAssociation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CubeRegionSet cube_region ()
+         raises (Reflective::MofError);
+      void set_cube_region (in CubeRegionSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube_region ()
+         raises (Reflective::MofError);
+      void add_cube_region (in CubeRegion new_element)
+         raises (Reflective::MofError);
+      void modify_cube_region (
+         in CubeRegion old_element,
+         in CubeRegion new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_region (in CubeRegion old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      OlapModule::Schema schema ()
+         raises (Reflective::MofError);
+      void set_schema (in OlapModule::Schema new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Cube
+
+   interface CubeDeploymentClass : CoreModule::ClassClass
+   {
+      readonly attribute CubeDeploymentSet all_of_type_cube_deployment;
+      readonly attribute CubeDeploymentSet all_of_class_cube_deployment;
+      CubeDeployment create_cube_deployment (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface CubeDeployment : CubeDeploymentClass, CoreModule::Class
+   {
+      CubeRegion cube_region ()
+         raises (Reflective::MofError);
+      void set_cube_region (in CubeRegion new_value)
+         raises (Reflective::MofError);
+      DeploymentGroup deployment_group ()
+         raises (Reflective::MofError);
+      void set_deployment_group (in DeploymentGroup new_value)
+         raises (Reflective::MofError);
+      ContentMapSet content_map ()
+         raises (Reflective::MofError);
+      void set_content_map (in ContentMapSet new_value)
+         raises (Reflective::MofError);
+      void unset_content_map ()
+         raises (Reflective::MofError);
+      void add_content_map (in ContentMap new_element)
+         raises (Reflective::MofError);
+      void modify_content_map (
+         in ContentMap old_element,
+         in ContentMap new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_content_map (in ContentMap old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeDeployment
+
+   interface CubeDimensionAssociationClass : CoreModule::ClassClass
+   {
+      readonly attribute CubeDimensionAssociationSet all_of_type_cube_dimension_association;
+      readonly attribute CubeDimensionAssociationSet all_of_class_cube_dimension_association;
+      CubeDimensionAssociation create_cube_dimension_association (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface CubeDimensionAssociation : CubeDimensionAssociationClass, CoreModule::Class
+   {
+      OlapModule::Dimension dimension ()
+         raises (Reflective::MofError);
+      void set_dimension (in OlapModule::Dimension new_value)
+         raises (Reflective::MofError);
+      OlapModule::Cube cube ()
+         raises (Reflective::MofError);
+      void set_cube (in OlapModule::Cube new_value)
+         raises (Reflective::MofError);
+      Hierarchy calc_hierarchy ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_calc_hierarchy (in Hierarchy new_value)
+         raises (Reflective::MofError);
+      void unset_calc_hierarchy ()
+         raises (Reflective::MofError);
+   }; // end of interface CubeDimensionAssociation
+
+   interface CubeRegionClass : CoreModule::ClassClass
+   {
+      readonly attribute CubeRegionSet all_of_type_cube_region;
+      readonly attribute CubeRegionSet all_of_class_cube_region;
+      CubeRegion create_cube_region (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_read_only,
+         in boolean is_fully_realized)
+         raises (Reflective::MofError);
+   };
+
+   interface CubeRegion : CubeRegionClass, CoreModule::Class
+   {
+      boolean is_read_only ()
+         raises (Reflective::MofError);
+      void set_is_read_only (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_fully_realized ()
+         raises (Reflective::MofError);
+      void set_is_fully_realized (in boolean new_value)
+         raises (Reflective::MofError);
+      MemberSelectionGroupSet member_selection_group ()
+         raises (Reflective::MofError);
+      void set_member_selection_group (in MemberSelectionGroupSet new_value)
+         raises (Reflective::MofError);
+      void unset_member_selection_group ()
+         raises (Reflective::MofError);
+      void add_member_selection_group (in MemberSelectionGroup new_element)
+         raises (Reflective::MofError);
+      void modify_member_selection_group (
+         in MemberSelectionGroup old_element,
+         in MemberSelectionGroup new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_member_selection_group (in MemberSelectionGroup old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      OlapModule::Cube cube ()
+         raises (Reflective::MofError);
+      void set_cube (in OlapModule::Cube new_value)
+         raises (Reflective::MofError);
+      CubeDeploymentUList cube_deployment ()
+         raises (Reflective::MofError);
+      void set_cube_deployment (in CubeDeploymentUList new_value)
+         raises (Reflective::MofError);
+      void unset_cube_deployment ()
+         raises (Reflective::MofError);
+      void add_cube_deployment (in CubeDeployment new_element)
+         raises (Reflective::MofError);
+      void add_cube_deployment_before (
+         in CubeDeployment new_element,
+         in CubeDeployment before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_deployment (
+         in CubeDeployment old_element,
+         in CubeDeployment new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_deployment (in CubeDeployment old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeRegion
+
+   interface DeploymentGroupClass : CoreModule::PackageClass
+   {
+      readonly attribute DeploymentGroupSet all_of_type_deployment_group;
+      readonly attribute DeploymentGroupSet all_of_class_deployment_group;
+      DeploymentGroup create_deployment_group (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface DeploymentGroup : DeploymentGroupClass, CoreModule::Package
+   {
+      OlapModule::Schema schema ()
+         raises (Reflective::MofError);
+      void set_schema (in OlapModule::Schema new_value)
+         raises (Reflective::MofError);
+      CubeDeploymentSet cube_deployment ()
+         raises (Reflective::MofError);
+      void set_cube_deployment (in CubeDeploymentSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube_deployment ()
+         raises (Reflective::MofError);
+      void add_cube_deployment (in CubeDeployment new_element)
+         raises (Reflective::MofError);
+      void modify_cube_deployment (
+         in CubeDeployment old_element,
+         in CubeDeployment new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_deployment (in CubeDeployment old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DimensionDeploymentSet dimension_deployment ()
+         raises (Reflective::MofError);
+      void set_dimension_deployment (in DimensionDeploymentSet new_value)
+         raises (Reflective::MofError);
+      void unset_dimension_deployment ()
+         raises (Reflective::MofError);
+      void add_dimension_deployment (in DimensionDeployment new_element)
+         raises (Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment old_element,
+         in DimensionDeployment new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_dimension_deployment (in DimensionDeployment old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeploymentGroup
+
+   interface DimensionClass : CoreModule::ClassClass
+   {
+      readonly attribute DimensionSet all_of_type_dimension;
+      readonly attribute DimensionSet all_of_class_dimension;
+      Dimension create_dimension (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in boolean is_time,
+         in boolean is_measure)
+         raises (Reflective::MofError);
+   };
+
+   interface Dimension : DimensionClass, CoreModule::Class
+   {
+      boolean is_time ()
+         raises (Reflective::MofError);
+      void set_is_time (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean is_measure ()
+         raises (Reflective::MofError);
+      void set_is_measure (in boolean new_value)
+         raises (Reflective::MofError);
+      HierarchySet hierarchy ()
+         raises (Reflective::MofError);
+      void set_hierarchy (in HierarchySet new_value)
+         raises (Reflective::MofError);
+      void unset_hierarchy ()
+         raises (Reflective::MofError);
+      void add_hierarchy (in OlapModule::Hierarchy new_element)
+         raises (Reflective::MofError);
+      void modify_hierarchy (
+         in OlapModule::Hierarchy old_element,
+         in OlapModule::Hierarchy new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_hierarchy (in OlapModule::Hierarchy old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      MemberSelectionSet member_selection ()
+         raises (Reflective::MofError);
+      void set_member_selection (in MemberSelectionSet new_value)
+         raises (Reflective::MofError);
+      void unset_member_selection ()
+         raises (Reflective::MofError);
+      void add_member_selection (in MemberSelection new_element)
+         raises (Reflective::MofError);
+      void modify_member_selection (
+         in MemberSelection old_element,
+         in MemberSelection new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_member_selection (in MemberSelection old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association ()
+         raises (Reflective::MofError);
+      void set_cube_dimension_association (in CubeDimensionAssociationSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube_dimension_association ()
+         raises (Reflective::MofError);
+      void add_cube_dimension_association (in CubeDimensionAssociation new_element)
+         raises (Reflective::MofError);
+      void modify_cube_dimension_association (
+         in CubeDimensionAssociation old_element,
+         in CubeDimensionAssociation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_dimension_association (in CubeDimensionAssociation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      OlapModule::Hierarchy display_default ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_display_default (in OlapModule::Hierarchy new_value)
+         raises (Reflective::MofError);
+      void unset_display_default ()
+         raises (Reflective::MofError);
+      OlapModule::Schema schema ()
+         raises (Reflective::MofError);
+      void set_schema (in OlapModule::Schema new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Dimension
+
+   interface DimensionDeploymentClass : CoreModule::ClassClass
+   {
+      readonly attribute DimensionDeploymentSet all_of_type_dimension_deployment;
+      readonly attribute DimensionDeploymentSet all_of_class_dimension_deployment;
+      DimensionDeployment create_dimension_deployment (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface DimensionDeployment : DimensionDeploymentClass, CoreModule::Class
+   {
+      HierarchyLevelAssociation hierarchy_level_association ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_hierarchy_level_association (in HierarchyLevelAssociation new_value)
+         raises (Reflective::MofError);
+      void unset_hierarchy_level_association ()
+         raises (Reflective::MofError);
+      ValueBasedHierarchy value_based_hierarchy ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_value_based_hierarchy (in ValueBasedHierarchy new_value)
+         raises (Reflective::MofError);
+      void unset_value_based_hierarchy ()
+         raises (Reflective::MofError);
+      StructureMapSet structure_map ()
+         raises (Reflective::MofError);
+      void set_structure_map (in StructureMapSet new_value)
+         raises (Reflective::MofError);
+      void unset_structure_map ()
+         raises (Reflective::MofError);
+      void add_structure_map (in StructureMap new_element)
+         raises (Reflective::MofError);
+      void modify_structure_map (
+         in StructureMap old_element,
+         in StructureMap new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_structure_map (in StructureMap old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      StructureMap list_of_values ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_list_of_values (in StructureMap new_value)
+         raises (Reflective::MofError);
+      void unset_list_of_values ()
+         raises (Reflective::MofError);
+      StructureMap immediate_parent ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_immediate_parent (in StructureMap new_value)
+         raises (Reflective::MofError);
+      void unset_immediate_parent ()
+         raises (Reflective::MofError);
+      DeploymentGroup deployment_group ()
+         raises (Reflective::MofError);
+      void set_deployment_group (in DeploymentGroup new_value)
+         raises (Reflective::MofError);
+   }; // end of interface DimensionDeployment
+
+   interface HierarchyClass : CoreModule::ClassClass
+   {
+      readonly attribute HierarchySet all_of_type_hierarchy;
+   };
+
+   interface Hierarchy : HierarchyClass, CoreModule::Class
+   {
+      OlapModule::Dimension dimension ()
+         raises (Reflective::MofError);
+      void set_dimension (in OlapModule::Dimension new_value)
+         raises (Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association ()
+         raises (Reflective::MofError);
+      void set_cube_dimension_association (in CubeDimensionAssociationSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube_dimension_association ()
+         raises (Reflective::MofError);
+      void add_cube_dimension_association (in CubeDimensionAssociation new_element)
+         raises (Reflective::MofError);
+      void modify_cube_dimension_association (
+         in CubeDimensionAssociation old_element,
+         in CubeDimensionAssociation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube_dimension_association (in CubeDimensionAssociation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      OlapModule::Dimension defaulted_dimension ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_defaulted_dimension (in OlapModule::Dimension new_value)
+         raises (Reflective::MofError);
+      void unset_defaulted_dimension ()
+         raises (Reflective::MofError);
+      HierarchyMemberSelectionGroupSet hierarchy_member_selection_group ()
+         raises (Reflective::MofError);
+      void set_hierarchy_member_selection_group (in HierarchyMemberSelectionGroupSet new_value)
+         raises (Reflective::MofError);
+      void unset_hierarchy_member_selection_group ()
+         raises (Reflective::MofError);
+      void add_hierarchy_member_selection_group (in HierarchyMemberSelectionGroup new_element)
+         raises (Reflective::MofError);
+      void modify_hierarchy_member_selection_group (
+         in HierarchyMemberSelectionGroup old_element,
+         in HierarchyMemberSelectionGroup new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_hierarchy_member_selection_group (in HierarchyMemberSelectionGroup old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Hierarchy
+
+   interface HierarchyLevelAssociationClass : CoreModule::ClassClass
+   {
+      readonly attribute HierarchyLevelAssociationSet all_of_type_hierarchy_level_association;
+      readonly attribute HierarchyLevelAssociationSet all_of_class_hierarchy_level_association;
+      HierarchyLevelAssociation create_hierarchy_level_association (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface HierarchyLevelAssociation : HierarchyLevelAssociationClass, CoreModule::Class
+   {
+      LevelBasedHierarchy level_based_hierarchy ()
+         raises (Reflective::MofError);
+      void set_level_based_hierarchy (in LevelBasedHierarchy new_value)
+         raises (Reflective::MofError);
+      Level current_level ()
+         raises (Reflective::MofError);
+      void set_current_level (in Level new_value)
+         raises (Reflective::MofError);
+      DimensionDeploymentUList dimension_deployment ()
+         raises (Reflective::MofError);
+      void set_dimension_deployment (in DimensionDeploymentUList new_value)
+         raises (Reflective::MofError);
+      void unset_dimension_deployment ()
+         raises (Reflective::MofError);
+      void add_dimension_deployment (in DimensionDeployment new_element)
+         raises (Reflective::MofError);
+      void add_dimension_deployment_before (
+         in DimensionDeployment new_element,
+         in DimensionDeployment before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment old_element,
+         in DimensionDeployment new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_dimension_deployment (in DimensionDeployment old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface HierarchyLevelAssociation
+
+   interface LevelBasedHierarchyClass : HierarchyClass
+   {
+      readonly attribute LevelBasedHierarchySet all_of_type_level_based_hierarchy;
+      readonly attribute LevelBasedHierarchySet all_of_class_level_based_hierarchy;
+      LevelBasedHierarchy create_level_based_hierarchy (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface LevelBasedHierarchy : LevelBasedHierarchyClass, Hierarchy
+   {
+      HierarchyLevelAssociationUList hierarchy_level_association ()
+         raises (Reflective::MofError);
+      void set_hierarchy_level_association (in HierarchyLevelAssociationUList new_value)
+         raises (Reflective::MofError);
+      void unset_hierarchy_level_association ()
+         raises (Reflective::MofError);
+      void add_hierarchy_level_association (in HierarchyLevelAssociation new_element)
+         raises (Reflective::MofError);
+      void add_hierarchy_level_association_before (
+         in HierarchyLevelAssociation new_element,
+         in HierarchyLevelAssociation before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy_level_association (
+         in HierarchyLevelAssociation old_element,
+         in HierarchyLevelAssociation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_hierarchy_level_association (in HierarchyLevelAssociation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface LevelBasedHierarchy
+
+   interface MemberSelectionGroupClass : CoreModule::ClassClass
+   {
+      readonly attribute MemberSelectionGroupSet all_of_type_member_selection_group;
+      readonly attribute MemberSelectionGroupSet all_of_class_member_selection_group;
+      MemberSelectionGroup create_member_selection_group (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface MemberSelectionGroup : MemberSelectionGroupClass, CoreModule::Class
+   {
+      MemberSelectionSet member_selection ()
+         raises (Reflective::MofError);
+      void set_member_selection (in MemberSelectionSet new_value)
+         raises (Reflective::MofError);
+      void add_member_selection (in MemberSelection new_element)
+         raises (Reflective::MofError);
+      void modify_member_selection (
+         in MemberSelection old_element,
+         in MemberSelection new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_member_selection (in MemberSelection old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CubeRegion cube_region ()
+         raises (Reflective::MofError);
+      void set_cube_region (in CubeRegion new_value)
+         raises (Reflective::MofError);
+   }; // end of interface MemberSelectionGroup
+
+   interface MemberSelectionClass : CoreModule::ClassClass
+   {
+      readonly attribute MemberSelectionSet all_of_type_member_selection;
+      readonly attribute MemberSelectionSet all_of_class_member_selection;
+      MemberSelection create_member_selection (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface MemberSelection : MemberSelectionClass, CoreModule::Class
+   {
+      OlapModule::Dimension dimension ()
+         raises (Reflective::MofError);
+      void set_dimension (in OlapModule::Dimension new_value)
+         raises (Reflective::MofError);
+      MemberSelectionGroupSet member_selection_group ()
+         raises (Reflective::MofError);
+      void set_member_selection_group (in MemberSelectionGroupSet new_value)
+         raises (Reflective::MofError);
+      void unset_member_selection_group ()
+         raises (Reflective::MofError);
+      void add_member_selection_group (in MemberSelectionGroup new_element)
+         raises (Reflective::MofError);
+      void modify_member_selection_group (
+         in MemberSelectionGroup old_element,
+         in MemberSelectionGroup new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_member_selection_group (in MemberSelectionGroup old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface MemberSelection
+
+   interface SchemaClass : CoreModule::PackageClass
+   {
+      readonly attribute SchemaSet all_of_type_schema;
+      readonly attribute SchemaSet all_of_class_schema;
+      Schema create_schema (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Schema : SchemaClass, CoreModule::Package
+   {
+      CubeSet cube ()
+         raises (Reflective::MofError);
+      void set_cube (in CubeSet new_value)
+         raises (Reflective::MofError);
+      void unset_cube ()
+         raises (Reflective::MofError);
+      void add_cube (in OlapModule::Cube new_element)
+         raises (Reflective::MofError);
+      void modify_cube (
+         in OlapModule::Cube old_element,
+         in OlapModule::Cube new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_cube (in OlapModule::Cube old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DimensionSet dimension ()
+         raises (Reflective::MofError);
+      void set_dimension (in DimensionSet new_value)
+         raises (Reflective::MofError);
+      void unset_dimension ()
+         raises (Reflective::MofError);
+      void add_dimension (in OlapModule::Dimension new_element)
+         raises (Reflective::MofError);
+      void modify_dimension (
+         in OlapModule::Dimension old_element,
+         in OlapModule::Dimension new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_dimension (in OlapModule::Dimension old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      DeploymentGroupSet deployment_group ()
+         raises (Reflective::MofError);
+      void set_deployment_group (in DeploymentGroupSet new_value)
+         raises (Reflective::MofError);
+      void unset_deployment_group ()
+         raises (Reflective::MofError);
+      void add_deployment_group (in DeploymentGroup new_element)
+         raises (Reflective::MofError);
+      void modify_deployment_group (
+         in DeploymentGroup old_element,
+         in DeploymentGroup new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_deployment_group (in DeploymentGroup old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Schema
+
+   interface ValueBasedHierarchyClass : HierarchyClass
+   {
+      readonly attribute ValueBasedHierarchySet all_of_type_value_based_hierarchy;
+      readonly attribute ValueBasedHierarchySet all_of_class_value_based_hierarchy;
+      ValueBasedHierarchy create_value_based_hierarchy (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface ValueBasedHierarchy : ValueBasedHierarchyClass, Hierarchy
+   {
+      DimensionDeploymentUList dimension_deployment ()
+         raises (Reflective::MofError);
+      void set_dimension_deployment (in DimensionDeploymentUList new_value)
+         raises (Reflective::MofError);
+      void unset_dimension_deployment ()
+         raises (Reflective::MofError);
+      void add_dimension_deployment (in DimensionDeployment new_element)
+         raises (Reflective::MofError);
+      void add_dimension_deployment_before (
+         in DimensionDeployment new_element,
+         in DimensionDeployment before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment old_element,
+         in DimensionDeployment new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_dimension_deployment (in DimensionDeployment old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ValueBasedHierarchy
+
+   interface LevelClass : MemberSelectionClass
+   {
+      readonly attribute LevelSet all_of_type_level;
+      readonly attribute LevelSet all_of_class_level;
+      Level create_level (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface Level : LevelClass, MemberSelection
+   {
+      HierarchyLevelAssociationSet hierarchy_level_association ()
+         raises (Reflective::MofError);
+      void set_hierarchy_level_association (in HierarchyLevelAssociationSet new_value)
+         raises (Reflective::MofError);
+      void unset_hierarchy_level_association ()
+         raises (Reflective::MofError);
+      void add_hierarchy_level_association (in HierarchyLevelAssociation new_element)
+         raises (Reflective::MofError);
+      void modify_hierarchy_level_association (
+         in HierarchyLevelAssociation old_element,
+         in HierarchyLevelAssociation new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_hierarchy_level_association (in HierarchyLevelAssociation old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Level
+
+   interface CodedLevelClass : LevelClass
+   {
+      readonly attribute CodedLevelSet all_of_type_coded_level;
+      readonly attribute CodedLevelSet all_of_class_coded_level;
+      CodedLevel create_coded_level (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract,
+         in ExpressionsModule::ExpressionNode encoding)
+         raises (Reflective::MofError);
+   };
+
+   interface CodedLevel : CodedLevelClass, Level
+   {
+      ExpressionsModule::ExpressionNode encoding ()
+         raises (Reflective::MofError);
+      void set_encoding (in ExpressionsModule::ExpressionNode new_value)
+         raises (Reflective::MofError);
+   }; // end of interface CodedLevel
+
+   interface MeasureClass : CoreModule::UmlAttributeClass
+   {
+      readonly attribute MeasureSet all_of_type_measure;
+      readonly attribute MeasureSet all_of_class_measure;
+      Measure create_measure (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ScopeKind owner_scope,
+         in CoreModule::ChangeableKind changeability,
+         in CoreModule::Multiplicity multiplicity,
+         in CoreModule::OrderingKind ordering,
+         in CoreModule::ScopeKind target_scope,
+         in CoreModule::Expression initial_value)
+         raises (Reflective::MofError);
+   };
+
+   interface Measure : MeasureClass, CoreModule::UmlAttribute
+   {
+   }; // end of interface Measure
+
+   interface StructureMapClass : TransformationModule::TransformationMapClass
+   {
+      readonly attribute StructureMapSet all_of_type_structure_map;
+      readonly attribute StructureMapSet all_of_class_structure_map;
+      StructureMap create_structure_map (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::ProcedureExpression function,
+         in string function_description,
+         in boolean is_primary)
+         raises (Reflective::MofError);
+   };
+
+   interface StructureMap : StructureMapClass, TransformationModule::TransformationMap
+   {
+      DimensionDeployment dimension_deployment ()
+         raises (Reflective::MofError);
+      void set_dimension_deployment (in DimensionDeployment new_value)
+         raises (Reflective::MofError);
+      DimensionDeployment dimension_deployment_lv ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_dimension_deployment_lv (in DimensionDeployment new_value)
+         raises (Reflective::MofError);
+      void unset_dimension_deployment_lv ()
+         raises (Reflective::MofError);
+      DimensionDeployment dimension_deployment_ip ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_dimension_deployment_ip (in DimensionDeployment new_value)
+         raises (Reflective::MofError);
+      void unset_dimension_deployment_ip ()
+         raises (Reflective::MofError);
+   }; // end of interface StructureMap
+
+   interface HierarchyMemberSelectionGroupClass : MemberSelectionGroupClass
+   {
+      readonly attribute HierarchyMemberSelectionGroupSet all_of_type_hierarchy_member_selection_group;
+      readonly attribute HierarchyMemberSelectionGroupSet all_of_class_hierarchy_member_selection_group;
+      HierarchyMemberSelectionGroup create_hierarchy_member_selection_group (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in boolean is_abstract)
+         raises (Reflective::MofError);
+   };
+
+   interface HierarchyMemberSelectionGroup : HierarchyMemberSelectionGroupClass, MemberSelectionGroup
+   {
+      HierarchySet hierarchy ()
+         raises (Reflective::MofError);
+      void set_hierarchy (in HierarchySet new_value)
+         raises (Reflective::MofError);
+      void add_hierarchy (in OlapModule::Hierarchy new_element)
+         raises (Reflective::MofError);
+      void modify_hierarchy (
+         in OlapModule::Hierarchy old_element,
+         in OlapModule::Hierarchy new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_hierarchy (in OlapModule::Hierarchy old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface HierarchyMemberSelectionGroup
+
+   struct LevelBasedHierarchyOwnsHierarchyLevelAssociationsLink
+   {
+      LevelBasedHierarchy level_based_hierarchy;
+      HierarchyLevelAssociation hierarchy_level_association;
+   };
+   typedef sequence<LevelBasedHierarchyOwnsHierarchyLevelAssociationsLink> LevelBasedHierarchyOwnsHierarchyLevelAssociationsLinkSet;
+
+   interface LevelBasedHierarchyOwnsHierarchyLevelAssociations : Reflective::RefAssociation
+   {
+      LevelBasedHierarchyOwnsHierarchyLevelAssociationsLinkSet all_level_based_hierarchy_owns_hierarchy_level_associations_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      LevelBasedHierarchy level_based_hierarchy (in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      HierarchyLevelAssociationUList hierarchy_level_association (in LevelBasedHierarchy level_based_hierarchy)
+         raises (Reflective::MofError);
+      void add (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      void add_before_hierarchy_level_association (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in HierarchyLevelAssociation before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_level_based_hierarchy (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in LevelBasedHierarchy new_level_based_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy_level_association (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in HierarchyLevelAssociation new_hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in LevelBasedHierarchy level_based_hierarchy,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface LevelBasedHierarchyOwnsHierarchyLevelAssociations
+
+   struct HierarchyLevelAssocsReferenceLevelLink
+   {
+      Level current_level;
+      HierarchyLevelAssociation hierarchy_level_association;
+   };
+   typedef sequence<HierarchyLevelAssocsReferenceLevelLink> HierarchyLevelAssocsReferenceLevelLinkSet;
+
+   interface HierarchyLevelAssocsReferenceLevel : Reflective::RefAssociation
+   {
+      HierarchyLevelAssocsReferenceLevelLinkSet all_hierarchy_level_assocs_reference_level_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Level current_level,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      Level current_level (in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      HierarchyLevelAssociationSet hierarchy_level_association (in Level current_level)
+         raises (Reflective::MofError);
+      void add (
+         in Level current_level,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      void modify_current_level (
+         in Level current_level,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in Level new_current_level)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy_level_association (
+         in Level current_level,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in HierarchyLevelAssociation new_hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Level current_level,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface HierarchyLevelAssocsReferenceLevel
+
+   struct DimensionOwnsMemberSelectionsLink
+   {
+      OlapModule::Dimension dimension;
+      MemberSelection member_selection;
+   };
+   typedef sequence<DimensionOwnsMemberSelectionsLink> DimensionOwnsMemberSelectionsLinkSet;
+
+   interface DimensionOwnsMemberSelections : Reflective::RefAssociation
+   {
+      DimensionOwnsMemberSelectionsLinkSet all_dimension_owns_member_selections_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Dimension dimension,
+         in MemberSelection member_selection)
+         raises (Reflective::MofError);
+      OlapModule::Dimension dimension (in MemberSelection member_selection)
+         raises (Reflective::MofError);
+      MemberSelectionSet member_selection (in OlapModule::Dimension dimension)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Dimension dimension,
+         in MemberSelection member_selection)
+         raises (Reflective::MofError);
+      void modify_dimension (
+         in OlapModule::Dimension dimension,
+         in MemberSelection member_selection,
+         in OlapModule::Dimension new_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_member_selection (
+         in OlapModule::Dimension dimension,
+         in MemberSelection member_selection,
+         in MemberSelection new_member_selection)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Dimension dimension,
+         in MemberSelection member_selection)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionOwnsMemberSelections
+
+   struct CubeOwnsCubeDimensionAssociationsLink
+   {
+      OlapModule::Cube cube;
+      CubeDimensionAssociation cube_dimension_association;
+   };
+   typedef sequence<CubeOwnsCubeDimensionAssociationsLink> CubeOwnsCubeDimensionAssociationsLinkSet;
+
+   interface CubeOwnsCubeDimensionAssociations : Reflective::RefAssociation
+   {
+      CubeOwnsCubeDimensionAssociationsLinkSet all_cube_owns_cube_dimension_associations_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Cube cube,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      OlapModule::Cube cube (in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association (in OlapModule::Cube cube)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Cube cube,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      void modify_cube (
+         in OlapModule::Cube cube,
+         in CubeDimensionAssociation cube_dimension_association,
+         in OlapModule::Cube new_cube)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_dimension_association (
+         in OlapModule::Cube cube,
+         in CubeDimensionAssociation cube_dimension_association,
+         in CubeDimensionAssociation new_cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Cube cube,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeOwnsCubeDimensionAssociations
+
+   struct CubeDimensionAssociationsReferenceDimensionLink
+   {
+      OlapModule::Dimension dimension;
+      CubeDimensionAssociation cube_dimension_association;
+   };
+   typedef sequence<CubeDimensionAssociationsReferenceDimensionLink> CubeDimensionAssociationsReferenceDimensionLinkSet;
+
+   interface CubeDimensionAssociationsReferenceDimension : Reflective::RefAssociation
+   {
+      CubeDimensionAssociationsReferenceDimensionLinkSet all_cube_dimension_associations_reference_dimension_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Dimension dimension,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      OlapModule::Dimension dimension (in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association (in OlapModule::Dimension dimension)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Dimension dimension,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      void modify_dimension (
+         in OlapModule::Dimension dimension,
+         in CubeDimensionAssociation cube_dimension_association,
+         in OlapModule::Dimension new_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_dimension_association (
+         in OlapModule::Dimension dimension,
+         in CubeDimensionAssociation cube_dimension_association,
+         in CubeDimensionAssociation new_cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Dimension dimension,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeDimensionAssociationsReferenceDimension
+
+   struct DimensionOwnsHierarchiesLink
+   {
+      OlapModule::Dimension dimension;
+      OlapModule::Hierarchy hierarchy;
+   };
+   typedef sequence<DimensionOwnsHierarchiesLink> DimensionOwnsHierarchiesLinkSet;
+
+   interface DimensionOwnsHierarchies : Reflective::RefAssociation
+   {
+      DimensionOwnsHierarchiesLinkSet all_dimension_owns_hierarchies_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Hierarchy hierarchy)
+         raises (Reflective::MofError);
+      OlapModule::Dimension dimension (in OlapModule::Hierarchy hierarchy)
+         raises (Reflective::MofError);
+      HierarchySet hierarchy (in OlapModule::Dimension dimension)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Hierarchy hierarchy)
+         raises (Reflective::MofError);
+      void modify_dimension (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Hierarchy hierarchy,
+         in OlapModule::Dimension new_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Hierarchy hierarchy,
+         in OlapModule::Hierarchy new_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Hierarchy hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionOwnsHierarchies
+
+   struct DimensionHasDefaultHierarchyLink
+   {
+      Hierarchy display_default;
+      Dimension defaulted_dimension;
+   };
+   typedef sequence<DimensionHasDefaultHierarchyLink> DimensionHasDefaultHierarchyLinkSet;
+
+   interface DimensionHasDefaultHierarchy : Reflective::RefAssociation
+   {
+      DimensionHasDefaultHierarchyLinkSet all_dimension_has_default_hierarchy_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Hierarchy display_default,
+         in Dimension defaulted_dimension)
+         raises (Reflective::MofError);
+      Hierarchy display_default (in Dimension defaulted_dimension)
+         raises (Reflective::MofError);
+      Dimension defaulted_dimension (in Hierarchy display_default)
+         raises (Reflective::MofError);
+      void add (
+         in Hierarchy display_default,
+         in Dimension defaulted_dimension)
+         raises (Reflective::MofError);
+      void modify_display_default (
+         in Hierarchy display_default,
+         in Dimension defaulted_dimension,
+         in Hierarchy new_display_default)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_defaulted_dimension (
+         in Hierarchy display_default,
+         in Dimension defaulted_dimension,
+         in Dimension new_defaulted_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Hierarchy display_default,
+         in Dimension defaulted_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionHasDefaultHierarchy
+
+   struct CubeDimensionAssociationsReferenceCalcHierarchyLink
+   {
+      Hierarchy calc_hierarchy;
+      CubeDimensionAssociation cube_dimension_association;
+   };
+   typedef sequence<CubeDimensionAssociationsReferenceCalcHierarchyLink> CubeDimensionAssociationsReferenceCalcHierarchyLinkSet;
+
+   interface CubeDimensionAssociationsReferenceCalcHierarchy : Reflective::RefAssociation
+   {
+      CubeDimensionAssociationsReferenceCalcHierarchyLinkSet all_cube_dimension_associations_reference_calc_hierarchy_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Hierarchy calc_hierarchy,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      Hierarchy calc_hierarchy (in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      CubeDimensionAssociationSet cube_dimension_association (in Hierarchy calc_hierarchy)
+         raises (Reflective::MofError);
+      void add (
+         in Hierarchy calc_hierarchy,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::MofError);
+      void modify_calc_hierarchy (
+         in Hierarchy calc_hierarchy,
+         in CubeDimensionAssociation cube_dimension_association,
+         in Hierarchy new_calc_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_dimension_association (
+         in Hierarchy calc_hierarchy,
+         in CubeDimensionAssociation cube_dimension_association,
+         in CubeDimensionAssociation new_cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Hierarchy calc_hierarchy,
+         in CubeDimensionAssociation cube_dimension_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeDimensionAssociationsReferenceCalcHierarchy
+
+   struct MemberSelectionGroupReferencesMemberSelectionsLink
+   {
+      MemberSelection member_selection;
+      MemberSelectionGroup member_selection_group;
+   };
+   typedef sequence<MemberSelectionGroupReferencesMemberSelectionsLink> MemberSelectionGroupReferencesMemberSelectionsLinkSet;
+
+   interface MemberSelectionGroupReferencesMemberSelections : Reflective::RefAssociation
+   {
+      MemberSelectionGroupReferencesMemberSelectionsLinkSet all_member_selection_group_references_member_selections_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MemberSelection member_selection,
+         in MemberSelectionGroup member_selection_group)
+         raises (Reflective::MofError);
+      MemberSelectionSet member_selection (in MemberSelectionGroup member_selection_group)
+         raises (Reflective::MofError);
+      MemberSelectionGroupSet member_selection_group (in MemberSelection member_selection)
+         raises (Reflective::MofError);
+      void add (
+         in MemberSelection member_selection,
+         in MemberSelectionGroup member_selection_group)
+         raises (Reflective::MofError);
+      void modify_member_selection (
+         in MemberSelection member_selection,
+         in MemberSelectionGroup member_selection_group,
+         in MemberSelection new_member_selection)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_member_selection_group (
+         in MemberSelection member_selection,
+         in MemberSelectionGroup member_selection_group,
+         in MemberSelectionGroup new_member_selection_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MemberSelection member_selection,
+         in MemberSelectionGroup member_selection_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface MemberSelectionGroupReferencesMemberSelections
+
+   struct SchemaOwnsCubesLink
+   {
+      OlapModule::Cube cube;
+      OlapModule::Schema schema;
+   };
+   typedef sequence<SchemaOwnsCubesLink> SchemaOwnsCubesLinkSet;
+
+   interface SchemaOwnsCubes : Reflective::RefAssociation
+   {
+      SchemaOwnsCubesLinkSet all_schema_owns_cubes_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Cube cube,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      CubeSet cube (in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      OlapModule::Schema schema (in OlapModule::Cube cube)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Cube cube,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      void modify_cube (
+         in OlapModule::Cube cube,
+         in OlapModule::Schema schema,
+         in OlapModule::Cube new_cube)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_schema (
+         in OlapModule::Cube cube,
+         in OlapModule::Schema schema,
+         in OlapModule::Schema new_schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Cube cube,
+         in OlapModule::Schema schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SchemaOwnsCubes
+
+   struct SchemaOwnsDimensionsLink
+   {
+      OlapModule::Dimension dimension;
+      OlapModule::Schema schema;
+   };
+   typedef sequence<SchemaOwnsDimensionsLink> SchemaOwnsDimensionsLinkSet;
+
+   interface SchemaOwnsDimensions : Reflective::RefAssociation
+   {
+      SchemaOwnsDimensionsLinkSet all_schema_owns_dimensions_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      DimensionSet dimension (in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      OlapModule::Schema schema (in OlapModule::Dimension dimension)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      void modify_dimension (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Schema schema,
+         in OlapModule::Dimension new_dimension)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_schema (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Schema schema,
+         in OlapModule::Schema new_schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Dimension dimension,
+         in OlapModule::Schema schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SchemaOwnsDimensions
+
+   struct HierarchyLevelAssociationOwnsDimensionDeploymentsLink
+   {
+      DimensionDeployment dimension_deployment;
+      HierarchyLevelAssociation hierarchy_level_association;
+   };
+   typedef sequence<HierarchyLevelAssociationOwnsDimensionDeploymentsLink> HierarchyLevelAssociationOwnsDimensionDeploymentsLinkSet;
+
+   interface HierarchyLevelAssociationOwnsDimensionDeployments : Reflective::RefAssociation
+   {
+      HierarchyLevelAssociationOwnsDimensionDeploymentsLinkSet all_hierarchy_level_association_owns_dimension_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      DimensionDeploymentUList dimension_deployment (in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      HierarchyLevelAssociation hierarchy_level_association (in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      void add (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::MofError);
+      void add_before_dimension_deployment (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in DimensionDeployment before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in DimensionDeployment new_dimension_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy_level_association (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association,
+         in HierarchyLevelAssociation new_hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DimensionDeployment dimension_deployment,
+         in HierarchyLevelAssociation hierarchy_level_association)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface HierarchyLevelAssociationOwnsDimensionDeployments
+
+   struct ValueBasedHierarchyOwnsDimensionDeploymentsLink
+   {
+      DimensionDeployment dimension_deployment;
+      ValueBasedHierarchy value_based_hierarchy;
+   };
+   typedef sequence<ValueBasedHierarchyOwnsDimensionDeploymentsLink> ValueBasedHierarchyOwnsDimensionDeploymentsLinkSet;
+
+   interface ValueBasedHierarchyOwnsDimensionDeployments : Reflective::RefAssociation
+   {
+      ValueBasedHierarchyOwnsDimensionDeploymentsLinkSet all_value_based_hierarchy_owns_dimension_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy)
+         raises (Reflective::MofError);
+      DimensionDeploymentUList dimension_deployment (in ValueBasedHierarchy value_based_hierarchy)
+         raises (Reflective::MofError);
+      ValueBasedHierarchy value_based_hierarchy (in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      void add (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy)
+         raises (Reflective::MofError);
+      void add_before_dimension_deployment (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy,
+         in DimensionDeployment before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy,
+         in DimensionDeployment new_dimension_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_value_based_hierarchy (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy,
+         in ValueBasedHierarchy new_value_based_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DimensionDeployment dimension_deployment,
+         in ValueBasedHierarchy value_based_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ValueBasedHierarchyOwnsDimensionDeployments
+
+   struct DimensionDeploymentOwnsStructureMapsLink
+   {
+      StructureMap structure_map;
+      DimensionDeployment dimension_deployment;
+   };
+   typedef sequence<DimensionDeploymentOwnsStructureMapsLink> DimensionDeploymentOwnsStructureMapsLinkSet;
+
+   interface DimensionDeploymentOwnsStructureMaps : Reflective::RefAssociation
+   {
+      DimensionDeploymentOwnsStructureMapsLinkSet all_dimension_deployment_owns_structure_maps_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in StructureMap structure_map,
+         in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      StructureMapSet structure_map (in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      DimensionDeployment dimension_deployment (in StructureMap structure_map)
+         raises (Reflective::MofError);
+      void add (
+         in StructureMap structure_map,
+         in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      void modify_structure_map (
+         in StructureMap structure_map,
+         in DimensionDeployment dimension_deployment,
+         in StructureMap new_structure_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment (
+         in StructureMap structure_map,
+         in DimensionDeployment dimension_deployment,
+         in DimensionDeployment new_dimension_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in StructureMap structure_map,
+         in DimensionDeployment dimension_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionDeploymentOwnsStructureMaps
+
+   struct DimensionDeploymentHasListOfValuesLink
+   {
+      StructureMap list_of_values;
+      DimensionDeployment dimension_deployment_lv;
+   };
+   typedef sequence<DimensionDeploymentHasListOfValuesLink> DimensionDeploymentHasListOfValuesLinkSet;
+
+   interface DimensionDeploymentHasListOfValues : Reflective::RefAssociation
+   {
+      DimensionDeploymentHasListOfValuesLinkSet all_dimension_deployment_has_list_of_values_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in StructureMap list_of_values,
+         in DimensionDeployment dimension_deployment_lv)
+         raises (Reflective::MofError);
+      StructureMap list_of_values (in DimensionDeployment dimension_deployment_lv)
+         raises (Reflective::MofError);
+      DimensionDeployment dimension_deployment_lv (in StructureMap list_of_values)
+         raises (Reflective::MofError);
+      void add (
+         in StructureMap list_of_values,
+         in DimensionDeployment dimension_deployment_lv)
+         raises (Reflective::MofError);
+      void modify_list_of_values (
+         in StructureMap list_of_values,
+         in DimensionDeployment dimension_deployment_lv,
+         in StructureMap new_list_of_values)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment_lv (
+         in StructureMap list_of_values,
+         in DimensionDeployment dimension_deployment_lv,
+         in DimensionDeployment new_dimension_deployment_lv)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in StructureMap list_of_values,
+         in DimensionDeployment dimension_deployment_lv)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionDeploymentHasListOfValues
+
+   struct DimensionDeploymentHasImmediateParentLink
+   {
+      StructureMap immediate_parent;
+      DimensionDeployment dimension_deployment_ip;
+   };
+   typedef sequence<DimensionDeploymentHasImmediateParentLink> DimensionDeploymentHasImmediateParentLinkSet;
+
+   interface DimensionDeploymentHasImmediateParent : Reflective::RefAssociation
+   {
+      DimensionDeploymentHasImmediateParentLinkSet all_dimension_deployment_has_immediate_parent_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in StructureMap immediate_parent,
+         in DimensionDeployment dimension_deployment_ip)
+         raises (Reflective::MofError);
+      StructureMap immediate_parent (in DimensionDeployment dimension_deployment_ip)
+         raises (Reflective::MofError);
+      DimensionDeployment dimension_deployment_ip (in StructureMap immediate_parent)
+         raises (Reflective::MofError);
+      void add (
+         in StructureMap immediate_parent,
+         in DimensionDeployment dimension_deployment_ip)
+         raises (Reflective::MofError);
+      void modify_immediate_parent (
+         in StructureMap immediate_parent,
+         in DimensionDeployment dimension_deployment_ip,
+         in StructureMap new_immediate_parent)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_dimension_deployment_ip (
+         in StructureMap immediate_parent,
+         in DimensionDeployment dimension_deployment_ip,
+         in DimensionDeployment new_dimension_deployment_ip)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in StructureMap immediate_parent,
+         in DimensionDeployment dimension_deployment_ip)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DimensionDeploymentHasImmediateParent
+
+   struct CubeOwnsCubeRegionsLink
+   {
+      CubeRegion cube_region;
+      OlapModule::Cube cube;
+   };
+   typedef sequence<CubeOwnsCubeRegionsLink> CubeOwnsCubeRegionsLinkSet;
+
+   interface CubeOwnsCubeRegions : Reflective::RefAssociation
+   {
+      CubeOwnsCubeRegionsLinkSet all_cube_owns_cube_regions_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CubeRegion cube_region,
+         in OlapModule::Cube cube)
+         raises (Reflective::MofError);
+      CubeRegionSet cube_region (in OlapModule::Cube cube)
+         raises (Reflective::MofError);
+      OlapModule::Cube cube (in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      void add (
+         in CubeRegion cube_region,
+         in OlapModule::Cube cube)
+         raises (Reflective::MofError);
+      void modify_cube_region (
+         in CubeRegion cube_region,
+         in OlapModule::Cube cube,
+         in CubeRegion new_cube_region)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube (
+         in CubeRegion cube_region,
+         in OlapModule::Cube cube,
+         in OlapModule::Cube new_cube)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CubeRegion cube_region,
+         in OlapModule::Cube cube)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeOwnsCubeRegions
+
+   struct CubeRegionOwnsMemberSelectionGroupsLink
+   {
+      MemberSelectionGroup member_selection_group;
+      CubeRegion cube_region;
+   };
+   typedef sequence<CubeRegionOwnsMemberSelectionGroupsLink> CubeRegionOwnsMemberSelectionGroupsLinkSet;
+
+   interface CubeRegionOwnsMemberSelectionGroups : Reflective::RefAssociation
+   {
+      CubeRegionOwnsMemberSelectionGroupsLinkSet all_cube_region_owns_member_selection_groups_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in MemberSelectionGroup member_selection_group,
+         in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      MemberSelectionGroupSet member_selection_group (in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      CubeRegion cube_region (in MemberSelectionGroup member_selection_group)
+         raises (Reflective::MofError);
+      void add (
+         in MemberSelectionGroup member_selection_group,
+         in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      void modify_member_selection_group (
+         in MemberSelectionGroup member_selection_group,
+         in CubeRegion cube_region,
+         in MemberSelectionGroup new_member_selection_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_region (
+         in MemberSelectionGroup member_selection_group,
+         in CubeRegion cube_region,
+         in CubeRegion new_cube_region)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in MemberSelectionGroup member_selection_group,
+         in CubeRegion cube_region)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeRegionOwnsMemberSelectionGroups
+
+   struct CubeRegionOwnsCubeDeploymentsLink
+   {
+      CubeDeployment cube_deployment;
+      CubeRegion cube_region;
+   };
+   typedef sequence<CubeRegionOwnsCubeDeploymentsLink> CubeRegionOwnsCubeDeploymentsLinkSet;
+
+   interface CubeRegionOwnsCubeDeployments : Reflective::RefAssociation
+   {
+      CubeRegionOwnsCubeDeploymentsLinkSet all_cube_region_owns_cube_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      CubeDeploymentUList cube_deployment (in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      CubeRegion cube_region (in CubeDeployment cube_deployment)
+         raises (Reflective::MofError);
+      void add (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region)
+         raises (Reflective::MofError);
+      void add_before_cube_deployment (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region,
+         in CubeDeployment before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_deployment (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region,
+         in CubeDeployment new_cube_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_region (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region,
+         in CubeRegion new_cube_region)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CubeDeployment cube_deployment,
+         in CubeRegion cube_region)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeRegionOwnsCubeDeployments
+
+   struct SchemaOwnsDeploymentGroupsLink
+   {
+      DeploymentGroup deployment_group;
+      OlapModule::Schema schema;
+   };
+   typedef sequence<SchemaOwnsDeploymentGroupsLink> SchemaOwnsDeploymentGroupsLinkSet;
+
+   interface SchemaOwnsDeploymentGroups : Reflective::RefAssociation
+   {
+      SchemaOwnsDeploymentGroupsLinkSet all_schema_owns_deployment_groups_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DeploymentGroup deployment_group,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      DeploymentGroupSet deployment_group (in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      OlapModule::Schema schema (in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      void add (
+         in DeploymentGroup deployment_group,
+         in OlapModule::Schema schema)
+         raises (Reflective::MofError);
+      void modify_deployment_group (
+         in DeploymentGroup deployment_group,
+         in OlapModule::Schema schema,
+         in DeploymentGroup new_deployment_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_schema (
+         in DeploymentGroup deployment_group,
+         in OlapModule::Schema schema,
+         in OlapModule::Schema new_schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DeploymentGroup deployment_group,
+         in OlapModule::Schema schema)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SchemaOwnsDeploymentGroups
+
+   struct DeploymentGroupReferencesCubeDeploymentsLink
+   {
+      CubeDeployment cube_deployment;
+      DeploymentGroup deployment_group;
+   };
+   typedef sequence<DeploymentGroupReferencesCubeDeploymentsLink> DeploymentGroupReferencesCubeDeploymentsLinkSet;
+
+   interface DeploymentGroupReferencesCubeDeployments : Reflective::RefAssociation
+   {
+      DeploymentGroupReferencesCubeDeploymentsLinkSet all_deployment_group_references_cube_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CubeDeployment cube_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      CubeDeploymentSet cube_deployment (in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      DeploymentGroup deployment_group (in CubeDeployment cube_deployment)
+         raises (Reflective::MofError);
+      void add (
+         in CubeDeployment cube_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      void modify_cube_deployment (
+         in CubeDeployment cube_deployment,
+         in DeploymentGroup deployment_group,
+         in CubeDeployment new_cube_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_deployment_group (
+         in CubeDeployment cube_deployment,
+         in DeploymentGroup deployment_group,
+         in DeploymentGroup new_deployment_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CubeDeployment cube_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeploymentGroupReferencesCubeDeployments
+
+   struct DeploymentGroupReferencesDimensionDeploymentsLink
+   {
+      DimensionDeployment dimension_deployment;
+      DeploymentGroup deployment_group;
+   };
+   typedef sequence<DeploymentGroupReferencesDimensionDeploymentsLink> DeploymentGroupReferencesDimensionDeploymentsLinkSet;
+
+   interface DeploymentGroupReferencesDimensionDeployments : Reflective::RefAssociation
+   {
+      DeploymentGroupReferencesDimensionDeploymentsLinkSet all_deployment_group_references_dimension_deployments_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in DimensionDeployment dimension_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      DimensionDeploymentSet dimension_deployment (in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      DeploymentGroup deployment_group (in DimensionDeployment dimension_deployment)
+         raises (Reflective::MofError);
+      void add (
+         in DimensionDeployment dimension_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::MofError);
+      void modify_dimension_deployment (
+         in DimensionDeployment dimension_deployment,
+         in DeploymentGroup deployment_group,
+         in DimensionDeployment new_dimension_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_deployment_group (
+         in DimensionDeployment dimension_deployment,
+         in DeploymentGroup deployment_group,
+         in DeploymentGroup new_deployment_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in DimensionDeployment dimension_deployment,
+         in DeploymentGroup deployment_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface DeploymentGroupReferencesDimensionDeployments
+
+   struct CubeDeploymentOwnsContentMapsLink
+   {
+      ContentMap content_map;
+      CubeDeployment cube_deployment;
+   };
+   typedef sequence<CubeDeploymentOwnsContentMapsLink> CubeDeploymentOwnsContentMapsLinkSet;
+
+   interface CubeDeploymentOwnsContentMaps : Reflective::RefAssociation
+   {
+      CubeDeploymentOwnsContentMapsLinkSet all_cube_deployment_owns_content_maps_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in ContentMap content_map,
+         in CubeDeployment cube_deployment)
+         raises (Reflective::MofError);
+      ContentMapSet content_map (in CubeDeployment cube_deployment)
+         raises (Reflective::MofError);
+      CubeDeployment cube_deployment (in ContentMap content_map)
+         raises (Reflective::MofError);
+      void add (
+         in ContentMap content_map,
+         in CubeDeployment cube_deployment)
+         raises (Reflective::MofError);
+      void modify_content_map (
+         in ContentMap content_map,
+         in CubeDeployment cube_deployment,
+         in ContentMap new_content_map)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_cube_deployment (
+         in ContentMap content_map,
+         in CubeDeployment cube_deployment,
+         in CubeDeployment new_cube_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in ContentMap content_map,
+         in CubeDeployment cube_deployment)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface CubeDeploymentOwnsContentMaps
+
+   struct HierarchyMemberSelectionGroupReferencesHierarchyLink
+   {
+      OlapModule::Hierarchy hierarchy;
+      HierarchyMemberSelectionGroup hierarchy_member_selection_group;
+   };
+   typedef sequence<HierarchyMemberSelectionGroupReferencesHierarchyLink> HierarchyMemberSelectionGroupReferencesHierarchyLinkSet;
+
+   interface HierarchyMemberSelectionGroupReferencesHierarchy : Reflective::RefAssociation
+   {
+      HierarchyMemberSelectionGroupReferencesHierarchyLinkSet all_hierarchy_member_selection_group_references_hierarchy_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in OlapModule::Hierarchy hierarchy,
+         in HierarchyMemberSelectionGroup hierarchy_member_selection_group)
+         raises (Reflective::MofError);
+      HierarchySet hierarchy (in HierarchyMemberSelectionGroup hierarchy_member_selection_group)
+         raises (Reflective::MofError);
+      HierarchyMemberSelectionGroupSet hierarchy_member_selection_group (in OlapModule::Hierarchy hierarchy)
+         raises (Reflective::MofError);
+      void add (
+         in OlapModule::Hierarchy hierarchy,
+         in HierarchyMemberSelectionGroup hierarchy_member_selection_group)
+         raises (Reflective::MofError);
+      void modify_hierarchy (
+         in OlapModule::Hierarchy hierarchy,
+         in HierarchyMemberSelectionGroup hierarchy_member_selection_group,
+         in OlapModule::Hierarchy new_hierarchy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_hierarchy_member_selection_group (
+         in OlapModule::Hierarchy hierarchy,
+         in HierarchyMemberSelectionGroup hierarchy_member_selection_group,
+         in HierarchyMemberSelectionGroup new_hierarchy_member_selection_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in OlapModule::Hierarchy hierarchy,
+         in HierarchyMemberSelectionGroup hierarchy_member_selection_group)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface HierarchyMemberSelectionGroupReferencesHierarchy
+
+   interface OlapModulePackageFactory
+   {
+      OlapModulePackage create_olap_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface OlapModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute ExpressionsModule::ExpressionsModulePackage expressions_ref;
+      readonly attribute TransformationModule::TransformationModulePackage transformation_ref;
+      readonly attribute ContentMapClass content_map_ref;
+      readonly attribute CubeClass cube_ref;
+      readonly attribute CubeDeploymentClass cube_deployment_ref;
+      readonly attribute CubeDimensionAssociationClass cube_dimension_association_ref;
+      readonly attribute CubeRegionClass cube_region_ref;
+      readonly attribute DeploymentGroupClass deployment_group_ref;
+      readonly attribute DimensionClass dimension_ref;
+      readonly attribute DimensionDeploymentClass dimension_deployment_ref;
+      readonly attribute HierarchyClass hierarchy_ref;
+      readonly attribute HierarchyLevelAssociationClass hierarchy_level_association_ref;
+      readonly attribute LevelBasedHierarchyClass level_based_hierarchy_ref;
+      readonly attribute MemberSelectionGroupClass member_selection_group_ref;
+      readonly attribute MemberSelectionClass member_selection_ref;
+      readonly attribute SchemaClass schema_ref;
+      readonly attribute ValueBasedHierarchyClass value_based_hierarchy_ref;
+      readonly attribute LevelClass level_ref;
+      readonly attribute CodedLevelClass coded_level_ref;
+      readonly attribute MeasureClass measure_ref;
+      readonly attribute StructureMapClass structure_map_ref;
+      readonly attribute HierarchyMemberSelectionGroupClass hierarchy_member_selection_group_ref;
+      readonly attribute LevelBasedHierarchyOwnsHierarchyLevelAssociations level_based_hierarchy_owns_hierarchy_level_associations_ref;
+      readonly attribute HierarchyLevelAssocsReferenceLevel hierarchy_level_assocs_reference_level_ref;
+      readonly attribute DimensionOwnsMemberSelections dimension_owns_member_selections_ref;
+      readonly attribute CubeOwnsCubeDimensionAssociations cube_owns_cube_dimension_associations_ref;
+      readonly attribute CubeDimensionAssociationsReferenceDimension cube_dimension_associations_reference_dimension_ref;
+      readonly attribute DimensionOwnsHierarchies dimension_owns_hierarchies_ref;
+      readonly attribute DimensionHasDefaultHierarchy dimension_has_default_hierarchy_ref;
+      readonly attribute CubeDimensionAssociationsReferenceCalcHierarchy cube_dimension_associations_reference_calc_hierarchy_ref;
+      readonly attribute MemberSelectionGroupReferencesMemberSelections member_selection_group_references_member_selections_ref;
+      readonly attribute SchemaOwnsCubes schema_owns_cubes_ref;
+      readonly attribute SchemaOwnsDimensions schema_owns_dimensions_ref;
+      readonly attribute HierarchyLevelAssociationOwnsDimensionDeployments hierarchy_level_association_owns_dimension_deployments_ref;
+      readonly attribute ValueBasedHierarchyOwnsDimensionDeployments value_based_hierarchy_owns_dimension_deployments_ref;
+      readonly attribute DimensionDeploymentOwnsStructureMaps dimension_deployment_owns_structure_maps_ref;
+      readonly attribute DimensionDeploymentHasListOfValues dimension_deployment_has_list_of_values_ref;
+      readonly attribute DimensionDeploymentHasImmediateParent dimension_deployment_has_immediate_parent_ref;
+      readonly attribute CubeOwnsCubeRegions cube_owns_cube_regions_ref;
+      readonly attribute CubeRegionOwnsMemberSelectionGroups cube_region_owns_member_selection_groups_ref;
+      readonly attribute CubeRegionOwnsCubeDeployments cube_region_owns_cube_deployments_ref;
+      readonly attribute SchemaOwnsDeploymentGroups schema_owns_deployment_groups_ref;
+      readonly attribute DeploymentGroupReferencesCubeDeployments deployment_group_references_cube_deployments_ref;
+      readonly attribute DeploymentGroupReferencesDimensionDeployments deployment_group_references_dimension_deployments_ref;
+      readonly attribute CubeDeploymentOwnsContentMaps cube_deployment_owns_content_maps_ref;
+      readonly attribute HierarchyMemberSelectionGroupReferencesHierarchy hierarchy_member_selection_group_references_hierarchy_ref;
+   };
+};
+
+#endif

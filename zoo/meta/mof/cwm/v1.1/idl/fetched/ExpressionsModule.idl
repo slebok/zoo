@@ -1,0 +1,261 @@
+#ifndef EXPRESSIONS_MODULE_IDL
+#define EXPRESSIONS_MODULE_IDL
+#pragma prefix "org.omg.cwm.foundation"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module ExpressionsModule
+{
+   interface ExpressionNodeClass;
+   interface ExpressionNode;
+   typedef sequence<ExpressionNode> ExpressionNodeSet;
+   typedef sequence<ExpressionNode> ExpressionNodeUList;
+   interface ConstantNodeClass;
+   interface ConstantNode;
+   typedef sequence<ConstantNode> ConstantNodeSet;
+   interface ElementNodeClass;
+   interface ElementNode;
+   typedef sequence<ElementNode> ElementNodeSet;
+   interface FeatureNodeClass;
+   interface FeatureNode;
+   typedef sequence<FeatureNode> FeatureNodeSet;
+   interface ExpressionsModulePackage;
+
+   interface ExpressionNodeClass : CoreModule::ElementClass
+   {
+      readonly attribute ExpressionNodeSet all_of_type_expression_node;
+      readonly attribute ExpressionNodeSet all_of_class_expression_node;
+      ExpressionNode create_expression_node (
+         in CoreModule::Expression expression)
+         raises (Reflective::MofError);
+   };
+
+   interface ExpressionNode : ExpressionNodeClass, CoreModule::Element
+   {
+      CoreModule::Expression expression ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_expression (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      void unset_expression ()
+         raises (Reflective::MofError);
+      FeatureNode feature_node ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_feature_node (in FeatureNode new_value)
+         raises (Reflective::MofError);
+      void unset_feature_node ()
+         raises (Reflective::MofError);
+      CoreModule::Classifier type ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_type (in CoreModule::Classifier new_value)
+         raises (Reflective::MofError);
+      void unset_type ()
+         raises (Reflective::MofError);
+   }; // end of interface ExpressionNode
+
+   interface ConstantNodeClass : ExpressionNodeClass
+   {
+      readonly attribute ConstantNodeSet all_of_type_constant_node;
+      readonly attribute ConstantNodeSet all_of_class_constant_node;
+      ConstantNode create_constant_node (
+         in CoreModule::Expression expression,
+         in any value)
+         raises (Reflective::MofError);
+   };
+
+   interface ConstantNode : ConstantNodeClass, ExpressionNode
+   {
+      any value ()
+         raises (Reflective::MofError);
+      void set_value (in any new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ConstantNode
+
+   interface ElementNodeClass : ExpressionNodeClass
+   {
+      readonly attribute ElementNodeSet all_of_type_element_node;
+      readonly attribute ElementNodeSet all_of_class_element_node;
+      ElementNode create_element_node (
+         in CoreModule::Expression expression)
+         raises (Reflective::MofError);
+   };
+
+   interface ElementNode : ElementNodeClass, ExpressionNode
+   {
+      CoreModule::ModelElement model_element ()
+         raises (Reflective::MofError);
+      void set_model_element (in CoreModule::ModelElement new_value)
+         raises (Reflective::MofError);
+   }; // end of interface ElementNode
+
+   interface FeatureNodeClass : ExpressionNodeClass
+   {
+      readonly attribute FeatureNodeSet all_of_type_feature_node;
+      readonly attribute FeatureNodeSet all_of_class_feature_node;
+      FeatureNode create_feature_node (
+         in CoreModule::Expression expression)
+         raises (Reflective::MofError);
+   };
+
+   interface FeatureNode : FeatureNodeClass, ExpressionNode
+   {
+      ExpressionNodeUList argument ()
+         raises (Reflective::MofError);
+      void set_argument (in ExpressionNodeUList new_value)
+         raises (Reflective::MofError);
+      void unset_argument ()
+         raises (Reflective::MofError);
+      void add_argument (in ExpressionNode new_element)
+         raises (Reflective::MofError);
+      void add_argument_before (
+         in ExpressionNode new_element,
+         in ExpressionNode before_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_argument (
+         in ExpressionNode old_element,
+         in ExpressionNode new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_argument (in ExpressionNode old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      CoreModule::Feature feature ()
+         raises (Reflective::MofError);
+      void set_feature (in CoreModule::Feature new_value)
+         raises (Reflective::MofError);
+   }; // end of interface FeatureNode
+
+   struct ExpressionNodeClassifierLink
+   {
+      CoreModule::Classifier type;
+      ExpressionNode expression_node;
+   };
+   typedef sequence<ExpressionNodeClassifierLink> ExpressionNodeClassifierLinkSet;
+
+   interface ExpressionNodeClassifier : Reflective::RefAssociation
+   {
+      ExpressionNodeClassifierLinkSet all_expression_node_classifier_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Classifier type,
+         in ExpressionNode expression_node)
+         raises (Reflective::MofError);
+      CoreModule::Classifier type (in ExpressionNode expression_node)
+         raises (Reflective::MofError);
+      ExpressionNodeSet expression_node (in CoreModule::Classifier type)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Classifier type,
+         in ExpressionNode expression_node)
+         raises (Reflective::MofError);
+      void modify_type (
+         in CoreModule::Classifier type,
+         in ExpressionNode expression_node,
+         in CoreModule::Classifier new_type)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_expression_node (
+         in CoreModule::Classifier type,
+         in ExpressionNode expression_node,
+         in ExpressionNode new_expression_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Classifier type,
+         in ExpressionNode expression_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ExpressionNodeClassifier
+
+   struct NodeFeatureLink
+   {
+      CoreModule::Feature feature;
+      FeatureNode feature_node;
+   };
+   typedef sequence<NodeFeatureLink> NodeFeatureLinkSet;
+
+   interface NodeFeature : Reflective::RefAssociation
+   {
+      NodeFeatureLinkSet all_node_feature_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::Feature feature,
+         in FeatureNode feature_node)
+         raises (Reflective::MofError);
+      CoreModule::Feature feature (in FeatureNode feature_node)
+         raises (Reflective::MofError);
+      FeatureNodeSet feature_node (in CoreModule::Feature feature)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::Feature feature,
+         in FeatureNode feature_node)
+         raises (Reflective::MofError);
+      void modify_feature (
+         in CoreModule::Feature feature,
+         in FeatureNode feature_node,
+         in CoreModule::Feature new_feature)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_feature_node (
+         in CoreModule::Feature feature,
+         in FeatureNode feature_node,
+         in FeatureNode new_feature_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::Feature feature,
+         in FeatureNode feature_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface NodeFeature
+
+   struct ReferencedElementLink
+   {
+      CoreModule::ModelElement model_element;
+      ElementNode element_node;
+   };
+   typedef sequence<ReferencedElementLink> ReferencedElementLinkSet;
+
+   interface ReferencedElement : Reflective::RefAssociation
+   {
+      ReferencedElementLinkSet all_referenced_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::ModelElement model_element,
+         in ElementNode element_node)
+         raises (Reflective::MofError);
+      CoreModule::ModelElement model_element (in ElementNode element_node)
+         raises (Reflective::MofError);
+      ElementNodeSet element_node (in CoreModule::ModelElement model_element)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::ModelElement model_element,
+         in ElementNode element_node)
+         raises (Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement model_element,
+         in ElementNode element_node,
+         in CoreModule::ModelElement new_model_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_element_node (
+         in CoreModule::ModelElement model_element,
+         in ElementNode element_node,
+         in ElementNode new_element_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::ModelElement model_element,
+         in ElementNode element_node)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ReferencedElement
+
+   interface ExpressionsModulePackageFactory
+   {
+      ExpressionsModulePackage create_expressions_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface ExpressionsModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute ExpressionNodeClass expression_node_ref;
+      readonly attribute ConstantNodeClass constant_node_ref;
+      readonly attribute ElementNodeClass element_node_ref;
+      readonly attribute FeatureNodeClass feature_node_ref;
+      readonly attribute ExpressionNodeClassifier expression_node_classifier_ref;
+      readonly attribute NodeFeature node_feature_ref;
+      readonly attribute ReferencedElement referenced_element_ref;
+   };
+};
+
+#endif

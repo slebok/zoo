@@ -1,0 +1,714 @@
+#ifndef BUSINESS_NOMENCLATURE_MODULE_IDL
+#define BUSINESS_NOMENCLATURE_MODULE_IDL
+#pragma prefix "org.omg.cwm.analysis"
+#include "Reflective.idl"
+#include "CoreModule.idl"
+
+module BusinessNomenclatureModule
+{
+   typedef sequence<CoreModule::ModelElement> ModelElementSet;
+   interface VocabularyElementClass;
+   interface VocabularyElement;
+   typedef sequence<VocabularyElement> VocabularyElementSet;
+   interface NomenclatureClass;
+   interface Nomenclature;
+   typedef sequence<Nomenclature> NomenclatureSet;
+   interface TaxonomyClass;
+   interface Taxonomy;
+   typedef sequence<Taxonomy> TaxonomySet;
+   interface GlossaryClass;
+   interface Glossary;
+   typedef sequence<Glossary> GlossarySet;
+   interface BusinessDomainClass;
+   interface BusinessDomain;
+   typedef sequence<BusinessDomain> BusinessDomainSet;
+   interface ConceptClass;
+   interface Concept;
+   typedef sequence<Concept> ConceptSet;
+   interface TermClass;
+   interface Term;
+   typedef sequence<Term> TermSet;
+   interface BusinessNomenclatureModulePackage;
+
+   interface VocabularyElementClass : CoreModule::ModelElementClass
+   {
+      readonly attribute VocabularyElementSet all_of_type_vocabulary_element;
+      readonly attribute VocabularyElementSet all_of_class_vocabulary_element;
+      VocabularyElement create_vocabulary_element (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string definition,
+         in string example,
+         in string usage)
+         raises (Reflective::MofError);
+   };
+
+   interface VocabularyElement : VocabularyElementClass, CoreModule::ModelElement
+   {
+      string definition ()
+         raises (Reflective::MofError);
+      void set_definition (in string new_value)
+         raises (Reflective::MofError);
+      string example ()
+         raises (Reflective::MofError);
+      void set_example (in string new_value)
+         raises (Reflective::MofError);
+      string usage ()
+         raises (Reflective::MofError);
+      void set_usage (in string new_value)
+         raises (Reflective::MofError);
+      ModelElementSet model_element ()
+         raises (Reflective::MofError);
+      void set_model_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_model_element ()
+         raises (Reflective::MofError);
+      void add_model_element (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_model_element (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface VocabularyElement
+
+   interface NomenclatureClass : CoreModule::PackageClass
+   {
+      readonly attribute NomenclatureSet all_of_type_nomenclature;
+      readonly attribute NomenclatureSet all_of_class_nomenclature;
+      Nomenclature create_nomenclature (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Nomenclature : NomenclatureClass, CoreModule::Package
+   {
+   }; // end of interface Nomenclature
+
+   interface TaxonomyClass : NomenclatureClass
+   {
+      readonly attribute TaxonomySet all_of_type_taxonomy;
+      readonly attribute TaxonomySet all_of_class_taxonomy;
+      Taxonomy create_taxonomy (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface Taxonomy : TaxonomyClass, Nomenclature
+   {
+      CoreModule::Namespace domain ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_domain (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_domain ()
+         raises (Reflective::MofError);
+      ModelElementSet concept ()
+         raises (Reflective::MofError);
+      void set_concept (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_concept ()
+         raises (Reflective::MofError);
+      void add_concept (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_concept (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_concept (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      NomenclatureSet subtaxonomy ()
+         raises (Reflective::MofError);
+      void set_subtaxonomy (in NomenclatureSet new_value)
+         raises (Reflective::MofError);
+      void unset_subtaxonomy ()
+         raises (Reflective::MofError);
+      void add_subtaxonomy (in Nomenclature new_element)
+         raises (Reflective::MofError);
+      void modify_subtaxonomy (
+         in Nomenclature old_element,
+         in Nomenclature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_subtaxonomy (in Nomenclature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Taxonomy
+
+   interface GlossaryClass : NomenclatureClass
+   {
+      readonly attribute GlossarySet all_of_type_glossary;
+      readonly attribute GlossarySet all_of_class_glossary;
+      Glossary create_glossary (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string language)
+         raises (Reflective::MofError);
+   };
+
+   interface Glossary : GlossaryClass, Nomenclature
+   {
+      string language ()
+         raises (Reflective::MofError);
+      void set_language (in string new_value)
+         raises (Reflective::MofError);
+      TaxonomySet taxonomy ()
+         raises (Reflective::MofError);
+      void set_taxonomy (in TaxonomySet new_value)
+         raises (Reflective::MofError);
+      void unset_taxonomy ()
+         raises (Reflective::MofError);
+      void add_taxonomy (in BusinessNomenclatureModule::Taxonomy new_element)
+         raises (Reflective::MofError);
+      void modify_taxonomy (
+         in BusinessNomenclatureModule::Taxonomy old_element,
+         in BusinessNomenclatureModule::Taxonomy new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_taxonomy (in BusinessNomenclatureModule::Taxonomy old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      ModelElementSet term ()
+         raises (Reflective::MofError);
+      void set_term (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_term ()
+         raises (Reflective::MofError);
+      void add_term (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_term (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_term (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      NomenclatureSet subglossary ()
+         raises (Reflective::MofError);
+      void set_subglossary (in NomenclatureSet new_value)
+         raises (Reflective::MofError);
+      void unset_subglossary ()
+         raises (Reflective::MofError);
+      void add_subglossary (in Nomenclature new_element)
+         raises (Reflective::MofError);
+      void modify_subglossary (
+         in Nomenclature old_element,
+         in Nomenclature new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_subglossary (in Nomenclature old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Glossary
+
+   interface BusinessDomainClass : CoreModule::PackageClass
+   {
+      readonly attribute BusinessDomainSet all_of_type_business_domain;
+      readonly attribute BusinessDomainSet all_of_class_business_domain;
+      BusinessDomain create_business_domain (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility)
+         raises (Reflective::MofError);
+   };
+
+   interface BusinessDomain : BusinessDomainClass, CoreModule::Package
+   {
+      ModelElementSet taxonomy ()
+         raises (Reflective::MofError);
+      void set_taxonomy (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void unset_taxonomy ()
+         raises (Reflective::MofError);
+      void add_taxonomy (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_taxonomy (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_taxonomy (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface BusinessDomain
+
+   interface ConceptClass : VocabularyElementClass
+   {
+      readonly attribute ConceptSet all_of_type_concept;
+      readonly attribute ConceptSet all_of_class_concept;
+      Concept create_concept (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string definition,
+         in string example,
+         in string usage)
+         raises (Reflective::MofError);
+   };
+
+   interface Concept : ConceptClass, VocabularyElement
+   {
+      CoreModule::Namespace taxonomy ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_taxonomy (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_taxonomy ()
+         raises (Reflective::MofError);
+      ConceptSet related_concept ()
+         raises (Reflective::MofError);
+      void set_related_concept (in ConceptSet new_value)
+         raises (Reflective::MofError);
+      void unset_related_concept ()
+         raises (Reflective::MofError);
+      void add_related_concept (in Concept new_element)
+         raises (Reflective::MofError);
+      void modify_related_concept (
+         in Concept old_element,
+         in Concept new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_related_concept (in Concept old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Concept
+
+   interface TermClass : VocabularyElementClass
+   {
+      readonly attribute TermSet all_of_type_term;
+      readonly attribute TermSet all_of_class_term;
+      Term create_term (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string definition,
+         in string example,
+         in string usage)
+         raises (Reflective::MofError);
+   };
+
+   interface Term : TermClass, VocabularyElement
+   {
+      CoreModule::Namespace glossary ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_glossary (in CoreModule::Namespace new_value)
+         raises (Reflective::MofError);
+      void unset_glossary ()
+         raises (Reflective::MofError);
+      ConceptSet concept ()
+         raises (Reflective::MofError);
+      void set_concept (in ConceptSet new_value)
+         raises (Reflective::MofError);
+      void unset_concept ()
+         raises (Reflective::MofError);
+      void add_concept (in BusinessNomenclatureModule::Concept new_element)
+         raises (Reflective::MofError);
+      void modify_concept (
+         in BusinessNomenclatureModule::Concept old_element,
+         in BusinessNomenclatureModule::Concept new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_concept (in BusinessNomenclatureModule::Concept old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      TermSet related_term ()
+         raises (Reflective::MofError);
+      void set_related_term (in TermSet new_value)
+         raises (Reflective::MofError);
+      void unset_related_term ()
+         raises (Reflective::MofError);
+      void add_related_term (in Term new_element)
+         raises (Reflective::MofError);
+      void modify_related_term (
+         in Term old_element,
+         in Term new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_related_term (in Term old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      Term preferred_term ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_preferred_term (in Term new_value)
+         raises (Reflective::MofError);
+      void unset_preferred_term ()
+         raises (Reflective::MofError);
+      TermSet narrower_term ()
+         raises (Reflective::MofError);
+      void set_narrower_term (in TermSet new_value)
+         raises (Reflective::MofError);
+      void unset_narrower_term ()
+         raises (Reflective::MofError);
+      void add_narrower_term (in Term new_element)
+         raises (Reflective::MofError);
+      void modify_narrower_term (
+         in Term old_element,
+         in Term new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_narrower_term (in Term old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface Term
+
+   struct GlossaryToTaxonomyLink
+   {
+      BusinessNomenclatureModule::Glossary glossary;
+      BusinessNomenclatureModule::Taxonomy taxonomy;
+   };
+   typedef sequence<GlossaryToTaxonomyLink> GlossaryToTaxonomyLinkSet;
+
+   interface GlossaryToTaxonomy : Reflective::RefAssociation
+   {
+      GlossaryToTaxonomyLinkSet all_glossary_to_taxonomy_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BusinessNomenclatureModule::Glossary glossary,
+         in BusinessNomenclatureModule::Taxonomy taxonomy)
+         raises (Reflective::MofError);
+      GlossarySet glossary (in BusinessNomenclatureModule::Taxonomy taxonomy)
+         raises (Reflective::MofError);
+      TaxonomySet taxonomy (in BusinessNomenclatureModule::Glossary glossary)
+         raises (Reflective::MofError);
+      void add (
+         in BusinessNomenclatureModule::Glossary glossary,
+         in BusinessNomenclatureModule::Taxonomy taxonomy)
+         raises (Reflective::MofError);
+      void modify_glossary (
+         in BusinessNomenclatureModule::Glossary glossary,
+         in BusinessNomenclatureModule::Taxonomy taxonomy,
+         in BusinessNomenclatureModule::Glossary new_glossary)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_taxonomy (
+         in BusinessNomenclatureModule::Glossary glossary,
+         in BusinessNomenclatureModule::Taxonomy taxonomy,
+         in BusinessNomenclatureModule::Taxonomy new_taxonomy)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BusinessNomenclatureModule::Glossary glossary,
+         in BusinessNomenclatureModule::Taxonomy taxonomy)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface GlossaryToTaxonomy
+
+   struct TermToConceptLink
+   {
+      BusinessNomenclatureModule::Concept concept;
+      BusinessNomenclatureModule::Term term;
+   };
+   typedef sequence<TermToConceptLink> TermToConceptLinkSet;
+
+   interface TermToConcept : Reflective::RefAssociation
+   {
+      TermToConceptLinkSet all_term_to_concept_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      ConceptSet concept (in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      TermSet term (in BusinessNomenclatureModule::Concept concept)
+         raises (Reflective::MofError);
+      void add (
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      void modify_concept (
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Term term,
+         in BusinessNomenclatureModule::Concept new_concept)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_term (
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Term term,
+         in BusinessNomenclatureModule::Term new_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TermToConcept
+
+   struct RelatedVocabularyElementsLink
+   {
+      VocabularyElement related_element;
+      VocabularyElement element;
+   };
+   typedef sequence<RelatedVocabularyElementsLink> RelatedVocabularyElementsLinkSet;
+
+   interface RelatedVocabularyElements : Reflective::RefAssociation
+   {
+      RelatedVocabularyElementsLinkSet all_related_vocabulary_elements_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in VocabularyElement related_element,
+         in VocabularyElement element)
+         raises (Reflective::MofError);
+      VocabularyElementSet related_element (in VocabularyElement element)
+         raises (Reflective::MofError);
+      VocabularyElementSet element (in VocabularyElement related_element)
+         raises (Reflective::MofError);
+      void add (
+         in VocabularyElement related_element,
+         in VocabularyElement element)
+         raises (Reflective::MofError);
+      void modify_related_element (
+         in VocabularyElement related_element,
+         in VocabularyElement element,
+         in VocabularyElement new_related_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_element (
+         in VocabularyElement related_element,
+         in VocabularyElement element,
+         in VocabularyElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in VocabularyElement related_element,
+         in VocabularyElement element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RelatedVocabularyElements
+
+   struct RelatedConceptsLink
+   {
+      BusinessNomenclatureModule::Concept related_concept;
+      BusinessNomenclatureModule::Concept concept;
+   };
+   typedef sequence<RelatedConceptsLink> RelatedConceptsLinkSet;
+
+   interface RelatedConcepts : Reflective::RefAssociation
+   {
+      RelatedConceptsLinkSet all_related_concepts_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BusinessNomenclatureModule::Concept related_concept,
+         in BusinessNomenclatureModule::Concept concept)
+         raises (Reflective::MofError);
+      ConceptSet related_concept (in BusinessNomenclatureModule::Concept concept)
+         raises (Reflective::MofError);
+      ConceptSet concept (in BusinessNomenclatureModule::Concept related_concept)
+         raises (Reflective::MofError);
+      void add (
+         in BusinessNomenclatureModule::Concept related_concept,
+         in BusinessNomenclatureModule::Concept concept)
+         raises (Reflective::MofError);
+      void modify_related_concept (
+         in BusinessNomenclatureModule::Concept related_concept,
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Concept new_related_concept)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_concept (
+         in BusinessNomenclatureModule::Concept related_concept,
+         in BusinessNomenclatureModule::Concept concept,
+         in BusinessNomenclatureModule::Concept new_concept)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BusinessNomenclatureModule::Concept related_concept,
+         in BusinessNomenclatureModule::Concept concept)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RelatedConcepts
+
+   struct RelatedTermsLink
+   {
+      BusinessNomenclatureModule::Term related_term;
+      BusinessNomenclatureModule::Term term;
+   };
+   typedef sequence<RelatedTermsLink> RelatedTermsLinkSet;
+
+   interface RelatedTerms : Reflective::RefAssociation
+   {
+      RelatedTermsLinkSet all_related_terms_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BusinessNomenclatureModule::Term related_term,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      TermSet related_term (in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      TermSet term (in BusinessNomenclatureModule::Term related_term)
+         raises (Reflective::MofError);
+      void add (
+         in BusinessNomenclatureModule::Term related_term,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::MofError);
+      void modify_related_term (
+         in BusinessNomenclatureModule::Term related_term,
+         in BusinessNomenclatureModule::Term term,
+         in BusinessNomenclatureModule::Term new_related_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_term (
+         in BusinessNomenclatureModule::Term related_term,
+         in BusinessNomenclatureModule::Term term,
+         in BusinessNomenclatureModule::Term new_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BusinessNomenclatureModule::Term related_term,
+         in BusinessNomenclatureModule::Term term)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface RelatedTerms
+
+   struct VocabularyElementToModelElementLink
+   {
+      CoreModule::ModelElement model_element;
+      VocabularyElement vocabulary_element;
+   };
+   typedef sequence<VocabularyElementToModelElementLink> VocabularyElementToModelElementLinkSet;
+
+   interface VocabularyElementToModelElement : Reflective::RefAssociation
+   {
+      VocabularyElementToModelElementLinkSet all_vocabulary_element_to_model_element_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::ModelElement model_element,
+         in VocabularyElement vocabulary_element)
+         raises (Reflective::MofError);
+      ModelElementSet model_element (in VocabularyElement vocabulary_element)
+         raises (Reflective::MofError);
+      VocabularyElementSet vocabulary_element (in CoreModule::ModelElement model_element)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::ModelElement model_element,
+         in VocabularyElement vocabulary_element)
+         raises (Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement model_element,
+         in VocabularyElement vocabulary_element,
+         in CoreModule::ModelElement new_model_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_vocabulary_element (
+         in CoreModule::ModelElement model_element,
+         in VocabularyElement vocabulary_element,
+         in VocabularyElement new_vocabulary_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::ModelElement model_element,
+         in VocabularyElement vocabulary_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface VocabularyElementToModelElement
+
+   struct SynonymToPreferredTermLink
+   {
+      Term preferred_term;
+      Term synonym;
+   };
+   typedef sequence<SynonymToPreferredTermLink> SynonymToPreferredTermLinkSet;
+
+   interface SynonymToPreferredTerm : Reflective::RefAssociation
+   {
+      SynonymToPreferredTermLinkSet all_synonym_to_preferred_term_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Term preferred_term,
+         in Term synonym)
+         raises (Reflective::MofError);
+      Term preferred_term (in Term synonym)
+         raises (Reflective::MofError);
+      TermSet synonym (in Term preferred_term)
+         raises (Reflective::MofError);
+      void add (
+         in Term preferred_term,
+         in Term synonym)
+         raises (Reflective::MofError);
+      void modify_preferred_term (
+         in Term preferred_term,
+         in Term synonym,
+         in Term new_preferred_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_synonym (
+         in Term preferred_term,
+         in Term synonym,
+         in Term new_synonym)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Term preferred_term,
+         in Term synonym)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface SynonymToPreferredTerm
+
+   struct WiderToNarrowerTermLink
+   {
+      Term wider_term;
+      Term narrower_term;
+   };
+   typedef sequence<WiderToNarrowerTermLink> WiderToNarrowerTermLinkSet;
+
+   interface WiderToNarrowerTerm : Reflective::RefAssociation
+   {
+      WiderToNarrowerTermLinkSet all_wider_to_narrower_term_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Term wider_term,
+         in Term narrower_term)
+         raises (Reflective::MofError);
+      TermSet wider_term (in Term narrower_term)
+         raises (Reflective::MofError);
+      TermSet narrower_term (in Term wider_term)
+         raises (Reflective::MofError);
+      void add (
+         in Term wider_term,
+         in Term narrower_term)
+         raises (Reflective::MofError);
+      void modify_wider_term (
+         in Term wider_term,
+         in Term narrower_term,
+         in Term new_wider_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_narrower_term (
+         in Term wider_term,
+         in Term narrower_term,
+         in Term new_narrower_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Term wider_term,
+         in Term narrower_term)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface WiderToNarrowerTerm
+
+   struct NomenclatureHierarchyLink
+   {
+      Nomenclature parent;
+      Nomenclature child;
+   };
+   typedef sequence<NomenclatureHierarchyLink> NomenclatureHierarchyLinkSet;
+
+   interface NomenclatureHierarchy : Reflective::RefAssociation
+   {
+      NomenclatureHierarchyLinkSet all_nomenclature_hierarchy_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in Nomenclature parent,
+         in Nomenclature child)
+         raises (Reflective::MofError);
+      Nomenclature parent (in Nomenclature child)
+         raises (Reflective::MofError);
+      NomenclatureSet child (in Nomenclature parent)
+         raises (Reflective::MofError);
+      void add (
+         in Nomenclature parent,
+         in Nomenclature child)
+         raises (Reflective::MofError);
+      void modify_parent (
+         in Nomenclature parent,
+         in Nomenclature child,
+         in Nomenclature new_parent)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_child (
+         in Nomenclature parent,
+         in Nomenclature child,
+         in Nomenclature new_child)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in Nomenclature parent,
+         in Nomenclature child)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface NomenclatureHierarchy
+
+   interface BusinessNomenclatureModulePackageFactory
+   {
+      BusinessNomenclatureModulePackage create_business_nomenclature_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface BusinessNomenclatureModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute VocabularyElementClass vocabulary_element_ref;
+      readonly attribute NomenclatureClass nomenclature_ref;
+      readonly attribute TaxonomyClass taxonomy_ref;
+      readonly attribute GlossaryClass glossary_ref;
+      readonly attribute BusinessDomainClass business_domain_ref;
+      readonly attribute ConceptClass concept_ref;
+      readonly attribute TermClass term_ref;
+      readonly attribute GlossaryToTaxonomy glossary_to_taxonomy_ref;
+      readonly attribute TermToConcept term_to_concept_ref;
+      readonly attribute RelatedVocabularyElements related_vocabulary_elements_ref;
+      readonly attribute RelatedConcepts related_concepts_ref;
+      readonly attribute RelatedTerms related_terms_ref;
+      readonly attribute VocabularyElementToModelElement vocabulary_element_to_model_element_ref;
+      readonly attribute SynonymToPreferredTerm synonym_to_preferred_term_ref;
+      readonly attribute WiderToNarrowerTerm wider_to_narrower_term_ref;
+      readonly attribute NomenclatureHierarchy nomenclature_hierarchy_ref;
+   };
+};
+
+#endif

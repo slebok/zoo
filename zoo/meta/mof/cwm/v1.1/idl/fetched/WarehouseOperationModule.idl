@@ -1,0 +1,478 @@
+#ifndef WAREHOUSE_OPERATION_MODULE_IDL
+#define WAREHOUSE_OPERATION_MODULE_IDL
+#pragma prefix "org.omg.cwm.management"
+#include "Reflective.idl"
+#include "BehavioralModule.idl"
+#include "CoreModule.idl"
+#include "TransformationModule.idl"
+
+module WarehouseOperationModule
+{
+   typedef sequence<CoreModule::ModelElement> ModelElementSet;
+   interface MeasurementClass;
+   interface Measurement;
+   typedef sequence<Measurement> MeasurementSet;
+   typedef sequence<Measurement> MeasurementUList;
+   interface ChangeRequestClass;
+   interface ChangeRequest;
+   typedef sequence<ChangeRequest> ChangeRequestSet;
+   typedef sequence<ChangeRequest> ChangeRequestUList;
+   interface TransformationExecutionClass;
+   interface TransformationExecution;
+   typedef sequence<TransformationExecution> TransformationExecutionSet;
+   interface ActivityExecutionClass;
+   interface ActivityExecution;
+   typedef sequence<ActivityExecution> ActivityExecutionSet;
+   interface StepExecutionClass;
+   interface StepExecution;
+   typedef sequence<StepExecution> StepExecutionSet;
+   interface WarehouseOperationModulePackage;
+
+   interface MeasurementClass : CoreModule::ModelElementClass
+   {
+      readonly attribute MeasurementSet all_of_type_measurement;
+      readonly attribute MeasurementSet all_of_class_measurement;
+      Measurement create_measurement (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in float value,
+         in string unit,
+         in string type,
+         in CoreModule::Time creation_date,
+         in CoreModule::Time effective_date)
+         raises (Reflective::MofError);
+   };
+
+   interface Measurement : MeasurementClass, CoreModule::ModelElement
+   {
+      float value ()
+         raises (Reflective::MofError);
+      void set_value (in float new_value)
+         raises (Reflective::MofError);
+      string unit ()
+         raises (Reflective::MofError);
+      void set_unit (in string new_value)
+         raises (Reflective::MofError);
+      string type ()
+         raises (Reflective::MofError);
+      void set_type (in string new_value)
+         raises (Reflective::MofError);
+      CoreModule::Time creation_date ()
+         raises (Reflective::MofError);
+      void set_creation_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      CoreModule::Time effective_date ()
+         raises (Reflective::MofError);
+      void set_effective_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      CoreModule::ModelElement model_element ()
+         raises (Reflective::MofError);
+      void set_model_element (in CoreModule::ModelElement new_value)
+         raises (Reflective::MofError);
+   }; // end of interface Measurement
+
+   interface ChangeRequestClass : CoreModule::ModelElementClass
+   {
+      readonly attribute ChangeRequestSet all_of_type_change_request;
+      readonly attribute ChangeRequestSet all_of_class_change_request;
+      ChangeRequest create_change_request (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in string change_description,
+         in string change_reason,
+         in string status,
+         in boolean completed,
+         in CoreModule::Time request_date,
+         in CoreModule::Time completion_date)
+         raises (Reflective::MofError);
+   };
+
+   interface ChangeRequest : ChangeRequestClass, CoreModule::ModelElement
+   {
+      string change_description ()
+         raises (Reflective::MofError);
+      void set_change_description (in string new_value)
+         raises (Reflective::MofError);
+      string change_reason ()
+         raises (Reflective::MofError);
+      void set_change_reason (in string new_value)
+         raises (Reflective::MofError);
+      string status ()
+         raises (Reflective::MofError);
+      void set_status (in string new_value)
+         raises (Reflective::MofError);
+      boolean completed ()
+         raises (Reflective::MofError);
+      void set_completed (in boolean new_value)
+         raises (Reflective::MofError);
+      CoreModule::Time request_date ()
+         raises (Reflective::MofError);
+      void set_request_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      CoreModule::Time completion_date ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_completion_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      void unset_completion_date ()
+         raises (Reflective::MofError);
+      ModelElementSet model_element ()
+         raises (Reflective::MofError);
+      void set_model_element (in ModelElementSet new_value)
+         raises (Reflective::MofError);
+      void add_model_element (in CoreModule::ModelElement new_element)
+         raises (Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement old_element,
+         in CoreModule::ModelElement new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_model_element (in CoreModule::ModelElement old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ChangeRequest
+
+   interface TransformationExecutionClass : CoreModule::ModelElementClass
+   {
+      readonly attribute TransformationExecutionSet all_of_type_transformation_execution;
+      readonly attribute TransformationExecutionSet all_of_class_transformation_execution;
+      TransformationExecution create_transformation_execution (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Time start_date,
+         in CoreModule::Time end_date,
+         in boolean in_progress,
+         in boolean successful,
+         in CoreModule::Expression status)
+         raises (Reflective::MofError);
+   };
+
+   interface TransformationExecution : TransformationExecutionClass, CoreModule::ModelElement
+   {
+      CoreModule::Time start_date ()
+         raises (Reflective::MofError);
+      void set_start_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      CoreModule::Time end_date ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_end_date (in CoreModule::Time new_value)
+         raises (Reflective::MofError);
+      void unset_end_date ()
+         raises (Reflective::MofError);
+      boolean in_progress ()
+         raises (Reflective::MofError);
+      void set_in_progress (in boolean new_value)
+         raises (Reflective::MofError);
+      boolean successful ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_successful (in boolean new_value)
+         raises (Reflective::MofError);
+      void unset_successful ()
+         raises (Reflective::MofError);
+      CoreModule::Expression status ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_status (in CoreModule::Expression new_value)
+         raises (Reflective::MofError);
+      void unset_status ()
+         raises (Reflective::MofError);
+   }; // end of interface TransformationExecution
+
+   interface ActivityExecutionClass : TransformationExecutionClass
+   {
+      readonly attribute ActivityExecutionSet all_of_type_activity_execution;
+      readonly attribute ActivityExecutionSet all_of_class_activity_execution;
+      ActivityExecution create_activity_execution (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Time start_date,
+         in CoreModule::Time end_date,
+         in boolean in_progress,
+         in boolean successful,
+         in CoreModule::Expression status)
+         raises (Reflective::MofError);
+   };
+
+   interface ActivityExecution : ActivityExecutionClass, TransformationExecution
+   {
+      TransformationModule::TransformationActivity transformation_activity ()
+         raises (Reflective::MofError);
+      void set_transformation_activity (in TransformationModule::TransformationActivity new_value)
+         raises (Reflective::MofError);
+      StepExecutionSet step_execution ()
+         raises (Reflective::MofError);
+      void set_step_execution (in StepExecutionSet new_value)
+         raises (Reflective::MofError);
+      void unset_step_execution ()
+         raises (Reflective::MofError);
+      void add_step_execution (in StepExecution new_element)
+         raises (Reflective::MofError);
+      void modify_step_execution (
+         in StepExecution old_element,
+         in StepExecution new_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove_step_execution (in StepExecution old_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ActivityExecution
+
+   interface StepExecutionClass : TransformationExecutionClass
+   {
+      readonly attribute StepExecutionSet all_of_type_step_execution;
+      readonly attribute StepExecutionSet all_of_class_step_execution;
+      StepExecution create_step_execution (
+         in CoreModule::Name name,
+         in CoreModule::VisibilityKind visibility,
+         in CoreModule::Time start_date,
+         in CoreModule::Time end_date,
+         in boolean in_progress,
+         in boolean successful,
+         in CoreModule::Expression status)
+         raises (Reflective::MofError);
+   };
+
+   interface StepExecution : StepExecutionClass, TransformationExecution
+   {
+      TransformationModule::TransformationStep transformation_step ()
+         raises (Reflective::MofError);
+      void set_transformation_step (in TransformationModule::TransformationStep new_value)
+         raises (Reflective::MofError);
+      ActivityExecution activity_execution ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_activity_execution (in ActivityExecution new_value)
+         raises (Reflective::MofError);
+      void unset_activity_execution ()
+         raises (Reflective::MofError);
+      BehavioralModule::CallAction call_action ()
+         raises (Reflective::NotSet, Reflective::MofError);
+      void set_call_action (in BehavioralModule::CallAction new_value)
+         raises (Reflective::MofError);
+      void unset_call_action ()
+         raises (Reflective::MofError);
+   }; // end of interface StepExecution
+
+   struct TransformationStepExecutionsLink
+   {
+      StepExecution execution;
+      TransformationModule::TransformationStep transformation_step;
+   };
+   typedef sequence<TransformationStepExecutionsLink> TransformationStepExecutionsLinkSet;
+
+   interface TransformationStepExecutions : Reflective::RefAssociation
+   {
+      TransformationStepExecutionsLinkSet all_transformation_step_executions_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in StepExecution execution,
+         in TransformationModule::TransformationStep transformation_step)
+         raises (Reflective::MofError);
+      StepExecutionSet execution (in TransformationModule::TransformationStep transformation_step)
+         raises (Reflective::MofError);
+      TransformationModule::TransformationStep transformation_step (in StepExecution execution)
+         raises (Reflective::MofError);
+      void add (
+         in StepExecution execution,
+         in TransformationModule::TransformationStep transformation_step)
+         raises (Reflective::MofError);
+      void modify_execution (
+         in StepExecution execution,
+         in TransformationModule::TransformationStep transformation_step,
+         in StepExecution new_execution)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_transformation_step (
+         in StepExecution execution,
+         in TransformationModule::TransformationStep transformation_step,
+         in TransformationModule::TransformationStep new_transformation_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in StepExecution execution,
+         in TransformationModule::TransformationStep transformation_step)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationStepExecutions
+
+   struct TransformationActivityExecutionsLink
+   {
+      TransformationModule::TransformationActivity transformation_activity;
+      ActivityExecution execution;
+   };
+   typedef sequence<TransformationActivityExecutionsLink> TransformationActivityExecutionsLinkSet;
+
+   interface TransformationActivityExecutions : Reflective::RefAssociation
+   {
+      TransformationActivityExecutionsLinkSet all_transformation_activity_executions_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in TransformationModule::TransformationActivity transformation_activity,
+         in ActivityExecution execution)
+         raises (Reflective::MofError);
+      TransformationModule::TransformationActivity transformation_activity (in ActivityExecution execution)
+         raises (Reflective::MofError);
+      ActivityExecutionSet execution (in TransformationModule::TransformationActivity transformation_activity)
+         raises (Reflective::MofError);
+      void add (
+         in TransformationModule::TransformationActivity transformation_activity,
+         in ActivityExecution execution)
+         raises (Reflective::MofError);
+      void modify_transformation_activity (
+         in TransformationModule::TransformationActivity transformation_activity,
+         in ActivityExecution execution,
+         in TransformationModule::TransformationActivity new_transformation_activity)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_execution (
+         in TransformationModule::TransformationActivity transformation_activity,
+         in ActivityExecution execution,
+         in ActivityExecution new_execution)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in TransformationModule::TransformationActivity transformation_activity,
+         in ActivityExecution execution)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface TransformationActivityExecutions
+
+   struct ModelElementMeasurementLink
+   {
+      CoreModule::ModelElement model_element;
+      WarehouseOperationModule::Measurement measurement;
+   };
+   typedef sequence<ModelElementMeasurementLink> ModelElementMeasurementLinkSet;
+
+   interface ModelElementMeasurement : Reflective::RefAssociation
+   {
+      ModelElementMeasurementLinkSet all_model_element_measurement_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement)
+         raises (Reflective::MofError);
+      CoreModule::ModelElement model_element (in WarehouseOperationModule::Measurement measurement)
+         raises (Reflective::MofError);
+      MeasurementUList measurement (in CoreModule::ModelElement model_element)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement)
+         raises (Reflective::MofError);
+      void add_before_measurement (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement,
+         in WarehouseOperationModule::Measurement before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement,
+         in CoreModule::ModelElement new_model_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_measurement (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement,
+         in WarehouseOperationModule::Measurement new_measurement)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::ModelElement model_element,
+         in WarehouseOperationModule::Measurement measurement)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ModelElementMeasurement
+
+   struct ModelElementChangeRequestLink
+   {
+      CoreModule::ModelElement model_element;
+      ChangeRequest change_request;
+   };
+   typedef sequence<ModelElementChangeRequestLink> ModelElementChangeRequestLinkSet;
+
+   interface ModelElementChangeRequest : Reflective::RefAssociation
+   {
+      ModelElementChangeRequestLinkSet all_model_element_change_request_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request)
+         raises (Reflective::MofError);
+      ModelElementSet model_element (in ChangeRequest change_request)
+         raises (Reflective::MofError);
+      ChangeRequestUList change_request (in CoreModule::ModelElement model_element)
+         raises (Reflective::MofError);
+      void add (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request)
+         raises (Reflective::MofError);
+      void add_before_change_request (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request,
+         in ChangeRequest before)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_model_element (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request,
+         in CoreModule::ModelElement new_model_element)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_change_request (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request,
+         in ChangeRequest new_change_request)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in CoreModule::ModelElement model_element,
+         in ChangeRequest change_request)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface ModelElementChangeRequest
+
+   struct StepExecutionCallActionLink
+   {
+      BehavioralModule::CallAction call_action;
+      StepExecution step_execution;
+   };
+   typedef sequence<StepExecutionCallActionLink> StepExecutionCallActionLinkSet;
+
+   interface StepExecutionCallAction : Reflective::RefAssociation
+   {
+      StepExecutionCallActionLinkSet all_step_execution_call_action_links()
+         raises (Reflective::MofError);
+      boolean exists (
+         in BehavioralModule::CallAction call_action,
+         in StepExecution step_execution)
+         raises (Reflective::MofError);
+      BehavioralModule::CallAction call_action (in StepExecution step_execution)
+         raises (Reflective::MofError);
+      StepExecutionSet step_execution (in BehavioralModule::CallAction call_action)
+         raises (Reflective::MofError);
+      void add (
+         in BehavioralModule::CallAction call_action,
+         in StepExecution step_execution)
+         raises (Reflective::MofError);
+      void modify_call_action (
+         in BehavioralModule::CallAction call_action,
+         in StepExecution step_execution,
+         in BehavioralModule::CallAction new_call_action)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void modify_step_execution (
+         in BehavioralModule::CallAction call_action,
+         in StepExecution step_execution,
+         in StepExecution new_step_execution)
+         raises (Reflective::NotFound, Reflective::MofError);
+      void remove (
+         in BehavioralModule::CallAction call_action,
+         in StepExecution step_execution)
+         raises (Reflective::NotFound, Reflective::MofError);
+   }; // end of interface StepExecutionCallAction
+
+   interface WarehouseOperationModulePackageFactory
+   {
+      WarehouseOperationModulePackage create_warehouse_operation_module_package ()
+         raises (Reflective::MofError);
+   };
+
+   interface WarehouseOperationModulePackage : Reflective::RefPackage
+   {
+      readonly attribute CoreModule::CoreModulePackage core_ref;
+      readonly attribute BehavioralModule::BehavioralModulePackage behavioral_ref;
+      readonly attribute TransformationModule::TransformationModulePackage transformation_ref;
+      readonly attribute MeasurementClass measurement_ref;
+      readonly attribute ChangeRequestClass change_request_ref;
+      readonly attribute TransformationExecutionClass transformation_execution_ref;
+      readonly attribute ActivityExecutionClass activity_execution_ref;
+      readonly attribute StepExecutionClass step_execution_ref;
+      readonly attribute TransformationStepExecutions transformation_step_executions_ref;
+      readonly attribute TransformationActivityExecutions transformation_activity_executions_ref;
+      readonly attribute ModelElementMeasurement model_element_measurement_ref;
+      readonly attribute ModelElementChangeRequest model_element_change_request_ref;
+      readonly attribute StepExecutionCallAction step_execution_call_action_ref;
+   };
+};
+
+#endif

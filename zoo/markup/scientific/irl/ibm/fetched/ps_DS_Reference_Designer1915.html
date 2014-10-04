@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US"><head>
+<script type="text/javascript" src="../../../../../../ver362.6/advanced/xmlajax.js"></script>
+ <script type='text/javascript'>
+<!--
+
+<!--
+ var xml = new Array();
+ function check(){
+ var len = xml.length; 
+for (var i=0;i<len;i++){
+var elementID = xml[i];
+var obj = document.getElementById(elementID);
+var url ="../../../../../../linkcheck?url=" + obj.getAttribute("href");
+linkCheck(url,obj);}
+} 
+//-->
+
+-->
+</script><title>Grammar specification</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><link rel="stylesheet" type="text/css" href="doc.css"/>
+<script language="JavaScript" src="../../../../../../scriptsfiles/icscript.js"> </script>
+
+
+<script type="text/javascript" src="../../../../../../ver362.6/advanced/synchWithToc.js"></script>
+
+<link rel="stylesheet" href="../../../../../../content/org.eclipse.help.webapp/advanced/breadcrumbs.css" charset="ISO-8859-1" type="text/css"></link>
+<script type="text/javascript" src="../../../../../../content/org.eclipse.help/livehelp.js"> </script>
+<script type="text/javascript">if( self == top ){ window.location.replace( "../../../../../../index.jsp?topic=%2Fcom.ibm.dserver.reference.studio%2FContent%2FBusiness_Rules%2F_pubskel%2FInfocenter_Primary%2Fps_DS_Reference_Designer1915.html");}</script>
+</head><body onload="check();">
+<div class="help_breadcrumbs"><a href="../../../../../../topic/com.ibm.dserver.rules/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_Decision_Server63.html">Decision Server Rules V7.5</a> > <a href="../../../../../../topic/com.ibm.dserver.reference/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_DS_Reference1758.html">Reference</a> > <a href="../../../../../../topic/com.ibm.dserver.reference.studio/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_DS_Reference_Designer1760.html">Rule Designer reference</a> > <a href="../../../../../../topic/com.ibm.dserver.reference.studio/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_DS_Reference_Designer1771.html">Rule languages</a> > <a href="../../../../../../topic/com.ibm.dserver.reference.studio/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_DS_Reference_Designer1813.html">ILOG Rule Language (IRL)</a> > <a href="../../../../../../topic/com.ibm.dserver.reference.studio/Content/Business_Rules/_pubskel/Infocenter_Primary/ps_DS_Reference_Designer1911.html">IRL grammar</a></div>
+<div class="General" role="main"><div class="header"><div class="content"><h1 class="heading">Grammar specification</h1></div></div><div class="content">
+
+
+
+<div class="descriptiveTopicContent">
+<div class="para">This section provides the lexical grammar for the ILOG
+Rule Language. </div>
+<div class="note"><div class="noteLabel">Note</div>
+<div class="para">A bullet (•) before a grammar rule indicates that
+the terminal symbol in the rule is detailed in <a href="ps_DS_Reference_Designer1814.html" title="The ILOG Rule Language defines IRL keywords to support rule authoring, management, and execution." class="bluelink">IRL keywords</a>. </div>
+</div>
+<div class="caption">General form of an IRL program</div><table border="1" cellpadding="4" cellspacing="0" class="ShadedHead" id="rslangref.uss_rs_lng_irlgrammar.1038451"><colgroup span="1">
+<col span="1"/>
+<col span="1"/></colgroup><thead>
+<tr align="left" bgcolor="#bfd6e7" valign="top">
+<th colspan="2" rowspan="1"> <div class="para">General form of an
+IRL program</div> </th>
+</tr>
+</thead><tbody>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleSetDefinition </span> :</div> <div class="para"> <span class="italics">ImportOrUseDeclaration</span>opt<span class="italics">   RulesetPropertyDefinition</span>opt<span class="italics">  HierarchicalPropertyDeclaration</span>opt<span class="italics">   PropertyTypingDeclaration</span>opt <span class="italics"> RuleOverridingDeclaration</span>opt <span class="italics"> VariableDeclaration</span>opt   <span class="italics">PackageList</span>opt<span class="italics">  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Package definition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PackageList</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  Package</span>   <span class="italics">PackageList</span>opt <code class="code"> </code> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Package</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  PackageDefinition</span> </div> <div class="para"> <span class="italics">  PackageContent</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PackageDefinition</span> <span class="italics">:</span> </div> <div class="para">  package
+ <span class="italics">Identifier  </span> </div> <div class="para"> 
+{<code class="code"> </code> <span class="italics">ImportOrUseDeclaration</span>opt<span class="bold"> </span> <span class="italics">VariableDeclaration</span>opt<code class="code"> </code> </div> <div class="para"> <code class="code"> 
+ </code> <span class="italics">PackageContentList</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PackageContentList: </span> </div> <div class="para"> <span class="italics">   PackageContent  PackageContentList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PackageContent: </span> </div> <div class="para"> <span class="italics">  FunctionDefinitionList</span>opt </div> <div class="para"> <span class="italics">  RuleDefinitionList</span>opt </div> <div class="para"> <span class="italics">  TaskDefinitionList</span>opt </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Import or use declaration </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ImportOrUseDeclaration:</span> </div> <div class="para"> <span class="italics">   SingleImportOrUseDeclaration</span> </div> <div class="para"> <span class="italics">   ImportOrUseOnDemandDeclaration</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1">• </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">SingleImportOrUseDeclaration:</span> </div> <div class="para"> <span class="italics">   </span>ImportOrUseKeyword <span class="italics"> PackageName</span>. *; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ImportOrUseOnDemandDeclaration</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">  </span>ImportOrUseKeyword <span class="italics"> TypeName</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ImportOrUseKeyword:</span> one
+of</div> <div class="para"> <span class="italics">  </span>import<span class="italics"> </span> </div> <div class="para"> <span class="italics">  </span>use<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Ruleset property definition </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RulesetPropertyDefinition</span> <span class="italics">:</span> </div> <div class="para"> <code class="code">  </code>ruleset <span class="italics">identifier  </span> </div> <div class="para"> <code class="code">  </code>{<code class="code"> </code> <span class="italics">PropertyList</span>opt<span class="bold"> </span> <span class="italics">RulesetParameterList</span>opt<code class="code"> </code> <span class="italics">HasherDefinitionList</span>opt<code class="code"> </code> </div> <div class="para"> <code class="code"> 
+  </code> <span class="italics">InstanceDefinitionList</span>opt<code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PropertyList: </span> </div> <div class="para"> <span class="italics">   PropertyEntry  PropertyList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PropertyEntry: </span> </div> <div class="para"> <span class="italics">  </span>property<span class="italics"> </span> <span class="italics"> PropertyName </span> = <span class="italics">PropertyValue</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RulesetParameterList: </span> </div> <div class="para"> <span class="italics">   RulesetParameter  RulesetParameterList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RulesetParameter: </span> </div> <div class="para"> <span class="italics">   InRulesetParameter InOutRulesetParameter OutRulesetParameter </span> </div> <div class="para"> <span class="italics">   LocalRulesetParameter </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InRulesetParameter: </span> </div> <div class="para"> 
+in  <span class="italics">Type</span>  <span class="italics">Variable</span>;</div> <div class="para"> 
+in  <span class="italics">Type</span>  <span class="italics">Variable</span> = <span class="italics">Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InoutRulesetParameter: </span> </div> <div class="para"> <span class="italics">  </span>inout<span class="italics"> </span> <span class="italics">Type</span>  <span class="italics">Variable</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OutRulesetParameter: </span> </div> <div class="para"> <span class="italics">  </span>out<span class="italics"> </span> <span class="italics"> Type</span>  <span class="italics">Variable</span>;</div> <div class="para"> <span class="italics">  </span>out<span class="italics"> </span> <span class="italics"> Type</span>  <span class="italics">Variable</span> = <span class="italics">Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">LocalRulesetParameter: </span> </div> <div class="para"> <span class="italics"> Type</span>  <span class="italics">Variable</span>;</div> <div class="para"> <span class="italics">Type</span>  <span class="italics">Variable</span> = <span class="italics">Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">HasherDefinitionList: </span> </div> <div class="para"> <span class="italics">  </span>hasher<span class="italics"> </span> (<span class="italics">ReturnType</span>  <span class="italics">Variable</span>) = <span class="italics">Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InstanceDefinitionList: </span> </div> <div class="para"> <span class="italics">  </span>instances<span class="italics"> </span> (<span class="italics">ReturnType</span>)
+= <span class="italics">Expression</span>;</div> <div class="para"> <span class="italics">  </span>instances<span class="italics"> </span> (<span class="italics">ReturnType</span>)
+= {<span class="italics">InstancesList</span>};</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InstancesList: </span> </div> <div class="para"> <span class="italics">   Expression</span> </div> <div class="para">  <span class="italics">Expression</span>,  <span class="italics">InstanceList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Type</span>:
+ one of</div> <div class="para">   boolean  char  byte  short 
+int  long  float  double  String</div> <div class="para">   <span class="italics">ClassName</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ReturnType</span>:
+ </div> <div class="para">   void   <span class="italics">Type </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Variable declaration </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">VariableDeclaration:</span> </div> <div class="para"> <code class="code">  </code>variables<code class="code"> </code>{<code class="code"> </code> <span class="italics">LocalRulesetParameterList</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">LocalRulesetParameterList:</span> </div> <div class="para"> <span class="italics">   LocalRulesetParameter</span> <span class="italics"> LocalRulesetParameterList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Hierarchical property declaration </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">HierarchicalPropertyDeclaration</span> <span class="italics">:</span> </div> <div class="para"> <code class="code">  </code>hierarchy <span class="italics">identifier  </span> </div> <div class="para"> <code class="code">  </code>{<code class="code"> </code> <span class="italics">HierarchicalNodeDefinition</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">HierarchicalChildren: </span> </div> <div class="para"> <span class="italics">   </span>{<code class="code"> </code> <span class="italics">HierarchyDefinitionList</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">HierarchyDefinitionList: </span> </div> <div class="para"> <span class="italics">HierarchicalNodeDefinition  HierarchyDefinitionList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">HierarchicalNodeDefinition </span> </div> <div class="para"> <span class="italics">STRING_LITERAL HierarchicalChildren</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Property typing declaration </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PropertyTypingDeclaration</span> <span class="italics">:</span> </div> <div class="para"> <code class="code">  </code>propertydefinition <span class="italics"> </span> </div> <div class="para"> <code class="code">  </code>{<code class="code"> </code> <span class="italics">PropertyTypingList</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PropertyTypingList
+: </span> </div> <div class="para"> <span class="italics"> </span> PropertyTyping  <span class="italics">PropertyTypingList</span>opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PropertyTyping: </span> </div> <div class="para"> <span class="italics">Type  Variable ; </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Rule overriding declaration </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleOverridingDeclaration</span> <span class="italics">:</span> </div> <div class="para"> <code class="code">  </code>overriding <span class="italics"> </span> </div> <div class="para"> <code class="code">  </code>{<code class="code"> </code> <span class="italics">RuleOverridingList</span> <code class="code"> </code>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleOverridingList
+: </span> </div> <div class="para"> <span class="italics"> </span> <span class="italics">RuleOverriding</span>  <span class="italics">RuleOverridingList</span>opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleOverriding: </span> </div> <div class="para"> <span class="italics">STRING_LITERAL overrides OverriddenList </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OverriddenList: </span> </div> <div class="para"> <span class="italics">STRING_LITERAL </span> </div> <div class="para"> <span class="italics">STRING_LITERAL , OverriddenList </span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Function definition </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionDefinitionList</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  FunctionDefinition</span>   <span class="italics">FunctionDefinitionList</span> <code class="code"> </code> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1">• </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionDefinition</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">   </span>function  <span class="italics">ReturnType</span>  <span class="italics">FunctionName</span>  ( <span class="italics">FunctionArgumentList</span>  ) </div> <div class="para"> <span class="italics">    </span>{<span class="italics"> 
+FunctionActionList  </span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionArgumentList: </span> </div> <div class="para"> <span class="italics">   FunctionArgument</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">FunctionArgument</span>,<span class="italics">  FunctionArgumentList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionArgument: </span> </div> <div class="para"> 
+ <span class="italics">ReturnType</span>  <span class="italics">Variable</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics"> FunctionActionList: </span> </div> <div class="para"> <span class="italics">   FunctionAction FunctionActionList</span>opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionAction:</span> one
+of</div> <div class="para"> <span class="italics">  InsertAction
+ VarDeclAction  ExecutableStatement</span> </div> <div class="para"> <span class="italics">  ForFunctionAction  IfElseFunctionAction  ModifyAction
+ RetractAction</span> </div> <div class="para"> <span class="italics">  ReturnStatement  ThrowAction  TryFunctionAction 
+UpdateAction </span> </div> <div class="para"> <span class="italics">  WhileFunctionAction </span> </div> </td>
+</tr>
+</tbody></table>
+<div class="caption">Syntax of a rule</div><table border="1" cellpadding="4" cellspacing="0" class="ShadedHead" id="rslangref.uss_rs_lng_irlgrammar.1038847"><colgroup span="1">
+<col span="1"/>
+<col span="1"/></colgroup><thead>
+<tr align="left" bgcolor="#bfd6e7" valign="top">
+<th colspan="2" rowspan="1"> <div class="para">Rule header</div> </th>
+</tr>
+</thead><tbody>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleDefinitionList</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  RuleDefinition</span>   <span class="italics">RuleDefinitionList</span> <code class="code"> </code> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleDefinition
+ :</span> </div> <div class="para"> <span class="italics">   </span>rule<span class="italics"> 
+Identifier  </span> {<span class="italics"> 
+RuleParameters</span>opt<span class="italics"> 
+RuleConditions  RuleActions </span> } ; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleParameters: </span> </div> <div class="para"> <span class="italics">   </span> <span class="italics"> RulePriority</span>opt<span class="italics">  RuleProperty</span>opt<span class="italics">  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RulePriority:</span> </div> <div class="para"> <span class="italics">  </span> priority  =  <span class="italics">PriorityExpression</span>;<span class="italics">  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleProperty:</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">ActivationProperty</span>opt
+ <span class="italics">PropertyList</span>  </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ActivationProperty:</span> </div> <div class="para"> <span class="italics">  </span> property  activation  =  true;
+ </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Rule conditions</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleConditions
+ :</span> </div> <div class="para"> <span class="italics">  </span> when  { <span class="italics"> FirstRuleCondition  RuleConditionList</span>opt<span class="italics">  </span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleConditionList:</span> </div> <div class="para"> <span class="italics">   RuleCondition</span> </div> <div class="para"> <span class="italics">   RuleConditionList  RuleCondition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FirstRuleCondition:
+ </span> </div> <div class="para"> <span class="italics">   RuleCondition  </span>except<span class="italics">  WaitStatementList</span>,<span class="italics"> EvaluateCondition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleCondition: </span> <span class="italics"> </span>one of</div> <div class="para"> <span class="italics">   SimpleCondition  NotCondition  ExistsCondition 
+EvaluateCondition </span> </div> <div class="para"> <span class="italics">   FromExpression  InExpression  CollectCondition 
+WaitStatementList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">SimpleCondition
+ :</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">Variable</span>opt:opt
+eventopt <span class="italics">ClassCondition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Variable:</span> </div> <div class="para"> <span class="italics">   </span> <span class="bold">?</span>opt<span class="italics">  Identifier </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ClassCondition:</span> </div> <div class="para"> <span class="italics">   ClassName </span> <span class="italics"> </span>(<span class="italics">TestAssignmentList</span>);</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">NotCondition:</span> </div> <div class="para"> <span class="italics">   </span>not<span class="italics"> 
+ClassCondition</span> <span class="italics">;</span> <span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExistsCondition:</span> </div> <div class="para"> <span class="italics">   </span>exists<span class="italics"> 
+ClassCondition</span> <span class="italics">;</span> <span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">EvaluateCondition:</span> </div> <div class="para"> <span class="italics">   </span>evaluate <span class="italics">  </span>(<span class="italics">TestAssignmentList</span>);</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FromExpression:</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">Variable</span>opt<span class="italics">  SimpleCondition  </span>from<span class="italics">  PrimaryExpression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InExpression:</span> </div> <div class="para"> <span class="italics">  Variable</span>opt<span class="italics">  SimpleCondition   </span>in <span class="italics">  PrimaryExpression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">CollectCondition:</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">Variable</span>opt<span class="italics"> </span> collect (<span class="italics">Expression</span>opt) <span class="italics"> SimpleCondition  </span>where</div> <div class="para"> <span class="italics">   TestAssignmentSet</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WaitStatementList:</span> </div> <div class="para"> <span class="italics">   WaitLogicalStatement</span> </div> <div class="para"> <span class="italics">   WaitStatement</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WaitLogicalStatement:</span> </div> <div class="para"> <span class="italics">   </span>wait<span class="bold">  </span>logical<span class="bold">  </span>untilopt<span class="italics"> 
+Expression  WaitCondition</span> <span class="italics">opt</span> </div> <div class="para"> <span class="italics">   Variable  </span>wait<span class="bold">  </span>logical<span class="bold">  </span>untilopt<span class="italics">  Expression  WaitCondition</span>opt<span class="italics"> </span> </div> <div class="para"> <span class="italics">   TimeoutAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WaitStatement:</span> </div> <div class="para"> <span class="italics">   </span>wait<span class="italics"> 
+Expression</span>opt<span class="italics">  WaitConditions</span> </div> <div class="para"> <span class="italics">   </span>wait<span class="italics">  </span>until<span class="italics">  Expression  WaitConditions</span> </div> <div class="para"> <span class="italics">   Variable  </span>wait <span class="italics"> Expression</span>opt<span class="italics">  WaitConditions  TimeoutAction</span> </div> <div class="para"> <span class="italics">   Variable  </span>wait<span class="italics">  </span>until<span class="italics"> 
+Expression  WaitConditions  TimeoutAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WaitConditions: </span> </div> <div class="para"> <span class="italics">  </span> <span class="bold">{ </span> <span class="italics">WaitConditionList  </span> <span class="bold">}</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para">   <span class="italics">WaitConditionList</span>:</div> <div class="para"> 
+       <span class="italics">WaitCondition</span> </div> <div class="para"> 
+       <span class="italics">WaitConditionList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para">      <span class="italics">WaitCondition</span>:
+one of</div> <div class="para"> <span class="italics"> 
+        SimpleCondition   NotCondition   ExistsCondition</span> </div> <div class="para"> <span class="italics">          CollectCondition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Tests and variable declarations</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TestAssignmentList:</span> </div> <div class="para"> <span class="italics">   TestAssignment</span> </div> <div class="para"> <span class="italics">   TestAssignmentList</span>;<span class="italics">  TestAssignment</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TestAssignment:
+ </span>one of</div> <div class="para"> <span class="italics">   AndExpresssionList   OrExpressionList   VariableAssignment
+ TestAssignmentSet</span> </div> <div class="para"> <span class="italics">   BooleanExpression    NotAssignment   TemporalConstraint</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AndExpressionList:</span> </div> <div class="para"> <span class="italics">   TestAssignment </span> &amp;&amp;<span class="italics">  TestAssignment </span> <span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OrExpressionList:</span> </div> <div class="para"> <span class="italics">   TestAssignment  </span>|| <span class="italics"> TestAssignment</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">VariableAssignment</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics"> </span> <span class="italics"> 
+Variable</span>  <span class="italics">Expression</span>  <span class="italics">BooleanAssignmentList</span>opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BooleanAssignmentList:</span> </div> <div class="para">  <span class="italics">BooleanAssignment   </span> </div> <div class="para">  <span class="italics">BooleanAssignmentList  BooleanAssignment</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BooleanAssignment: </span> </div> <div class="para">  <span class="italics">&amp; BooleanArgument</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TestAssignmentSet</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">   </span>(<span class="italics">TestAssignment</span>)<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">NotAssignment</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics"> </span>! <span class="italics"> TestAssignment</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TemporalConstraint</span>: </div> <div class="para"> <span class="italics">Expression</span>opt<span class="bold">.</span>opt <span class="italics">TemporalOperator
+Arguments </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TemporalOperator:
+ </span>one of</div> <div class="para"> <span class="italics">   </span>after<span class="italics"> 
+  </span>before  occursin</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BooleanExpression</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">Expression</span> <span class="italics"> </span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">BooleanArgumentList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BooleanArgumentList</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">BooleanArgument</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">BooleanArgumentList</span> <span class="italics">  </span>&amp;<span class="italics"> 
+BooleanArgument</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BooleanArgument:</span> </div> <div class="para"> <span class="italics">   BooleanArgument</span> </div> <div class="para"> <span class="italics">   </span>instanceof<span class="italics"> Identifier</span> </div> <div class="para"> <span class="italics">   </span>isknown</div> <div class="para"> <span class="italics">   </span>isunknown</div> <div class="para"> <span class="italics">   </span>InTest</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics"> BooleanTerm</span> <span class="italics">:  </span>one of<span class="italics"> </span> </div> <div class="para"> <span class="italics">     PredefinedPredicate   Expression</span> </div> <div class="para"> 
+   Identifier Expression (use of custom predicate) </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PredefinedPredicate</span> <span class="italics">:</span> <span class="italics">  </span> <span class="italics">one of</span> </div> <div class="para"> <span class="italics"> </span>  == !=  &lt;  &gt;  &gt;=  &lt;=
+ <span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics"> </span>InTest<span class="italics">:  </span>one of<span class="italics"> </span> </div> <div class="para"> <span class="italics">   </span>in<span class="italics"> Expression</span> </div> <div class="para"> 
+ in <span class="bold">{</span> InList } </div> <div class="para"> 
+!in Expression</div> <div class="para">  !in <span class="bold">{</span> InList }  </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InList</span> <span class="italics">:</span> <span class="italics">  </span>one
+of</div> <div class="para"> <span class="italics">  Expression</span> </div> <div class="para"> <span class="italics">  InList</span>, <span class="italics">Expression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Expressions</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Expression</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">AdditiveExpression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AdditiveExpression:</span> </div> <div class="para"> <span class="italics">   MultiplicativeExpression</span> </div> <div class="para"> <span class="italics">   MultiplicativeExpressionList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">MultiplicativeExpressionList:</span> </div> <div class="para"> <span class="bold"> +  </span> <span class="italics">MultiplicativeExpression</span> </div> <div class="para"> <span class="bold"> -  </span> <span class="italics">MultiplicativeExpression</span> </div> <div class="para"> <span class="bold"> +  </span> <span class="italics">MultiplicativeExpressionList</span> </div> <div class="para"> <span class="bold"> -  </span> <span class="italics">MultiplicativeExpressionList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">MultiplicativeExpression:</span> </div> <div class="para"> <span class="italics">   UnaryExpression</span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">UnaryExpressionList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">UnaryExpressionList:</span> </div> <div class="para"> <span class="italics">   </span>*<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">   </span>/<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">   </span>%<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">   </span>*<span class="italics"> 
+UnaryExpressionList</span> </div> <div class="para"> <span class="italics">   </span>/<span class="italics"> 
+UnaryExpressionList</span> </div> <div class="para"> <span class="italics">   </span>%<span class="italics"> 
+UnaryExpressionList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">UnaryExpression:</span> </div> <div class="para"> <span class="italics">  </span> +<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">  </span> -<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">  </span> ++<span class="italics"> 
+UnaryExpression</span> </div> <div class="para"> <span class="italics">  </span> <span class="bold">--</span> <span class="italics">  UnaryExpression</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">UnaryExpression
+ </span>++<span class="italics">  </span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">UnaryExpression
+ </span> <span class="bold">- </span> <span class="bold">-</span> <span class="italics">  </span> </div> <div class="para"> <span class="italics">    CastExpression</span> </div> <div class="para"> <span class="italics">    TimeOfExpression</span> </div> <div class="para"> <span class="italics">    PrimaryExpression</span> </div> <div class="para"> <span class="italics">    AsExpression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">CastExpression:</span> </div> <div class="para"> <span class="italics">   </span>(<span class="italics">ClassName</span>)<span class="italics"> UnaryExpression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para">AsExpression:</div> <div class="para"> <span class="italics">   UnaryExpression </span> <span class="bold">as</span> <span class="italics"> </span>(<span class="italics">ClassName</span>)</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TimeOfExpression:</span> </div> <div class="para"> <span class="italics">   </span>timeof (<span class="italics">Expression</span>);</div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Primary Expressions</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PrimaryExpression:</span> </div> <div class="para"> <span class="italics">   PrimaryPrefix</span> </div> <div class="para"> <span class="italics">   PrimaryPrefix  PrimarySuffixList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PrimaryPrefix: </span>one
+of</div> <div class="para"> <span class="italics">  
+Literal  Name  AllocationExpression  </span>(<span class="italics">Expression</span>)</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Literal</span>:
+ one of</div> <div class="para">   <span class="italics">INTEGER_LITERAL</span> 
+ <span class="italics">FLOATING_POINT_LITERAL</span> </div> <div class="para"> 
+ <span class="italics">CHARACTER_LITERAL</span> 
+ <span class="italics">STRING_LITERAL</span> 
+true  false  null </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Name:</span> </div> <div class="para"> <span class="italics">   Variable  IdentifierList</span>opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">IdentifierList: </span> </div> <div class="para"> <span class="italics">   DotIdentifier</span> </div> <div class="para"> <span class="italics">   DotIdentifier IdentifierList  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">DotIdentifier: </span> </div> <div class="para"> 
+   <span class="bold">.</span> <span class="italics">Identifier </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AllocationExpression:</span> </div> <div class="para"> <span class="italics">   </span>new<span class="italics"> 
+ClassName  Arguments</span> </div> <div class="para"> <span class="italics">   </span>new<span class="italics"> 
+Type  DimensionList</span> </div> <div class="para"> <span class="italics">   </span>new<span class="italics"> 
+Type  OptDimensionList  BracedInitializationList </span> </div> <div class="para"> <span class="italics">   BracedInitializationList </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Arguments:</span> </div> <div class="para"> <span class="italics">   </span>(<span class="italics">ExpressionList</span>) </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExpressionList: </span> </div> <div class="para"> <span class="italics">   Expression</span> </div> <div class="para"> <span class="italics">   ExpressionList</span>,<span class="italics"> Expression   </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">DimensionList:</span> </div> <div class="para"> <span class="italics">Dimension </span> </div> <div class="para"> <span class="italics">DimensionList  Dimension</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Dimension: </span> </div> <div class="para"> <span class="italics">  </span> [<span class="italics">Expression</span>]<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OptDimensionList:</span> </div> <div class="para"> <span class="italics">OptDimension </span> </div> <div class="para"> <span class="italics">OptDimensionList  OptDimension</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OptDimension: </span> </div> <div class="para"> <span class="italics">   </span>[<span class="italics">Expression</span>opt]<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">BracedInitializationList:</span> </div> <div class="para">{InitializationList}<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InitializationList: </span> </div> <div class="para"> 
+   Initialization </div> <div class="para">     InitializationList,<span class="italics"> </span>Initialization </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics"> Initialization</span> <span class="italics">:  </span> </div> <div class="para"> <span class="italics">     Expression</span> </div> <div class="para"> <span class="italics">     BracedInitializationList</span> </div> <div class="para"> <span class="italics">     </span>{<span class="italics">ExpressionList</span>}<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PrimarySuffixList:</span> </div> <div class="para"> <span class="italics">   PrimarySuffix</span> </div> <div class="para"> <span class="italics">   PrimarySuffixList  PrimarySuffix</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">PrimarySuffix:
+ </span> <span class="italics">one of</span> </div> <div class="para"> 
+ <span class="bold">.</span> <span class="italics">Variable</span> (access to variable or class
+field) </div> <div class="para"> <span class="italics"> 
+ Arguments </span> (access to IRL function or class method) </div> <div class="para"> <span class="italics">   DimensionList </span> (access to array
+element) </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Rule actions</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleActions
+: </span> </div> <div class="para"> <span class="italics">   </span>then {<span class="italics">RuleActionList</span>opt} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleActionList:</span> </div> <div class="para"> <span class="italics">   RuleAction</span> </div> <div class="para"> <span class="italics">   RuleActionList  RuleAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleAction: </span>one
+of</div> <div class="para"> <span class="italics">  
+InsertAction  VarDeclAction  ExecutableStatement</span> </div> <div class="para"> <span class="italics">   ForAction  IfElseAction  ModifyAction  RetractAction
+ ThrowAction </span> </div> <div class="para"> <span class="italics">   TimeoutAction  TryAction  UpdateAction  WhileAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InsertAction </span>:</div> <div class="para"> insert
+ logicalopt  eventopt  <span class="italics">ClassName</span>  <span class="italics">Arguments</span>opt </div> <div class="para"> <span class="italics">ExecutableActionStatements</span>opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">VarDeclAction:</span> </div> <div class="para"> <span class="italics">   Type Variable </span> = <span class="italics"> Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ForAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>for(<span class="italics">ForInit</span>opt<span class="bold">; </span> <span class="italics"> TestAssignment</span>opt<span class="bold">;  </span> <span class="italics">ForUpdate</span>opt)<span class="bold"> </span> </div> <div class="para"> <span class="italics">   LoopRuleAction</span> </div> <div class="para"> 
+ for(<span class="italics">ForInit</span>opt<span class="bold">; </span> <span class="italics"> TestAssignment</span>opt<span class="bold">;  </span> <span class="italics">ForUpdate</span>opt)<span class="bold">  </span> </div> <div class="para"> <span class="bold">   </span>{<span class="italics">LoopRuleActionList</span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ForFunctionAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>for  (<span class="italics">ForInit</span>opt<span class="bold">; </span> <span class="italics"> TestAssignment</span>opt<span class="bold">;  </span> <span class="italics">ForUpdate</span>opt)<span class="bold"> </span> </div> <div class="para"> <span class="bold">   </span> <span class="italics">LoopFunctionAction</span> </div> <div class="para"> 
+ for  (<span class="italics">ForInit</span>opt<span class="bold">; </span> <span class="italics"> TestAssignment</span>opt<span class="bold">;  </span> <span class="italics">ForUpdate</span>opt)<span class="bold"> </span> </div> <div class="para"> <span class="bold">   </span>{<span class="italics">LoopFunctionActionList</span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ForInit:</span> </div> <div class="para"> <span class="italics">   PrimaryExpression  AssignmentOperatorExpression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ForUpdate:</span> </div> <div class="para"> <span class="italics">   PrimaryExpression  AssignmentOperatorExpression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">IfElseAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>if<span class="italics"> 
+ TestAssignmentSet  RuleAction</span> <span class="italics"> ElseStatement</span> <span class="italics">opt</span> <span class="italics">  </span> </div> <div class="para"> <span class="italics">   </span>if<span class="italics"> 
+ TestAssignmentSet  </span>{<span class="italics">RuleActionList</span>} <span class="italics"> ElseStatement</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ElseStatement</span>:</div> <div class="para"> 
+ else  <span class="italics">RuleAction</span> </div> <div class="para"> 
+ else  {<span class="italics">RuleActionList</span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">IfElseFunctionAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>if<span class="italics"> 
+ TestAssignmentSet  FunctionAction</span> </div> <div class="para"> <span class="italics">   ElseFunctionAction</span>opt<span class="italics">  </span> </div> <div class="para"> <span class="italics">   </span>if<span class="italics"> 
+ TestAssignmentSet  </span>{<span class="italics">FunctionActionList</span>} </div> <div class="para"> <span class="italics">  ElseFunctionAction</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ElseFunctionAction</span>:</div> <div class="para"> 
+ else <span class="italics">FunctionAction</span> </div> <div class="para"> 
+ else  {<span class="italics">FunctionActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ModifyAction
+ :</span> </div> <div class="para"> modify refreshopt<span class="italics">  PrimaryExpression </span> </div> <div class="para"> <span class="italics">    ExecutableActionStatements</span>;opt</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RetractAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>retract<span class="italics">  PrimaryExpression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ThrowAction:</span> </div> <div class="para"> 
+ throw  <span class="italics">Expression</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TimeoutAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>timeout<span class="italics">  Variable  </span>{<span class="italics">NonTimeoutRuleActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">NonTimeoutRuleActionList:</span> </div> <div class="para"> <span class="italics">   NonTimeoutRuleAction</span> </div> <div class="para"> <span class="italics">   NonTimeoutRuleActionList  NonTimeoutRuleAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">NonTimeoutRuleAction:</span> </div> <div class="para"> <span class="italics">   RuleAction</span>  but not  <span class="italics">TimeoutAction</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleAction
+:</span> one of</div> <div class="para"> <span class="italics">   InsertAction  VarDeclAction  ExecutableStatement
+ </span> </div> <div class="para"> <span class="italics">   ForAction  IfElseAction  ModifyAction  RetractAction
+ </span> </div> <div class="para"> <span class="italics">   UpdateAction  WhileAction  </span>break;
+continue;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionAction:</span> one
+of</div> <div class="para"> <span class="italics">  
+InsertAction  VarDeclAction  ExecutableStatement  </span> </div> <div class="para"> <span class="italics">   ForFunctionAction  IfElseFunctionAction  ModifyAction
+ </span> </div> <div class="para"> <span class="italics">   RetractAction  UpdateAction  WhileFunctionAction
+ </span> </div> <div class="para"> <span class="italics">   </span>break;<span class="italics"> </span> continue; <span class="italics"> ReturnStatement</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ReturnStatement</span>:</div> <div class="para"> 
+ return <span class="bold"> </span>(  <span class="italics">expression</span> <span class="bold"> </span>)</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleActionList:</span> </div> <div class="para"> <span class="italics">   RuleAction  RuleActionList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionActionList:</span> </div> <div class="para"> <span class="italics">   FunctionAction  FunctionActionList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TryAction:</span> </div> <div class="para"> 
+ try  {<span class="italics">RuleActionList</span>opt} </div> <div class="para"> 
+ <span class="italics">Catches</span> </div> <div class="para">or</div> <div class="para"> 
+  try  {<span class="italics">RuleActionList</span>opt} </div> <div class="para"> 
+  <span class="italics">Catches</span>opt </div> <div class="para"> 
+ <span class="italics">Finally</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Catches:</span> </div> <div class="para"> <span class="italics">   CatchClause</span> </div> <div class="para"> <span class="italics">   Catches CatchClause</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">CatchClause:</span> </div> <div class="para"> 
+ catch (<span class="italics">ExceptionType Identifier</span>)
+{<span class="italics">RuleActionList</span>opt} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Finally:</span> </div> <div class="para"> 
+ finally  {<span class="italics">RuleActionList</span>opt} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TryFunctionAction:</span> </div> <div class="para"> 
+ try  {<span class="italics">FunctionActionList</span>opt} </div> <div class="para"> 
+ <span class="italics">FunctionCatches</span> </div> <div class="para">or</div> <div class="para"> 
+  try  {<span class="italics">FunctionActionList</span>opt} </div> <div class="para"> 
+  <span class="italics">FunctionCatches</span>opt </div> <div class="para"> 
+ <span class="italics">Finally</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionCatches:</span> </div> <div class="para"> <span class="italics">   FunctionCatchClause</span> </div> <div class="para"> <span class="italics">   FunctionCatches FunctionCatchClause</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionCatchClause:</span> </div> <div class="para"> 
+ catch (<span class="italics">ExceptionType Identifier</span>)
+{<span class="italics">FunctionActionList</span>opt} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionFinally:</span> </div> <div class="para"> 
+ finally  {<span class="italics">FunctionActionList</span>opt} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">UpdateAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>update  refreshopt<span class="italics">  PrimaryExpression</span>;<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WhileAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>while<span class="italics"> 
+TestAssignmentSet  LoopRuleAction</span> </div> <div class="para"> <span class="italics">   </span>while<span class="italics"> 
+TestAssignmentSet  </span>{<span class="italics">LoopRuleActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">WhileFunctionAction
+ :</span> </div> <div class="para"> <span class="italics">   </span>while<span class="italics"> 
+TestAssignmentSet  LoopFunctionAction</span> </div> <div class="para"> <span class="italics">   </span>while<span class="italics"> 
+TestAssignmentSet  </span>{<span class="italics">LoopFunctionActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td colspan="2" rowspan="1"> <div class="para"> <span class="bold">Executable statements</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExecutableStatementList:</span> </div> <div class="para"> <span class="italics">   ExecutableStatement</span> </div> <div class="para"> <span class="italics">   ExecutableStatementList  ExecutableStatement</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExecutableActionStatements:</span> </div> <div class="para"> <span class="italics">  </span> { <span class="italics"> ExecutableStatementList
+ </span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExecutableStatement: </span> </div> <div class="para"> <span class="italics">   PrimaryExpression  AssignmentOperatorExpression</span>opt;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AssignmentOperatorExpression:</span> </div> <div class="para"> <span class="italics">   AssignmentOperator  Expression</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AssignmentOperator
+ :  </span> <span class="italics">one of</span> 
+ =  *=  /=  %=  +=  -=  </div> </td>
+</tr>
+</tbody></table>
+<div class="caption">Syntax of a ruleflow</div><table border="1" cellpadding="4" cellspacing="0" class="ShadedHead" id="rslangref.uss_rs_lng_irlgrammar.1039706"><colgroup span="1">
+<col span="1"/>
+<col span="1"/></colgroup><thead>
+<tr align="left" bgcolor="#bfd6e7" valign="top">
+<th colspan="2" rowspan="1"> <div class="para">Ruleflow tasks</div> </th>
+</tr>
+</thead><tbody>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TaskDefinitionList</span> <span class="italics">:</span> </div> <div class="para"> <span class="italics">  TaskDefinition</span>   <span class="italics">TaskDefinitionList</span> <code class="code"> </code> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">TaskDefinition
+:</span> </div> <div class="para"> <span class="italics">   RuleTaskDefinition</span> </div> <div class="para"> <span class="italics">   FunctionTaskDefinition</span> </div> <div class="para"> <span class="italics">   FlowTaskDefinition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleTaskDefinition
+ :</span> </div> <div class="para">ruletask <span class="italics">identifier</span> </div> <div class="para">{</div> <div class="para">  <span class="italics">CommonTaskParameters</span> </div> <div class="para">  <span class="italics">RuleTaskBody</span> </div> <div class="para">  <span class="italics">RuleTaskScope</span> </div> <div class="para">  <span class="italics">RuleTaskParameters</span>opt</div> <div class="para">};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionTaskDefinition
+ :</span> </div> <div class="para">functiontask <span class="italics">identifier</span> </div> <div class="para">{</div> <div class="para"> <span class="italics">  CommonTaskParameters  </span> </div> <div class="para"> <span class="italics">  FunctionTaskBody</span> </div> <div class="para">};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowTaskDefinition
+ :</span> </div> <div class="para">flowtask <span class="italics">identifier</span> </div> <div class="para">{</div> <div class="para"> <span class="italics">  CommonTaskParameters  </span> </div> <div class="para"> <span class="italics">  FlowTaskBody</span> </div> <div class="para">};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">CommonTaskParameters: </span> </div> <div class="para"> <span class="italics">  </span> <span class="italics"> 
+CompletionFlagParameter</span>opt<span class="italics"> </span> <span class="italics"> </span> <span class="italics">InitialActions</span>opt<span class="italics"> FinalActions</span>opt<span class="italics">  PropertyList</span>opt<span class="italics">   </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">CompletionFlagParameter:</span> </div> <div class="para"> <span class="italics">  </span> completionflag = <span class="italics">Expression </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">InitalActions:</span> </div> <div class="para"> <span class="italics">  </span> initialaction  {<span class="italics">FunctionActionList</span>}<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FinalActions:</span> </div> <div class="para"> <span class="italics">  </span> finalaction  {<span class="italics">FunctionActionList</span>}<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleTaskBody: </span> </div> <div class="para"> <span class="italics">   </span> <span class="italics">ExtendedBodyDefinition
+  ComprehensiveBodyDefinition </span> </div> <div class="para"> <span class="italics">   DynamicComprehensiveBodyDefinition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleTaskScope: </span> </div> <div class="para"> <span class="italics">   </span>scope  {<span class="italics">ScopeDefinition</span>}<span class="italics">  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ScopeDefinition:</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">RuleName</span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">PackageName.* </span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">ScopeDefinition</span>opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ExtendedBodyDefinition:</span> </div> <div class="para"> <span class="italics">  </span> body  {<span class="italics">RulesList</span>};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RulesList</span>:</div> <div class="para"> <span class="italics">identifier</span> </div> <div class="para"> <span class="italics">identifier</span>, <span class="italics">RulesList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">ComprehensiveBodyDefinition:</span> </div> <div class="para"> <span class="italics">  </span> body  =  select (<span class="italics">Variable</span>) {<span class="italics">FunctionActionList</span>};opt </div> <div class="para"> <span class="italics">  </span> body  =  select () {<span class="italics">FunctionActionList</span>};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">DynamicComprehensiveBodyDefinition:</span> </div> <div class="para"> <span class="italics">  </span> body  =  dynamicselect(<span class="italics">Variable</span>)  {<span class="italics">FunctionActionList</span>} </div> <div class="para"> 
+   EndDynamicComprehensiveBodyDefinition</div> <div class="para">or</div> <div class="para"> <span class="italics">  </span> body  =  dynamicselect<code class="code"> </code>()
+ {<span class="italics">FunctionActionList</span>} </div> <div class="para"> 
+   EndDynamicComprehensiveBodyDefinition</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para">EndDynamicComprehensiveBodyDefinition<span class="italics">:</span> </div> <div class="para">;opt </div> <div class="para">or</div> <div class="para">  <span class="italics">DomainValueDefinition</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">DomainValueDefinition:</span> </div> <div class="para"> 
+in Expression;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">RuleTaskParameters: </span> </div> <div class="para"> <span class="italics"> </span> <span class="italics">AgendaFilterParameter
+  AlgorithmParameters  FiringParameter  FiringLimitParameter  OrderingParameter
+  </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para">AgendaFilterParameter:</div> <div class="para"> <span class="italics">  </span> agendafilter = <span class="italics">Expression</span>; </div> <div class="para"> <span class="italics">  </span> agendafilter = filter (<span class="italics">Variable</span>)  {<span class="italics">FunctionActionList</span>};opt </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AlgorithmParameters</span>:</div> <div class="para"> <span class="italics">  </span> algorithm = <span class="italics">AlgorithmValues</span>; </div> <div class="para"> <span class="italics">  </span> iterator = <span class="italics"> Expression</span>;<span class="italics"> </span> </div> <div class="para"> <span class="italics">  </span> <span class="italics">MatchedClasses</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">AlgorithmValues</span>:</div> <div class="para"> 
+default    sequential    </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">MatchedClasses</span>:</div> <div class="para"> <span class="italics">  </span> matchedclasses = <span class="italics"> Expression;</span> <span class="italics"> </span> </div> <div class="para"> <span class="italics">  </span> matchedclasses = <span class="italics"> </span>{<span class="italics">MatchedClassesList</span>};<span class="italics"> </span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">MatchedClassesList:</span> </div> <div class="para">  <span class="italics">ReturnType</span> </div> <div class="para">  <span class="italics">ReturnType</span>, <span class="italics">MatchedClassesList</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FiringParameter</span>:</div> <div class="para"> <span class="italics">  </span> firing = <span class="italics">FiringValues</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FiringValues</span>:</div> <div class="para"> 
+allrules    rule    </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FiringLimitParameter</span>:</div> <div class="para"> <span class="italics">  </span> firinglimit = <span class="italics">Expression</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OrderingParameter:</span> </div> <div class="para"> <span class="italics">  </span> ordering = <span class="italics">OrderingValues</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">OrderingValues:</span> </div> <div class="para"> 
+dynamic    sorted    literal</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FunctionTaskBody: </span> </div> <div class="para"> <span class="italics">  </span> body {<span class="italics">FunctionActionList</span>};<span class="italics"> </span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowTaskBody: </span> </div> <div class="para"> <span class="italics">  </span> body {<span class="italics">FlowActionList</span>};<span class="italics"> </span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowActionList</span>:</div> <div class="para">  <span class="italics">FlowAction</span>  <span class="italics">FlowActionList</span>opt<span class="italics"> </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowAction:
+ </span>one of</div> <div class="para">  <span class="italics">FlowTaskInvocationAction </span> <span class="italics"> FlowForkAction  FlowGotoAction  </span> </div> <div class="para"> <span class="italics">  FlowIfElseAction  FlowSwitchAction  FlowWhileAction </span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowTaskInvocationAction
+:</span> </div> <div class="para"> <span class="italics"> Label</span>opt<span class="italics"> </span> <span class="italics">identifier</span>;</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Label:</span> </div> <div class="para">  <span class="italics">identifier</span>:</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowForkAction</span> <span class="italics">:</span> </div> <div class="para">  <span class="italics">Label</span>opt  fork  <span class="italics">FlowForkActionList</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowForkActionList:</span> </div> <div class="para"> 
+{ <span class="italics">FlowActionList</span>};<span class="italics"> </span>opt </div> <div class="para"> 
+{ <span class="italics">FlowActionList</span>} &amp;&amp; <span class="italics">FlowForkActionList</span>  </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowGotoAction</span> <span class="italics">:</span> </div> <div class="para">  goto
+ <span class="italics">identifier</span>; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowIfElseAction</span> <span class="italics">:</span> </div> <div class="para">  <span class="italics">Label</span>opt  if  <span class="italics">TestAssignmentSet</span>  <span class="italics">FlowAction</span>  <span class="italics">FlowElseAction</span>opt ; </div> <div class="para">  <span class="italics">Label</span>opt<span class="italics"> </span> if
+ <span class="italics">TestAssignmentSet</span> 
+{<span class="italics">FlowActionList</span>} </div> <div class="para"> 
+    <span class="italics">FlowElseAction</span>opt; </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowElseAction</span> <span class="italics">:</span> </div> <div class="para">  else
+ <span class="italics">FlowAction</span> </div> <div class="para"> 
+else  {<span class="italics">FlowActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowSwitchAction</span> <span class="italics">:</span> </div> <div class="para">  <span class="italics">Label</span>opt  switch (<span class="italics">Expression</span>) </div> <div class="para"> 
+{ <span class="italics">Cases</span>opt    <span class="italics">Default</span>opt } </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Cases:</span> </div> <div class="para">  <span class="italics">CaseClause</span> </div> <div class="para">  <span class="italics">Cases CaseClause</span> </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para">CaseClause :</div> <div class="para"> 
+case <span class="italics">INTEGER_LITERAL</span>:</div> <div class="para"> 
+  <span class="italics">FlowAction</span> </div> <div class="para"> 
+case <span class="italics">INTEGER_LITERAL</span>:</div> <div class="para"> 
+  {<span class="italics">FlowActionList</span>}</div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">Default</span> <span class="italics">:</span> </div> <div class="para">  default: </div> <div class="para"> 
+  <span class="italics">FlowAction</span> </div> <div class="para"> 
+default: </div> <div class="para">    {<span class="italics">FlowActionList</span>}
+ </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">FlowWhileAction</span> <span class="italics">:</span> </div> <div class="para">  <span class="italics">Label</span>opt  while  <span class="italics">TestAssignmentSet</span>  <span class="italics">LoopFlowAction</span>  </div> <div class="para"> 
+while  <span class="italics">TestAssignmentSet</span> 
+{<span class="italics">LoopFlowActionList</span>} </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> <div class="para">•</div> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">LoopFlowAction</span> <span class="italics">:</span> </div> <div class="para">  <span class="italics">FlowAction</span> </div> <div class="para"> 
+break; </div> <div class="para">  continue;  </div> </td>
+</tr>
+<tr valign="top">
+<td rowspan="1" colspan="1"> </td>
+<td rowspan="1" colspan="1"> <div class="para"> <span class="italics">LoopFlowActionList:</span> </div> <div class="para">  <span class="italics">LoopFlowAction</span>  <span class="italics">LoopFlowActionList</span>opt<span class="italics">  </span> </div> </td>
+</tr>
+</tbody></table>
+</div>
+<div class="eclipseRelatedLinks"><div class="eclipseRelatedLinksLabel">Current section</div><ul class="eclipseRelatedLinks"><li><a href="ps_DS_Reference_Designer1911.html" class="bluelink">IRL grammar</a></li></ul></div></div><div class="footer"><div class="content"><div class="navigation"><a href="ps_DS_Reference_Designer1914.html" class="navigation"><span class="previous">PREVIOUS</span></a><span class="separator">&#160;&#160;</span><a href="ps_DS_Reference_Designer1916.html" class="navigation"><span class="next">NEXT</span></a></div><div class="copyright">&#169; Copyright IBM Corp. 1987, 2011. <a href="ps_DS_Reference_Designer1761.html" class="navigation"><span class="legalterms">Legal Terms</span></a></div></div></div></div></body></html>
