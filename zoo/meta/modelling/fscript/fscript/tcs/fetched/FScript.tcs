@@ -1,0 +1,349 @@
+-- @name		FScript
+-- @version		1.0
+-- @authors		Frédéric Jouault
+-- @date		20080205
+-- @description	Concrete syntax of the FScript Fractal action language.
+
+-- The different sections of a TCS model have been enclosed between BEGIN and END
+-- comments below. Additional information is provided below each BEGIN comment.
+-- The main sections of interest are "Class templates", and
+-- "Operator table" (the latter only for DSLs using operators).
+syntax FScript {
+
+-- BEGIN Primitive templates
+-- Specifies representation of primitive types.
+-- Only needs modification when default lexer is not satisfactory.
+-- Generally modified along with the lexer.
+	primitiveTemplate identifier for String default using NAME:
+		value = "%token%";
+
+	primitiveTemplate stringSymbol for String using STRING:
+		value = "%token%",
+		serializer="'\'' + %value%.toCString() + '\''";
+
+	primitiveTemplate floatSymbol for Double default using FLOAT:
+		value = "Double.valueOf(%token%)";
+-- END Primitive templates
+
+-- BEGIN Class templates
+-- Specifies representation of classes.
+-- This is the main section to work on.
+	template Procedure main abstract;
+	
+	template Action context
+		:	"action" name "(" parameters{separator = ","} ")" body
+		;
+		
+	template VariableDefinition addToContext
+		:	name
+		;
+
+	template Block context
+		:	"{" [
+				statements
+			] "}"
+		;
+		
+-- @begin Control Structures
+	template ControlStructure abstract;
+	
+	template VariableAssignment
+		:	variable{refersTo = name, autoCreate = ifmissing, createIn = '#context'.freeVariables} "=" value ";"
+		;
+		
+	template Conditional
+		:	"if" "(" condition ")" then
+			(isDefined(else) ? "else" else)
+		;
+		
+	template Iteration
+		:	"for" variable ":" source body
+		;
+		
+	template ReturnStat
+		:	"return" (isDefined(expression) ? expression) ";"
+		;
+
+	template PrimitiveAction abstract;
+	
+	template BindAction
+		:	"bind" "(" clientInterface "," serverInterface ")" ";"
+		;
+-- @end Control Structures
+
+-- @begin FPath (copied from FPath.tcs in the FPath Language Project)
+	template Expression abstract operatored;
+	
+	template ContextExp
+		:	"."
+		;
+		
+	template VariableExp
+		:	"$" definition{refersTo = name}
+		;
+
+	template FunctionCallExp
+		:	name "(" arguments{separator = ","} ")"
+		;
+
+	template NumberExp
+		:	'value'
+		;
+
+	template StringExp
+		:	'value'{as = stringSymbol}
+		;
+
+	operatorTemplate PathExp(operators = opSlash, source = initialNodeSet)
+		:	steps{separator = "/"}
+		;
+
+	operatorTemplate BinaryOperatorExp(operators =
+			opMul opDiv
+			opPlus opMinus2
+			opLt opGt opLe opGe opEq opNe
+			opAnd opOr
+			, source = 'left', storeOpTo = operator, storeRightTo = 'right'
+		);
+
+	operatorTemplate UnaryOperatorExp(operators =
+			opNot opMinus1
+			, source = operand, storeOpTo = operator
+		);
+		
+	template Step
+		:	axis "::" test (isDefined(predicates) ? "[" predicates{separator = "]" "["} "]")
+		;
+
+	template Test abstract;
+	
+	template WildcardTest
+		:	"*"
+		;
+
+	template NameTest
+		:	name
+		;
+
+	enumerationTemplate Axis
+		:	#component				= "component",
+			#'internal-interface'	= "internal-interface",
+			#interface				= "interface",
+			#attribute				= "attribute",
+			#binding				= "binding",
+			#child					= "child",
+			#parent					= "parent",
+			#descendant				= "descendant",
+			#ancestor				= "ancestor",
+			#sibling				= "sibling",
+			#'descendant-or-self'	= "descendant-or-self",
+			#'ancestor-or-self' 	= "ancestor-or-self",
+			#'sibling-or-self'		= "sibling-or-self"
+		;
+-- @end FPath
+-- END Class templates
+
+-- BEGIN Special symbols
+-- Possible modifications:
+--	- Addition of new symbols.
+--	- Modification of spaces information.
+--	- Removal of unused symbols so that using these symbols results in lexical
+--	error rather than parsing error.
+	symbols {
+		lsquare		= "[";
+		rsquare		= "]"	: rightSpace;
+		excl		= "!";
+		coma		= ","	: leftNone, rightSpace;
+		lparen		= "(";
+		rparen		= ")"	: leftNone, rightSpace;
+		lcurly		= "{"	: leftSpace;
+		rcurly		= "}"	: leftNone, rightSpace;
+		semi		= ";"	: leftNone, rightSpace;
+		colon		= ":"	: leftSpace, rightSpace;
+		pipe		= "|"	: leftSpace, rightSpace;
+		sharp		= "#"	: leftSpace;
+		qmark		= "?";
+		coloncolon	= "::"	: leftNone, rightNone;
+
+		-- operator symbols
+		point		= "."	: leftNone;
+		rarrow		= "->"	: leftNone;
+		minus		= "-"	: leftSpace, rightSpace;
+		star		= "*"	: leftSpace, rightSpace;
+		slash		= "/"	: leftSpace, rightSpace;
+		plus		= "+"	: leftSpace, rightSpace;
+		eq			= "="	: leftSpace, rightSpace;
+		eqeq		= "=="	: leftSpace, rightSpace;
+		gt			= ">"	: leftSpace, rightSpace;
+		lt			= "<"	: leftSpace, rightSpace;
+		ge			= ">="	: leftSpace, rightSpace;
+		le			= "<="	: leftSpace, rightSpace;
+		ne			= "<>"	: leftSpace, rightSpace;
+		larrow		= "<-"	: leftSpace, rightSpace;
+	}
+-- END Special symbols
+
+-- BEGIN Operator table
+-- Defines all operators with their priority, arity, and associativity.
+-- All defined operators must be used in operator templates.
+	operators {
+		priority 0 {	-- highest priority
+			opSlash = slash, 2;
+		}
+		
+		priority 1 {
+			opNot = "not", 1;
+			opMinus1 = minus, 1;
+		}
+		
+		priority 2 {
+			opMul = star, 2;
+			opDiv = "div", 2;
+		}
+
+		priority 3 {
+			opPlus = plus, 2;
+			opMinus2 = minus, 2;
+		}
+
+		priority 4 {
+			opLt = lt, 2;
+			opGt = gt, 2;
+			opLe = le, 2;
+			opGe = ge, 2;
+			opEq = eqeq, 2;
+			opNe = ne, 2;
+		}
+
+		priority 5 {
+			opAnd = "and", 2;
+			opOr = "or", 2;
+		}
+	}
+-- END Operator table
+
+
+-- BEGIN Lexer
+-- Specifies the lexical entities.
+-- Only needs modification when default lexer is not satisfactory.
+-- Generally modified along with Primitive templates.
+	token COMMENT	: endOfLine(start = "//");
+
+	lexer = "
+%options testLiterals = false;
+
+NL
+	:	(	'\\r' '\\n'
+		|	'\\n' '\\r'	//Improbable
+		|	'\\r'
+		|	'\\n'
+		)
+	{newline();}
+	;
+
+WS
+	:	(	' '
+		|	'\\t'
+		)
+	;
+
+%protected
+DIGIT
+	:	'0'..'9'
+	;
+
+%protected
+ALPHA
+	:	'a'..'z'
+	|	'A'..'Z'
+	|	'_'
+	//For Unicode compatibility (from 0000 to 00ff)
+	|	'\\u00C0' .. '\\u00D6'
+	|	'\\u00D8' .. '\\u00F6'
+	|	'\\u00F8' .. '\\u00FF'
+	;
+
+%protected
+SNAME
+%v2	options {
+%v2		testLiterals = true;
+%v2	}
+	:	(ALPHA) (ALPHA | '-' | DIGIT)*
+;
+
+NAME
+	:	(
+%v3			SNAME
+%v2			s:SNAME {if(s.getType() != SNAME) $setType(s.getType());}
+		|	'\"'!
+			(	ESC
+			|	'\\n' {newline();}
+			|	~('\\\\'|'\\\"'|'\\n')
+			)*
+			'\"'!
+%v3			{setText(ei.unescapeString(getText(), 1));}
+		)
+	;
+
+%v3	FLOAT	:	DIGIT+ ('.' DIGIT*)?	;
+
+%protected
+ESC
+	:	'\\\\'!
+		(	'n' %v2{%setText(\"\\n\");}
+		|	'r' %v2{%setText(\"\\r\");}
+		|	't' %v2{%setText(\"\\t\");}
+		|	'b' %v2{%setText(\"\\b\");}
+		|	'f' %v2{%setText(\"\\f\");}
+		|	'\"' %v2{%setText(\"\\\"\");}
+		|	'\\'' %v2{%setText(\"\\'\");}
+		|	'\\\\' %v2{%setText(\"\\\\\");}
+		|	(
+				('0'..'3')
+				(
+%v2					options {
+%v2						warnWhenFollowAmbig = false;
+%v2					}
+				:	('0'..'7')
+					(
+%v2						options {
+%v2							warnWhenFollowAmbig = false;
+%v2						}
+					:	'0'..'7'
+					)?
+				)?
+			|	('4'..'7')
+				(
+%v2					options {
+%v2						warnWhenFollowAmbig = false;
+%v2					}
+				:	('0'..'7')
+				)?
+			)
+				{
+%v2					String s = %getText;
+%v2					int i;
+%v2					int ret = 0;
+%v2					String ans;
+%v2					for (i=0; i<s.length(); ++i)
+%v2						ret = ret*8 + s.charAt(i) - '0';
+%v2					ans = String.valueOf((char) ret);
+%v2					%setText(ans);
+				}
+		)
+	;
+
+STRING
+	:	'\\''!
+		(	ESC
+		|	'\\n' {newline();}
+		|	~('\\\\'|'\\''|'\\n')
+		)*
+		'\\''!
+%v3			{setText(ei.unescapeString(getText(), 1));}
+	;
+
+	";
+-- END Lexer
+
+}

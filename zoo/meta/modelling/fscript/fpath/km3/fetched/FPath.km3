@@ -1,0 +1,94 @@
+-- @name		FPath
+-- @version		1.0
+-- @authors		Frédéric Jouault
+-- @date		20080124
+-- @description	Metamodel of the FPath Fractal navigation language.
+-- @see			http://fractal.objectweb.org/fscript/fscript_manual.pdf
+package FPath {
+
+	-- Every class should extend LocatedElement, directly or indirectly.
+	-- This is a technical constraint to support text-to-model traceability.
+	abstract class LocatedElement {
+		attribute location[0-1] : String;
+		attribute commentsBefore[*] ordered : String;
+		attribute commentsAfter[*] ordered : String;
+	}
+
+-- BEGIN DSL-specific classes (replace sample contents)
+	abstract class Expression extends LocatedElement {}
+
+	class ContextExp extends Expression {}
+	
+	class VariableExp extends Expression {
+		attribute name : String;
+	}
+	
+	class FunctionCallExp extends Expression {
+		attribute name : String;
+		reference arguments[*] ordered container : Expression;
+	}
+
+	class NumberExp extends Expression {
+		attribute value : Double;
+	}
+
+	class StringExp extends Expression {
+		attribute value : String;
+	}
+	
+	class PathExp extends Expression {
+		reference initialNodeSet container : Expression;
+		reference steps[1-*] ordered container : Step;
+	}
+
+	abstract class OperatorExp extends Expression {
+		attribute operator : String;
+	}
+
+	class BinaryOperatorExp extends OperatorExp {
+		reference left container : Expression;
+		reference right container : Expression;
+	}
+
+	class UnaryOperatorExp extends OperatorExp {
+		reference operand container : Expression;
+	}
+
+	class Step extends LocatedElement {
+		attribute axis : Axis;
+		reference test container : Test;
+		reference predicates[*] ordered container : Expression;
+	}
+	
+	abstract class Test extends LocatedElement {}
+	
+	class WildcardTest extends Test {}
+	
+	class NameTest extends Test {
+		attribute name : String;
+	}
+	
+	enumeration Axis {
+		literal component;
+		literal "internal-interface";
+		literal interface;
+		literal "attribute";
+		literal binding;
+		literal child;
+		literal parent;
+		literal descendant;
+		literal ancestor;
+		literal sibling;
+		literal "descendant-or-self";
+		literal "ancestor-or-self";
+		literal "sibling-or-self";
+	}
+-- END DSL-specific classes
+}
+
+package PrimitiveTypes {
+	datatype Boolean;
+	datatype Double;
+	datatype Integer;
+	datatype String;
+}

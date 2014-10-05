@@ -1,0 +1,150 @@
+-- @name		FScript
+-- @version		1.0
+-- @authors		Frédéric Jouault
+-- @date		20080205
+-- @description	Metamodel of the FScript Fractal action language. This metamodel includes the FPath metamodel.
+-- @see			http://fractal.objectweb.org/fscript/fscript_manual.pdf
+package FScript {
+
+	-- Every class should extend LocatedElement, directly or indirectly.
+	-- This is a technical constraint to support text-to-model traceability.
+	abstract class LocatedElement {
+		attribute location[0-1] : String;
+		attribute commentsBefore[*] ordered : String;
+		attribute commentsAfter[*] ordered : String;
+	}
+
+-- BEGIN DSL-specific classes (replace sample contents)
+	abstract class Procedure extends LocatedElement {
+		attribute name : String;
+		reference parameters[*] ordered container : VariableDefinition;
+		reference body container : Block;
+	}
+	
+	class Function extends Procedure {}
+
+	class Action extends Procedure {}
+	
+	class VariableDefinition extends LocatedElement {
+		attribute name : String;
+	}
+	
+	class Block extends LocatedElement {
+		reference statements[*] ordered container : ControlStructure;
+		reference freeVariables[*] ordered container : VariableDefinition;
+	}
+-- @begin Control Structures
+	abstract class ControlStructure extends LocatedElement {}
+	
+	class VariableAssignment extends ControlStructure {
+		reference variable : VariableDefinition;
+		reference value container : Expression;	
+	}
+	
+	class Conditional extends ControlStructure {
+		reference condition container : Expression;
+		reference then container : Block;
+		reference else[0-1] container : Block;
+	}
+	
+	class Iteration extends ControlStructure {
+		reference variable container : VariableDefinition;
+		reference source container : Expression;
+		reference body container : Block;
+	}
+	
+	class ReturnStat extends ControlStructure {
+		reference expression[0-1] container : Expression;
+	}
+	
+	abstract class PrimitiveAction extends ControlStructure {}
+	
+	class BindAction extends PrimitiveAction {
+		reference clientInterface container : Expression;
+		reference serverInterface container : Expression;
+	}
+-- @end Control Structures
+-- END DSL-specific classes
+}
+
+-- FPath metamodel elements copied from the FPath Language Project.
+package FPath {
+
+-- BEGIN DSL-specific classes (replace sample contents)
+	abstract class Expression extends LocatedElement {}
+
+	class ContextExp extends Expression {}
+	
+	class VariableExp extends Expression {
+		reference definition : VariableDefinition;
+	}
+	
+	class FunctionCallExp extends Expression {
+		attribute name : String;
+		reference arguments[*] ordered container : Expression;
+	}
+
+	class NumberExp extends Expression {
+		attribute value : Double;
+	}
+
+	class StringExp extends Expression {
+		attribute value : String;
+	}
+	
+	class PathExp extends Expression {
+		reference initialNodeSet container : Expression;
+		reference steps[1-*] ordered container : Step;
+	}
+
+	abstract class OperatorExp extends Expression {
+		attribute operator : String;
+	}
+
+	class BinaryOperatorExp extends OperatorExp {
+		reference left container : Expression;
+		reference right container : Expression;
+	}
+
+	class UnaryOperatorExp extends OperatorExp {
+		reference operand container : Expression;
+	}
+
+	class Step extends LocatedElement {
+		attribute axis : Axis;
+		reference test container : Test;
+		reference predicates[*] ordered container : Expression;
+	}
+	
+	abstract class Test extends LocatedElement {}
+	
+	class WildcardTest extends Test {}
+	
+	class NameTest extends Test {
+		attribute name : String;
+	}
+	
+	enumeration Axis {
+		literal component;
+		literal "internal-interface";
+		literal interface;
+		literal "attribute";
+		literal binding;
+		literal child;
+		literal parent;
+		literal descendant;
+		literal ancestor;
+		literal sibling;
+		literal "descendant-or-self";
+		literal "ancestor-or-self";
+		literal "sibling-or-self";
+	}
+-- END DSL-specific classes
+}
+
+package PrimitiveTypes {
+	datatype Boolean;
+	datatype Double;
+	datatype Integer;
+	datatype String;
+}

@@ -1,0 +1,542 @@
+-- @authors		Frédéric Jouault
+-- @date		2007/05/21
+-- @description	This TCS model defines the syntax of the LOTOS language.
+syntax FIACRE {
+
+	primitiveTemplate identifier for String default using NAME:
+		value = "%token%";
+
+	primitiveTemplate identifierOrKeyword for String using NAME orKeyword:
+		value = "%token%";
+
+	primitiveTemplate stringSymbol for String using STRING:
+		value = "%token%",
+		serializer="'\'' + %value%.toCString() + '\''";
+
+	primitiveTemplate integerSymbol for Integer default using INT:
+		value = "Integer.valueOf(%token%)";
+
+	template Program main context
+		:	[ elements ] {indentIncr = 0, startNL = false, nbNL = 2}
+		;
+
+	template Declaration abstract;
+	
+	template TypeDeclaration addToContext
+		:	"type" name "is" [ type ] {endNL = false}
+		;
+
+	template ChannelDeclaration addToContext
+		:	"channel" name "is" channel
+		;
+
+	template ComponentDeclaration context addToContext
+		:	"component" name
+			(isDefined(ports) ? "[" ports{separator = ","} "]")
+			(isDefined(parameters) ? "(" parameters{separator = ","} ")")
+			"is" [
+				(isDefined(variables) ? "vars" [ variables{separator = ",", forcedLower = 1} ])
+				(isDefined(localPorts) ? "port" [ localPorts{separator = ",", forcedLower = 1} ])
+				composition
+			]
+		;
+
+-- @begin Composition
+	template Composition abstract;
+	
+	template ShuffleComp
+		:	"shuffle" compositions "end"
+		;
+
+	template SyncComp
+		:	"sync" compositions "end"
+		;
+
+	template ParComp
+		:	"par" [ elements ] "end"
+		;
+		
+	template ParallelElement
+		:	(isDefined(ports) ? ports{separator = ",", refersTo = name, forcedLower = 1} "->")
+			composition
+		;
+		
+	template Instance
+		:	process{refersTo = name}
+			(isDefined(ports) ? "[" ports{refersTo = name, separator = ","} "]")
+			(isDefined(arguments) ? "(" arguments{separator = ","} ")")
+		;
+-- @end Composition
+
+
+-- @begin Process
+	template ProcessDeclaration context addToContext
+		:	"process" name
+			(isDefined(ports) ? "[" ports{separator = ","} "]")
+			(isDefined(parameters) ? "(" parameters{separator = ","} ")")
+			"is" [
+				"states" [ states{separator = ","} ]
+				"init" [ initialState{refersTo = name} ]
+	-- REMARK: "var" in spec
+				(isDefined(variables) ? "vars" [ variables{separator = ","} ])
+			]
+			[
+				transitions
+			] {nbNL = 2, endNL = false}
+		;
+
+	template PortsDeclaration
+		:	ports{separator = ","} ":" channel
+		;
+
+	template PortDeclaration addToContext
+		:	(isIn ? "in") (isOut ? "out") name
+		;
+	
+	template Parameters
+		:	parameters{separator = ","} ":" type
+		;
+		
+	template Parameter
+		:	(isRead ? "read") (isWrite ? "write") name
+		;
+		
+	template State addToContext
+		:	name
+		;
+
+	template VariablesDeclaration
+		:	variables{separator = ","} ":" type
+			(isDefined(initializer) ? ":=" initializer)
+		;
+
+	template VariableDeclaration addToContext
+		:	name
+		;
+
+	template Transition
+		:	"from" from{refersTo = name} [
+				statements{separator = ";"}
+			] {endNL = false}
+		;
+-- @end Process
+
+
+-- @begin Statements
+	template Statement abstract;
+
+	-- TODO: do not consider ":=" as an operator
+	template AssignStat
+		:	target --":=" value
+			(isDefined(where) ? "where" where)
+		;
+	
+	template CommunicationStat
+		:	port{refersTo = name} (isIn ?
+				"?" variables{separator = ","}
+				(isDefined(where) ? "where" where)
+			:
+				"!" expressions{separator = ","}
+			)
+		;
+
+	template WhileStat
+		:	"while" condition "do" [
+				statements{separator = ";"}
+			] "end"
+		;
+	
+	template IfStat
+		:	"if" condition "then" [
+				thenStatements{separator = ";"}
+			]
+			elsIfs
+			(isDefined(elseStatements) ? "else" [
+				elseStatements{separator = ";", forcedLower = 1}
+			])
+			"end"
+		;
+
+	template ElsIf
+		:	"elsif" condition "then" [
+				statements{separator = ";"}
+			]
+		;
+		
+	template SelectStat
+		:	"select" [ blocks{separator = "[]"} ] {nbNL = 2, startNbNL = 1} "end"
+		;
+		
+	template StatBlock
+		:	[ statements{separator = ";"} ] {indentIncr = 0, startNL = false, endNL = false}
+		;
+		
+	template ToStat
+		:	"to" to{refersTo = name}
+		;
+-- @end Statements
+
+
+-- @begin Types
+	template Type abstract;
+	
+	template BooleanType
+		:	"bool"
+		;
+		
+	template NaturalType
+		:	"nat"
+		;
+		
+	template IntegerType
+		:	"int"
+		;
+		
+	template IntervalType
+		:	"interval" lower ".." upper
+		;
+
+	template EnumerationType
+		:	"enum" literals{separator = ","} "end"
+		;
+
+	template EnumLiteral addToContext
+		:	name
+		;	
+	
+	template RecordType
+		:	"record" [
+				fields{separator = ","}
+			] "end"
+		;
+
+	template RecordFields
+		:	fields{separator = ","} ":" type
+		;
+		
+	template RecordField
+		:	name
+		;
+		
+	template ArrayType
+		:	"array" "of" size elementType
+		;
+		
+	template QueueType
+		:	"queue" "of" size elementType
+		;
+
+	template TypeRef
+		:	declaration{refersTo = name}
+		;
+-- @end Types
+
+
+-- @begin Channels
+	template Channel abstract;
+	
+	template MultiProfileChannel
+		:	channels{separator = "|"}
+		;
+
+	template SimpleChannel abstract;
+
+--	template ChannelRef
+--		:	declaration{refersTo = name}
+--		;
+		
+	template Profile
+		:	(isDefined(types) ? types{separator = "*", forcedLower = 1} : "none")
+		;
+-- @end Channels
+
+
+-- @begin Expressions
+	template Expression abstract operatored;
+	
+	template LiteralExp
+		:	value
+		;
+
+	-- TODO: do not consider "any" as an Expression because it is only used in AssignStat
+	template AnyExp
+		:	"any"
+		;
+		
+	operatorTemplate BinaryOperatorExp(operators =
+			opStar opSlash opPercent
+			opPlus opMinus2
+			opLt opGt opLe opGe opEq opNe
+			opAnd opOr
+			opAssign,
+			source = 'left', storeOpTo = operator, storeRightTo = 'right');
+
+	operatorTemplate UnaryOperatorExp(operators =
+			opNot opFull opEmpty opFirst opDequeue,
+			source = operand, storeOpTo = operator);
+
+	template EnqueueExp
+		:	"enqueue" "(" target "," source ")"
+		;
+
+	template AccessExp abstract;
+	
+	template VariableExp
+		:	declaration{refersTo = name}
+		;
+		
+	operatorTemplate ArrayAccessExp(operators = opLsquare, source = 'source')
+		:	index "]"
+		;
+		
+	operatorTemplate NavigationExp(operators = opPoint, source = 'source')
+		:	property
+		;
+-- @end Expressions
+
+	template Literal abstract;
+
+	template BooleanVal
+		:	(value ? "true" : "false")
+		;
+		
+	template NaturalVal
+		:	value
+		;
+		
+	template IntegerVal
+		:	(isPositive ? "+" : "-") value
+		;
+	
+	template QueueVal
+		:	"new" size type
+		;
+		
+-- @begin Initializers
+	template Initializer abstract;
+	
+	template LiteralInit
+		:	value
+		;
+
+	template ArrayInit
+		:	"[" elements{separator = ","} "]"
+		;
+		
+	template RecordInit
+		:	"{" fieldInits{separator = ","} "}"
+		;
+		
+	template FieldInit
+		:	field "=" initializer
+		;
+-- @end Initializers
+
+
+	symbols {
+		lsquarersquare		= "[]";
+		lsquare		= "[";
+		rsquare		= "]"	: rightSpace;
+		excl		= "!";
+		coma		= ","	: leftNone, rightSpace;
+		lparen		= "(";
+		rparen		= ")"	: leftNone, rightSpace;
+		lcurly		= "{"	: leftSpace;
+		rcurly		= "}"	: leftNone, rightSpace;
+		semi		= ";"	: leftNone, rightSpace;
+		colon		= ":"	: leftSpace, rightSpace;	-- except after def where it is leftNone, rightSpace
+		pipe		= "|"	: leftSpace, rightSpace;
+		sharp		= "#"	: leftSpace;
+		qmark		= "?";
+		coloncolon	= "::"	: leftNone, rightNone;
+		pipe3		= "|||";
+		pipelsquare	= "|[";
+		rsquarepipe	= "]|";
+		coloneq		= ":="	: leftSpace, rightSpace;
+		pointpoint	= ".."	: leftNone, rightNone;
+		percent		= "\\%"	: leftSpace, rightSpace;
+
+		-- operator symbols
+		point		= "."	: leftNone;
+		rarrow		= "->"	: leftNone;
+		minus		= "-"	: leftSpace, rightSpace;
+		star		= "*"	: leftSpace, rightSpace;
+		slash		= "/"	: leftSpace, rightSpace;
+		plus		= "+"	: leftSpace, rightSpace;
+		eq		= "="	: leftSpace, rightSpace;
+		gt		= ">"	: leftSpace, rightSpace;
+		lt		= "<"	: leftSpace, rightSpace;
+		ge		= ">="	: leftSpace, rightSpace;
+		le		= "<="	: leftSpace, rightSpace;
+		ne		= "<>"	: leftSpace, rightSpace;
+		larrow		= "<-"	: leftSpace, rightSpace;
+	}
+	
+	operators {
+		priority 0 {	-- hghest priority
+			opLsquare = lsquare, 2;
+			opPoint = point, 2;
+		}
+		
+		priority 1 {
+			opNot = "not", 1;
+			opFull = "full", 1;
+			opEmpty = "empty", 1;
+			opFirst = "first", 1;
+			opDequeue = "dequeue", 1;
+		}
+		
+		priority 2 {
+			opStar = star, 2;
+			opSlash = slash, 2;
+			opPercent = percent, 2;
+		}
+
+		priority 3 {
+			opPlus = plus, 2;
+			opMinus2 = minus, 2;
+		}
+
+		priority 4 {
+			opLt = lt, 2;
+			opGt = gt, 2;
+			opLe = le, 2;
+			opGe = ge, 2;
+			opEq = eq, 2;
+			opNe = ne, 2;
+		}
+
+		priority 5 {
+			opAnd = "and", 2;
+			opOr = "or", 2;
+		}
+
+		priority 6 {
+			opAssign = coloneq, 2;
+		}
+	}
+		
+	token COMMENT : multiLine(start = "/*", end = "*/");
+
+	lexer = "
+%options testLiterals = false;
+
+NL
+	:	(	'\\r' '\\n'
+		|	'\\n' '\\r'	//Improbable
+		|	'\\r'
+		|	'\\n'
+		)
+	{newline();}
+	;
+
+WS
+	:	(	' '
+		|	'\\t'
+		)
+	;
+
+%protected
+DIGIT
+	:	'0'..'9'
+	;
+
+%protected
+ALPHA
+	:	'a'..'z'
+	|	'A'..'Z'
+	|	'_'
+	//For Unicode compatibility (from 0000 to 00ff)
+	|	'\\u00C0' .. '\\u00D6'
+	|	'\\u00D8' .. '\\u00F6'
+	|	'\\u00F8' .. '\\u00FF'
+	;
+
+%protected
+SNAME
+%v2	options {
+%v2		testLiterals = true;
+%v2	}
+	:	(ALPHA) (ALPHA | DIGIT)*
+;
+
+NAME
+	:	(
+%v3			SNAME
+%v2			s:SNAME {if(s.getType() != SNAME) $setType(s.getType());}
+		|	'\"'!
+			(	ESC
+			|	'\\n' {newline();}
+			|	~('\\\\'|'\\\"'|'\\n')
+			)*
+			'\"'!
+%v3			{setText(ei.unescapeString(getText(), 1));}
+		)
+	;
+
+INT
+	:	(DIGIT)+
+//%v2		(('.' DIGIT)=> '.' (DIGIT)+ {$setType(FLOAT);})?
+	;
+
+//%v3	FLOAT	:	DIGIT+ '.' DIGIT*	;
+
+%protected
+ESC
+	:	'\\\\'!
+		(	'n' %v2{%setText(\"\\n\");}
+		|	'r' %v2{%setText(\"\\r\");}
+		|	't' %v2{%setText(\"\\t\");}
+		|	'b' %v2{%setText(\"\\b\");}
+		|	'f' %v2{%setText(\"\\f\");}
+		|	'\"' %v2{%setText(\"\\\"\");}
+		|	'\\'' %v2{%setText(\"\\'\");}
+		|	'\\\\' %v2{%setText(\"\\\\\");}
+		|	(
+				('0'..'3')
+				(
+%v2					options {
+%v2						warnWhenFollowAmbig = false;
+%v2					}
+				:	('0'..'7')
+					(
+%v2						options {
+%v2							warnWhenFollowAmbig = false;
+%v2						}
+					:	'0'..'7'
+					)?
+				)?
+			|	('4'..'7')
+				(
+%v2					options {
+%v2						warnWhenFollowAmbig = false;
+%v2					}
+				:	('0'..'7')
+				)?
+			)
+				{
+%v2					String s = %getText;
+%v2					int i;
+%v2					int ret = 0;
+%v2					String ans;
+%v2					for (i=0; i<s.length(); ++i)
+%v2						ret = ret*8 + s.charAt(i) - '0';
+%v2					ans = String.valueOf((char) ret);
+%v2					%setText(ans);
+				}
+		)
+	;
+
+STRING
+	:	'\\''!
+		(	ESC
+		|	'\\n' {newline();}
+		|	~('\\\\'|'\\''|'\\n')
+		)*
+		'\\''!
+%v3			{setText(ei.unescapeString(getText(), 1));}
+	;
+
+	";
+
+}

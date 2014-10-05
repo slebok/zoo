@@ -1,0 +1,331 @@
+-- @name		FIACRE
+-- @version		1.0
+-- @domains		Formal specification
+-- @authors		Frédéric Jouault
+-- @date		2007/07/11
+-- @description	FIACRE metamodel.
+-- @see			http://www-sop.inria.fr/oasis/fiacre/
+package FIACRE {
+
+	abstract class LocatedElement {
+		attribute location[0-1] : String;
+		attribute commentsBefore[*] ordered : String;
+		attribute commentsAfter[*] ordered : String;
+	}
+	
+	abstract class NamedElement extends LocatedElement {
+		attribute name : String;
+	}
+
+	class Program extends LocatedElement {
+		reference elements[*] ordered container : Declaration;
+	}
+
+	abstract class Declaration extends NamedElement {}
+	
+	class TypeDeclaration extends Declaration {
+		reference type container : Type;
+	}
+	
+	class ChannelDeclaration extends Declaration {
+		reference channel container : Channel;
+	}
+	
+	class ComponentDeclaration extends Declaration {
+		reference ports[*] ordered container : PortsDeclaration;
+		reference parameters[*] ordered container : Parameters;
+		reference variables[*] ordered container : VariablesDeclaration;
+		reference localPorts[*] ordered container : PortsDeclaration;
+		reference composition container : Composition;
+	}
+
+-- @begin Composition
+	abstract class Composition extends LocatedElement {}
+	
+	class ShuffleComp extends Composition {
+		reference compositions[1-*] ordered container : Composition;
+	}
+
+	class SyncComp extends Composition {
+		reference compositions[1-*] ordered container : Composition;
+	}
+	
+	class ParComp extends Composition {
+		reference elements[1-*] ordered container : ParallelElement;
+	}
+	
+	class ParallelElement extends LocatedElement {
+		reference ports[*] ordered : PortDeclaration;
+		reference composition container : Composition;
+	}
+	
+	class Instance extends Composition {
+		-- TODO: or ComponentDeclaration
+		reference process : ProcessDeclaration;
+		reference ports[*] ordered : PortDeclaration;
+		reference arguments[*] ordered container : Expression;
+	}
+-- @end Composition
+	
+-- @begin Process
+	class ProcessDeclaration extends Declaration {
+		reference ports[*] ordered container : PortsDeclaration;
+		reference parameters[*] ordered container : Parameters;
+		reference states[*] ordered container : State;
+		reference initialState : State;
+		reference variables[*] ordered container : VariablesDeclaration;
+		reference transitions[1-*] ordered container : Transition;
+	}
+
+	class PortsDeclaration extends LocatedElement {
+		reference ports[1-*] ordered container : PortDeclaration oppositeOf list;
+		reference channel container : Channel;
+	}
+	
+	class PortDeclaration extends NamedElement {
+		reference list : PortsDeclaration oppositeOf ports;
+		attribute isIn : Boolean;
+		attribute isOut : Boolean;
+	}
+
+	class Parameters extends LocatedElement {
+		reference parameters[1-*] ordered container : Parameter oppositeOf list;
+		reference type container : Type;
+	}
+	
+	class Parameter extends NamedElement {
+		reference list : Parameters oppositeOf parameters;
+		attribute isRead : Boolean;
+		attribute isWrite : Boolean;
+	}
+	
+	class State extends NamedElement {}
+	
+	class VariablesDeclaration extends LocatedElement {
+		reference variables[1-*] ordered container : VariableDeclaration oppositeOf list;
+		reference type container : Type;
+		reference initializer[0-1] container : Initializer;
+	}
+	
+	class VariableDeclaration extends NamedElement {
+		reference list[0-1] : VariablesDeclaration oppositeOf variables;
+	}
+	
+	class Transition extends LocatedElement {
+		reference from : State;
+		reference statements[*] ordered container : Statement;
+	}
+-- @end Process
+
+-- @begin Statements
+	abstract class Statement extends LocatedElement {}
+	
+	class AssignStat extends Statement {
+--		reference target container : AccessExp;
+--		reference target container : VariableExp;
+-- TODO: target AccessExp, or at least write a WFR to check that
+-- we have a BinaryOperatorExp with operator = ":="
+		reference target container : Expression;
+		reference value container : Expression;
+		reference where[0-1] container : Expression;
+	}
+	
+	class CommunicationStat extends Statement {
+		reference port : PortDeclaration;
+		attribute isIn : Boolean;
+--		reference types[0-*] ordered container : Type;
+
+		-- only for in
+		reference variables[1-*] ordered container : VariableExp;
+		-- only for out
+		reference expressions[1-*] ordered container : Expression;
+		
+		reference where[0-1] container : Expression;
+	}
+	
+	class WhileStat extends Statement {
+		reference condition container : Expression;
+		reference statements[1-*] ordered container : Statement;
+	}
+	
+	class IfStat extends Statement {
+		reference condition container : Expression;
+		reference thenStatements[1-*] ordered container : Statement;
+		reference elsIfs[*] ordered container : ElsIf;
+		reference elseStatements[*] ordered container : Statement;
+	}
+	
+	class ElsIf extends LocatedElement {
+		reference condition container : Expression;
+		reference statements[1-*] ordered container : Statement;
+	}
+	
+	class SelectStat extends Statement {
+		reference blocks[1-*] ordered container : StatBlock;
+	}
+	
+	class StatBlock extends LocatedElement {
+		reference statements[1-*] ordered container : Statement;
+	}
+	
+	class ToStat extends Statement {
+		reference to : State;
+	}
+-- @end Statements
+
+-- @begin Types
+	abstract class Type extends LocatedElement {}
+	
+	class BooleanType extends Type {}
+
+	class NaturalType extends Type {}
+
+	class IntegerType extends Type {}
+
+	class IntervalType extends Type {
+		attribute lower : Integer;
+		attribute upper : Integer;
+	}
+	
+	class EnumerationType extends Type {
+		reference literals[1-*] ordered container : EnumLiteral;
+	}
+	
+	class EnumLiteral extends VariableDeclaration {}
+	
+	class RecordType extends Type {
+		reference fields[1-*] ordered container : RecordFields;
+	}
+
+	class RecordFields extends NamedElement {
+		reference fields[1-*] ordered container : RecordField;
+		reference type container : Type;
+	}
+	
+	class RecordField extends NamedElement {}
+	
+	class ArrayType extends Type {
+		attribute size : Integer;
+		reference elementType container : Type;
+	}
+	
+	class QueueType extends Type {
+		attribute size : Integer;
+		reference elementType container : Type;
+	}
+	
+	class TypeRef extends Type {
+		reference declaration : TypeDeclaration;
+	}
+-- @end Types
+
+-- @begin Channels
+	abstract class Channel extends LocatedElement {}
+
+	class MultiProfileChannel extends Channel {
+		reference channels[1-*] container : SimpleChannel;
+	}
+
+	abstract class SimpleChannel extends LocatedElement {}
+	
+--	class ChannelRef extends SimpleChannel {
+--		reference declaration : ChannelDeclaration;
+--	}
+	
+	class Profile extends SimpleChannel {
+		reference types[*] container : Type;
+	}
+-- @end Channels
+
+
+-- @begin Expressions
+	abstract class Expression extends LocatedElement {}
+	
+	class LiteralExp extends Expression {
+		reference value container : Literal;
+	}
+	
+	class AnyExp extends Expression {}
+	
+	class BinaryOperatorExp extends Expression {
+		attribute operator : String;
+		reference left container : Expression;
+		reference right container : Expression;
+	}
+	
+	class UnaryOperatorExp extends Expression {
+		attribute operator : String;
+		reference operand container : Expression;
+	}
+	
+	class EnqueueExp extends Expression {
+		reference target container : Expression;
+		reference source container : Expression;
+	}
+	
+	abstract class AccessExp extends Expression {}
+
+	class VariableExp extends AccessExp {
+--	class VariableExp extends Expression {
+		reference declaration : VariableDeclaration;
+	}
+	
+	class ArrayAccessExp extends AccessExp {
+--		reference source container : AccessExp;
+		reference source container : Expression;
+		reference index container : Expression;
+	}
+
+	class NavigationExp extends AccessExp {
+--		reference source container : AccessExp;
+		reference source container : Expression;
+		attribute property : String;
+	}
+-- @end Expressions
+
+	abstract class Literal extends LocatedElement {}
+
+	class BooleanVal extends Literal {
+		attribute value : Boolean;
+	}
+
+	class NaturalVal extends Literal {
+		attribute value : Integer;
+	}
+	
+	class IntegerVal extends NaturalVal {
+		attribute isPositive : Boolean;
+	}
+	
+	class QueueVal extends Literal {
+		attribute size : Integer;
+		reference type container : Type;
+	}
+
+-- @begin Initializers
+	abstract class Initializer extends LocatedElement {}
+	
+	class LiteralInit extends Initializer {
+		reference value container : Literal;
+	}
+	
+	class ArrayInit extends Initializer {
+		reference elements[*] ordered container : Initializer;
+	}
+	
+	class RecordInit extends Initializer {
+		reference fieldInits[1-*] ordered container : FieldInit;
+	}
+	
+	class FieldInit extends LocatedElement {
+		attribute field : String;
+		reference initializer container : Initializer;
+	}
+-- @end Initializers
+}
+
+package PrimitiveTypes {
+	datatype Boolean;
+	datatype Integer;
+	datatype String;
+}
