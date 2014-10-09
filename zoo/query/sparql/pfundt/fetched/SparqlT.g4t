@@ -1,0 +1,604 @@
+/*
+ *    Copyright 2007-2010 The sparkle-g Team
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+/**
+ * @author Simone Tripodi   (simone.tripodi)
+ * @author Michele Mostarda (michele.mostarda)
+ * @author Juergen Pfundt   (Juergen.Pfundt)
+ * @version $Id: Sparql.g 161 2011-05-23 22:14:39Z Juergen.Pfundt@web.de $
+ */
+tree grammar SparqlT;
+
+options {
+   language = C;
+   tokenVocab=Sparql; // reuse token types
+   ASTLabelType=pANTLR3_BASE_TREE;
+   output=AST; //template;
+}
+
+@header {
+/* package com.googlecode.sparkleg; */
+}
+
+// $<Parser
+
+query
+    : ^(QUERY prologue selectQuery? constructQuery? describeQuery? askQuery?) bindingsClause?
+    | ^(UPDATE update+)
+    ;
+
+prologue
+    : ^(PROLOGUE baseDecl* prefixDecl*)
+    ;
+
+baseDecl
+    : ^(BASE IRI_REF)
+    ;
+
+prefixDecl
+    : ^(PREFIX PNAME_NS IRI_REF)
+    ;
+
+selectQuery
+    : ^(SELECT selectClause datasetClause* whereClause* solutionModifier)
+    ;
+
+subSelect
+    : ^(SUBSELECT whereClause* datasetClause* solutionModifier)
+    ;
+    	
+selectClause
+    : ^(SELECT_CLAUSE ASTERISK)
+    | ^(SELECT_CLAUSE DISTINCT ASTERISK)
+    | ^(SELECT_CLAUSE REDUCED ASTERISK)
+    | ^(SELECT_CLAUSE selectVariables*)
+    | ^(SELECT_CLAUSE DISTINCT selectVariables*)
+    | ^(SELECT_CLAUSE REDUCED selectVariables*)
+    ;
+
+selectVariables
+    : ^(VAR var) 
+    | ^(AS expression var)
+    ;
+  
+constructQuery
+    : ^(CONSTRUCT constructTemplate datasetClause* whereClause? solutionModifier)
+    | ^(CONSTRUCT datasetClause* whereClause? solutionModifier)
+    ;
+
+describeQuery
+    : ^(DESCRIBE varOrIRIref* ASTERISK* datasetClause* whereClause? solutionModifier)
+    ;
+
+askQuery
+    : ^(ASK datasetClause* whereClause)
+    ;
+
+datasetClause
+    : ^(FROM NAMED? iriRef)
+    ;
+
+whereClause
+    : ^(WHERE_CLAUSE groupGraphPattern?)
+    ;
+    
+solutionModifier
+    : groupClause? havingClause? orderClause? limitOffsetClauses?
+    ;
+
+groupClause
+    : ^(GROUP_BY groupCondition+)
+    ;
+    		 
+groupCondition
+    : ^(GROUP_CONDITION builtInCall)
+    | ^(GROUP_CONDITION functionCall)
+    | ^(GROUP_CONDITION expression ^(AS var?) )
+    | ^(GROUP_CONDITION var)
+    ;
+
+havingClause
+    : ^(HAVING constraint+)	
+    ;
+    
+orderClause
+    : ^(ORDER_BY orderCondition+)
+    ;
+
+orderCondition
+    : ^(ORDER_CONDITION ASC expression)
+    | ^(ORDER_CONDITION DESC expression)
+    | ^(ORDER_CONDITION constraint)
+    | ^(ORDER_CONDITION var)
+    ;
+	    
+limitOffsetClauses
+    : ^(LIMIT INTEGER) (^(OFFSET INTEGER))*
+    | ^(OFFSET INTEGER) (^(LIMIT INTEGER))*
+    ;
+
+
+bindingsClause
+    : ^(BINDINGS var* bindingValueList*)
+    ;
+    
+bindingValueList
+    : ^(BINDING_VALUE bindingValue*)
+    ;
+    	
+bindingValue
+    : iriRef | rdfLiteral | numericLiteral | booleanLiteral | UNDEF
+    ;
+    
+update
+    : prologue load* clear* drop* add* move* copy* create* insert* delete* modify*
+    ;   
+    
+load 	  
+    : ^(LOAD SILENT* iriRef graphRef?)
+    ;
+    
+clear
+    : ^(CLEAR SILENT* graphRefAll)
+    ;
+    
+drop
+    : ^(DROP SILENT* graphRefAll)
+    ; 
+
+create
+    : ^(CREATE SILENT* graphRef)
+    ;
+    
+add
+    : ^(ADD SILENT* graphOrDefault graphOrDefault)
+    ;
+    
+move
+    : ^(MOVE SILENT* graphOrDefault graphOrDefault)
+    ;
+    
+copy
+    : ^(COPY SILENT* graphOrDefault graphOrDefault)
+    ;
+
+insert
+    : ^(INSERT DATA quadPattern)
+    ;
+   
+delete 	  
+    : ^(DELETE deleteData)
+    | ^(DELETE deleteWhere)
+    ;
+
+deleteData
+    : ^(DELETE DATA quadPattern)
+    ;
+
+deleteWhere
+    : ^(DELETE WHERE quadPattern)
+    ;
+    
+modify
+    : ^(MODIFY ^(WITH iriRef) deleteClause* insertClause* usingClause* whereClause)
+    | ^(MODIFY deleteClause* insertClause* usingClause* whereClause)
+    ;
+  
+deleteClause
+    : ^(DELETE quadPattern)
+    ;
+      
+insertClause
+    : ^(INSERT quadPattern)
+    ;
+
+usingClause
+    : ^(USING NAMED? iriRef)
+    ;
+
+graphOrDefault	  
+    : DEFAULT 
+    | GRAPH? iriRef
+    ;
+    	    	
+graphRef
+    : GRAPH iriRef
+    ;
+
+graphRefAll
+    : graphRef | DEFAULT | NAMED | ALL
+    ;
+
+quadPattern
+    : quads
+    ;
+    
+quads
+    : triplesTemplate? quadsDetails*
+    ;
+    
+quadsDetails
+    : quadsNotTriples triplesTemplate?
+    ;
+    
+quadsNotTriples
+    : ^(GRAPH varOrIRIref triplesTemplate?)
+    ;
+    
+triplesTemplate
+    : ^(TRIPLES_TEMPLATE triplesSameSubject*)
+    ;
+
+groupGraphPattern
+    : ^(GROUP_GRAPH_PATTERN groupGraphPatternSub)
+    | ^(GROUP_GRAPH_PATTERN subSelect)
+    | ^(GROUP_GRAPH_PATTERN GROUP_GRAPH_PATTERN)
+    ;
+
+groupGraphPatternSub
+    : triplesBlock groupGraphPatternSubDetail*
+    | groupGraphPatternSubDetail+ 
+    ;
+
+groupGraphPatternSubDetail
+    : g=graphPatternNotTriples DOT? t=triplesBlock?
+    ;    
+
+triplesBlock
+    : triplesSameSubjectPath+
+    ;
+
+graphPatternNotTriples
+    : groupOrUnionGraphPattern | optionalGraphPattern | minusGraphPattern | graphGraphPattern | serviceGraphPattern | filter | bind
+    ;
+
+optionalGraphPattern
+    : ^(OPTIONAL groupGraphPattern)
+    ;
+
+graphGraphPattern
+    : ^(GRAPH varOrIRIref groupGraphPattern)
+    ;
+
+serviceGraphPattern
+    : ^(SERVICE SILENT? varOrIRIref groupGraphPattern)
+    ;
+    
+bind
+    : ^(BIND expression ^(AS var))	
+    ;
+    	
+minusGraphPattern
+    : ^(MINUS_KEYWORD groupGraphPattern)
+    ;
+
+groupOrUnionGraphPattern
+    : ^(UNION groupGraphPattern groupGraphPattern)
+    | groupGraphPattern
+    ;
+
+filter
+    : ^(FILTER constraint)
+    ;
+
+constraint
+    : expression
+    | builtInCall
+    | functionCall
+    ;
+
+functionCall
+    : ^(FUNCTION iriRef ^(ARG_LIST argList))
+    ;
+
+argList
+    : nil
+    | DISTINCT? expression*
+    ;
+
+expressionList
+    : ^(EXPRESSION_LIST expression+)
+    | ^(EXPRESSION_LIST nil)
+    ;	
+
+constructTemplate
+    : ^(CONSTRUCT_TRIPLES constructTriples?)
+    ;
+
+constructTriples
+    : triplesSameSubject+
+    ;
+
+triplesSameSubject
+    : ^(TRIPLES_SAME_SUBJECT ^(SUBJECT varOrTerm) propertyListNotEmpty)
+    | ^(TRIPLES_SAME_SUBJECT triplesNode propertyListNotEmpty?)
+    ;
+    
+        
+propertyListNotEmpty
+    : propertyListNotEmptyDetails+
+    ;
+
+propertyListNotEmptyDetails
+    : ^(PREDICATE  v=verb o=objectList)
+    ;
+
+objectList
+    : (^(OBJECT graphNode))+
+    ;
+
+verb
+    : varOrIRIref
+    | A
+    | path
+    ;
+
+triplesSameSubjectPath
+    : ^(TRIPLES_SAME_SUBJECT ^(SUBJECT varOrTerm) propertyListNotEmpty)
+    | ^(TRIPLES_SAME_SUBJECT  triplesNode propertyListNotEmpty?)
+    ;
+    
+path
+    : ^(PATH pathSequence+)
+    ; 
+
+pathSequence
+    : ^(PATH_SEQUENCE pathEltOrInverse+)
+    ;
+    
+pathEltOrInverse
+    : INVERSE? pathElt
+    ;
+    	  	
+pathElt
+    : pathPrimary pathMod?
+    ;
+    
+pathMod
+    : (ASTERISK | QUESTION_MARK | PLUS | OPEN_CURLY_BRACE (INTEGER (COMMA (CLOSE_CURLY_BRACE | INTEGER CLOSE_CURLY_BRACE) | CLOSE_CURLY_BRACE) | COMMA INTEGER CLOSE_CURLY_BRACE))
+    ;
+
+pathPrimary
+    : ^(PATH_PRIMARY iriRef)
+    | ^(PATH_PRIMARY A)
+    | ^(PATH_PRIMARY NEGATION pathNegatedPropertySet)
+    | ^(PATH_PRIMARY path)
+    ;
+
+pathNegatedPropertySet
+    : ^(PATH_NEGATED pathOneInPropertySet+)
+    ;  	
+
+pathOneInPropertySet
+    : INVERSE? (iriRef | A)
+    ;
+	
+triplesNode
+    : ^(COLLECTION graphNode+)
+    | ^(TRIPLES_NODE propertyListNotEmpty)
+    ;
+
+graphNode
+    : varOrTerm | triplesNode
+    ;
+
+varOrTerm
+    : var | graphTerm | BLANK_NODE
+    ;
+
+varOrIRIref
+    : var | iriRef
+    ;
+
+var
+    : VAR1 | VAR2
+    ;
+
+graphTerm
+    : iriRef
+    | rdfLiteral
+    | numericLiteral
+    | booleanLiteral
+    | blankNode
+    | nil
+    ;
+    
+nil
+    : OPEN_BRACE CLOSE_BRACE
+    ;
+
+expression
+    : ^(OR expression expression)
+    | ^(AND expression expression)
+    | ^(EQUAL expression expression)  
+    | ^(NOT_EQUAL expression expression)
+    | ^(LESS expression expression)
+    | ^(GREATER expression expression)
+    | ^(LESS_EQUAL expression expression)
+    | ^(GREATER_EQUAL expression expression)  
+    | ^(IN expression expressionList)
+    | ^(NOT IN expression expressionList)
+    | ^(PLUS expression expression)
+    | ^(MINUS expression expression) 
+    | ^(ASTERISK expression expression)
+    | ^(DIVIDE expression expression)
+    | numericLiteralPositive
+    | numericLiteralNegative
+    | unaryExpression 
+    ;
+    
+unaryExpression
+    : ^(UNARY NEGATION primaryExpression)
+    | ^(UNARY PLUS primaryExpression)
+    | ^(UNARY MINUS primaryExpression)
+    | ^(UNARY primaryExpression)
+    ;
+
+primaryExpression 
+    : brackettedExpression | builtInCall | iriRefOrFunction | rdfLiteral | numericLiteral | booleanLiteral | var | aggregate
+    ;
+
+brackettedExpression
+    : ^(BRACKETTED_EXPRESSION e=expression)
+    ;
+
+builtInCall
+    : ^(STR expression)
+    | ^(LANG expression)
+    | ^(LANGMATCHES expression+)
+    | ^(DATATYPE expression)
+    | ^(BOUND var)
+    | ^(IRI expression)
+    | ^(URI expression)
+    | ^(BNODE expression)
+    | BNODE
+    | RAND
+    | ^(ABS expression)
+    | ^(CEIL expression)
+    | ^(FLOOR expression)
+    | ^(ROUND expression)
+    | ^(CONCAT expressionList)
+    | subStringExpression
+    | ^(STRLEN expression)
+    | ^(UCASE expression)
+    | ^(LCASE expression)
+    | ^(ENCODE_FOR_URI expression)
+    | ^(CONTAINS expression expression)
+    | ^(STRSTARTS expression expression)
+    | ^(STRENDS expression expression)
+    | ^(STRBEFORE expression expression)
+    | ^(STRAFTER expression expression)
+    | ^(REPLACE expression expression expression)
+    | ^(YEAR expression)
+    | ^(MONTH expression)
+    | ^(DAY expression)
+    | ^(HOURS expression)
+    | ^(MINUTES expression)
+    | ^(SECONDS expression)
+    | ^(TIMEZONE expression)
+    | ^(TZ expression)
+    | NOW
+    | ^(MD5 expression)
+    | ^(SHA1 expression)
+    | ^(SHA224 expression)
+    | ^(SHA256 expression)
+    | ^(SHA384 expression)
+    | ^(SHA512 expression)
+    | ^(COALESCE expressionList)
+    | ^(IF expression expression expression)
+    | ^(STRLANG expression expression)
+    | ^(STRDT expression expression)
+    | ^(SAMETERM expression expression)
+    | ^(ISIRI expression)
+    | ^(ISURI expression)
+    | ^(ISBLANK expression) 
+    | ^(ISLITERAL expression)
+    | ^(ISNUMERIC expression)
+    | regexExpression
+    | existsFunction
+    | notExistsFunction
+    ;
+
+regexExpression
+    : ^(REGEX expression+)
+    ;
+    
+subStringExpression
+    : ^(SUBSTR expression+)
+    ;
+    
+existsFunction
+    : ^(EXISTS groupGraphPattern)
+    ;
+
+notExistsFunction
+    : ^(NOT_EXISTS groupGraphPattern)
+    ;
+
+aggregate
+    : ^(COUNT DISTINCT* ASTERISK* expression*)
+    | ^(SUM DISTINCT* expression)
+    | ^(MIN DISTINCT* expression)
+    | ^(MAX DISTINCT* expression)
+    | ^(AVG DISTINCT* expression)
+    | ^(SAMPLE DISTINCT? expression)
+    | ^(GROUP_CONCAT DISTINCT* expression string?)
+    ;
+    
+iriRefOrFunction
+    : ^(FUNCTION f=iriRef ^(ARG_LIST (a=argList)))
+    | ^(FUNCTION f=iriRef)
+    ;
+
+rdfLiteral
+    : string (LANGTAG | (REFERENCE iriRef))?
+    ;
+
+numericLiteral
+    : numericLiteralUnsigned
+    | numericLiteralPositive
+    | numericLiteralNegative
+    ;
+
+numericLiteralUnsigned
+    : INTEGER 
+    | DECIMAL
+    | DOUBLE
+    ;
+
+numericLiteralPositive
+    : INTEGER_POSITIVE
+    | DECIMAL_POSITIVE
+    | DOUBLE_POSITIVE
+    ;
+
+numericLiteralNegative
+    : INTEGER_NEGATIVE
+    | DECIMAL_NEGATIVE
+    | DOUBLE_NEGATIVE
+    ;
+
+booleanLiteral
+    : TRUE
+    | FALSE
+    ;
+
+string
+    : STRING_LITERAL1
+    | STRING_LITERAL2
+    | STRING_LITERAL_LONG1
+    | STRING_LITERAL_LONG2
+    ;
+
+iriRef
+    : IRI_REF
+    | prefixedName
+    ;
+
+prefixedName
+    : PNAME_LN
+    | PNAME_NS
+    ;
+
+blankNode
+    : BLANK_NODE_LABEL
+    | anon
+    ;
+
+anon
+    : OPEN_SQUARE_BRACKET CLOSE_SQUARE_BRACKET
+    ;	
+// $>

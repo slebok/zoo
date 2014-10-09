@@ -1,5 +1,5 @@
 #!/usr/local/bin/python3
-# Migration of all remaining metamodels
+# Migration of Pico grammars
 import os.path
 
 dirs = ['v0.0', 'v0.1', 'v1.0.10', 'v1.0.11', 'v1.0.12', 'v1.0.13', 'v1.0.14', 'v1.0.15', 'v1.0.16', 'v1.0.17', 'v1.0.18', 'v1.0.19', 'v2.0.10', 'v2.0.11', 'v2.0.12', 'v2.0.5', 'v2.0.6', 'v2.0.7', 'v2.0.8', 'v2.0.9']
