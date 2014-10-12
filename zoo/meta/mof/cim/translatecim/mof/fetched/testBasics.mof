@@ -1,0 +1,138 @@
+[Abstract, Version ( "2.18.0" ), 
+    UMLPackagePath ( "CIM::Core::Service" ), 
+    Description ( 
+       "A test class containing sample properties." )]
+class testBasics {
+
+      [Description (
+		  "A simple string.")]
+   string simpleString;
+
+      [Deprecated { "newSimpleString" },
+	   Description (
+		  "A deprecated simple string.")]
+   string DeprecatedSimpleString;
+
+      [Description ( 
+          "A string with a MaxLen." ),
+       	  MaxLen ( 256 )]
+   string testStringWithMaxLen;
+
+      [Description ( "A uint16 array." )]
+   uint16 OperationalStatus[];
+
+      [Description ( "A uint16 with a MappingString." ), 
+       MappingStrings { "MIB.IETF|IF-MIB.ifAdminStatus" }]
+   uint16 EnabledState;
+
+      [Description ( "A uint16 with a ModelCorrespondence." ), 
+       ModelCorrespondence { 
+          "CIM_ProtocolEndpoint.OtherTypeDescription" }]
+   uint16 uint16WithModelCorrespondence;
+
+      [Description ( "A datetime." ), 
+       MappingStrings { "MIB.IETF|IF-MIB.ifLastChange" }]
+   datetime TimeOfLastStateChange;
+
+      [Description ( "A uint16 with Values." ), 
+       ValueMap { "0", "1", "3" }, 
+       Values { "Unknown", "FiftyFive", "Three" } ]
+   uint16 TestNonEnumerableValue;
+
+     [Description ( "A uint16 with Values and a range and an initializer." ), 
+       ValueMap { "0", "1", "2", "3..65535" }, 
+       Values { "Unknown", "One", "Two", "DMTF Reserved" } ]
+   uint16 TestEnumerableValueWithMeaninglessRange = 2;
+
+      [Description ( "An enumerable array with a single initial value." ), 
+       ValueMap { "0", "1", "2", "3..65535" }, 
+       Values { "Unknown", "One", "Two", "DMTF Reserved" } ]
+   uint16 TestEnumerableArrayWithOneInitializer[] = {2};
+
+      [Description ( "An enumerable array with multiple initial values." ), 
+       ValueMap { "0", "1", "2", "3..65535" }, 
+       Values { "Unknown", "One", "Two", "DMTF Reserved" } ]
+   uint16 TestEnumerableArrayWithMultipleInitializers[] = { 1, 2 };
+
+      [Experimental, Description ( 
+          "An experimental boolean with MappingStrings." )]
+   boolean ExperimentalBoolean;
+
+      [Description ( 
+          "A uint32 method that returns Values." ), 
+       ValueMap { "0", "1", "2", "3", "4", "5..0x0FFF", 
+          "0x1000..0x7777", "0x8000.." }, 
+       Values { "Success", "Not_Supported", "Unspecified Error", 
+          "Timeout", "Failed", "DMTF_Reserved", "Method_Reserved", 
+          "Vendor_Reserved" }, 
+       ModelCorrespondence { 
+         "CIM_ProtocolEndpoint.BroadcastResetSupported" }]
+   uint32 BroadcastReset(
+	);
+
+// from Core/CIM_AdminDomain.mof
+      [Description ( 
+          "A string with enumerated values." ), 
+       ValueMap { "Other", "AS", "NAP", "NOC", "POP", "RNP", "IP", 
+          "IPX", "SNA", "Dial", "WAN", "LAN", "ISDN", "Frame Relay", 
+          "ATM", "E.164", "IB", "FC", "Policy Repository", "WWN" }, 
+       Values { "Other", "Autonomous System", 
+          "Network Access Provider", "Network Operations Center", 
+          "Point of Presence", "Regional Network Provider", "IP", 
+          "IPX", "SNA", "Dial", "WAN", "LAN", "ISDN", "Frame Relay", 
+          "ATM", "E.164", "Infiniband", "Fibre Channel", 
+          "Policy Repository", "Fibre Channel Worldwide Name" }, 
+       ModelCorrespondence { "CIM_AdminDomain.Name" }]
+   string EnumeratedString;
+
+// from Core/CIM_Job.mof
+   [Description ( 
+       "A sint8 class with negative ValueMaps." ), 
+    ValueMap { "-7", "-6", "-5", "-4", "-3", "-2", "-1", "0", 
+       "1", "2", "3", "4", "5", "6", "7" }, 
+    Values { "-Saturday", "-Friday", "-Thursday", "-Wednesday", 
+       "-Tuesday", "-Monday", "-Sunday", "ExactDayOfMonth", 
+       "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", 
+       "Friday", "Saturday" }]
+	sint8 RunDayOfWeek;
+
+// from Device/CIM_CurrentSensor.mof
+   [Description (
+	"A negative initializer, we don't want to canonicalize it to \"_3\"." ),
+	Deprecated { "No Value" }, 
+    Override ( "UnitModifier" )]
+	sint32 UnitModifier = -3;
+
+// from Metric/CIM_BaseMetricDefinition
+   [Description ( 
+       "A Values that uses Java keywords - \"boolean\", so we have"
+	   "to map it to \"cim_boolean\"" ), 
+    ValueMap { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", 
+       "11", "12", "13", "14" }, 
+    Values { "boolean", "char16", "datetime", "real32", "real64", 
+       "sint16", "sint32", "sint64", "sint8", "string", "uint16", 
+       "uint32", "uint64", "uint8" }]
+	uint16 DataType;
+	
+// from CIM_SharedDeviceManagementService.mof
+	[Description ( 
+    	"A method with a referenge named \"System\", which is a common"
+ 		"Java class name, so we have to convert it to \"cim_System\"."
+		"Also has a reference to \"System\" that likewise must be "
+		"converted." )]
+    uint32 ShareDevice(
+         [IN, Description ( 
+             "The System whose access to the LogicalDevice the "
+             "change is requested for." )]
+      CIM_System REF System, 
+         [IN, Description ( 
+             "blah blah blah" )]
+      datetime TimeoutPeriod);
+
+// A problem similar to the previous one.
+   [Description ( 
+       	"A property named \"System\", which is a common Java "
+		"class name, so we have to convert it to \"cim_System\"." )]
+	sint8 System;
+
+};

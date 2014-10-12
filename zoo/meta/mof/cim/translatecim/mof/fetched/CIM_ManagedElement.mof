@@ -1,0 +1,131 @@
+// Copyright (c) 2008 DMTF.  All rights reserved.
+   [Abstract, Version ( "2.19.0" ), 
+    UMLPackagePath ( "CIM::Core::CoreElements" ), 
+    Description ( 
+       "ManagedElement is an abstract class that provides a common "
+       "superclass (or top of the inheritance tree) for the "
+       "non-association classes in the CIM Schema." )]
+class CIM_ManagedElement {
+
+      [Description ( 
+          "InstanceID is an optional property that may be used to "
+          "opaquely and uniquely identify an instance of this class "
+          "within the scope of the instantiating Namespace. Various "
+          "subclasses of this class may override this property to "
+          "make it required, or a key. Such subclasses may also "
+          "modify the preferred algorithms for ensuring uniqueness "
+          "that are defined below.\n"
+          "To ensure uniqueness within the NameSpace, the value of "
+          "InstanceID should be constructed using the following "
+          "\"preferred\" algorithm: \n"
+          "<OrgID>:<LocalID> \n"
+          "Where <OrgID> and <LocalID> are separated by a colon "
+          "(:), and where <OrgID> must include a copyrighted, "
+          "trademarked, or otherwise unique name that is owned by "
+          "the business entity that is creating or defining the "
+          "InstanceID or that is a registered ID assigned to the "
+          "business entity by a recognized global authority. (This "
+          "requirement is similar to the <Schema Name>_<Class Name> "
+          "structure of Schema class names.) In addition, to ensure "
+          "uniqueness, <OrgID> must not contain a colon (:). When "
+          "using this algorithm, the first colon to appear in "
+          "InstanceID must appear between <OrgID> and <LocalID>. \n"
+          "<LocalID> is chosen by the business entity and should "
+          "not be reused to identify different underlying "
+          "(real-world) elements. If not null and the above "
+          "\"preferred\" algorithm is not used, the defining entity "
+          "must assure that the resulting InstanceID is not reused "
+          "across any InstanceIDs produced by this or other "
+          "providers for the NameSpace of this instance. \n"
+          "If not set to null for DMTF-defined instances, the "
+          "\"preferred\" algorithm must be used with the <OrgID> "
+          "set to CIM." )]
+   string InstanceID;
+
+      [Description ( 
+          "The Caption property is a short textual description "
+          "(one- line string) of the object." ), 
+       MaxLen ( 64 )]
+   string Caption;
+
+      [Description ( 
+          "The Description property provides a textual description "
+          "of the object." )]
+   string Description;
+
+      [Description ( 
+          "A user-friendly name for the object. This property "
+          "allows each instance to define a user-friendly name in "
+          "addition to its key properties, identity data, and "
+          "description information. \n"
+          "Note that the Name property of ManagedSystemElement is "
+          "also defined as a user-friendly name. But, it is often "
+          "subclassed to be a Key. It is not reasonable that the "
+          "same property can convey both identity and a "
+          "user-friendly name, without inconsistencies. Where Name "
+          "exists and is not a Key (such as for instances of "
+          "LogicalDevice), the same information can be present in "
+          "both the Name and ElementName properties." )]
+   string ElementName;
+
+      [Experimental, Description ( 
+          "Generation is an optional, monotonically increasing "
+          "property that may be used to identify a particular "
+          "generation of the resource represented by this class.\n"
+          "If Generation is supported by the implementation, its "
+          "value shall not be null. \n"
+          "Except as otherwise specified, a value (including null) "
+          "of Generation specified at creation time shall be "
+          "replaced by null if Generation is not supported by the "
+          "implementation or shall be a, (possibly different), "
+          "non-null value if the implementation does support Generation.\n"
+          "After creation and if supported, Generation shall be "
+          "updated, at least once per access, whenever the "
+          "represented resource is modified, regardless of the "
+          "source of the modification.\n"
+          "Note: the Generation value only needs to be updated once "
+          "between references, even if the resource is updated many "
+          "times. The key point is to assure that it will be "
+          "different if there have been updates, not to count each update.\n"
+          "Note: unless otherwise specified, the value of "
+          "Generation within one instance is not required to be "
+          "coordinated with the value of Generation in any other instance.\n"
+          "Note:the semantics of the instance, (as defined by its "
+          "creation class), define the underlying resource. That "
+          "underlying resource may be a collection or aggregation "
+          "of resources. And, in that case, the semantics of the "
+          "instance further define when updates to constituent "
+          "resources also require updates to the Generation of the "
+          "collective resource. Default behavior of composite "
+          "aggregations should be to update the Generation of the "
+          "composite whenever the Generation of a component is updated.\n"
+          "Subclasses may define additional requirements for "
+          "updates on some or all of related instances.\n"
+          "For a particular instance, the value of Generation may "
+          "wrap through zero, but the elapsed time between wraps "
+          "shall be greater than 10\'s of years.\n"
+          "This class does not require Generation to be unique "
+          "across instances of other classes nor across instances "
+          "of the same class that have different keys. Generation "
+          "shall be different across power cycles, resets, or "
+          "reboots if any of those actions results in an update. "
+          "Generation may be different across power cycles, resets, "
+          "or reboots if those actions do not result in an update. "
+          "If the Generation property of an instance is non-null, "
+          "and if any attempt to update the instance includes the "
+          "Generation property, then if it doesn\'t match the "
+          "current value, the update shall fail.\n"
+          "The usage of this property is intended to be further "
+          "specified by applicable management profiles. \n"
+          "Typically, a client will read the value of this property "
+          "and then supply that value as input to an operation that "
+          "modifies the instance in some means. This may be via an "
+          "explicit parameter in an extrinsic method or via an "
+          "embedded value in an extrinsic method or intrinsic operation.\n"
+          "For example: a profile may require that an intrinsic "
+          "instance modification supply the Generation property and "
+          "that it must match for the modification to succeed." )]
+   uint64 Generation;
+
+
+};

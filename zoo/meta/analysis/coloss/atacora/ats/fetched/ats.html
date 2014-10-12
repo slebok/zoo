@@ -1,0 +1,489 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+  
+  <title>ats.html</title>
+  <meta content="C. Attiogb&eacute;" name="author">
+  <meta content="ATACORA Example" name="description">
+</head>
+
+
+<body>
+
+<div style="text-align: center;">
+<hr style="width: 100%; height: 2px;"><span style="font-weight: bold;">ATACORA</span><br>
+
+</div>
+
+<hr style="width: 100%; height: 2px;"><br>
+
+<span style="font-weight: bold;">The ATS (Abstract Transition System) working grammar :</span><br>
+
+<br style="font-family: Times New Roman,Times,serif;">
+
+<span style="font-family: sans-serif;">/*------------------------------------------------------------------*/</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">/* Basic Form of ATS (Abstract Transition Systems) */</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">/* An ATS is a transition system equipped with data</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp; The data is not specific </span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp; but 'abstract' so as to capture various description</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp; The transitions are described as guarded statement</span><br style="font-family: sans-serif;">
+
+<br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">The expected interest : to use ATS as a common description</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">Guarded statements avoid the exhaustive description</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp; (c) J. C. Attiogb&eacute;, LINA, Mars 2004, NatIF Project</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp; Updates </span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; December 2004 : </span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; January 2005 :</span><br style="font-family: sans-serif;">
+
+<span style="font-family: sans-serif;">/*-----------------------------------------------------------------*/</span><br>
+
+<br>
+
+<br>
+
+<code>/*------------ Shape of a basic ATS (without composition) */<br>
+
+&lt;ATS&gt; ::= &lt;DataPart&gt; &lt;Transitions&gt;<br>
+
+<br>
+
+&lt;DataPart&gt; ::= DATAPART &lt;TypeDef&gt; &lt;VariableDef&gt;<br>
+
+&nbsp; /* Generic Data Language */<br>
+
+<br>
+
+&lt;TypeDef&gt;::= TYPES &lt;TheTypes&gt;<br>
+
+&nbsp; /*sets may be used as support for types <br>
+
+&nbsp;&nbsp;&nbsp; existing/predefined types; user defined types<br>
+
+&nbsp;&nbsp; */ <br>
+
+<br>
+
+&lt;TheTypes&gt; ::= <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!UsusalTypes&gt;<br>
+
+&nbsp;&nbsp;&nbsp; |&nbsp; &lt;Sets&gt;<br>
+
+&nbsp;&nbsp;&nbsp; |&nbsp; &lt;Relations&gt;<br>
+
+&nbsp;&nbsp;&nbsp; |&nbsp; &lt;Functions&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+&nbsp; <br>
+
+&lt;VariableDef&gt; ::= &lt;GlobalVars&gt;&nbsp; &lt;LocalVars&gt; <br>
+
+&nbsp; /* variables are typed <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp; GlobalVars and LocalVars have the same description<br>
+
+&nbsp;&nbsp; */<br>
+
+<br>
+
+&lt;GlobalVars&gt; ::= <br>
+
+&nbsp; GLOBAL_VARS /*! keyword !*/<br>
+
+&nbsp;&nbsp;&nbsp; &lt;VarDecl_List&gt; <br>
+
+<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;VarDecl&gt; ::=&nbsp;
+[&lt;VarQualifier&gt;]&nbsp; &lt;Variable&gt; : &lt;TheTypes&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;VarDecl_List&gt; ::= &lt;VarDecl&gt; ( "," &lt;VarDecl&gt; )*<br>
+
+<br>
+
+&lt;VarQualifier&gt; ::= in&nbsp; /* input only */ <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | out&nbsp; /* ouput only */<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+| io&nbsp;&nbsp; /* both input and output */<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | ...<br>
+
+&nbsp;<br>
+
+&lt;LocalVars&gt; ::= <br>
+
+&nbsp; LOCAL_VARS /*! keyword !*/<br>
+
+&nbsp;&nbsp;&nbsp; &lt;VarDecl_List&gt; <br>
+
+<br>
+
+<br>
+
+&lt;Variable&gt; ::= /* alphanumeric as usually */<br>
+
+&nbsp;&nbsp; ...<br>
+
+<br>
+
+GLOBAL_PROPERTIES /*! keyword !*/<br>
+
+&nbsp;&lt;Predicate&gt;<br>
+
+<br>
+
+LOCAL_PROPERTIES /*! keyword !*/<br>
+
+&nbsp;&lt;Predicate&gt;<br>
+
+<br>
+
+LIVENESS /*! keyword !*/<br>
+
+&nbsp;&lt;Predicate&gt;<br>
+
+<br>
+
+SAFETY /*! keyword !*/<br>
+
+&nbsp;&lt;Predicate&gt;<br>
+
+<br>
+
+INITIALISATION<br>
+
+&nbsp;&lt;StatementKeyWord&gt; "{" &lt;Statement_List&gt; "}")*<br>
+
+<br>
+
+&lt;Transitions&gt; ::=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;ATSBehaviourKeyword&gt;<br>
+
+&nbsp; /*List of non deterministic named guarded transitions */<br>
+
+&nbsp; (&lt;TransitionName&gt; "=" <br>
+
+&nbsp;&nbsp;&nbsp; &lt;LocalCtxKeyword&gt;&nbsp; &lt;LocalContext&gt;<br>
+
+&nbsp;&nbsp;&nbsp; &lt;TBehaviourKeyword&gt;<br>
+
+&nbsp;&nbsp; [] &lt;Guard&gt;&lt;Constraints&gt; --&lt;Label&gt;--&gt; &lt;StatementKeyWord&gt; "{" &lt;Statement_List&gt; "}")*<br>
+
+<br>
+
+&lt;ATSBehaviourKeyword&gt; ::= BEHAVIOUR<br>
+
+<br>
+
+&lt;TransitionName&gt; ::= /* ID */<br>
+
+<br>
+
+&lt;LocalCtxKeyword&gt; ::= LOCALCONTEXT<br>
+
+<br>
+
+&lt;LocalContext&gt; ::= &lt;VarDecl_List&gt; &lt;Predicate&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* variable decl. + predicate(localV, globalV) */<br>
+
+<br>
+
+&lt;BehaviourKeyword&gt; ::= TRANSITION<br>
+
+<br>
+
+&lt;Guard&gt; ::=<br>
+
+/*&nbsp; Predicate expressed in the data language */<br>
+
+&nbsp; &lt;Predicate&gt; <br>
+
+<br>
+
+&lt;Constraints&gt; ::=<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;Predicate&gt;<br>
+
+&nbsp;&nbsp; | &lt;SpecificConstraint&gt; <br>
+
+&nbsp;&nbsp; | &lt;ImportedConstraint&gt; &lt;Formalism&gt;<br>
+
+<br>
+
+&lt;SpecificConstraint&gt; ::=<br>
+
+&nbsp; at &lt;delai&gt; ...&nbsp;&nbsp;&nbsp; /* timing constraint */<br>
+
+&nbsp; every &lt;delai&gt; ... /* scheduling */ <br>
+
+&nbsp; ...<br>
+
+&lt;ImportedConstraint&gt; /* Constraints imported from a given formalism */<br>
+
+<br>
+
+&lt;Label&gt; ::= /* ID */<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... /* just a label ??*/<br>
+
+<br>
+
+/*------------------------- MODULES ---------------------*/<br>
+
+<br>
+
+&lt;Identifier&gt; "=" &lt;ATS&gt;&nbsp;&nbsp;&nbsp; /* named ATS */<br>
+
+<br>
+
+&nbsp;<br>
+
+/* Renaming ---------------------------*/<br>
+
+&lt;ATS&gt; ::= Rename &lt;ATS&gt; &lt;ID_Substitution&gt;<br>
+
+&lt;ID_Substitution&gt; ::= (&lt;Renaming&gt;)*<br>
+
+&lt;Renaming&gt; &nbsp;&nbsp;&nbsp; ::= &nbsp;&nbsp;&nbsp; &lt;Identifier&gt; "/" &lt;Identifier&gt;<br>
+
+<br>
+
+/* Hidding -----------------------------<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hide some variable from the ATS */<br>
+
+&lt;ATS&gt; ::= HideVar &lt;ATS&gt; &lt;VarList&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* the hidden variables become local */<br>
+
+/* Extension---------------------------<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; extends an existing ATS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+
+&lt;ATS&gt; ::= Extends &lt;ATS&gt; &lt;ATS&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* the second one complements the firts */<br>
+
+<br>
+
+<br>
+
+/* parallel composition operators -----*/<br>
+
+/* 1 : asynchronous parallel composition <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp; with possibly shared (global) variables<br>
+
+*/<br>
+
+<br>
+
+<br>
+
+&lt;ATS&gt; := &lt;ATS&gt; "]|[" &lt;ATS&gt;&nbsp;&nbsp; /* binary */&nbsp; <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; "]|[" &lt;Boundary&gt; &lt;ATS&gt; /* n-ary */<br>
+
+<br>
+
+/* 2 : synchronous parallel composition <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp; with possibly shared (global) variables<br>
+
+*/<br>
+
+&lt;ATS&gt; = &lt;ATS&gt; "[|]" &lt;ATS&gt;<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; "]|[" &lt;Boundary&gt; &lt;ATS&gt;<br>
+
+<br>
+
+&lt;Boundary&gt; ::= /!* like i= 1..n or "x \in setdef "/<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+/*----------------- MISC --------------------------------*/<br>
+
+<br>
+
+&lt;delai&gt;&nbsp; ::= ...&nbsp; /* pour gestion du temps */<br>
+
+<br>
+
+&lt;Predicate&gt; ::= ... /* First Order Logic */<br>
+
+<br>
+
+&lt;Expression&gt; ::= ... /* As usuallly BUT DataPart-Dependent */<br>
+
+<br>
+
+&lt;Statement&gt; ::=&nbsp; &lt;Assignment&gt;<br>
+
+<br>
+
+&lt;Statement_List&gt; := &lt;Statement&gt; [(Statement)]* <br>
+
+<br>
+
+&lt;StatementKeyWord&gt; ::= nondeterminitic <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | atomic <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | ...<br>
+
+<br>
+
+&lt;Assignment&gt;&nbsp; ::= &lt;Variable&gt; ":=" &lt;Expression&gt;<br>
+
+<br>
+
+...<br>
+
+<br>
+
+<span style="font-weight: bold;">/*-------------------------------------------------------*/</span></code><br>
+
+<span style="font-weight: bold;">'Concrete' form of guarded statement</span> <br>
+
+<br>
+
+<code>Transition_name = <br>
+
+LOCALCONTEXT<br>
+
+&nbsp; VarDecl<br>
+
+GUARD<br>
+
+&nbsp;&nbsp; Predicate<br>
+
+CONSTRAINTS<br>
+
+&nbsp;&nbsp; Predicate<br>
+
+THEN [label = actionname]<br>
+
+&nbsp;&nbsp; Statements<br>
+
+END</code><br>
+
+<br>
+
+<span style="font-weight: bold;">/*-------------------------------------------------------*/</span><br style="font-weight: bold;">
+
+<span style="font-weight: bold;">'Concrete' form of ATS</span><br>
+
+<code>ATS<br>
+
+&nbsp;&nbsp; Nom<br>
+
+DATAPART<br>
+
+&nbsp;&nbsp; TYPES<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+&nbsp;&nbsp; GLOBALVARS<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+&nbsp;&nbsp; LOCALVARS<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+GLOBAL_PROPERTIES<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+LOCAL_PROPERTIES <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+LIVENESS <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+SAFETY <br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+INITIALISATION<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+
+<br>
+
+BEHAVIOUR<br>
+
+<br>
+
+t1 = <br>
+
+&nbsp;&nbsp; LOCALCONTEXT ...<br>
+
+&nbsp;&nbsp; TRANSITION ...<br>
+
+&nbsp;&nbsp; GUARD ... --label--&gt; Stat<br>
+
+<br>
+
+t2 = <br>
+
+&nbsp;&nbsp; LOCALCONTEXT ...<br>
+
+&nbsp;&nbsp; TRANSITION ...<br>
+
+&nbsp;&nbsp; GUARD ... --label--&gt; Stat<br>
+
+<br>
+
+...<br>
+
+<br>
+
+STA<br>
+
+</code><br>
+
+/*--------------------------------------------------*/<br>
+
+<br>
+
+<a href="index.html">Atacora Home Page</a><br>
+
+<hr style="width: 100%; height: 2px;">Christian Attiogb&eacute;<br>
+
+</body>
+</html>

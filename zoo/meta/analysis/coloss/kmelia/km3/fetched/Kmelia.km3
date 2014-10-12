@@ -1,0 +1,97 @@
+-- @name		Kmelia
+-- @version		1.0
+-- @authors		Frédéric Jouault
+-- @date		2007/10/17
+-- @description	Abstract syntax of a subset of the Kmelia component language.
+package Kmelia {
+
+	-- Every class should extend LocatedElement, directly or indirectly.
+	-- This is a technical constraint to support text-to-model traceability.
+	abstract class LocatedElement {
+		attribute location[0-1] : String;
+		attribute commentsBefore[*] ordered : String;
+		attribute commentsAfter[*] ordered : String;
+	}
+
+-- BEGIN DSL-specific classes (replace sample contents)
+	class Component extends LocatedElement {
+		attribute name : String;
+		reference provides[*] ordered : Service;
+		reference requires[*] ordered : Service;
+		reference services[*] ordered container : Service;
+	}
+	
+	abstract class Service extends LocatedElement {
+		attribute name : String;
+		attribute isRequired : Boolean;
+	}
+	
+	class ExternalService extends Service {}
+
+	class InternalService extends Service {
+		reference parameters[*] ordered container : Parameter;
+		attribute returnType[0-1] : String;
+		reference body[0-1] container : Body;
+	}
+	
+	class Parameter extends LocatedElement {
+		attribute name : String;
+		attribute type : String;
+	}
+	
+	class Body extends LocatedElement {
+		reference interface container : Interface;
+		reference behavior[0-1] container : Behavior;
+	}
+
+	class Interface extends LocatedElement {}
+	
+	class Behavior extends LocatedElement {
+		reference initialState : State;
+		reference finalStates[1-*] ordered : State;
+		reference states[1-*] ordered container : State;
+		reference transitions[1-*] ordered container : Transition;
+	}
+	
+	class State extends LocatedElement {
+		attribute name : String;
+	}
+	
+	class Transition extends LocatedElement {
+		reference source : State;
+		reference target : State;
+		reference actions[*] ordered container : Action;
+	}
+
+-- @begin Actions
+	abstract class Action extends LocatedElement {}
+	
+	class FunctionCall extends Action {
+		attribute name : String;
+		reference arguments[*] ordered container : Expression;
+	}
+	
+	abstract class Communication extends Action {
+		attribute channel : String;
+	}
+	
+	class ServiceCall extends Communication {
+		attribute name : String;
+	}
+-- @end Actions
+		
+-- @begin Expressions
+	abstract class Expression extends LocatedElement {}
+	
+	class StringExp extends Expression {
+		attribute value : String;
+	}
+-- @end Expressions
+-- END DSL-specific classes
+}
+
+package PrimitiveTypes {
+	datatype Boolean;
+	datatype Integer;
+	datatype String;
+}
