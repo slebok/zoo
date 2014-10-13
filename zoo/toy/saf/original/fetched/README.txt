@@ -1,5 +1,3 @@
-http://www.jamesrobertwilliams.co.uk/saf
-	and
 http://super-awesome-fighter.appspot.com
 
 Super Awesome Fighter!

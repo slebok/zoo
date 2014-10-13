@@ -8,3 +8,4 @@ Super Awesome Fighter from the Rascal language workbench standard library.
 Author: Tijs van der Storm
 
 Grammar extracted and added to the Grammar Zoo on 22 Jun 2013 by Vadim Zaytsev.
+Re-extracted and connected on 13 Oct 2014 by the same guy.
