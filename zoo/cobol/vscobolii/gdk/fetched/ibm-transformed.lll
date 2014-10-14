@@ -1,0 +1,853 @@
+mode :
+   cobol_word;
+
+priority_number :
+   numeric;
+
+level_number :
+   numeric;
+
+integer :
+   numeric;
+
+user_defined_word :
+   cobol_word;
+
+system_name :
+   cobol_word;
+
+alphabetic_user_defined_word :
+   cobol_word;
+
+copy_directive_without_period :
+   "COPY" (text_name |  literal ) (("OF" | "IN") (library_name |  literal ))? 
+   ( "SUPPRESS" )? 
+   ("REPLACING" (copy_operand "BY" copy_operand)+)?;
+
+statements :
+   (accept_statement statements? | add_statement (statements | "END-ADD" statements? | size_error_phrases ("END-ADD" statements?)?)? | alter_statement statements? | call_statement_format_i (statements | "END-CALL" statements? | on_overflow ("END-CALL" statements?)?)? | call_statement_format_ii (statements | "END-CALL" statements? | exception_phrases ("END-CALL" statements?)?)? | cancel_statement statements? | close_statement statements? | compute_statement (statements | "END-COMPUTE" statements? | size_error_phrases ("END-COMPUTE" statements?)?)? | continue_statement statements? | delete_statement (statements | "END-DELETE" statements? | invalid_key_phrases ("END-DELETE" statements?)?)? | display_statement statements? | divide_statement (statements | "END-DIVIDE" statements? | size_error_phrases ("END-DIVIDE" statements?)?)? | entry_statement statements? | evaluate_statement ("END-EVALUATE" statements?)? | exit_statement statements? | exit_program_statement statements? | goback_statement statements? | go_to_statement statements? | if_statement ("END-IF" statements?)? | initialize_statement statements? | inspect_statement statements? | merge_statement statements? | move_statement statements? | multiply_statement (statements | "END-MULTIPLY" statements? | size_error_phrases ("END-MULTIPLY" statements?)?)? | open_statement statements? | perform_statement statements? | read_statement_format_i (statements | "END-READ" statements? | at_end_phrases ("END-READ" statements?)?)? | read_statement_format_ii (statements | "END-READ" statements? | invalid_key_phrases ("END-READ" statements?)?)? | release_statement statements? | return_statement ("END-RETURN" statements?)? | rewrite_statement (statements | "END-REWRITE" statements? | invalid_key_phrases ("END-REWRITE" statements?)?)? | search_statement ("END-SEARCH" statements?)? | set_statement statements? | sort_statement statements? | start_statement (statements | "END-START" statements? | invalid_key_phrases ("END-START" statements?)?)? | stop_statement statements? | string_statement (statements | "END-STRING" statements? | overflow_phrases ("END-STRING" statements?)?)? | subtract_statement (statements | "END-SUBTRACT" statements? | size_error_phrases ("END-SUBTRACT" statements?)?)? | unstring_statement (statements | "END-UNSTRING" statements? | overflow_phrases ("END-UNSTRING" statements?)?)? | write_statement_format_i (statements | "END-WRITE" statements? | write_before_after (statements | "END-WRITE" statements? | w_phrase ("END-WRITE" statements?)?)? | invalid_key_phrases ("END-WRITE" statements?)?)? | examine_statement statements? | copy_directive statements?);
+
+overflow_phrases :
+   on_overflow? not_on_overflow?;
+
+invalid_key_phrases :
+   (invalid_key | not_invalid_key | invalid_key not_invalid_key);
+
+at_end_phrases :
+   (at_end | not_at_end | at_end not_at_end);
+
+exception_phrases :
+   (on_exception | not_on_exception | on_exception not_on_exception);
+
+size_error_phrases :
+   (on_size_error | not_on_size_error | on_size_error not_on_size_error);
+
+examine_statement :
+   "EXAMINE" identifier "TALLYING" ("ALL" | "LEADING") literal;
+
+not_at_eop :
+   "NOT" "AT"? ("END-OF-PAGE" | "EOP") series_of_imperative_statements;
+
+at_eop :
+   "AT"? ("END-OF-PAGE" | "EOP") series_of_imperative_statements;
+
+write_before_after :
+   (("BEFORE" | "AFTER") "ADVANCING"? ((identifier | integer) ("LINE" | "LINES")? | mnemonic_name | "PAGE"))?;
+
+not_at_end :
+   "NOT" "AT"? "END" series_of_imperative_statements;
+
+at_end :
+   "AT"? "END" series_of_imperative_statements;
+
+inspect_replacing_phrase :
+   "REPLACING" 
+   ("CHARACTERS" "BY" (identifier | literal) before_after_phrase* | ("ALL" | "LEADING" | "FIRST") ((identifier | literal) "BY" (identifier | literal) before_after_phrase*)+)+;
+
+inspect_tallying_phrase :
+   "TALLYING" 
+   (identifier "FOR" ("CHARACTERS" before_after_phrase* | ("ALL" | "LEADING") ((identifier | literal) before_after_phrase*)+)+)+;
+
+before_after_phrase :
+   ("BEFORE" | "AFTER") "INITIAL"? (identifier | literal);
+
+when_other_phrase :
+   "WHEN" "OTHER" series_of_imperative_statements;
+
+when_phrase :
+   ("WHEN" e_phrase ("ALSO" e_phrase)*)+ series_of_imperative_statements;
+
+e_phrase :
+   ("ANY" | condition | "TRUE" | "FALSE" | "NOT"? (identifier | literal | arithmetic_expression) (("THROUGH" | "THRU") (identifier | literal | arithmetic_expression))?);
+
+invalid_key :
+   "INVALID" "KEY"? series_of_imperative_statements;
+
+not_invalid_key :
+   "NOT" "INVALID" "KEY"? series_of_imperative_statements;
+
+not_on_exception :
+   "NOT" "ON"? "EXCEPTION" series_of_imperative_statements;
+
+on_exception :
+   "ON"? "EXCEPTION" series_of_imperative_statements;
+
+not_on_overflow :
+   "NOT" "ON"? "OVERFLOW" series_of_imperative_statements;
+
+on_overflow :
+   "ON"? "OVERFLOW" series_of_imperative_statements;
+
+not_on_size_error :
+   "NOT" "ON"? "SIZE" "ERROR" series_of_imperative_statements;
+
+on_size_error :
+   "ON"? "SIZE" "ERROR" series_of_imperative_statements;
+
+use_directive :
+   (use_directive_format_i | use_directive_format_ii | use_directive_format_iii);
+
+subtract_statement :
+   (subtract_statement_format_i | subtract_statement_format_ii | subtract_statement_format_iii);
+
+set_statement :
+   (set_statement_format_i | set_statement_format_ii | set_statement_format_iii | set_statement_format_iv | set_statement_format_v);
+
+search_statement :
+   (search_statement_format_i | search_statement_format_ii);
+
+perform_statement :
+   (perform_statement_format_i | perform_statement_format_ii | perform_statement_format_iii | perform_statement_format_iv);
+
+open_statement :
+   (open_statement_format_i | open_statement_format_ii);
+
+multiply_statement :
+   (multiply_statement_format_i | multiply_statement_format_ii);
+
+move_statement :
+   (move_statement_format_i | move_statement_format_ii);
+
+inspect_statement :
+   (inspect_statement_format_i | inspect_statement_format_ii | inspect_statement_format_iii | inspect_statement_format_iv);
+
+go_to_statement :
+   (go_to_statement_format_i | go_to_statement_format_ii | altered_go_to | go_to_statement_format_iv);
+
+divide_statement :
+   (divide_statement_format_i | divide_statement_format_ii | divide_statement_format_iii | divide_statement_format_iv | divide_statement_format_v);
+
+close_statement :
+   (close_statement_format_i | close_statement_format_ii);
+
+add_statement :
+   (add_statement_format_i | add_statement_format_ii | add_statement_format_iii);
+
+accept_statement :
+   (accept_statement_format_i | accept_statement_format_ii);
+
+call_using_phrase :
+   "USING" (("BY"? "REFERENCE")? (identifier |  "ADDRESS" "OF" identifier  |  file_name )+ | "BY"? "CONTENT" (( "LENGTH" "OF" )? identifier |  "ADDRESS" "OF" identifier  |  literal )+)+;
+
+altered_go_to :
+   "GO" "TO"?;
+
+occurs_clause :
+   (occurs_clause_format_i | occurs_clause_format_ii);
+
+data_clauses :
+   (blank_when_zero_clause | external_clause | global_clause | justified_clause | occurs_clause | picture_clause | sign_clause | synchronized_clause | usage_clause | value_clause_format_ii | renames_clause)*;
+
+data_description_entry :
+   (data_description_entry_format_i | data_description_entry_format_ii | data_description_entry_format_iii | copy_directive);
+
+code_set_clause :
+   "CODE-SET" "IS"? alphabet_name;
+
+recording_mode_clause :
+    "RECORDING" "MODE"? "IS"? mode ;
+
+linage_area_clause :
+   ("WITH"? "FOOTING" "AT"? (data_name | integer))? 
+   ("LINES"? "AT"? "TOP" (data_name | integer))? 
+   ("LINES"? "AT"? "BOTTOM" (data_name | integer))?;
+
+linage_clause :
+   "LINAGE" "IS"? (qualified_data_name | integer) "LINES"? linage_area_clause;
+
+data_records_clause :
+   "DATA" ("RECORD" | "RECORDS") ("IS" | "ARE")? qualified_data_name+;
+
+value_of_clause :
+   "VALUE" "OF" (system_name "IS"? (qualified_data_name | literal))+;
+
+label_records_clause :
+   "LABEL" ("RECORD" | "RECORDS") ("IS" | "ARE")? ("STANDARD" | "OMITTED" |  qualified_data_name+ );
+
+record_varying_clause :
+   "IS"? "VARYING" "IN"? "SIZE"? 
+   ("FROM"? integer)? ("TO" integer)? "CHARACTERS"?;
+
+record_clause :
+   "RECORD" ("CONTAINS"? integer "CHARACTERS"? | "CONTAINS"? integer "TO" integer "CHARACTERS"? | record_varying_clause ("DEPENDING" "ON"? qualified_data_name)?);
+
+block_contains_clause :
+   "BLOCK" "CONTAINS"? (integer "TO")? integer ("CHARACTERS" | "RECORDS" | "RECORD")?;
+
+global_clause :
+   "IS"? "GLOBAL";
+
+external_clause :
+   "IS"? "EXTERNAL";
+
+file_clauses :
+   (external_clause | global_clause | block_contains_clause | record_clause | label_records_clause | value_of_clause | data_records_clause | linage_clause | recording_mode_clause | code_set_clause)*;
+
+file_description_entry :
+   ("FD" | "SD") file_name file_clauses ".";
+
+status_clause :
+   "FILE"? "STATUS" "IS"? qualified_data_name ( qualified_data_name )?;
+
+relative_key :
+   "RELATIVE" "KEY"? "IS"? qualified_data_name;
+
+record_key :
+   "RECORD" "KEY"? 
+   "IS"? qualified_data_name password_clause? 
+   idx_entry*;
+
+password_clause :
+    "PASSWORD" "IS"? qualified_data_name ;
+
+key_clause :
+   (record_key | relative_key);
+
+access_mode_clause :
+   ("ACCESS" "MODE"? "IS"?)? ("SEQUENTIAL" | "RANDOM" | "DYNAMIC");
+
+record_delimiter_clause :
+   "RECORD" "DELIMITER" "IS"? ("STANDARD-1" | assignment_name);
+
+padding_character_clause :
+   "PADDING" "CHARACTER"? "IS"? (qualified_data_name | literal);
+
+organisation_clause :
+   ("ORGANIZATION" "IS"?)? ("SEQUENTIAL" | "INDEXED" | "RELATIVE");
+
+reserve_clause :
+   "RESERVE" integer ("AREA" | "AREAS")?;
+
+file_control_clauses :
+   (reserve_clause | organisation_clause | padding_character_clause | record_delimiter_clause | access_mode_clause | key_clause | password_clause | status_clause)*;
+
+assign_clause :
+   "ASSIGN" "TO"? (assignment_name | literal)+;
+
+select_clause :
+   "SELECT" "OPTIONAL"? file_name;
+
+file_control_entry :
+   select_clause assign_clause file_control_clauses ".";
+
+special_names_clauses :
+   (environment_clause | alphabet_clause | symbolic_clause | class_clause | currency_clause)*;
+
+currency_clause :
+   ("CURRENCY" "SIGN"? "IS"? literal | "DECIMAL-POINT" "IS"? "COMMA" | "CURRENCY" "SIGN"? "IS"? literal "DECIMAL-POINT" "IS"? "COMMA");
+
+class_clause :
+   "CLASS" class_name "IS"? (literal (("THROUGH" | "THRU") literal)?)+;
+
+symbolic_clause :
+   "SYMBOLIC" "CHARACTERS"? (symbolic_character+ ("ARE" | "IS")? integer+)+ ("IN" alphabet_name)?;
+
+alphabet_clause :
+   "ALPHABET" alphabet_name "IS"? ("STANDARD-1" | "STANDARD-2" | "NATIVE" | "EBCDIC" | (literal (("THROUGH" | "THRU") literal | ("ALSO" literal)+)?)+);
+
+environment_clause :
+   (environment_name "IS"? mnemonic_name | environment_name ("IS"? mnemonic_name snp_entry? | snp_entry));
+
+computer_paragraphs :
+   (source_computer_paragraph | object_computer_paragraph)*;
+
+sentence :
+   statements ".";
+
+series_of_imperative_statements :
+   statements;
+
+procedure_division_content :
+   ("DECLARATIVES" "." (sect "." use_directive "." para)+ "END" "DECLARATIVES" ".")? 
+   para? section*;
+
+section :
+   section_name  "SECTION" priority_number? "." para;
+
+using_phrase :
+   "USING" data_name+;
+
+record_description_entry :
+   data_description_entry;
+
+data_division_content :
+   ("FILE" "SECTION" "." (file_description_entry record_description_entry+)*)? 
+   ("WORKING-STORAGE" "SECTION" "." data_description_entry*)? 
+   ("LINKAGE" "SECTION" "." data_description_entry*)?;
+
+environment_division_content :
+   configuration_section? input_output_section?;
+
+identification_division_content :
+   ("AUTHOR" "."?  comment_entry* | "INSTALLATION" "."?  comment_entry* | "DATE-WRITTEN" "."?  comment_entry* | "DATE-COMPILED" "."?  comment_entry* | "SECURITY" "."?  comment_entry* | "REMARKS" "." comment_entry*)*;
+
+copy_operand :
+   (quoted_pseudo_text | identifier | literal | cobol_word);
+
+abbreviation_rest :
+   (("AND" | "OR") "NOT"? relational_operator? (object | "(" object abbreviation_rest ")"))+;
+
+object :
+   arithmetic_expression;
+
+relational_operator :
+   ("IS" | "NOT" | "IS" "NOT" | "NOT" "IS")? ("GREATER" "THAN"? | ">" | "LESS" "THAN"? | "<" | "EQUAL" "TO"? | "=" | "GREATER" "THAN"? "OR" "EQUAL" "TO"? | ">=" | "LESS" "THAN"? "OR" "EQUAL" "TO"? | "<=");
+
+operand :
+   arithmetic_expression;
+
+simple_condition :
+   (class_condition | condition_name_condition | relation_condition | sign_condition | switch_status_condition | "(" condition ")");
+
+combinable_condition :
+   (simple_condition | negated_simple_condition | abbreviated_combined_relation_condition);
+
+condition :
+   (combinable_condition | combined_condition);
+
+basis :
+   (identifier | literal | "(" arithmetic_expression ")");
+
+power :
+   ("+" | "-")? basis ("**" basis)*;
+
+times_div :
+   power (("*" | "/") power)*;
+
+arithmetic_expression :
+   times_div (("+" | "-") times_div)*;
+
+special_register :
+   ("ADDRESS" "OF" data_name | "DEBUG-ITEM" | "LENGTH" "OF" identifier | "RETURN-CODE" | "SHIFT-OUT" | "SHIFT-IN" | "SORT-CONTROL" | "SORT-CORE-SIZE" | "SORT-FILE-SIZE" | "SORT-MESSAGE" | "SORT-MODE-SIZE" | "SORT-RETURN" | "TALLY" | "WHEN-COMPILED");
+
+literal :
+   (nonnumeric | numeric | dbcs | figurative_constant);
+
+figurative_constant :
+   ("ZERO" | "ZEROS" | "ZEROES" | "SPACE" | "SPACES" | "HIGH-VALUE" | "HIGH-VALUES" | "LOW-VALUE" | "LOW-VALUES" | "QUOTE" | "QUOTES" | "ALL" literal | "NULL" | "NULLS");
+
+assignment_name :
+   system_name;
+
+environment_name :
+   system_name;
+
+computer_name :
+   system_name;
+
+section_name :
+   (user_defined_word | integer);
+
+paragraph_name :
+   (user_defined_word | integer);
+
+text_name :
+   user_defined_word;
+
+program_name :
+   user_defined_word;
+
+library_name :
+   user_defined_word;
+
+symbolic_character :
+   alphabetic_user_defined_word;
+
+record_name :
+   qualified_data_name;
+
+mnemonic_name :
+   alphabetic_user_defined_word;
+
+index_name :
+   alphabetic_user_defined_word;
+
+file_name :
+   alphabetic_user_defined_word;
+
+data_name :
+   alphabetic_user_defined_word;
+
+condition_name :
+   alphabetic_user_defined_word;
+
+class_name :
+   alphabetic_user_defined_word;
+
+alphabet_name :
+   alphabetic_user_defined_word;
+
+length :
+   arithmetic_expression;
+
+leftmost_character_position :
+   arithmetic_expression;
+
+condition_name_reference :
+   (condition_name_in_data_division | condition_name_in_special_names_paragraph);
+
+subscript :
+   (integer | identifier (("+" | "-") integer)? | index_name (("+" | "-") integer)? | ("+" | "-") integer);
+
+qualified_data_name :
+   data_name (("IN" | "OF") data_name)* (("IN" | "OF") file_name)?;
+
+identifier :
+   (identifier_format_i | identifier_format_ii | special_register);
+
+procedure_name :
+   (reference_to_procedure_division_name_format_i | reference_to_procedure_division_name_format_ii);
+
+abbreviated_combined_relation_condition :
+   (relation_condition abbreviation_rest | arithmetic_expression relational_operator "(" "NOT"? arithmetic_expression abbreviation_rest ")" | arithmetic_expression "(" "NOT"? relational_operator? arithmetic_expression abbreviation_rest ")");
+
+accept_statement_format_i :
+   "ACCEPT" identifier ("FROM" (mnemonic_name |  environment_name ))?;
+
+accept_statement_format_ii :
+   "ACCEPT" identifier "FROM" ("DATE" | "DAY" | "DAY-OF-WEEK" | "TIME");
+
+add_statement_format_i :
+   "ADD" (identifier | literal)+ "TO" (identifier "ROUNDED"?)+;
+
+add_statement_format_ii :
+   "ADD" (identifier | literal)+ "TO"? (identifier | literal) 
+   "GIVING" (identifier "ROUNDED"?)+;
+
+add_statement_format_iii :
+   "ADD" ("CORRESPONDING" | "CORR") identifier "TO" identifier 
+   "ROUNDED"?;
+
+after_phrase :
+   ("AFTER" (identifier | index_name) "FROM" (identifier | index_name | literal) "BY" (identifier | literal) "UNTIL" condition)*;
+
+alter_statement :
+   "ALTER" 
+   (procedure_name "TO" ("PROCEED" "TO")? procedure_name)+;
+
+blank_when_zero_clause :
+   "BLANK" "WHEN"? ("ZERO" |  "ZEROS"  |  "ZEROES" );
+
+call_statement_format_i :
+   "CALL" (identifier | literal) 
+   (call_using_phrase copy_directive_without_period?)?;
+
+call_statement_format_ii :
+   "CALL" (identifier | literal) 
+   (call_using_phrase copy_directive_without_period?)?;
+
+cancel_statement :
+   "CANCEL" (identifier | literal)+;
+
+class_condition :
+   identifier ("IS" | "NOT" | "IS" "NOT" | "NOT" "IS")? ("NUMERIC" | "ALPHABETIC" | "ALPHABETIC-LOWER" | "ALPHABETIC-UPPER" | class_name |  "DBCS"  |  "KANJI" );
+
+close_statement_format_i :
+   "CLOSE" 
+   (file_name (("REEL" | "UNIT") ("FOR"? "REMOVAL" |  "WITH"? "NO" "REWIND" )? | "WITH"? ("NO" "REWIND" | "LOCK"))?)+;
+
+close_statement_format_ii :
+   "CLOSE" (file_name ("WITH"? "LOCK")?)+;
+
+cobol_source_program :
+   ("IDENTIFICATION" |  "ID" ) "DIVISION" "." "PROGRAM-ID" "."?  program_name 
+   ("IS"? "INITIAL" "PROGRAM"?)? "."?  
+   identification_division_content? 
+   ("ENVIRONMENT" "DIVISION" "." environment_division_content)? 
+   ("DATA" "DIVISION" "." data_division_content)? 
+   ("PROCEDURE" "DIVISION" (using_phrase? "." | copy_directive | "USING" data_name* copy_directive) procedure_division_content)? 
+   (nested_source_program* "END" "PROGRAM" program_name ".")?;
+
+combined_condition :
+   combinable_condition (("AND" | "OR") combinable_condition)+;
+
+compute_statement :
+   "COMPUTE" (identifier "ROUNDED"?)+ ("=" |  "EQUAL" ) 
+   arithmetic_expression;
+
+condition_name_condition :
+   condition_name_reference;
+
+condition_name_in_data_division :
+   condition_name (("IN" | "OF") data_name)* 
+   (("IN" | "OF") file_name)? ("(" subscript ")")*;
+
+condition_name_in_special_names_paragraph :
+   condition_name (("IN" | "OF") mnemonic_name)*;
+
+configuration_section :
+   "CONFIGURATION" "SECTION" "." computer_paragraphs special_names_paragraph?;
+
+continue_statement :
+   "CONTINUE";
+
+copy_directive :
+   copy_directive_without_period ".";
+
+data_description_entry_format_i :
+   level_number (data_name | "FILLER")? redefines_clause? 
+   data_clauses "."?;
+
+delete_statement :
+   "DELETE" file_name "RECORD"?;
+
+display_statement :
+   "DISPLAY" (identifier | literal)+ 
+   ("UPON" (mnemonic_name |  environment_name ))? 
+   ("WITH"? "NO" "ADVANCING")?;
+
+divide_statement_format_i :
+   "DIVIDE" (identifier | literal) "INTO" (identifier "ROUNDED"?)+;
+
+divide_statement_format_ii :
+   "DIVIDE" (identifier | literal) "INTO" (identifier | literal) 
+   "GIVING" (identifier "ROUNDED"?)+;
+
+divide_statement_format_iii :
+   "DIVIDE" (identifier | literal) "BY" (identifier | literal) 
+   "GIVING" (identifier "ROUNDED"?)+;
+
+divide_statement_format_iv :
+   "DIVIDE" (identifier | literal) "INTO" (identifier | literal) 
+   "GIVING" identifier "ROUNDED"? "REMAINDER" identifier;
+
+divide_statement_format_v :
+   "DIVIDE" (identifier | literal) "BY" (identifier | literal) 
+   "GIVING" identifier "ROUNDED"? "REMAINDER" identifier;
+
+entry_statement :
+    "ENTRY" literal ("USING" data_name+)? ;
+
+evaluate_statement :
+   "EVALUATE" (identifier | literal | arithmetic_expression | condition | "TRUE" | "FALSE") ("ALSO" (identifier | literal | arithmetic_expression | condition | "TRUE" | "FALSE"))* 
+   when_phrase+ 
+   when_other_phrase?;
+
+exit_program_statement :
+   "EXIT" "PROGRAM";
+
+exit_statement :
+   "EXIT";
+
+file_control_paragraph :
+   "FILE-CONTROL" "."  
+   file_control_entry* ;
+
+go_to_statement_format_i :
+   "GO" "TO"? procedure_name;
+
+go_to_statement_format_ii :
+   "GO" "TO"? procedure_name+ "DEPENDING" "ON"? 
+   identifier;
+
+go_to_statement_format_iv :
+    "GO" "TO"? "MORE-LABELS" ;
+
+goback_statement :
+   "GOBACK";
+
+i_o_control_paragraph :
+   "I-O-CONTROL" "." ((qsam_or_sam_i_o_control_entries | vsam_i_o_control_entries)+ ".")? 
+   (sort_merge_i_o_control_entries ".")?;
+
+identifier_format_i :
+   
+   qualified_data_name ("(" subscript+ ")")? 
+   ("(" leftmost_character_position ":" length? ")")?;
+
+identifier_format_ii :
+   "LINAGE-COUNTER" (("IN" | "OF") file_name)?;
+
+idx_entry :
+   "ALTERNATE" "RECORD"?  "KEY"? "IS"? qualified_data_name 
+   ( "PASSWORD" "IS"? qualified_data_name )? ("WITH"? "DUPLICATES")?;
+
+if_statement :
+   "IF" condition "THEN"? (statements | "NEXT" "SENTENCE") 
+   ("ELSE" (statements | "NEXT" "SENTENCE"))?;
+
+initialize_statement :
+   "INITIALIZE" identifier+ 
+   ("REPLACING" (("ALPHABETIC" | "ALPHANUMERIC" | "NUMERIC" | "ALPHANUMERIC-EDITED" | "NUMERIC-EDITED" |  "DBCS"  |  "EGCS" ) "DATA"? "BY" (identifier | literal))+)?;
+
+input_output_section :
+   "INPUT-OUTPUT" "SECTION" "." file_control_paragraph? 
+   i_o_control_paragraph?;
+
+inspect_statement_format_i :
+   "INSPECT" identifier inspect_tallying_phrase;
+
+inspect_statement_format_ii :
+   "INSPECT" identifier inspect_replacing_phrase;
+
+inspect_statement_format_iii :
+   "INSPECT" identifier inspect_tallying_phrase inspect_replacing_phrase;
+
+inspect_statement_format_iv :
+   "INSPECT" identifier "CONVERTING" (identifier | literal) "TO" 
+   (identifier | literal) before_after_phrase*;
+
+justified_clause :
+   ("JUSTIFIED" | "JUST") "RIGHT"?;
+
+merge_statement :
+   "MERGE" file_name ("ON"? ("ASCENDING" | "DESCENDING") "KEY"? qualified_data_name+)+ 
+   ("COLLATING"? "SEQUENCE" "IS"? alphabet_name)? "USING" file_name file_name+ 
+   ("OUTPUT" "PROCEDURE" "IS"? procedure_name (("THROUGH" | "THRU") procedure_name)? | "GIVING" file_name+);
+
+move_statement_format_i :
+   "MOVE" (identifier | literal) "TO" identifier+;
+
+move_statement_format_ii :
+   "MOVE" ("CORRESPONDING" | "CORR") identifier "TO" identifier+;
+
+multiply_statement_format_i :
+   "MULTIPLY" (identifier | literal) "BY" (identifier "ROUNDED"?)+;
+
+multiply_statement_format_ii :
+   "MULTIPLY" (identifier | literal) "BY" (identifier | literal) 
+   "GIVING" (identifier "ROUNDED"?)+;
+
+negated_simple_condition :
+   "NOT" condition;
+
+nested_source_program :
+   ("IDENTIFICATION" |  "ID" ) "DIVISION" "." "PROGRAM-ID" "."?  program_name 
+   ("IS"? ("COMMON" "INITIAL"? | "INITIAL" "COMMON"?) "PROGRAM"?)? "."?  
+   identification_division_content? 
+   ("ENVIRONMENT" "DIVISION" "." environment_division_content)? 
+   ("DATA" "DIVISION" "." data_division_content)? 
+   ("PROCEDURE" "DIVISION" (using_phrase? "." | copy_directive | "USING" data_name* copy_directive) procedure_division_content)? 
+   nested_source_program* "END" "PROGRAM" program_name ".";
+
+object_computer_paragraph :
+   "OBJECT-COMPUTER" "." 
+   (computer_name ("MEMORY" "SIZE"? integer ("WORDS" | "CHARACTERS" | "MODULES"))? ocp_entry ".")?;
+
+occurs_clause_format_i :
+   "OCCURS" integer "TIMES"? 
+   (("ASCENDING" | "DESCENDING") "KEY"? "IS"? data_name+)* 
+   ("INDEXED" "BY"? index_name+)?;
+
+occurs_clause_format_ii :
+   "OCCURS" (integer  "TO")? integer "TIMES"? "DEPENDING" 
+   "ON"? qualified_data_name 
+   (("ASCENDING" | "DESCENDING") "KEY"? "IS"? data_name+)* 
+   ("INDEXED" "BY"? index_name+)?;
+
+ocp_entry :
+   ("PROGRAM"? "COLLATING"? "SEQUENCE" "IS"? alphabet_name)? 
+   ("SEGMENT-LIMIT" "IS"? priority_number)?;
+
+open_statement_format_i :
+   "OPEN" ("INPUT" (file_name ("REVERSED" | "WITH"? "NO" "REWIND")?)+ | "OUTPUT" (file_name ("WITH"? "NO" "REWIND")?)+ | "I-O" file_name+ | "EXTEND" file_name+)+;
+
+open_statement_format_ii :
+   "OPEN" ("INPUT" file_name+ | "OUTPUT" file_name+ | "I-O" file_name+ | "EXTEND" file_name+)+;
+
+para :
+   (sentence* (paragraph_name "." sentence*)*)?;
+
+perform_statement_format_i :
+   "PERFORM" 
+   (procedure_name (("THROUGH" | "THRU") procedure_name)? | series_of_imperative_statements?  "END-PERFORM");
+
+perform_statement_format_ii :
+   "PERFORM" (procedure_name (("THROUGH" | "THRU") procedure_name)? (identifier | integer) "TIMES" | (identifier | integer) "TIMES" series_of_imperative_statements?  "END-PERFORM");
+
+perform_statement_format_iii :
+   "PERFORM" 
+   (procedure_name (("THROUGH" | "THRU") procedure_name)? test_phrase | test_phrase series_of_imperative_statements?  "END-PERFORM");
+
+perform_statement_format_iv :
+   "PERFORM" (procedure_name (("THROUGH" | "THRU") procedure_name)? varying_phrase after_phrase | varying_phrase series_of_imperative_statements?  "END-PERFORM");
+
+picture_clause :
+   ("PICTURE" | "PIC") "IS"? character_string;
+
+qsam_or_sam_i_o_control_entries :
+   ("RERUN" "ON"?  (assignment_name | file_name) "EVERY"? (integer "RECORDS" | "END" "OF"? ("REEL" | "UNIT")) "OF"? file_name | "SAME" "RECORD"? "AREA"? "FOR"? file_name (file_name )* | "MULTIPLE" "FILE" "TAPE"? "CONTAINS"? (file_name ("POSITION" integer)?)+ |  "APPLY" "WRITE-ONLY" "ON"? file_name+ );
+
+read_statement_format_i :
+   "READ" file_name "NEXT"? "RECORD"? 
+   ("INTO" identifier)?;
+
+read_statement_format_ii :
+   "READ" file_name "RECORD"? ("INTO" identifier)? 
+   ("KEY" "IS"? qualified_data_name)?;
+
+redefines_clause :
+   "REDEFINES" data_name;
+
+reference_to_procedure_division_name_format_i :
+   paragraph_name (("IN" | "OF") section_name)?;
+
+reference_to_procedure_division_name_format_ii :
+   section_name;
+
+relation_condition :
+   operand relational_operator 
+   operand;
+
+release_statement :
+   "RELEASE" record_name ("FROM" identifier)?;
+
+renames_clause :
+   "RENAMES" qualified_data_name 
+   (("THROUGH" | "THRU") qualified_data_name)?;
+
+return_statement :
+   "RETURN" file_name "RECORD"? ("INTO" identifier)? 
+   at_end 
+   not_at_end?;
+
+rewrite_statement :
+   "REWRITE" record_name ("FROM" identifier)?;
+
+search_statement_format_i :
+   "SEARCH" identifier ("VARYING" (identifier | index_name))? 
+   at_end? 
+   ("WHEN" condition (series_of_imperative_statements | "NEXT" "SENTENCE"))+;
+
+search_statement_format_ii :
+   "SEARCH" "ALL" identifier at_end? 
+   "WHEN" (identifier "IS"? ("EQUAL" "TO"? | "=") (identifier | literal | arithmetic_expression) | condition_name_reference) 
+   ("AND" (identifier "IS"? ("EQUAL" "TO"? | "=") (identifier | literal | arithmetic_expression) | condition_name_reference))* 
+   (series_of_imperative_statements  | "NEXT" "SENTENCE" )?;
+
+sect :
+   section_name "SECTION" priority_number?;
+
+set_statement_format_i :
+   "SET" (index_name | identifier)+ "TO" (index_name | identifier | integer);
+
+set_statement_format_ii :
+   "SET" index_name+ ("UP" "BY" | "DOWN" "BY") (identifier | integer);
+
+set_statement_format_iii :
+   "SET" (mnemonic_name+ "TO" ("ON" | "OFF"))+;
+
+set_statement_format_iv :
+   "SET" condition_name_reference+ "TO" "TRUE";
+
+set_statement_format_v :
+    "SET" (identifier | "ADDRESS" "OF" identifier)+ 
+   "TO" (identifier | "ADDRESS" "OF" identifier | "NULL" | "NULLS") ;
+
+sign_clause :
+   ("SIGN" "IS"?)? ("LEADING" | "TRAILING") ("SEPARATE" "CHARACTER"?)?;
+
+sign_condition :
+   operand ("IS" | "NOT" | "IS" "NOT" | "NOT" "IS")? ("POSITIVE" | "NEGATIVE" | "ZERO");
+
+snp_entry :
+   ("ON" "STATUS"? "IS"? condition ("OFF" "STATUS"? "IS"? condition)? | "OFF" "STATUS"? "IS"? condition ("ON" "STATUS"? "IS"? condition)?);
+
+sort_merge_i_o_control_entries :
+   ( "RERUN" "ON" assignment_name )? 
+   ("SAME" ("RECORD" | "SORT" | "SORT-MERGE") "AREA"? "FOR"? file_name (file_name )*)+;
+
+sort_statement :
+   "SORT" file_name ("ON"? ("ASCENDING" | "DESCENDING") "KEY"? qualified_data_name+)+ 
+   ("WITH"? "DUPLICATES" "IN"? "ORDER"?)? 
+   ("COLLATING"? "SEQUENCE" "IS"? alphabet_name)? 
+   ("USING" file_name+ | "INPUT" "PROCEDURE" "IS"? procedure_name (("THROUGH" | "THRU") procedure_name)?) 
+   ("GIVING" file_name+ | "OUTPUT" "PROCEDURE" "IS"? procedure_name (("THROUGH" | "THRU") procedure_name)?);
+
+source_computer_paragraph :
+   "SOURCE-COMPUTER" "." 
+   (computer_name ("WITH"? "DEBUGGING" "MODE")? ".")?;
+
+special_names_paragraph :
+   "SPECIAL-NAMES" "." special_names_clauses ("." )?;
+
+start_statement :
+   "START" file_name 
+   ("KEY" "IS"? ("EQUAL" "TO"? | "=" | "GREATER" "THAN"? | ">" | "NOT" "LESS" "THAN"? | "NOT" "<" | "GREATER" "THAN"? "OR" "EQUAL" "TO"? | ">=") qualified_data_name)?;
+
+stop_statement :
+   "STOP" ("RUN" | literal);
+
+string_statement :
+   "STRING" 
+   ((identifier | literal)+ "DELIMITED" "BY"? (identifier | literal | "SIZE"))+ 
+   "INTO" identifier ("WITH"? "POINTER" identifier)?;
+
+subtract_statement_format_i :
+   "SUBTRACT" (identifier | literal)+ "FROM" 
+   (identifier "ROUNDED"?)+;
+
+subtract_statement_format_ii :
+   "SUBTRACT" (identifier | literal)+ "FROM" (identifier | literal) 
+   "GIVING" (identifier "ROUNDED"?)+;
+
+subtract_statement_format_iii :
+   "SUBTRACT" ("CORRESPONDING" | "CORR") identifier "FROM" 
+   identifier "ROUNDED"?;
+
+switch_status_condition :
+   condition_name_reference;
+
+synchronized_clause :
+   ("SYNCHRONIZED" | "SYNC") ("LEFT" | "RIGHT")?;
+
+test_phrase :
+   ("WITH"? "TEST" ("BEFORE" | "AFTER"))? "UNTIL" condition;
+
+unstring_statement :
+   "UNSTRING" identifier 
+   ("DELIMITED" "BY"? "ALL"? (identifier | literal) ("OR" "ALL"? (identifier | literal))*)? "INTO" 
+   (identifier ("DELIMITER" "IN"? identifier)? ("COUNT" "IN"? identifier)?)+ 
+   ("WITH"? "POINTER" identifier)? ("TALLYING" "IN"? identifier)?;
+
+usage_clause :
+   ("USAGE" "IS"?)? ("BINARY" | "COMP" |  "COMP-1"  |  "COMP-2"  |  "COMP-3"  |  "COMP-4"  | "COMPUTATIONAL" |  "COMPUTATIONAL-1"  |  "COMPUTATIONAL-2"  |  "COMPUTATIONAL-3"  |  "COMPUTATIONAL-4"  | "DISPLAY" |  "DISPLAY-1"  | "INDEX" | "PACKED-DECIMAL" |  "POINTER" );
+
+use_directive_format_i :
+   "USE" "GLOBAL"? "AFTER" "STANDARD"? ("EXCEPTION" | "ERROR") "PROCEDURE" 
+   "ON"? (file_name+ | "INPUT" | "OUTPUT" | "I-O" | "EXTEND");
+
+use_directive_format_ii :
+    "USE" "GLOBAL"? "AFTER" "STANDARD"? ("BEGINNING" | "ENDING")? 
+   ("FILE" | "REEL" | "UNIT")? "LABEL" "PROCEDURE" "ON"? (file_name+ | "INPUT" | "OUTPUT" | "I-O" | "EXTEND") ;
+
+use_directive_format_iii :
+   "USE" "FOR"? "DEBUGGING" "ON"? (procedure_name+ | "ALL" "PROCEDURES");
+
+value_clause_format_ii :
+   ("VALUE" "IS"? | "VALUES" "ARE"?) 
+   (literal (("THROUGH" | "THRU") literal)?)+;
+
+varying_phrase :
+   ("WITH"? "TEST" ("BEFORE" | "AFTER"))? "VARYING" (identifier | index_name) "FROM" (identifier | index_name | literal) "BY" (identifier | literal) "UNTIL" 
+   condition;
+
+vsam_i_o_control_entries :
+   ("RERUN" "ON"?  (assignment_name | file_name) "EVERY"? integer "RECORDS" "OF"? file_name | "SAME" "RECORD"? "AREA"? "FOR"? file_name (file_name )*);
+
+w_phrase :
+   (at_eop | not_at_eop | at_eop not_at_eop);
+
+write_statement_format_i :
+   "WRITE" record_name ("FROM" identifier)?;
+
