@@ -92,9 +92,9 @@ public BodyElement footer()
 		lastupdated(),
 		makelinks([<"↑","#TOP">]),
 		br(),
-		ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img("cc-by.png","CC-BY") ),
-		ahref( ("href":"http://validator.w3.org/check/referer"), img("vxhtml.png","Valid XHTML 1.0") ),
-		ahref( ("href":"http://jigsaw.w3.org/css-validator/check/referer"), img("vcss.png","Valid CSS 2.1") )
+		ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img("cc-by.png","CC-BY", "View CC-BY license") ),
+		ahref( ("href":"http://validator.w3.org/check/referer"), img("vxhtml.png","Valid XHTML 1.0", "Validate as XHTML 1.0") ),
+		ahref( ("href":"http://jigsaw.w3.org/css-validator/check/referer"), img("vcss.png","Valid CSS 2.1", "Validate as CSS 2.1") )
 	]));
 
 public str safe4anchor(str s)

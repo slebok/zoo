@@ -31,6 +31,9 @@ void gmain()
 void listGlues(ZooEntry z)
 {
 	here = [d | loc d <- (framework::BackEnd::basedir + z.where).ls, d.extension == "glue", !startsWith(d.file,"_")];
+	// TODO: sort GLUEs so that extract.glue happens before connect.glue etc
+	// the following is a dirty hack
+	here = reverse(sort(here));
 	for(gfile <- here)
 	{
 		println("<z.where> HAS <gfile>");

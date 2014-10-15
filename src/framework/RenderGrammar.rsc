@@ -50,12 +50,18 @@ void rmain(bool force)
 					println("\tNo need to refresh the rendered version.");
 					continue;
 				}
+				else
+					println("\tGenerating...");
 				g = readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf");
 				// NB: HACK!
 				// TODO: workaround - escaping in GrammarLab concrete syntax
 				g = visit(g){case nonterminal("DQUOTE") => terminal("\"")};
+				//tk = txtbykey(zvs,"of");
+				//hm = bgf2html(tk, dir, g, z );
+				//iprintln(hm);
 				writeHTML(
 					bgf2html(txtbykey(zvs,"of"), dir, g, z ),
+					//hm,
 					framework::BackEnd::outdir+"<mydir>/index.html"
 				);
 				//println(z);
@@ -77,7 +83,7 @@ HTML bgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 		body( (), [
 			heading(1, ("class":"l"), _seq([aname("TOP"),_text("Browsable <name> Grammar")])),
 			//<p>Extracted and/or recovered by <strong><a href="http://grammarware.net">Vadim Zaytsev</a></strong>,	see <a href="http://slps.github.io/zoo/">Grammar Zoo</a> for details.
-			ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img(pathtoroot(z.where,"cc-by.png"),"CC-BY") ),
+			ahref( ("href":"http://creativecommons.org/licenses/by/3.0/"), img(pathtoroot(z.where,"cc-by.png"),"CC-BY","View the CC-BY license") ),
 			para( (), _seq([
 				_text("Grammar <t> by "),
 				strong((), ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev"))),
@@ -85,8 +91,7 @@ HTML bgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 				ahref( ("href":"http://grammarzoo.github.io/"), _text("Grammar Zoo")),
 				_text(" entry for details: "),
 				ahref( ("href":pathtoroot(z.where,"index.html")+"#<safe4anchor("<z.where>/<t>")>"), _text("<z.where>/<t>") ),
-				br(),
-				*[src2be("Source used for this grammar: ",zin) | struct(str key, list[ZooValue] zin) <- z.meta, key == "source"]
+				*[*[br(),src2be("Source used for this grammar: ",zin)] | struct(str key, list[ZooValue] zin) <- z.meta, key == "source"]
 			])),
 			heading(2, ("class":"l"), _text("Summary")),
 			ul( ("class":"nl"), metricSummary(g)),
@@ -94,7 +99,7 @@ HTML bgf2html(str name, str t, GGrammar g, ZooEntry z) = html(
 			hpp(g),
 			hr(),
 			div( ("class":"b"), _seq([
-				ahref( ("href":"http://grammarware.github.io/lab"), img( pathtoroot(z.where,"grammarlab.png"), "Powered by GrammarLab" ) ),
+				ahref( ("href":"http://grammarware.github.io/lab"), img( pathtoroot(z.where,"by-grammarlab.png"), "GrammarLab", "Powered by GrammarLab" ) ),
 				_text("Maintained by Dr. "),
 				ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
 				_text(" a.k.a. @"),
@@ -113,8 +118,8 @@ BodyElement hpplhs(str lhs) = ahref( ("class":"nt", "name":lhs), _text(lhs) );
 
 BodyElement hpprhs(GExpr rhs)
 	= (choice(L) := rhs)
-	? _seq([*[_text("\n\t"),hpp(e)] | e <- L])
-	: _seq([_text("\n\t"),hpp(rhs)]);
+	? _seq([*[_text("\n"),_tab(),hpp(e)] | e <- L])
+	: _seq([_text("\n"),_tab(),hpp(rhs)]);
 
 // possibly parenthesized
 BodyElement PPhpp(e:sequence(_)) = _seq([mmeta("("), hpp(e), mmeta(")")]);
@@ -206,7 +211,9 @@ list[BodyElement] metricSummary(GGrammar g)
 			strong( (), _text("<VAR(g)>")),
 			_text(" nonterminal symbols: "),
 			strong( (), _text("<size(g.N)>")),
-			_text(" defined (see below), "),
+			_text(" defined ("),
+			csnlL(g.N),
+			_text("), "),
 			strong( (), _text("<ROOT(g)>")),
 			_text(" root ("),
 			csnlL(listROOT(g)),
@@ -227,6 +234,10 @@ list[BodyElement] metricSummary(GGrammar g)
 			strong( (), _text("<KWDS(g)>")),
 			_text(" keywords ("),
 			cstl(freqTerminals(listKWDS(g),g)),
+			_text("), "),
+			strong( (), _text("<LET(g)>")),
+			_text(" letters ("),
+			cstl(freqTerminals(listLET(g),g)),
 			_text("), "),
 			strong( (), _text("<NUM(g)>")),
 			_text(" numerics ("),

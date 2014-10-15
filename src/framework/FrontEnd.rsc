@@ -31,8 +31,8 @@ HTML zooval2html(ZooEntry ze, bool debug)
 		]),
 		//zentry(str where, list[ZooValue] meta, list[ZooEntry] inner)
 		body( ("style":"background-color:#9C9;"), [
-			div( ("style":"float:right;", "class":"box"), img( "grammarlab.png", "Powered by GrammarLab" ) ),
-			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "GrammarZoo logo" ) ),
+			div( ("style":"float:right;", "class":"box"), img( "grammarlab.png", "GrammarLab", "Powered by GrammarLab" ) ),
+			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "GrammarZoo logo", "" ) ),
 			heading(1, (), _seq([aname("TOP"),_text(txtbykey(ze,"name"))])),
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
 			heading(2, ("class":"fh"), _text("<countEntries(ze)> entries and counting")),
