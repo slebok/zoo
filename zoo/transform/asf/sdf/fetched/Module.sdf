@@ -1,0 +1,26 @@
+module languages/asf/syntax/Module[Tree]
+
+imports basic/Whitespace
+imports languages/asf/syntax/Equations[Tree]
+imports languages/asf/syntax/Tests[Tree]
+
+imports languages/sdf2/syntax/Character[
+	Character => CHAR 
+	NumChar => ASF-NumChar 
+	ShortChar => ASF-ShortChar
+]
+
+hiddens
+  context-free start-symbols
+    ASF-Module ASF-Section
+
+exports
+  sorts ASF-Module ASF-Section ASF-NumChar ASF-ShortChar
+
+context-free syntax
+
+  list:ASF-Section* -> ASF-Module {cons("default")}
+
+  "equations" list:ASF-ConditionalEquation* -> ASF-Section {cons("equations")}
+  "tests" test-list:ASF-TestEquation* -> ASF-Section {cons("tests")}
+

@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bgf="http://planet-sl.org/bgf" xmlns:xbgf="http://planet-sl.org/xbgf" xmlns:cbgf="http://planet-sl.org/cbgf" targetNamespace="http://planet-sl.org/cbgf">
+	<xsd:annotation>
+		<xsd:documentation>
+			BGF Convergence Operator Suite
+			(heavily inspired by XBGF, with emphasis on bidirectionality and
+			 the goal of expression relationship rather than transformation)
+    	</xsd:documentation>
+	</xsd:annotation>
+	<xsd:import namespace="http://planet-sl.org/bgf" schemaLocation="bgf.xsd"/>
+	<xsd:import namespace="http://planet-sl.org/xbgf" schemaLocation="xbgf.xsd"/>
+	<xsd:element name="relationship">
+		<xsd:annotation>
+			<xsd:documentation>
+				Superposition of multiple transformations.
+      		</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:group ref="cbgf:transformation" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:group name="transformation">
+		<xsd:choice>
+			<!--
+				not covered from xbgf:
+					* strip (deprecated)
+					* dump (debug)
+				
+				might be shaky!
+					* reroot (implementation is not easily turned bx)
+			-->
+			<xsd:group ref="cbgf:folding-unfolding-transformation"/>
+			<xsd:group ref="cbgf:refactoring-transformation"/>
+			<xsd:group ref="cbgf:increasing-decreasing-transformation"/>
+			<xsd:group ref="cbgf:concrete-revising-transformation"/>
+			<xsd:group ref="cbgf:abstract-revising-transformation"/>
+			<xsd:group ref="cbgf:decorative-transformation"/>
+			<xsd:element ref="cbgf:rename-rename"/>
+			<xsd:element ref="cbgf:reroot-reroot"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="folding-unfolding-transformation">
+		<xsd:choice>
+			<xsd:element ref="cbgf:unfold-fold"/>
+			<xsd:element ref="cbgf:fold-unfold"/>
+			<xsd:element ref="cbgf:inline-extract"/>
+			<xsd:element ref="cbgf:extract-inline"/>
+			<xsd:element ref="cbgf:abridge-detour"/>
+			<xsd:element ref="cbgf:detour-abridge"/>
+			<xsd:element ref="cbgf:unchain-chain"/>
+			<xsd:element ref="cbgf:chain-unchain"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="refactoring-transformation">
+		<xsd:choice>
+			<!--
+				not covered from xbgf:
+					* distribute (too automatic)
+					* import (sugar?)
+					* equate (needs split)
+				
+				tricky:
+					* rassoc/lassoc
+			-->
+			<xsd:element ref="cbgf:massage-massage"/>
+			<xsd:element ref="cbgf:factor-factor"/>
+			<xsd:element ref="cbgf:deyaccify-yaccify"/>
+			<xsd:element ref="cbgf:yaccify-deyaccify"/>
+			<xsd:element ref="cbgf:eliminate-introduce"/>
+			<xsd:element ref="cbgf:introduce-eliminate"/>
+			<xsd:element ref="cbgf:vertical-horizontal"/>
+			<xsd:element ref="cbgf:horizontal-vertical"/>
+			<xsd:element ref="cbgf:assoc-iterate"/>
+			<xsd:element ref="cbgf:iterate-assoc"/>
+			<xsd:element ref="cbgf:equate-clone"/>
+			<xsd:element ref="cbgf:clone-equate"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="increasing-decreasing-transformation">
+		<xsd:choice>
+			<!--
+				not covered from xbgf:
+					* unite (too automatic?)
+			-->
+			<xsd:element ref="cbgf:add-remove"/>
+			<xsd:element ref="cbgf:remove-add"/>
+			<xsd:element ref="cbgf:appear-disappear"/>
+			<xsd:element ref="cbgf:disappear-appear"/>
+			<xsd:element ref="cbgf:widen-narrow"/>
+			<xsd:element ref="cbgf:narrow-widen"/>
+			<xsd:element ref="cbgf:upgrade-downgrade"/>
+			<xsd:element ref="cbgf:downgrade-upgrade"/>
+			<xsd:element ref="cbgf:unite-split"/>
+			<xsd:element ref="cbgf:split-unite"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="concrete-revising-transformation">
+		<xsd:choice>
+			<xsd:element ref="cbgf:abstractize-concretize"/>
+			<xsd:element ref="cbgf:concretize-abstractize"/>
+			<xsd:element ref="cbgf:permute-permute"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="abstract-revising-transformation">
+		<xsd:choice>
+			<!--
+				not covered from xbgf:
+					* redefine (sugar)
+			-->
+			<xsd:element ref="cbgf:define-undefine"/>
+			<xsd:element ref="cbgf:undefine-define"/>
+			<xsd:element ref="cbgf:inject-project"/>
+			<xsd:element ref="cbgf:project-inject"/>
+			<xsd:element ref="cbgf:replace-replace"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="decorative-transformation">
+		<xsd:choice>
+			<xsd:element ref="cbgf:designate-unlabel"/>
+			<xsd:element ref="cbgf:unlabel-designate"/>
+			<xsd:element ref="cbgf:deanonymize-anonymize"/>
+			<xsd:element ref="cbgf:anonymize-deanonymize"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:element name="remove-add">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="vertical">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="horizontal">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="add-remove">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="vertical">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="horizontal">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="appear-disappear">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="disappear-appear">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="chain-unchain">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="unchain-chain">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="anonymize-deanonymize">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="deanonymize-anonymize">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="define-undefine">
+		<!-- difference from XBGF:
+			undefine requires a nonterminal
+			define requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="undefine-define">
+		<!-- difference from XBGF:
+			undefine requires a nonterminal
+			define requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="downgrade-upgrade">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="upgrade-downgrade">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="designate-unlabel">
+		<!-- difference from XBGF:
+			designate requires a production
+			unlabel requires a label
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="unlabel-designate">
+		<!-- difference from XBGF:
+			designate requires a production
+			unlabel requires a label
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="deyaccify-yaccify">
+		<!-- difference from XBGF:
+			deyaccify requires a nonterminal
+			yaccify requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="yaccify-deyaccify">
+		<!-- difference from XBGF:
+			deyaccify requires a nonterminal
+			yaccify requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="eliminate-introduce">
+		<!-- difference from XBGF:
+			eliminate requires a nonterminal
+			introduce requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="introduce-eliminate">
+		<!-- difference from XBGF:
+			eliminate requires a nonterminal
+			introduce requires (possibly multiple) productions
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="extract-inline">
+		<!-- difference from XBGF:
+			extract requires (possibly multiple) productions
+			inline IS a nonterminal
+		TODO:
+			scope awareness
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="inline-extract">
+		<!-- difference from XBGF:
+			extract requires (possibly multiple) productions
+			inline IS a nonterminal
+		TODO:
+			scope awareness
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="factor-factor">
+		<!-- naturally bx -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="fold-unfold">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="nonterminal" type="bgf:nonterminal"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="unfold-fold">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="nonterminal" type="bgf:nonterminal"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="horizontal-vertical">
+		<!-- difference from XBGF:
+			horizontal requires a nonterminal
+			vertical IS a scope
+		SOLUTION:
+			limit ourselves to nonterminals
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="nonterminal" type="bgf:nonterminal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="vertical-horizontal">
+		<!-- difference from XBGF:
+			horizontal requires a nonterminal
+			vertical IS a scope
+		SOLUTION:
+			limit ourselves to nonterminals
+		-->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="nonterminal" type="bgf:nonterminal"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="assoc-iterate">
+		<!-- experimental, no natural reverse in XBGF -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="iterate-assoc">
+		<!-- experimental, no natural reverse in XBGF -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="inject-project">
+		<!-- already pretty bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="project-inject">
+		<!-- already pretty bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="massage-massage">
+		<!-- naturally bx -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="narrow-widen">
+		<!-- graciously bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="widen-narrow">
+		<!-- graciously bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="permute-permute">
+		<!-- one there, one back -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="rename-rename">
+		<!-- "from" and "to" don't make sense anymore -->
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element name="label">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="from" type="bgf:label"/>
+							<xsd:element name="to" type="bgf:label"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="nonterminal">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="from" type="bgf:nonterminal"/>
+							<xsd:element name="to" type="bgf:nonterminal"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="selector">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="in" minOccurs="0" type="bgf:label"/>
+							<xsd:element name="from" type="bgf:selector"/>
+							<xsd:element name="to" type="bgf:selector"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="terminal">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="from" type="bgf:terminal"/>
+							<xsd:element name="to" type="bgf:terminal"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="replace-replace">
+		<!-- brutally bidirectional -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element ref="bgf:expression"/>
+				<xsd:element name="in" minOccurs="0">
+					<xsd:complexType>
+						<xsd:group ref="xbgf:scope"/>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="tag" type="xsd:string"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="abridge-detour">
+		<!-- graciously bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="detour-abridge">
+		<!-- graciously bx by design -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="bgf:production"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="concretize-abstractize">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="bgf:production"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="abstractize-concretize">
+		<xsd:complexType>
+			<xsd:choice>
+				<xsd:element ref="bgf:production"/>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="equate-clone">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="align">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="with" type="bgf:nonterminal"/>
+				<xsd:element name="in">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:group ref="xbgf:scope" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="clone-equate">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="align">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="with" type="bgf:nonterminal"/>
+				<xsd:element name="in">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:group ref="xbgf:scope" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="unite-split">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="add">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="to">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="in">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:group ref="xbgf:scope" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="split-unite">
+		<!-- TODO: internal names like "add" and "to" make no sense -->
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="add">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="to">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element ref="bgf:production" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="in">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:group ref="xbgf:scope" maxOccurs="unbounded"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="reroot-reroot">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="from" type="cbgf:roots"/>
+				<xsd:element name="to" type="cbgf:roots"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="roots">
+		<xsd:sequence>
+			<xsd:element name="root" type="bgf:nonterminal" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:group name="scope">
+		<!-- extremely hard to take into account in bx; not advised at the moment -->
+		<xsd:choice>
+			<xsd:element name="label" type="bgf:label"/>
+			<xsd:element name="nonterminal" type="bgf:nonterminal"/>
+		</xsd:choice>
+	</xsd:group>
+</xsd:schema>

@@ -1,0 +1,16 @@
+module languages/asf/syntax/Conditions[Tree]
+
+exports
+   sorts ASF-Condition ASF-Conditions Tree
+
+   context-free syntax
+
+       lhs:Tree unequal:"!=" rhs:Tree -> ASF-Condition {cons("negative")}
+       lhs:Tree equality:"==" rhs:Tree   -> ASF-Condition {cons("equality")}
+       lhs:Tree match:":=" rhs:Tree   -> ASF-Condition {cons("match")}
+       lhs:Tree match:"!:=" rhs:Tree  -> ASF-Condition {cons("no-match")}
+
+  context-free syntax
+
+       list:{ASF-Condition ","}+ -> ASF-Conditions
+

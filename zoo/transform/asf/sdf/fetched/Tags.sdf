@@ -1,0 +1,19 @@
+module languages/asf/syntax/Tags
+
+exports
+
+sorts ASF-TagId ASF-Tag
+
+lexical syntax
+
+    head:[A-Za-z0-9\"\'] 
+	-> ASF-TagId {avoid,cons("one-char")}
+
+    head:[A-Za-z0-9\"\'] middle:[A-Za-z0-9\"\'\-]* last:[A-Za-z0-9\"\'] 
+	-> ASF-TagId {avoid,cons("many-chars")}
+
+context-free syntax
+
+    "[" "]"           -> ASF-Tag {cons("empty")}
+    "[" ASF-TagId "]" -> ASF-Tag {cons("not-empty")}
+
