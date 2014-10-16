@@ -1,0 +1,139 @@
+entrypoints Module ;
+
+
+-- To regenerate grammar (see src/Makefile, the goal 'grammar'):
+--         cd src/
+--         bnfc -p "Language.Clafer.Front" --ghc clafer.cf
+--         happy -gca Language/Clafer/Front/Parclafer.y
+--         alex -g Language/Clafer/Front/Lexclafer.x
+
+comment "//" ;
+comment "/*" "*/" ;
+
+Module.         Module ::= [Declaration] ;
+
+EnumDecl.       Declaration ::= "enum" PosIdent "=" [EnumId] ;
+ElementDecl.    Declaration ::= Element ;
+
+Clafer.         Clafer ::= Abstract GCard PosIdent Super Card Init Elements ;
+Constraint.     Constraint ::= "[" [Exp] "]" ;
+SoftConstraint. SoftConstraint ::= "(" [Exp] ")";
+Goal.   		Goal ::= "<<" [Exp] ">>" ;
+
+
+AbstractEmpty.  Abstract ::= ;
+Abstract.       Abstract ::= "abstract" ;
+
+-- ElementsEmpty causes parsing problems
+ElementsEmpty.  Elements ::= ;
+ElementsList.   Elements ::= "{" [Element] "}" ;
+
+Subclafer.      Element ::= Clafer ;
+ClaferUse.      Element ::= "`" Name Card Elements ;
+Subconstraint.  Element ::= Constraint ;
+Subgoal. 		Element ::= Goal; 
+Subsoftconstraint. Element ::= SoftConstraint;
+
+SuperEmpty.     Super ::=  ;
+SuperSome.      Super ::= SuperHow SetExp ;
+
+SuperColon.     SuperHow ::= ":" ;
+SuperArrow.     SuperHow ::= "->" ;
+SuperMArrow.    SuperHow ::= "->>" ;
+
+InitEmpty.      Init ::= ;
+InitSome.       Init ::= InitHow Exp ;
+
+InitHow_1.      InitHow ::= "=" ;
+InitHow_2.      InitHow ::= ":=" ;
+
+GCardEmpty.     GCard ::= ;
+GCardXor.       GCard ::= "xor" ;
+GCardOr.        GCard ::= "or" ;
+GCardMux.       GCard ::= "mux" ;
+GCardOpt.       GCard ::= "opt" ;
+GCardInterval.  GCard ::= NCard ;
+
+CardEmpty.      Card ::= ;
+CardLone.       Card ::= "?" ;
+CardSome.       Card ::= "+" ;
+CardAny.        Card ::= "*" ;
+CardNum.        Card ::= PosInteger ;
+CardInterval.   Card ::= NCard ;
+
+NCard.          NCard  ::= PosInteger ".." ExInteger ;
+
+ExIntegerAst.   ExInteger ::= "*" ;
+ExIntegerNum.   ExInteger ::= PosInteger ;
+
+Path.           Name ::= [ModId] ;
+
+DeclAllDisj.    Exp   ::= "all" "disj" Decl "|" Exp ;
+DeclAll.        Exp   ::= "all"        Decl "|" Exp ;
+DeclQuantDisj.  Exp   ::= Quant "disj" Decl "|" Exp ;
+DeclQuant.      Exp   ::= Quant        Decl "|" Exp ;
+EGMax.          Exp1  ::= "max" Exp2 ;
+EGMin.          Exp1  ::= "min" Exp2 ;
+EIff.           Exp1  ::= Exp1 "<=>" Exp2 ;
+EImplies.       Exp2  ::= Exp2 "=>"  Exp3 ;
+EOr.            Exp3  ::= Exp3 "||"  Exp4 ;
+EXor.           Exp4  ::= Exp4 "xor" Exp5 ;
+EAnd.           Exp5  ::= Exp5 "&&"  Exp6 ;
+ENeg.           Exp6  ::= "!" Exp7 ;
+ELt.            Exp7  ::= Exp7 "<"  Exp8 ;
+EGt.            Exp7  ::= Exp7 ">"  Exp8 ;
+EEq.            Exp7  ::= Exp7 "="  Exp8 ;
+ELte.           Exp7  ::= Exp7 "<=" Exp8 ;
+EGte.           Exp7  ::= Exp7 ">=" Exp8 ;
+ENeq.           Exp7  ::= Exp7 "!=" Exp8 ;
+EIn.            Exp7  ::= Exp7 "in" Exp8 ;
+ENin.           Exp7  ::= Exp7 "not" "in" Exp8 ;
+QuantExp.       Exp8  ::= Quant Exp12 ;
+EAdd.           Exp9  ::= Exp9  "+" Exp10 ;
+ESub.           Exp9  ::= Exp9  "-" Exp10 ;
+EMul.           Exp10 ::= Exp10 "*" Exp11 ;
+EDiv.           Exp10 ::= Exp10 "/" Exp11 ;
+ESumSetExp.     Exp11 ::= "sum" Exp12;
+ECSetExp.       Exp11 ::= "#" Exp12 ;
+EMinExp.        Exp11 ::= "-" Exp12 ;
+EImpliesElse.   Exp12 ::= "if" Exp12 "then" Exp12 "else" Exp13 ;
+EInt.           Exp13 ::= PosInteger ;
+EDouble.        Exp13 ::= PosDouble ;
+EStr.           Exp13 ::= PosString ;
+ESetExp.        Exp13 ::= SetExp ;
+
+Union.          SetExp  ::= SetExp  "++" SetExp1 ;
+UnionCom.       SetExp  ::= SetExp  ","  SetExp1 ;
+Difference.     SetExp1 ::= SetExp1 "--" SetExp2 ;
+Intersection.   SetExp2 ::= SetExp2 "&"  SetExp3 ;
+Domain.         SetExp3 ::= SetExp3 "<:" SetExp4 ;
+Range.          SetExp4 ::= SetExp4 ":>" SetExp5 ;
+Join.           SetExp5 ::= SetExp5 "."  SetExp6 ;
+ClaferId.       SetExp6 ::= Name ;
+
+Decl.           Decl ::= [LocId] ":" SetExp ;
+
+QuantNo.        Quant ::= "no" ;
+QuantNot.		Quant ::= "not" ;
+QuantLone.      Quant ::= "lone" ;
+QuantOne.       Quant ::= "one" ;
+QuantSome.      Quant ::= "some" ;
+
+EnumIdIdent.    EnumId ::= PosIdent ;
+ModIdIdent.     ModId  ::= PosIdent ;
+LocIdIdent.     LocId  ::= PosIdent ;
+
+separator           Declaration ""  ;
+separator  nonempty EnumId      "|" ;
+separator           Element     ""  ;
+separator           Exp         ""  ;
+separator  nonempty LocId       ";" ;
+separator  nonempty ModId       "\\" ;
+
+coercions Exp 13 ;
+coercions SetExp 6 ;
+
+position token PosInteger (digit+) ;
+position token PosDouble (digit+ '.' digit+ ('e' '-'? digit+)?) ;
+position token PosString '"' ((char - ["\"\\"]) | ('\\' ["\"\\nt"]))* '"' ;
+position token PosIdent (letter (letter|digit|'_'|'\'')*) ;
