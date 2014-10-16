@@ -1,7 +1,7 @@
 {
 module HaskellParser where
 import Alex
-import HaskellLexer(Token'(..), token'pos, tokens')
+EDITED !
 import HaskellAbsSyn
 }
 
