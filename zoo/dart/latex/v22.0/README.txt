@@ -5,4 +5,4 @@ Dart Programming Language Specification
 Version 1.11
 edit №2
 
-Grammar in a broad sense fetched automatically by Vadim Zaytsev, http://grammarware.net
+Grammar in a broad sense fetched automatically and extracted in October 2014 by Vadim Zaytsev, http://grammarware.net
