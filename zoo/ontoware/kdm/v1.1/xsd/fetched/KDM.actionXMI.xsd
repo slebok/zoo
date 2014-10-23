@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.1/action" xmlns:code="http://schema.omg.org/spec/KDM/1.1/code" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/action">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/code" schemaLocation="KDM.code.xsd"/>
+  <xsd:complexType name="ActionElement">
+    <xsd:complexContent>
+      <xsd:extension base="code:AbstractCodeElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="codeElement" type="code:AbstractCodeElement"/>
+          <xsd:element name="actionRelation" type="action:AbstractActionRelationship"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ActionElement" type="action:ActionElement"/>
+  <xsd:complexType abstract="true" name="AbstractActionRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractActionRelationship" type="action:AbstractActionRelationship"/>
+  <xsd:complexType name="ControlFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="action:ActionElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ControlFlow" type="action:ControlFlow"/>
+  <xsd:complexType name="Calls">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:ControlElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Calls" type="action:Calls"/>
+  <xsd:complexType name="Creates">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:Datatype"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Creates" type="action:Creates"/>
+  <xsd:complexType name="Reads">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:DataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Reads" type="action:Reads"/>
+  <xsd:complexType name="Writes">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:DataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Writes" type="action:Writes"/>
+  <xsd:complexType name="CompliesTo">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:CodeItem"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="CompliesTo" type="action:CompliesTo"/>
+  <xsd:complexType name="Flow">
+    <xsd:complexContent>
+      <xsd:extension base="action:ControlFlow"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Flow" type="action:Flow"/>
+  <xsd:complexType name="TrueFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:ControlFlow"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TrueFlow" type="action:TrueFlow"/>
+  <xsd:complexType name="FalseFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:ControlFlow"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="FalseFlow" type="action:FalseFlow"/>
+  <xsd:complexType name="GuardedFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:ControlFlow"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GuardedFlow" type="action:GuardedFlow"/>
+  <xsd:complexType name="UsesType">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:Datatype"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UsesType" type="action:UsesType"/>
+  <xsd:complexType name="Addresses">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:ComputationalObject"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Addresses" type="action:Addresses"/>
+  <xsd:complexType name="ActionRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ActionRelationship" type="action:ActionRelationship"/>
+  <xsd:complexType name="Throws">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:DataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Throws" type="action:Throws"/>
+  <xsd:complexType name="Dispatches">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:DataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Dispatches" type="action:Dispatches"/>
+  <xsd:complexType name="EntryFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="action:ActionElement"/>
+          <xsd:element name="from" type="code:AbstractCodeElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EntryFlow" type="action:EntryFlow"/>
+  <xsd:complexType name="BlockUnit">
+    <xsd:complexContent>
+      <xsd:extension base="action:ActionElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BlockUnit" type="action:BlockUnit"/>
+  <xsd:complexType name="ExceptionUnit">
+    <xsd:complexContent>
+      <xsd:extension base="action:BlockUnit"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExceptionUnit" type="action:ExceptionUnit"/>
+  <xsd:complexType name="TryUnit">
+    <xsd:complexContent>
+      <xsd:extension base="action:ExceptionUnit"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TryUnit" type="action:TryUnit"/>
+  <xsd:complexType name="FinallyUnit">
+    <xsd:complexContent>
+      <xsd:extension base="action:ExceptionUnit"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="FinallyUnit" type="action:FinallyUnit"/>
+  <xsd:complexType name="CatchUnit">
+    <xsd:complexContent>
+      <xsd:extension base="action:ExceptionUnit"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="CatchUnit" type="action:CatchUnit"/>
+  <xsd:complexType name="ExitFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="action:ActionElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExitFlow" type="action:ExitFlow"/>
+  <xsd:complexType name="ExceptionFlow">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="action:ActionElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExceptionFlow" type="action:ExceptionFlow"/>
+</xsd:schema>

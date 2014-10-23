@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:kdm="http://kdm.omg.org/kdm" name="Stereotype Example">
+  <extensionFamily xmi:id="id.0" name="Example extensions">
+    <stereotype xmi:id="id.1" name="Java method"/>
+    <stereotype xmi:id="id.2" name="C++ method"/>
+    <stereotype xmi:id="id.3" name="C++ procedure"/>
+    <stereotype xmi:id="id.4" name="C++ friend">
+      <tag xmi:id="id.5" tag="friend_of" type="ClassUnit"/>
+    </stereotype>
+    <stereotype xmi:id="id.6" name="IsFriendOf"/>
+    <stereotype xmi:id="id.7" name="native call">
+      <tag xmi:id="id.8" tag="implemented in" type="String"/>
+    </stereotype>
+  </extensionFamily>
+  <model xmi:id="id.9" xmi:type="code:CodeModel" name="Example">
+    <codeElement xmi:id="id.10" xmi:type="code:ClassUnit" name="myclass">
+      <codeElement xmi:id="id.11" xmi:type="code:MethodUnit" stereotype="id.2" name="foo" type="id.12">
+        <codeElement xmi:id="id.12" xmi:type="code:Signature" name="foo"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xmi:id="id.13" xmi:type="code:CallableUnit" stereotype="id.4 id.3" name="bar" type="id.16" kind="regular">
+      <taggedValue xmi:id="id.14" xmi:type="kdm:TaggedRef" tag="id.5" reference="id.10"/>
+      <codeRelation xmi:id="id.15" xmi:type="code:CodeRelationship" stereotype="id.6" to="id.10" from="id.13"/>
+      <codeElement xmi:id="id.16" xmi:type="code:Signature" name="bar"/>
+    </codeElement>
+  </model>
+  <model xmi:id="id.17" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.18" xmi:type="code:ClassUnit" stereotype="id.1">
+      <codeElement xmi:id="id.19" xmi:type="code:MethodUnit" stereotype="id.1" name="foobar" type="id.23">
+        <codeElement xmi:id="id.20" xmi:type="action:ActionElement" stereotype="id.7" name="a1">
+          <actionRelation xmi:id="id.21" xmi:type="action:Calls" stereotype="id.7" to="id.13" from="id.20">
+            <taggedValue xmi:id="id.22" xmi:type="kdm:TaggedValue" tag="id.8" value="C"/>
+          </actionRelation>
+        </codeElement>
+        <codeElement xmi:id="id.23" xmi:type="code:Signature" name="foobar"/>
+      </codeElement>
+    </codeElement>
+  </model>
+</kdm:Segment>

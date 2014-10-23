@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://schema.omg.org/spec/KDM/1.2/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.2/kdm" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.2/core">
+  <xsd:import namespace="http://www.omg.org/XMI" schemaLocation="platform:/plugin/org.eclipse.emf.ecore/model/XMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.2/kdm" schemaLocation="platform:/resource/KDM.XMI/KDM.kdmXMI.xsd"/>
+  <xsd:complexType abstract="true" name="Element">
+    <xsd:choice maxOccurs="unbounded" minOccurs="0">
+      <xsd:element name="attribute" type="kdm:Attribute"/>
+      <xsd:element name="annotation" type="kdm:Annotation"/>
+      <xsd:element ref="xmi:Extension"/>
+    </xsd:choice>
+    <xsd:attribute ref="xmi:id"/>
+    <xsd:attributeGroup ref="xmi:ObjectAttribs"/>
+  </xsd:complexType>
+  <xsd:element name="Element" type="core:Element"/>
+  <xsd:complexType abstract="true" name="ModelElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="stereotype" type="kdm:Stereotype"/>
+          <xsd:element name="taggedValue" type="kdm:ExtendedValue"/>
+        </xsd:choice>
+        <xsd:attribute name="stereotype" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ModelElement" type="core:ModelElement"/>
+  <xsd:complexType abstract="true" name="KDMEntity">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="KDMEntity" type="core:KDMEntity"/>
+  <xsd:complexType abstract="true" name="KDMRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="KDMRelationship" type="core:KDMRelationship"/>
+  <xsd:complexType name="AggregatedRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="from" type="core:KDMEntity"/>
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="relation" type="core:KDMRelationship"/>
+        </xsd:choice>
+        <xsd:attribute name="density" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="relation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AggregatedRelationship" type="core:AggregatedRelationship"/>
+</xsd:schema>

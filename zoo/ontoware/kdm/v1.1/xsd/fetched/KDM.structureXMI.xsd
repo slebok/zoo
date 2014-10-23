@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:structure="http://schema.omg.org/spec/KDM/1.1/structure" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/structure">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="platform:/resource/KDM.XMI/KDM.coreXMI.xsd"/>
+  <xsd:complexType abstract="true" name="AbstractStructureElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="aggregated" type="core:AggregatedRelationship"/>
+          <xsd:element name="implementation" type="core:KDMEntity"/>
+          <xsd:element name="structureElement" type="structure:AbstractStructureElement"/>
+          <xsd:element name="structureRelationship" type="structure:AbstractStructureRelationship"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractStructureElement" type="structure:AbstractStructureElement"/>
+  <xsd:complexType name="Subsystem">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Subsystem" type="structure:Subsystem"/>
+  <xsd:complexType name="Layer">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Layer" type="structure:Layer"/>
+  <xsd:complexType name="StructureModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="structureElement" type="structure:AbstractStructureElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="StructureModel" type="structure:StructureModel"/>
+  <xsd:complexType name="Component">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Component" type="structure:Component"/>
+  <xsd:complexType name="SoftwareSystem">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SoftwareSystem" type="structure:SoftwareSystem"/>
+  <xsd:complexType abstract="true" name="AbstractStructureRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractStructureRelationship" type="structure:AbstractStructureRelationship"/>
+  <xsd:complexType name="StructureRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="structure:AbstractStructureElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="StructureRelationship" type="structure:StructureRelationship"/>
+  <xsd:complexType name="ArchitectureView">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ArchitectureView" type="structure:ArchitectureView"/>
+  <xsd:complexType name="StructureElement">
+    <xsd:complexContent>
+      <xsd:extension base="structure:AbstractStructureElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="StructureElement" type="structure:StructureElement"/>
+</xsd:schema>

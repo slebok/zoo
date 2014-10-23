@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.1/action" xmlns:code="http://schema.omg.org/spec/KDM/1.1/code" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:event="http://schema.omg.org/spec/KDM/1.1/event" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/event">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/code" schemaLocation="KDM.codeXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/action" schemaLocation="KDM.actionXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/source" schemaLocation="KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:complexType name="EventModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="eventElement" type="event:AbstractEventElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EventModel" type="event:EventModel"/>
+  <xsd:complexType abstract="true" name="AbstractEventElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+          <xsd:element name="eventRelation" type="event:AbstractEventRelationship"/>
+          <xsd:element name="abstraction" type="action:ActionElement"/>
+          <xsd:element name="implementation" type="code:AbstractCodeElement"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractEventElement" type="event:AbstractEventElement"/>
+  <xsd:complexType name="Event">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventElement">
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Event" type="event:Event"/>
+  <xsd:complexType abstract="true" name="AbstractEventRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractEventRelationship" type="event:AbstractEventRelationship"/>
+  <xsd:complexType name="EventRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="event:AbstractEventElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EventRelationship" type="event:EventRelationship"/>
+  <xsd:complexType name="EventResource">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="eventElement" type="event:AbstractEventElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EventResource" type="event:EventResource"/>
+  <xsd:complexType name="State">
+    <xsd:complexContent>
+      <xsd:extension base="event:EventResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="State" type="event:State"/>
+  <xsd:complexType name="Transition">
+    <xsd:complexContent>
+      <xsd:extension base="event:EventResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Transition" type="event:Transition"/>
+  <xsd:complexType name="OnEntry">
+    <xsd:complexContent>
+      <xsd:extension base="event:Transition"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="OnEntry" type="event:OnEntry"/>
+  <xsd:complexType name="OnExit">
+    <xsd:complexContent>
+      <xsd:extension base="event:Transition"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="OnExit" type="event:OnExit"/>
+  <xsd:complexType name="EventAction">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="eventElement" type="event:Event"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EventAction" type="event:EventAction"/>
+  <xsd:complexType name="ReadsState">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="event:State"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReadsState" type="event:ReadsState"/>
+  <xsd:complexType name="ProducesEvent">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="event:Event"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ProducesEvent" type="event:ProducesEvent"/>
+  <xsd:complexType name="ConsumesEvent">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="event:Event"/>
+          <xsd:element name="from" type="event:Transition"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConsumesEvent" type="event:ConsumesEvent"/>
+  <xsd:complexType name="NextState">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="event:State"/>
+          <xsd:element name="from" type="event:Transition"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="NextState" type="event:NextState"/>
+  <xsd:complexType name="InitialState">
+    <xsd:complexContent>
+      <xsd:extension base="event:State"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InitialState" type="event:InitialState"/>
+  <xsd:complexType name="EventElement">
+    <xsd:complexContent>
+      <xsd:extension base="event:AbstractEventElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="EventElement" type="event:EventElement"/>
+  <xsd:complexType name="HasState">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="event:AbstractEventElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="HasState" type="event:HasState"/>
+</xsd:schema>

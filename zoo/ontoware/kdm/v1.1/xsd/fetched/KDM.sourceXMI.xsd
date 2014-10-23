@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/source">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:complexType name="SourceRef">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="region" type="source:SourceRegion"/>
+        </xsd:choice>
+        <xsd:attribute name="language" type="xsd:string"/>
+        <xsd:attribute name="snippet" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SourceRef" type="source:SourceRef"/>
+  <xsd:complexType name="SourceRegion">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="file" type="source:SourceFile"/>
+        </xsd:choice>
+        <xsd:attribute name="startLine" type="xsd:string"/>
+        <xsd:attribute name="startPosition" type="xsd:string"/>
+        <xsd:attribute name="endLine" type="xsd:string"/>
+        <xsd:attribute name="endPosition" type="xsd:string"/>
+        <xsd:attribute name="language" type="xsd:string"/>
+        <xsd:attribute name="path" type="xsd:string"/>
+        <xsd:attribute name="file" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SourceRegion" type="source:SourceRegion"/>
+  <xsd:complexType name="InventoryModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="inventoryElement" type="source:AbstractInventoryElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InventoryModel" type="source:InventoryModel"/>
+  <xsd:complexType abstract="true" name="AbstractInventoryElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="inventoryRelation" type="source:AbstractInventoryRelationship"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractInventoryElement" type="source:AbstractInventoryElement"/>
+  <xsd:complexType name="InventoryItem">
+    <xsd:complexContent>
+      <xsd:extension base="source:AbstractInventoryElement">
+        <xsd:attribute name="version" type="xsd:string"/>
+        <xsd:attribute name="path" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InventoryItem" type="source:InventoryItem"/>
+  <xsd:complexType name="SourceFile">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem">
+        <xsd:attribute name="language" type="xsd:string"/>
+        <xsd:attribute name="encoding" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SourceFile" type="source:SourceFile"/>
+  <xsd:complexType name="Image">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Image" type="source:Image"/>
+  <xsd:complexType name="ResourceDescription">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ResourceDescription" type="source:ResourceDescription"/>
+  <xsd:complexType name="Configuration">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Configuration" type="source:Configuration"/>
+  <xsd:complexType name="InventoryContainer">
+    <xsd:complexContent>
+      <xsd:extension base="source:AbstractInventoryElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="inventoryElement" type="source:AbstractInventoryElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InventoryContainer" type="source:InventoryContainer"/>
+  <xsd:complexType name="Directory">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryContainer">
+        <xsd:attribute name="path" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Directory" type="source:Directory"/>
+  <xsd:complexType name="Project">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Project" type="source:Project"/>
+  <xsd:complexType abstract="true" name="AbstractInventoryRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractInventoryRelationship" type="source:AbstractInventoryRelationship"/>
+  <xsd:complexType name="BinaryFile">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BinaryFile" type="source:BinaryFile"/>
+  <xsd:complexType name="ExecutableFile">
+    <xsd:complexContent>
+      <xsd:extension base="source:InventoryItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExecutableFile" type="source:ExecutableFile"/>
+  <xsd:complexType name="DependsOn">
+    <xsd:complexContent>
+      <xsd:extension base="source:AbstractInventoryRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="source:AbstractInventoryElement"/>
+          <xsd:element name="from" type="source:AbstractInventoryElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DependsOn" type="source:DependsOn"/>
+  <xsd:complexType name="InventoryElement">
+    <xsd:complexContent>
+      <xsd:extension base="source:AbstractInventoryElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InventoryElement" type="source:InventoryElement"/>
+  <xsd:complexType name="InventoryRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="source:AbstractInventoryRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="source:AbstractInventoryElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="InventoryRelationship" type="source:InventoryRelationship"/>
+</xsd:schema>

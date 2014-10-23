@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.1/action" xmlns:code="http://schema.omg.org/spec/KDM/1.1/code" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:ui="http://schema.omg.org/spec/KDM/1.1/ui" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/ui">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/action" schemaLocation="KDM.actionXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/code" schemaLocation="KDM.codeXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/source" schemaLocation="KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:complexType abstract="true" name="AbstractUIElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+          <xsd:element name="UIRelation" type="ui:AbstractUIRelationship"/>
+          <xsd:element name="implementation" type="code:AbstractCodeElement"/>
+          <xsd:element name="abstraction" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractUIElement" type="ui:AbstractUIElement"/>
+  <xsd:complexType name="UIResource">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="UIElement" type="ui:AbstractUIElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIResource" type="ui:UIResource"/>
+  <xsd:complexType name="UIDisplay">
+    <xsd:complexContent>
+      <xsd:extension base="ui:UIResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIDisplay" type="ui:UIDisplay"/>
+  <xsd:complexType name="Screen">
+    <xsd:complexContent>
+      <xsd:extension base="ui:UIDisplay"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Screen" type="ui:Screen"/>
+  <xsd:complexType name="Report">
+    <xsd:complexContent>
+      <xsd:extension base="ui:UIDisplay"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Report" type="ui:Report"/>
+  <xsd:complexType name="UIModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="UIElement" type="ui:AbstractUIElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIModel" type="ui:UIModel"/>
+  <xsd:complexType abstract="true" name="AbstractUIRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractUIRelationship" type="ui:AbstractUIRelationship"/>
+  <xsd:complexType name="UILayout">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:UIResource"/>
+          <xsd:element name="from" type="ui:UIResource"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UILayout" type="ui:UILayout"/>
+  <xsd:complexType name="UIField">
+    <xsd:complexContent>
+      <xsd:extension base="ui:UIResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIField" type="ui:UIField"/>
+  <xsd:complexType name="DisplaysImage">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="source:Image"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DisplaysImage" type="ui:DisplaysImage"/>
+  <xsd:complexType name="Displays">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:UIResource"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Displays" type="ui:Displays"/>
+  <xsd:complexType name="UIFlow">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:AbstractUIElement"/>
+          <xsd:element name="from" type="ui:AbstractUIElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIFlow" type="ui:UIFlow"/>
+  <xsd:complexType name="UIElement">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIElement" type="ui:UIElement"/>
+  <xsd:complexType name="UIRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="ui:AbstractUIElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIRelationship" type="ui:UIRelationship"/>
+  <xsd:complexType name="UIAction">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="UIElement" type="ui:UIEvent"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIAction" type="ui:UIAction"/>
+  <xsd:complexType name="UIEvent">
+    <xsd:complexContent>
+      <xsd:extension base="ui:AbstractUIElement">
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UIEvent" type="ui:UIEvent"/>
+  <xsd:complexType name="ReadsUI">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:UIResource"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReadsUI" type="ui:ReadsUI"/>
+  <xsd:complexType name="WritesUI">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:UIResource"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="WritesUI" type="ui:WritesUI"/>
+  <xsd:complexType name="ManagesUI">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="ui:UIResource"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ManagesUI" type="ui:ManagesUI"/>
+</xsd:schema>

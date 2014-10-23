@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:data="http://kdm.omg.org/data" xmlns:kdm="http://kdm.omg.org/kdm" xmlns:platform="http://kdm.omg.org/platform" name="Schema Example">
+  <model xmi:id="id.0" xmi:type="data:DataModel" name="Contracts">
+    <dataElement xmi:id="id.1" xmi:type="data:RelationalSchema" name="Contracts">
+      <dataElement xmi:id="id.2" xmi:type="data:RelationalTable" name="products">
+        <dataElement xmi:id="id.3" xmi:type="data:UniqueKey" name="ID" implementation="id.4"/>
+        <itemUnit xmi:id="id.4" name="ID" type="id.57"/>
+        <itemUnit xmi:id="id.5" name="name" type="id.58"/>
+        <itemUnit xmi:id="id.6" name="type" type="id.58"/>
+      </dataElement>
+      <dataElement xmi:id="id.7" xmi:type="data:RelationalTable" name="contracts">
+        <dataElement xmi:id="id.8" xmi:type="data:UniqueKey" name="ID" implementation="id.11"/>
+        <dataElement xmi:id="id.9" xmi:type="data:ReferenceKey" implementation="id.12">
+          <dataRelation xmi:id="id.10" xmi:type="data:KeyRelation" to="id.3" from="id.9"/>
+        </dataElement>
+        <itemUnit xmi:id="id.11" name="ID" type="id.57"/>
+        <itemUnit xmi:id="id.12" name="product" type="id.57"/>
+        <itemUnit xmi:id="id.13" name="revenue" type="id.59"/>
+        <itemUnit xmi:id="id.14" name="dateSigned" type="id.60"/>
+      </dataElement>
+      <dataElement xmi:id="id.15" xmi:type="data:RelationalTable" name="revenueRecognitions">
+        <dataElement xmi:id="id.16" xmi:type="data:UniqueKey" implementation="id.25 id.27"/>
+        <dataElement xmi:id="id.17" xmi:type="data:ReferenceKey" implementation="id.25">
+          <dataRelation xmi:id="id.18" xmi:type="data:KeyRelation" to="id.8" from="id.17"/>
+        </dataElement>
+        <dataElement xmi:id="id.19" xmi:type="data:DataEvent" name="e1" kind="Insert">
+          <abstraction xmi:id="id.20" name="e1.1" kind="Call">
+            <actionRelation xmi:id="id.21" xmi:type="action:Calls" to="id.47" from="id.20"/>
+          </abstraction>
+        </dataElement>
+        <dataElement xmi:id="id.22" xmi:type="data:DataEvent" name="e2" kind="Update">
+          <abstraction xmi:id="id.23" name="e2.1" kind="Call">
+            <actionRelation xmi:id="id.24" xmi:type="action:Calls" to="id.47" from="id.23"/>
+          </abstraction>
+        </dataElement>
+        <itemUnit xmi:id="id.25" name="contract" type="id.57"/>
+        <itemUnit xmi:id="id.26" name="amount" type="id.59"/>
+        <itemUnit xmi:id="id.27" name="recognizedOn" type="id.60"/>
+      </dataElement>
+      <codeElement xmi:id="id.28" xmi:type="code:CallableUnit" name="INSERT_RECOGNITIONS" kind="regular">
+        <entryFlow xmi:id="id.29" to="id.35" from="id.28"/>
+        <codeElement xmi:id="id.30" xmi:type="code:Signature">
+          <parameterUnit xmi:id="id.31" name="contractID" type="id.57" pos="1"/>
+          <parameterUnit xmi:id="id.32" name="amount" type="id.59" pos="2"/>
+          <parameterUnit xmi:id="id.33" name="recognizedOn" type="id.60" pos="3"/>
+          <parameterUnit xmi:id="id.34" name="result" type="id.57" kind="byReference" pos="4"/>
+        </codeElement>
+        <codeElement xmi:id="id.35" xmi:type="action:ActionElement" name="a1" kind="Insert">
+          <source xmi:id="id.36" language="SQL" snippet="INSERT INTO revenueRecognitions VALUES( contractID, amount, recognizedOn);"/>
+          <actionRelation xmi:id="id.37" xmi:type="action:Reads" to="id.31" from="id.35"/>
+          <actionRelation xmi:id="id.38" xmi:type="action:Reads" to="id.32" from="id.35"/>
+          <actionRelation xmi:id="id.39" xmi:type="action:Reads" to="id.33" from="id.35"/>
+          <actionRelation xmi:id="id.40" xmi:type="data:WritesColumnSet" to="id.15" from="id.35"/>
+          <actionRelation xmi:id="id.41" xmi:type="data:ProducesDataEvent" to="id.19" from="id.35"/>
+        </codeElement>
+        <codeElement xmi:id="id.42" xmi:type="action:ActionElement" name="a2" kind="Assign">
+          <source xmi:id="id.43" language="SQL" snippet="SET result = 1;"/>
+          <codeElement xmi:id="id.44" xmi:type="code:Value" name="1"/>
+          <actionRelation xmi:id="id.45" xmi:type="action:Reads" to="id.44" from="id.42"/>
+          <actionRelation xmi:id="id.46" xmi:type="action:Writes" to="id.34" from="id.42"/>
+        </codeElement>
+      </codeElement>
+      <codeElement xmi:id="id.47" xmi:type="code:CallableUnit" name="reminder1">
+        <entryFlow xmi:id="id.48" to="id.49" from="id.47"/>
+        <codeElement xmi:id="id.49" xmi:type="action:ActionElement" name="a3" kind="Throw">
+          <codeElement xmi:id="id.50" xmi:type="code:ValueList" name="error">
+            <valueElement xmi:id="id.51" xmi:type="code:Value" name="&quot;Notify sales!&quot;" type="id.58"/>
+            <valueElement xmi:id="id.52" xmi:type="code:Value" name="16" type="id.57"/>
+            <valueElement xmi:id="id.53" xmi:type="code:Value" name="10" type="id.57"/>
+          </codeElement>
+          <actionRelation xmi:id="id.54" xmi:type="action:Throws" to="id.50" from="id.49"/>
+        </codeElement>
+      </codeElement>
+    </dataElement>
+  </model>
+  <model xmi:id="id.55" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.56" xmi:type="code:LanguageUnit" name="SQL datatypes">
+      <codeElement xmi:id="id.57" xmi:type="code:IntegerType" name="sql int"/>
+      <codeElement xmi:id="id.58" xmi:type="code:StringType" name="sql varchar"/>
+      <codeElement xmi:id="id.59" xmi:type="code:DecimalType" name="sql decimal"/>
+      <codeElement xmi:id="id.60" xmi:type="code:DateType" name="sql date"/>
+      <codeElement xmi:id="id.61" xmi:type="code:BooleanType"/>
+    </codeElement>
+  </model>
+  <model xmi:id="id.62" xmi:type="platform:PlatformModel">
+    <platformElement xmi:id="id.63" xmi:type="platform:ExternalActor">
+      <abstraction xmi:id="id.64" >
+        <actionRelation xmi:id="id.65" xmi:type="data:ProducesDataEvent" to="id.19" from="id.64"/>
+      </abstraction>
+    </platformElement>
+  </model>
+</kdm:Segment>

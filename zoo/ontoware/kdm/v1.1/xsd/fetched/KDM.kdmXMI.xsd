@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/kdm">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:complexType abstract="true" name="KDMFramework">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="audit" type="kdm:Audit"/>
+          <xsd:element name="extensionFamily" type="kdm:ExtensionFamily"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="KDMFramework" type="kdm:KDMFramework"/>
+  <xsd:complexType abstract="true" name="KDMModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMFramework"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="KDMModel" type="kdm:KDMModel"/>
+  <xsd:complexType name="Audit">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:attribute name="description" type="xsd:string"/>
+        <xsd:attribute name="author" type="xsd:string"/>
+        <xsd:attribute name="date" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Audit" type="kdm:Audit"/>
+  <xsd:complexType name="Segment">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMFramework">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="segment" type="kdm:Segment"/>
+          <xsd:element name="model" type="kdm:KDMModel"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Segment" type="kdm:Segment"/>
+  <xsd:complexType name="Attribute">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:attribute name="tag" type="xsd:string"/>
+        <xsd:attribute name="value" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Attribute" type="kdm:Attribute"/>
+  <xsd:complexType name="Annotation">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:attribute name="text" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Annotation" type="kdm:Annotation"/>
+  <xsd:complexType name="TagDefinition">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:attribute name="tag" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TagDefinition" type="kdm:TagDefinition"/>
+  <xsd:complexType abstract="true" name="ExtendedValue">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="tag" type="kdm:TagDefinition"/>
+        </xsd:choice>
+        <xsd:attribute name="tag" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExtendedValue" type="kdm:ExtendedValue"/>
+  <xsd:complexType name="Stereotype">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="tag" type="kdm:TagDefinition"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Stereotype" type="kdm:Stereotype"/>
+  <xsd:complexType name="ExtensionFamily">
+    <xsd:complexContent>
+      <xsd:extension base="core:Element">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="stereotype" type="kdm:Stereotype"/>
+        </xsd:choice>
+        <xsd:attribute name="name" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExtensionFamily" type="kdm:ExtensionFamily"/>
+  <xsd:complexType name="TaggedRef">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:ExtendedValue">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="reference" type="core:ModelElement"/>
+        </xsd:choice>
+        <xsd:attribute name="reference" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TaggedRef" type="kdm:TaggedRef"/>
+  <xsd:complexType name="TaggedValue">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:ExtendedValue">
+        <xsd:attribute name="value" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TaggedValue" type="kdm:TaggedValue"/>
+</xsd:schema>

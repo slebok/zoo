@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:build="http://kdm.omg.org/build" xmlns:kdm="http://kdm.omg.org/kdm" xmlns:source="http://kdm.omg.org/source" name="Build Example">
+  <model xmi:id="id.0" xmi:type="source:InventoryModel">
+    <inventoryElement xmi:id="id.1" xmi:type="source:SourceFile" name="a.c">
+      <inventoryRelation xmi:id="id.2" xmi:type="source:DependsOn" to="id.5" from="id.1"/>
+    </inventoryElement>
+    <inventoryElement xmi:id="id.3" xmi:type="source:SourceFile" name="b.c">
+      <inventoryRelation xmi:id="id.4" xmi:type="source:DependsOn" to="id.5" from="id.3"/>
+    </inventoryElement>
+    <inventoryElement xmi:id="id.5" xmi:type="source:SourceFile" name="ab.h"/>
+    <inventoryElement xmi:id="id.6" xmi:type="source:Directory">
+      <inventoryElement xmi:id="id.7" xmi:type="source:Image"/>
+      <inventoryElement xmi:id="id.8" xmi:type="source:Image"/>
+    </inventoryElement>
+    <inventoryElement xmi:id="id.9" xmi:type="source:SourceFile" name="makefile"/>
+    <inventoryElement xmi:id="id.10" xmi:type="source:ExecutableFile" name="ab.exe"/>
+  </model>
+  <model xmi:id="id.11" xmi:type="build:BuildModel">
+    <buildElement xmi:id="id.12" xmi:type="build:BuildComponent" name="sources" implementation="id.1 id.5 id.3"/>
+    <buildElement xmi:id="id.13" xmi:type="build:BuildProduct" name="ab product" implementation="id.10"/>
+    <buildElement xmi:id="id.14" xmi:type="build:BuildStep">
+      <buildRelation xmi:id="id.15" xmi:type="build:DescribedBy" to="id.28" from="id.14"/>
+      <buildRelation xmi:id="id.16" xmi:type="build:SupportedBy" to="id.30" from="id.14"/>
+      <buildElement xmi:id="id.17" xmi:type="build:BuildStep" name="compile">
+        <buildRelation xmi:id="id.18" xmi:type="build:Consumes" to="id.12" from="id.17"/>
+        <buildRelation xmi:id="id.19" xmi:type="build:Produces" to="id.25" from="id.17"/>
+        <buildRelation xmi:id="id.20" xmi:type="build:SupportedBy" to="id.26" from="id.17"/>
+      </buildElement>
+      <buildElement xmi:id="id.21" xmi:type="build:BuildStep" name="link">
+        <buildRelation xmi:id="id.22" xmi:type="build:Consumes" to="id.25" from="id.21"/>
+        <buildRelation xmi:id="id.23" xmi:type="build:Produces" to="id.13" from="id.21"/>
+        <buildRelation xmi:id="id.24" xmi:type="build:SupportedBy" to="id.26" from="id.21"/>
+      </buildElement>
+      <buildElement xmi:id="id.25" xmi:type="build:BuildComponent" name="object files"/>
+      <buildElement xmi:id="id.26" xmi:type="build:Tool" name="C compiler">
+        <buildRelation xmi:id="id.27" xmi:type="build:SuppliedBy" to="id.32" from="id.26"/>
+      </buildElement>
+    </buildElement>
+    <buildElement xmi:id="id.28" xmi:type="build:BuildDescription" implementation="id.9">
+      <source xmi:id="id.29" language="shell" snippet="cc $(SOURCE) -o ab.exe"/>
+    </buildElement>
+    <buildElement xmi:id="id.30" xmi:type="build:Tool" name="make">
+      <buildRelation xmi:id="id.31" xmi:type="build:SuppliedBy" to="id.32" from="id.30"/>
+    </buildElement>
+    <buildElement xmi:id="id.32" xmi:type="build:Supplier" name="Tools'R'Us corp"/>
+  </model>
+</kdm:Segment>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:data="http://kdm.omg.org/data" xmlns:kdm="http://kdm.omg.org/kdm" xmlns:platform="http://kdm.omg.org/platform" name="Data Example">
+  <model xmi:id="id.0" xmi:type="data:DataModel" name="Contracts">
+    <dataElement xmi:id="id.1" xmi:type="data:RelationalSchema" name="Contracts">
+      <dataElement xmi:id="id.2" xmi:type="data:RelationalTable" name="products">
+        <dataElement xmi:id="id.3" xmi:type="data:UniqueKey" name="ID" implementation="id.4"/>
+        <itemUnit xmi:id="id.4" name="ID" type="id.172"/>
+        <itemUnit xmi:id="id.5" name="name" type="id.173"/>
+        <itemUnit xmi:id="id.6" name="type" type="id.173"/>
+      </dataElement>
+      <dataElement xmi:id="id.7" xmi:type="data:RelationalTable" name="contracts">
+        <dataElement xmi:id="id.8" xmi:type="data:UniqueKey" name="ID" implementation="id.11"/>
+        <dataElement xmi:id="id.9" xmi:type="data:ReferenceKey" implementation="id.12">
+          <dataRelation xmi:id="id.10" xmi:type="data:KeyRelation" to="id.3" from="id.9"/>
+        </dataElement>
+        <itemUnit xmi:id="id.11" name="ID" type="id.172"/>
+        <itemUnit xmi:id="id.12" name="product" type="id.172"/>
+        <itemUnit xmi:id="id.13" name="revenue" type="id.174"/>
+        <itemUnit xmi:id="id.14" name="dateSigned" type="id.175"/>
+      </dataElement>
+    </dataElement>
+    <dataElement xmi:id="id.15" xmi:type="data:DataAction" name="d1" kind="Connect" implementation="id.79">
+      <abstraction xmi:id="id.16" name="da1" kind="Connect">
+        <actionRelation xmi:id="id.17" xmi:type="action:Reads" to="id.80" from="id.16"/>
+        <actionRelation xmi:id="id.18" xmi:type="action:Reads" to="id.81" from="id.16"/>
+        <actionRelation xmi:id="id.19" xmi:type="action:Reads" to="id.82" from="id.16"/>
+        <actionRelation xmi:id="id.20" xmi:type="platform:ManagesResource" to="id.67"/>
+      </abstraction>
+    </dataElement>
+    <dataElement xmi:id="id.21" xmi:type="data:DataAction" name="d2" kind="Select" implementation="id.90 id.96 id.104">
+      <source xmi:id="id.22" language="sql" snippet="&quot;select * from contracts c, products p where ID = ? and c.product=p.ID  &quot;"/>
+      <abstraction xmi:id="id.23" name="w1" kind="Equal">
+        <codeElement xmi:id="id.24" xmi:type="code:StorableUnit" name="t1" type="id.176" kind="register"/>
+        <actionRelation xmi:id="id.25" xmi:type="action:Reads" to="id.11" from="id.23"/>
+        <actionRelation xmi:id="id.26" xmi:type="action:Reads" to="id.77" from="id.23"/>
+        <actionRelation xmi:id="id.27" xmi:type="action:Writes" to="id.24" from="id.23"/>
+        <actionRelation xmi:id="id.28" xmi:type="action:Flow" to="id.29"/>
+      </abstraction>
+      <abstraction xmi:id="id.29" name="w2" kind="Equal">
+        <codeElement xmi:id="id.30" xmi:type="code:StorableUnit" name="t2" type="id.176" kind="register"/>
+        <actionRelation xmi:id="id.31" xmi:type="action:Reads" to="id.12" from="id.29"/>
+        <actionRelation xmi:id="id.32" xmi:type="action:Reads" to="id.4" from="id.29"/>
+        <actionRelation xmi:id="id.33" xmi:type="action:Writes" from="id.29"/>
+        <actionRelation xmi:id="id.34" xmi:type="action:Flow" to="id.35" from="id.29"/>
+      </abstraction>
+      <abstraction xmi:id="id.35" name="w3" kind="And">
+        <codeElement xmi:id="id.36" xmi:type="code:StorableUnit" name="t3" type="id.176" kind="register"/>
+        <actionRelation xmi:id="id.37" xmi:type="action:Reads" to="id.24" from="id.35"/>
+        <actionRelation xmi:id="id.38" xmi:type="action:Reads" to="id.30"/>
+        <actionRelation xmi:id="id.39" xmi:type="action:Flow" to="id.40" from="id.35"/>
+      </abstraction>
+      <abstraction xmi:id="id.40" name="w4" kind="Condition">
+        <actionRelation xmi:id="id.41" xmi:type="action:TrueFlow" to="id.42" from="id.40"/>
+      </abstraction>
+      <abstraction xmi:id="id.42" name="s1" kind="Select">
+        <actionRelation xmi:id="id.43" xmi:type="data:ReadsColumnSet" to="id.7" from="id.42"/>
+        <actionRelation xmi:id="id.44" xmi:type="action:Reads" to="id.11" from="id.42"/>
+        <actionRelation xmi:id="id.45" xmi:type="action:Reads" to="id.12" from="id.42"/>
+        <actionRelation xmi:id="id.46" xmi:type="action:Reads" to="id.13" from="id.42"/>
+        <actionRelation xmi:id="id.47" xmi:type="action:Reads" to="id.14" from="id.42"/>
+        <actionRelation xmi:id="id.48" xmi:type="data:ReadsColumnSet" to="id.2"/>
+        <actionRelation xmi:id="id.49" xmi:type="action:Reads" to="id.4" from="id.42"/>
+        <actionRelation xmi:id="id.50" xmi:type="action:Reads" to="id.5" from="id.42"/>
+        <actionRelation xmi:id="id.51" xmi:type="action:Reads" to="id.6" from="id.42"/>
+        <actionRelation xmi:id="id.52" xmi:type="action:Writes" to="id.103" from="id.42"/>
+        <actionRelation xmi:id="id.53" xmi:type="platform:ReadsResource" to="id.67" from="id.42"/>
+      </abstraction>
+    </dataElement>
+    <dataElement xmi:id="id.54" xmi:type="data:DataAction" name="d3" kind="Retrieve" implementation="id.115">
+      <abstraction xmi:id="id.55" name="da2" kind="Assign">
+        <actionRelation xmi:id="id.56" xmi:type="action:Reads" to="id.13" from="id.55"/>
+        <actionRelation xmi:id="id.57" xmi:type="action:Addresses" to="id.103" from="id.55"/>
+        <actionRelation xmi:id="id.58" xmi:type="action:Writes" to="id.117" from="id.55"/>
+      </abstraction>
+    </dataElement>
+    <dataElement xmi:id="id.59" xmi:type="data:DataAction" name="d4" kind="Retrieve" implementation="id.130">
+      <abstraction xmi:id="id.60" name="da3" kind="Assign">
+        <actionRelation xmi:id="id.61" xmi:type="action:Reads" to="id.14" from="id.60"/>
+        <actionRelation xmi:id="id.62" xmi:type="action:Addresses" to="id.103" from="id.60"/>
+        <actionRelation xmi:id="id.63" xmi:type="action:Writes" to="id.132" from="id.60"/>
+      </abstraction>
+    </dataElement>
+  </model>
+  <model xmi:id="id.64" xmi:type="platform:PlatformModel">
+    <platformElement xmi:id="id.65" xmi:type="platform:Machine">
+      <deployedResource xmi:id="id.66" >
+        <platformElement xmi:id="id.67" xmi:type="platform:DataManager" name="foobar">
+          <abstraction xmi:id="id.68" name="dm1">
+            <actionRelation xmi:id="id.69" xmi:type="data:HasContent" to="id.1"/>
+          </abstraction>
+        </platformElement>
+      </deployedResource>
+    </platformElement>
+  </model>
+  <model xmi:id="id.70" xmi:type="code:CodeModel" name="Application">
+    <codeElement xmi:id="id.71" xmi:type="code:ClassUnit" name="DataExample">
+      <codeElement xmi:id="id.72" xmi:type="code:MemberUnit" name="findContractStatement">
+        <codeRelation xmi:id="id.73" xmi:type="code:HasValue" to="id.145" from="id.72"/>
+      </codeElement>
+      <codeElement xmi:id="id.74" xmi:type="code:MethodUnit" name="calculateRecognitions">
+        <entryFlow xmi:id="id.75" to="id.79" from="id.74"/>
+        <codeElement xmi:id="id.76" xmi:type="code:Signature">
+          <parameterUnit xmi:id="id.77" name="contractNumber" type="id.179"/>
+        </codeElement>
+        <codeElement xmi:id="id.78" xmi:type="code:StorableUnit" name="db" type="id.155" kind="local"/>
+        <codeElement xmi:id="id.79" xmi:type="action:ActionElement" name="c1" kind="Call">
+          <codeElement xmi:id="id.80" xmi:type="code:Value" name="&quot;jdbc:odbc:foobar&quot;"/>
+          <codeElement xmi:id="id.81" xmi:type="code:Value" name="&quot;sunny&quot;" type="id.178"/>
+          <codeElement xmi:id="id.82" xmi:type="code:Value" name="&quot;&quot;" type="id.178"/>
+          <actionRelation xmi:id="id.83" xmi:type="action:Reads" to="id.80" from="id.79"/>
+          <actionRelation xmi:id="id.84" xmi:type="action:Reads" to="id.81" from="id.79"/>
+          <actionRelation xmi:id="id.85" xmi:type="action:Reads" to="id.82" from="id.79"/>
+          <actionRelation xmi:id="id.86" xmi:type="action:Calls" to="id.154" from="id.79"/>
+          <actionRelation xmi:id="id.87" xmi:type="action:Writes" to="id.78" from="id.79"/>
+          <actionRelation xmi:id="id.88" xmi:type="action:Flow" to="id.90" from="id.79"/>
+        </codeElement>
+        <codeElement xmi:id="id.89" xmi:type="code:StorableUnit" name="stmt" type="id.161" kind="local"/>
+        <codeElement xmi:id="id.90" xmi:type="action:ActionElement" name="c2" kind="MethodCall">
+          <actionRelation xmi:id="id.91" xmi:type="action:Addresses" to="id.78" from="id.90"/>
+          <actionRelation xmi:id="id.92" xmi:type="action:Reads" to="id.72" from="id.90"/>
+          <actionRelation xmi:id="id.93" xmi:type="action:Calls" to="id.156" from="id.90"/>
+          <actionRelation xmi:id="id.94" xmi:type="action:Writes" to="id.89" from="id.90"/>
+          <actionRelation xmi:id="id.95" xmi:type="action:Flow" to="id.96" from="id.90"/>
+        </codeElement>
+        <codeElement xmi:id="id.96" xmi:type="action:ActionElement" name="c3" kind="MethodCall">
+          <codeElement xmi:id="id.97" xmi:type="code:Value" name="1"/>
+          <actionRelation xmi:id="id.98" xmi:type="action:Addresses" to="id.89" from="id.96"/>
+          <actionRelation xmi:id="id.99" xmi:type="action:Reads" to="id.97" from="id.96"/>
+          <actionRelation xmi:id="id.100" xmi:type="action:Reads" to="id.77" from="id.96"/>
+          <actionRelation xmi:id="id.101" xmi:type="action:Calls" to="id.162" from="id.96"/>
+          <actionRelation xmi:id="id.102" xmi:type="action:Flow" to="id.104" from="id.96"/>
+        </codeElement>
+        <codeElement xmi:id="id.103" xmi:type="code:StorableUnit" name="contracts" type="id.157" kind="local"/>
+        <codeElement xmi:id="id.104" xmi:type="action:ActionElement" name="c4" kind="MethodCall">
+          <actionRelation xmi:id="id.105" xmi:type="action:Addresses" to="id.89" from="id.104"/>
+          <actionRelation xmi:id="id.106" xmi:type="action:Calls" to="id.163" from="id.104"/>
+          <actionRelation xmi:id="id.107" xmi:type="action:Writes" to="id.103" from="id.104"/>
+          <actionRelation xmi:id="id.108" xmi:type="action:Flow" to="id.109" from="id.104"/>
+        </codeElement>
+        <codeElement xmi:id="id.109" xmi:type="action:ActionElement" name="c5" kind="MethodCall">
+          <actionRelation xmi:id="id.110" xmi:type="action:Addresses" to="id.103" from="id.109"/>
+          <actionRelation xmi:id="id.111" xmi:type="action:Calls" to="id.158" from="id.109"/>
+          <actionRelation xmi:id="id.112" xmi:type="action:Flow" to="id.114" from="id.109"/>
+        </codeElement>
+        <codeElement xmi:id="id.113" xmi:type="code:StorableUnit" name="totalRevenue" type="id.165" kind="local"/>
+        <codeElement xmi:id="id.114" xmi:type="action:ActionElement" name="c6" kind="Compound">
+          <codeElement xmi:id="id.115" xmi:type="action:ActionElement" name="c6.1" kind="Call">
+            <codeElement xmi:id="id.116" xmi:type="code:Value" name="&quot;revenue&quot;"/>
+            <codeElement xmi:id="id.117" xmi:type="code:StorableUnit" name="t4" kind="register"/>
+            <actionRelation xmi:id="id.118" xmi:type="action:Addresses" to="id.103" from="id.115"/>
+            <actionRelation xmi:id="id.119" xmi:type="action:Calls" to="id.159" from="id.115"/>
+            <actionRelation xmi:id="id.120" xmi:type="action:Writes" to="id.117" from="id.115"/>
+            <actionRelation xmi:id="id.121" xmi:type="action:Flow" to="id.122" from="id.115"/>
+          </codeElement>
+          <codeElement xmi:id="id.122" xmi:type="action:ActionElement" name="c6.2" kind="Call">
+            <actionRelation xmi:id="id.123" xmi:type="action:Reads" to="id.117" from="id.122"/>
+            <actionRelation xmi:id="id.124" xmi:type="action:Calls" to="id.166" from="id.122"/>
+            <actionRelation xmi:id="id.125" xmi:type="action:Writes" to="id.113" from="id.122"/>
+            <actionRelation xmi:id="id.126" xmi:type="action:Flow"/>
+          </codeElement>
+          <actionRelation xmi:id="id.127" xmi:type="action:Flow" to="id.115" from="id.114"/>
+        </codeElement>
+        <codeElement xmi:id="id.128" xmi:type="code:StorableUnit" name="recognizedDate" type="id.168" kind="local"/>
+        <codeElement xmi:id="id.129" xmi:type="action:ActionElement" name="c7" kind="MethodCall">
+          <codeElement xmi:id="id.130" xmi:type="action:ActionElement" name="c7.1" kind="Call">
+            <codeElement xmi:id="id.131" xmi:type="code:Value" name="&quot;dateSigned&quot;"/>
+            <codeElement xmi:id="id.132" xmi:type="code:StorableUnit" name="t5" kind="register"/>
+            <actionRelation xmi:id="id.133" xmi:type="action:Addresses" to="id.103" from="id.130"/>
+            <actionRelation xmi:id="id.134" xmi:type="action:Calls" to="id.160" from="id.130"/>
+            <actionRelation xmi:id="id.135" xmi:type="action:Writes" to="id.132" from="id.130"/>
+            <actionRelation xmi:id="id.136" xmi:type="action:Flow" to="id.137" from="id.130"/>
+          </codeElement>
+          <codeElement xmi:id="id.137" xmi:type="action:ActionElement" name="c7.2" kind="New">
+            <actionRelation xmi:id="id.138" xmi:type="action:Creates" to="id.168" from="id.137"/>
+            <actionRelation xmi:id="id.139" xmi:type="action:Writes" to="id.128" from="id.137"/>
+            <actionRelation xmi:id="id.140" xmi:type="action:Flow"/>
+          </codeElement>
+          <codeElement xmi:id="id.141" xmi:type="action:ActionElement" name="c7.3" kind="MethodCall">
+            <actionRelation xmi:id="id.142" xmi:type="action:Reads" to="id.132" from="id.137"/>
+            <actionRelation xmi:id="id.143" xmi:type="action:Calls" to="id.169" from="id.141"/>
+            <actionRelation xmi:id="id.144" xmi:type="action:Writes" to="id.128" from="id.141"/>
+          </codeElement>
+        </codeElement>
+      </codeElement>
+      <codeElement xmi:id="id.145" xmi:type="code:Value" name="&quot;SELECT * FROM contracts c, products p WHERE ID=? AND c.product=p.ID&quot;" type="id.178"/>
+      <codeElement xmi:id="id.146" xmi:type="code:MethodUnit" name="init" kind="constructor">
+        <entryFlow xmi:id="id.147" to="id.148" from="id.146"/>
+        <codeElement xmi:id="id.148" xmi:type="action:ActionElement" name="i1" kind="Assign">
+          <actionRelation xmi:id="id.149" xmi:type="action:Reads" to="id.145" from="id.148"/>
+          <actionRelation xmi:id="id.150" xmi:type="action:Writes" to="id.72" from="id.148"/>
+        </codeElement>
+      </codeElement>
+    </codeElement>
+  </model>
+  <model xmi:id="id.151" xmi:type="code:CodeModel" name="Java packages">
+    <codeElement xmi:id="id.152" xmi:type="code:Package" name="java.sql">
+      <codeElement xmi:id="id.153" xmi:type="code:ClassUnit" name="DriverManager">
+        <codeElement xmi:id="id.154" xmi:type="code:MethodUnit" name="getConnection" kind="abstract"/>
+      </codeElement>
+      <codeElement xmi:id="id.155" xmi:type="code:ClassUnit" name="Connection">
+        <codeElement xmi:id="id.156" xmi:type="code:MethodUnit" name="prepareStatement" kind="abstract"/>
+      </codeElement>
+      <codeElement xmi:id="id.157" xmi:type="code:ClassUnit" name="ResultSet">
+        <codeElement xmi:id="id.158" xmi:type="code:MethodUnit" name="next" kind="abstract"/>
+        <codeElement xmi:id="id.159" xmi:type="code:MethodUnit" name="getBigDecimal" kind="abstract"/>
+        <codeElement xmi:id="id.160" xmi:type="code:MethodUnit" name="getDate" kind="abstract"/>
+      </codeElement>
+      <codeElement xmi:id="id.161" xmi:type="code:ClassUnit" name="Statement">
+        <codeElement xmi:id="id.162" xmi:type="code:MethodUnit" name="setLong" kind="abstract"/>
+        <codeElement xmi:id="id.163" xmi:type="code:MethodUnit" name="executeQuery" kind="abstract"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xmi:id="id.164" xmi:type="code:Package" name="Money">
+      <codeElement xmi:id="id.165" xmi:type="code:ClassUnit" name="Money">
+        <codeElement xmi:id="id.166" xmi:type="code:MethodUnit" name="dollars" kind="abstract"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xmi:id="id.167" xmi:type="code:Package" name="MfDate">
+      <codeElement xmi:id="id.168" xmi:type="code:ClassUnit" name="MfDate">
+        <codeElement xmi:id="id.169" xmi:type="code:MethodUnit" name="MfDate" kind="abstract"/>
+      </codeElement>
+    </codeElement>
+  </model>
+  <model xmi:id="id.170" xmi:type="code:CodeModel" name="Common Datatypes">
+    <codeElement xmi:id="id.171" xmi:type="code:LanguageUnit" name="SQL datatypes">
+      <codeElement xmi:id="id.172" xmi:type="code:IntegerType" name="sql int"/>
+      <codeElement xmi:id="id.173" xmi:type="code:StringType" name="sql varchar"/>
+      <codeElement xmi:id="id.174" xmi:type="code:DecimalType" name="sql decimal"/>
+      <codeElement xmi:id="id.175" xmi:type="code:DateType" name="sql date"/>
+      <codeElement xmi:id="id.176" xmi:type="code:BooleanType"/>
+    </codeElement>
+    <codeElement xmi:id="id.177" xmi:type="code:LanguageUnit" name="Java datatypes">
+      <codeElement xmi:id="id.178" xmi:type="code:StringType"/>
+      <codeElement xmi:id="id.179" xmi:type="code:IntegerType" name="java long"/>
+      <codeElement xmi:id="id.180" xmi:type="code:IntegerType" name="java byte"/>
+    </codeElement>
+  </model>
+</kdm:Segment>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.1/action" xmlns:code="http://schema.omg.org/spec/KDM/1.1/code" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:data="http://schema.omg.org/spec/KDM/1.1/data" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/data">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/code" schemaLocation="KDM.codeXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/action" schemaLocation="KDM.actionXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/source" schemaLocation="KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="KDM.coreXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:complexType name="DataModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="dataElement" type="data:AbstractDataElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataModel" type="data:DataModel"/>
+  <xsd:complexType abstract="true" name="AbstractDataElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+          <xsd:element name="dataRelation" type="data:AbstractDataRelationship"/>
+          <xsd:element name="abstraction" type="action:ActionElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractDataElement" type="data:AbstractDataElement"/>
+  <xsd:complexType name="DataResource">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataResource" type="data:DataResource"/>
+  <xsd:complexType name="IndexElement">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataResource">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="implementation" type="code:ItemUnit"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="IndexElement" type="data:IndexElement"/>
+  <xsd:complexType name="UniqueKey">
+    <xsd:complexContent>
+      <xsd:extension base="data:IndexElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="UniqueKey" type="data:UniqueKey"/>
+  <xsd:complexType name="Index">
+    <xsd:complexContent>
+      <xsd:extension base="data:IndexElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Index" type="data:Index"/>
+  <xsd:complexType abstract="true" name="AbstractDataRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractDataRelationship" type="data:AbstractDataRelationship"/>
+  <xsd:complexType name="KeyRelation">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:UniqueKey"/>
+          <xsd:element name="from" type="data:ReferenceKey"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="KeyRelation" type="data:KeyRelation"/>
+  <xsd:complexType name="ReferenceKey">
+    <xsd:complexContent>
+      <xsd:extension base="data:IndexElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReferenceKey" type="data:ReferenceKey"/>
+  <xsd:complexType name="DataContainer">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataResource">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="dataElement" type="data:DataResource"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataContainer" type="data:DataContainer"/>
+  <xsd:complexType name="Catalog">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Catalog" type="data:Catalog"/>
+  <xsd:complexType name="RelationalSchema">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataContainer">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="codeElement" type="code:CodeItem"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RelationalSchema" type="data:RelationalSchema"/>
+  <xsd:complexType name="ColumnSet">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataContainer">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="itemUnit" type="code:ItemUnit"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ColumnSet" type="data:ColumnSet"/>
+  <xsd:complexType name="RelationalTable">
+    <xsd:complexContent>
+      <xsd:extension base="data:ColumnSet"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RelationalTable" type="data:RelationalTable"/>
+  <xsd:complexType name="RelationalView">
+    <xsd:complexContent>
+      <xsd:extension base="data:ColumnSet"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RelationalView" type="data:RelationalView"/>
+  <xsd:complexType name="RecordFile">
+    <xsd:complexContent>
+      <xsd:extension base="data:ColumnSet"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RecordFile" type="data:RecordFile"/>
+  <xsd:complexType name="DataEvent">
+    <xsd:complexContent>
+      <xsd:extension base="data:DataResource">
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataEvent" type="data:DataEvent"/>
+  <xsd:complexType name="XMLSchema">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="contentElement" type="data:AbstractContentElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="XMLSchema" type="data:XMLSchema"/>
+  <xsd:complexType abstract="true" name="AbstractContentElement">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractContentElement" type="data:AbstractContentElement"/>
+  <xsd:complexType name="ComplexContentType">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractContentElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="contentElement" type="data:AbstractContentElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ComplexContentType" type="data:ComplexContentType"/>
+  <xsd:complexType name="AllContent">
+    <xsd:complexContent>
+      <xsd:extension base="data:ComplexContentType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AllContent" type="data:AllContent"/>
+  <xsd:complexType name="SeqContent">
+    <xsd:complexContent>
+      <xsd:extension base="data:ComplexContentType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SeqContent" type="data:SeqContent"/>
+  <xsd:complexType name="ChoiceContent">
+    <xsd:complexContent>
+      <xsd:extension base="data:ComplexContentType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ChoiceContent" type="data:ChoiceContent"/>
+  <xsd:complexType name="ContentItem">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractContentElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="type" type="data:ComplexContentType"/>
+          <xsd:element name="contentElement" type="data:AbstractContentElement"/>
+        </xsd:choice>
+        <xsd:attribute name="type" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ContentItem" type="data:ContentItem"/>
+  <xsd:complexType name="GroupContent">
+    <xsd:complexContent>
+      <xsd:extension base="data:ContentItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="GroupContent" type="data:GroupContent"/>
+  <xsd:complexType name="ContentRestriction">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractContentElement">
+        <xsd:attribute name="kind" type="xsd:string"/>
+        <xsd:attribute name="value" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ContentRestriction" type="data:ContentRestriction"/>
+  <xsd:complexType name="SimpleContentType">
+    <xsd:complexContent>
+      <xsd:extension base="data:ComplexContentType">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="type" type="data:ComplexContentType"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+        <xsd:attribute name="type" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SimpleContentType" type="data:SimpleContentType"/>
+  <xsd:complexType name="ExtendedDataElement">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExtendedDataElement" type="data:ExtendedDataElement"/>
+  <xsd:complexType name="DataRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="data:AbstractDataElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataRelationship" type="data:DataRelationship"/>
+  <xsd:complexType name="MixedContent">
+    <xsd:complexContent>
+      <xsd:extension base="data:ComplexContentType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="MixedContent" type="data:MixedContent"/>
+  <xsd:complexType name="ContentReference">
+    <xsd:complexContent>
+      <xsd:extension base="data:ContentItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ContentReference" type="data:ContentReference"/>
+  <xsd:complexType name="DataAction">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="implementation" type="action:ActionElement"/>
+          <xsd:element name="dataElement" type="data:DataEvent"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataAction" type="data:DataAction"/>
+  <xsd:complexType name="ReadsColumnSet">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ColumnSet"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReadsColumnSet" type="data:ReadsColumnSet"/>
+  <xsd:complexType name="ContentAttribute">
+    <xsd:complexContent>
+      <xsd:extension base="data:ContentItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ContentAttribute" type="data:ContentAttribute"/>
+  <xsd:complexType name="TypedBy">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ComplexContentType"/>
+          <xsd:element name="from" type="data:ContentItem"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TypedBy" type="data:TypedBy"/>
+  <xsd:complexType name="ReferenceTo">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ContentItem"/>
+          <xsd:element name="from" type="data:ContentItem"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReferenceTo" type="data:ReferenceTo"/>
+  <xsd:complexType name="RestrictionOf">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ComplexContentType"/>
+          <xsd:element name="from" type="data:ComplexContentType"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RestrictionOf" type="data:RestrictionOf"/>
+  <xsd:complexType name="ExtensionTo">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ComplexContentType"/>
+          <xsd:element name="from" type="data:ComplexContentType"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExtensionTo" type="data:ExtensionTo"/>
+  <xsd:complexType name="DatatypeOf">
+    <xsd:complexContent>
+      <xsd:extension base="data:AbstractDataRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:Datatype"/>
+          <xsd:element name="from" type="data:ComplexContentType"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DatatypeOf" type="data:DatatypeOf"/>
+  <xsd:complexType name="HasContent">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:AbstractDataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="HasContent" type="data:HasContent"/>
+  <xsd:complexType name="WritesColumnSet">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:ColumnSet"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="WritesColumnSet" type="data:WritesColumnSet"/>
+  <xsd:complexType name="ProducesDataEvent">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:DataEvent"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ProducesDataEvent" type="data:ProducesDataEvent"/>
+  <xsd:complexType name="DataSegment">
+    <xsd:complexContent>
+      <xsd:extension base="data:ColumnSet"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataSegment" type="data:DataSegment"/>
+  <xsd:complexType name="ContentElement">
+    <xsd:complexContent>
+      <xsd:extension base="data:ContentItem"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ContentElement" type="data:ContentElement"/>
+  <xsd:complexType name="ManagesData">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="data:AbstractDataElement"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ManagesData" type="data:ManagesData"/>
+</xsd:schema>

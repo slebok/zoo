@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:data="http://kdm.omg.org/data" xmlns:event="http://kdm.omg.org/event" xmlns:kdm="http://kdm.omg.org/kdm" xmlns:platform="http://kdm.omg.org/platform" name="RecordFile example">
+  <model xmi:id="id.0" xmi:type="data:DataModel">
+    <dataElement xmi:id="id.1" xmi:type="data:RecordFile" name="SEQUENTIAL-FILE">
+      <itemUnit xmi:id="id.2" name="SEQ-SOC-SEC-NUM" type="id.115" ext="PIC X(9)" size="9"/>
+      <itemUnit xmi:id="id.3" name="SEQ-REST-OF-RECORD" type="id.115" ext="PIC X(30)" size="30"/>
+    </dataElement>
+    <dataElement xmi:id="id.4" xmi:type="data:RecordFile" name="INDEXED-FILE">
+      <dataElement xmi:id="id.5" xmi:type="data:UniqueKey" implementation="id.7"/>
+      <dataElement xmi:id="id.6" xmi:type="data:Index" implementation="id.7"/>
+      <itemUnit xmi:id="id.7" name="IND-SOC-SEC-NUM" type="id.115" ext="PIC X(9)" size="9"/>
+      <itemUnit xmi:id="id.8" name="IND-REST-OF-RECORD" type="id.115" ext="PIC X(30)" size="30"/>
+    </dataElement>
+    <dataElement xmi:id="id.9" xmi:type="data:DataAction" name="da1" kind="open" implementation="id.44">
+      <abstraction xmi:id="id.10" name="da1" kind="open">
+        <actionRelation xmi:id="id.11" xmi:type="data:ManagesData" to="id.1" from="id.10"/>
+        <actionRelation xmi:id="id.12" xmi:type="platform:ManagesResource" to="id.75" from="id.10"/>
+      </abstraction>
+    </dataElement>
+    <dataElement xmi:id="id.13" xmi:type="data:DataAction" name="da2" kind="open" implementation="id.44">
+      <abstraction xmi:id="id.14" name="da2" kind="open">
+        <actionRelation xmi:id="id.15" xmi:type="platform:ManagesResource" to="id.79" from="id.14"/>
+        <actionRelation xmi:id="id.16" xmi:type="data:ManagesData" to="id.4" from="id.14"/>
+      </abstraction>
+    </dataElement>
+    <dataElement xmi:id="id.17" xmi:type="data:DataAction" name="da3" kind="read" implementation="id.47">
+      <abstraction xmi:id="id.18" name="da3" kind="read">
+        <actionRelation xmi:id="id.19" xmi:type="data:ReadsColumnSet" to="id.1" from="id.18"/>
+        <actionRelation xmi:id="id.20" xmi:type="action:Writes" to="id.2" from="id.18"/>
+        <actionRelation xmi:id="id.21" xmi:type="action:Writes" to="id.3" from="id.18"/>
+        <actionRelation xmi:id="id.22" xmi:type="platform:ReadsResource" to="id.75" from="id.18"/>
+      </abstraction>
+      <dataElement xmi:id="id.23" name="at end" kind="EOF">
+        <abstraction xmi:id="id.24" name="ae1">
+          <actionRelation xmi:id="id.25" xmi:type="action:ExceptionFlow" to="id.50" from="id.24"/>
+        </abstraction>
+      </dataElement>
+      <dataElement xmi:id="id.26" name="not at end" kind="NOT EOF">
+        <abstraction xmi:id="id.27" name="nae1">
+          <actionRelation xmi:id="id.28" xmi:type="action:Flow" to="id.53" from="id.27"/>
+        </abstraction>
+      </dataElement>
+    </dataElement>
+    <dataElement xmi:id="id.29" xmi:type="data:DataAction" name="da4" kind="write" implementation="id.59">
+      <abstraction xmi:id="id.30" name="da4" kind="write">
+        <actionRelation xmi:id="id.31" xmi:type="action:Reads" to="id.7" from="id.30"/>
+        <actionRelation xmi:id="id.32" xmi:type="action:Reads" to="id.8" from="id.30"/>
+        <actionRelation xmi:id="id.33" xmi:type="data:WritesColumnSet" to="id.4" from="id.30"/>
+        <actionRelation xmi:id="id.34" xmi:type="platform:WritesResource" to="id.79" from="id.30"/>
+      </abstraction>
+      <dataElement xmi:id="id.35" name="invalid key" kind="INVALID KEY">
+        <abstraction xmi:id="id.36" name="ik1">
+          <actionRelation xmi:id="id.37" xmi:type="action:ExceptionFlow" to="id.62" from="id.36"/>
+        </abstraction>
+      </dataElement>
+    </dataElement>
+    <dataElement xmi:id="id.38" xmi:type="data:DataAction" name="da5" kind="close">
+      <abstraction xmi:id="id.39" name="da5" kind="close"/>
+    </dataElement>
+    <dataElement xmi:id="id.40" xmi:type="data:DataAction" name="da6" kind="close">
+      <abstraction xmi:id="id.41" name="da5" kind="close"/>
+    </dataElement>
+  </model>
+  <model xmi:id="id.42" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.43" xmi:type="code:CodeAssembly">
+      <codeElement xmi:id="id.44" xmi:type="action:ActionElement" name="a0" kind="open">
+        <source xmi:id="id.45" language="Cobol" snippet="OPEN INPUT SEQUENTIAL-FILE OUTPUT INDEXED-FILE."/>
+        <actionRelation xmi:id="id.46" xmi:type="action:Flow" to="id.47" from="id.44"/>
+      </codeElement>
+      <codeElement xmi:id="id.47" xmi:type="action:ActionElement" name="a1" kind="read">
+        <source xmi:id="id.48" language="Cobol" snippet="READ SEQUENTIAL-FILE"/>
+        <actionRelation xmi:id="id.49" xmi:type="action:Flow" to="id.53" from="id.47"/>
+      </codeElement>
+      <codeElement xmi:id="id.50" xmi:type="action:ActionElement" name="a2">
+        <source xmi:id="id.51" language="Cobol" snippet="MOVE 'YES' TO END-OF-FILE-SWITCH"/>
+        <actionRelation xmi:id="id.52" xmi:type="action:Flow" to="id.64" from="id.50"/>
+      </codeElement>
+      <codeElement xmi:id="id.53" xmi:type="action:ActionElement" name="a3">
+        <source xmi:id="id.54" language="Cobol" snippet="MOVE SEQ-SOC-SEC-NUM TO IND-SOC-SEQ-NUM"/>
+        <actionRelation xmi:id="id.55" xmi:type="action:Flow" to="id.56" from="id.53"/>
+      </codeElement>
+      <codeElement xmi:id="id.56" xmi:type="action:ActionElement" name="a4">
+        <source xmi:id="id.57" language="Cobol" snippet="MOVE SEQ-REST-OF-RECORD TO IND-REST-OF-RECORD"/>
+        <actionRelation xmi:id="id.58" xmi:type="action:Flow" to="id.59" from="id.56"/>
+      </codeElement>
+      <codeElement xmi:id="id.59" xmi:type="action:ActionElement" name="a5" kind="call">
+        <source xmi:id="id.60" language="Cobol" snippet="WRITE INDEXED-RECORD"/>
+        <actionRelation xmi:id="id.61" xmi:type="action:Flow" to="id.64" from="id.59"/>
+      </codeElement>
+      <codeElement xmi:id="id.62" xmi:type="action:ActionElement" name="a6" kind="write">
+        <source xmi:id="id.63" language="Cobol" snippet="PERFORM 0020-EXPLAIN-WRITE-ERROR"/>
+      </codeElement>
+      <codeElement xmi:id="id.64" xmi:type="action:ActionElement" name="a7" kind="write">
+        <source xmi:id="id.65" language="Cobol" snippet="UNTIL END-OF-FILE-SWITCH = 'YES'"/>
+        <actionRelation xmi:id="id.66" xmi:type="action:FalseFlow" to="id.47" from="id.64"/>
+        <actionRelation xmi:id="id.67" xmi:type="action:TrueFlow" to="id.68" from="id.64"/>
+      </codeElement>
+      <codeElement xmi:id="id.68" xmi:type="action:ActionElement" name="a8" kind="close">
+        <source xmi:id="id.69" language="Cobol" snippet="Close SEQUENTIAL-FILE INDEXED-FILE."/>
+      </codeElement>
+    </codeElement>
+  </model>
+  <model xmi:id="id.70" xmi:type="platform:PlatformModel">
+    <platformElement xmi:id="id.71" xmi:type="platform:DeployedSoftwareSystem" groupedComponent="id.73"/>
+    <platformElement xmi:id="id.72" xmi:type="platform:Machine">
+      <deployedComponent xmi:id="id.73" groupedCode="id.43"/>
+      <deployedResource xmi:id="id.74" >
+        <platformElement xmi:id="id.75" xmi:type="platform:StreamResource">
+          <abstraction xmi:id="id.76" name="ra1" kind="">
+            <actionRelation xmi:id="id.77" xmi:type="data:HasContent" to="id.1" from="id.76"/>
+            <actionRelation xmi:id="id.78" xmi:type="event:HasState" to="id.89" from="id.76"/>
+          </abstraction>
+        </platformElement>
+        <platformElement xmi:id="id.79" xmi:type="platform:FileResource">
+          <abstraction xmi:id="id.80" name="ra2" kind="">
+            <actionRelation xmi:id="id.81" xmi:type="data:HasContent" to="id.4" from="id.80"/>
+          </abstraction>
+        </platformElement>
+      </deployedResource>
+    </platformElement>
+    <platformElement xmi:id="id.82" xmi:type="platform:PlatformAction" name="pa1" kind="open">
+      <abstraction xmi:id="id.83" name="pa1">
+        <actionRelation xmi:id="id.84" xmi:type="platform:ManagesResource" to="id.75" from="id.83"/>
+      </abstraction>
+    </platformElement>
+    <platformElement xmi:id="id.85" xmi:type="platform:PlatformAction" name="pa2" kind="open">
+      <abstraction xmi:id="id.86" name="pa2">
+        <actionRelation xmi:id="id.87" xmi:type="platform:ManagesResource" to="id.79" from="id.86"/>
+      </abstraction>
+    </platformElement>
+  </model>
+  <model xmi:id="id.88" xmi:type="event:EventModel">
+    <eventElement xmi:id="id.89" xmi:type="event:EventResource" name="sequential-file">
+      <eventElement xmi:id="id.90" xmi:type="event:State" name="closed">
+        <eventElement xmi:id="id.91" xmi:type="event:Transition" name="tr1">
+          <eventRelation xmi:id="id.92" xmi:type="event:ConsumesEvent" to="id.110" from="id.91"/>
+          <eventRelation xmi:id="id.93" xmi:type="event:NextState" to="id.103" from="id.91"/>
+          <eventRelation xmi:id="id.94" xmi:type="event:NextState" to="id.95" from="id.91"/>
+        </eventElement>
+      </eventElement>
+      <eventElement xmi:id="id.95" xmi:type="event:State" name="opened.not at end">
+        <eventElement xmi:id="id.96" xmi:type="event:Transition" name="tr2">
+          <eventRelation xmi:id="id.97" xmi:type="event:ConsumesEvent" to="id.111" from="id.96"/>
+          <eventRelation xmi:id="id.98" xmi:type="event:NextState" to="id.103" from="id.96"/>
+          <eventRelation xmi:id="id.99" xmi:type="event:NextState" to="id.95" from="id.96"/>
+        </eventElement>
+        <eventElement xmi:id="id.100" xmi:type="event:Transition" name="tr3">
+          <eventRelation xmi:id="id.101" xmi:type="event:ConsumesEvent" to="id.112" from="id.100"/>
+          <eventRelation xmi:id="id.102" xmi:type="event:NextState" to="id.90" from="id.100"/>
+        </eventElement>
+      </eventElement>
+      <eventElement xmi:id="id.103" xmi:type="event:State" name="opened.at end">
+        <eventElement xmi:id="id.104" xmi:type="event:Transition" name="tr4">
+          <eventRelation xmi:id="id.105" xmi:type="event:ConsumesEvent" to="id.112" from="id.104"/>
+          <eventRelation xmi:id="id.106" xmi:type="event:NextState" to="id.90" from="id.104"/>
+        </eventElement>
+        <eventElement xmi:id="id.107" xmi:type="event:Transition" name="tr5">
+          <eventRelation xmi:id="id.108" xmi:type="event:ConsumesEvent" to="id.111" from="id.107"/>
+          <eventRelation xmi:id="id.109" xmi:type="event:NextState" to="id.103" from="id.107"/>
+        </eventElement>
+      </eventElement>
+      <eventElement xmi:id="id.110" xmi:type="event:Event" name="open" kind="open"/>
+      <eventElement xmi:id="id.111" xmi:type="event:Event" name="read"/>
+      <eventElement xmi:id="id.112" xmi:type="event:Event" name="close"/>
+    </eventElement>
+  </model>
+  <model xmi:id="id.113" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.114" xmi:type="code:LanguageUnit">
+      <codeElement xmi:id="id.115" xmi:type="code:StringType" name="X"/>
+    </codeElement>
+  </model>
+</kdm:Segment>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.2/action" xmlns:conceptual="http://schema.omg.org/spec/KDM/1.2/conceptual" xmlns:core="http://schema.omg.org/spec/KDM/1.2/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.2/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.2/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.2/conceptual">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.2/action" schemaLocation="platform:/resource/KDM.XMI/KDM.actionXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.2/source" schemaLocation="platform:/resource/KDM.XMI/KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.2/core" schemaLocation="platform:/resource/KDM.XMI/KDM.coreXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.2/kdm" schemaLocation="platform:/resource/KDM.XMI/KDM.kdmXMI.xsd"/>
+  <xsd:complexType name="ConceptualModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="conceptualElement" type="conceptual:AbstractConceptualElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualModel" type="conceptual:ConceptualModel"/>
+  <xsd:complexType abstract="true" name="AbstractConceptualElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+          <xsd:element name="implementation" type="core:KDMEntity"/>
+          <xsd:element name="conceptualRelation" type="conceptual:AbstractConceptualRelationship"/>
+          <xsd:element name="abstraction" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractConceptualElement" type="conceptual:AbstractConceptualElement"/>
+  <xsd:complexType name="TermUnit">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="TermUnit" type="conceptual:TermUnit"/>
+  <xsd:complexType name="ConceptualContainer">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="conceptualElement" type="conceptual:AbstractConceptualElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualContainer" type="conceptual:ConceptualContainer"/>
+  <xsd:complexType name="FactUnit">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:ConceptualContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="FactUnit" type="conceptual:FactUnit"/>
+  <xsd:complexType abstract="true" name="AbstractConceptualRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractConceptualRelationship" type="conceptual:AbstractConceptualRelationship"/>
+  <xsd:complexType name="ConceptualRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="conceptual:AbstractConceptualElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualRelationship" type="conceptual:ConceptualRelationship"/>
+  <xsd:complexType name="BehaviorUnit">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:ConceptualContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BehaviorUnit" type="conceptual:BehaviorUnit"/>
+  <xsd:complexType name="RuleUnit">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:ConceptualContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RuleUnit" type="conceptual:RuleUnit"/>
+  <xsd:complexType name="ScenarioUnit">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:ConceptualContainer"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ScenarioUnit" type="conceptual:ScenarioUnit"/>
+  <xsd:complexType name="ConceptualFlow">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="conceptual:ConceptualContainer"/>
+          <xsd:element name="from" type="conceptual:ConceptualContainer"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualFlow" type="conceptual:ConceptualFlow"/>
+  <xsd:complexType name="ConceptualElement">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualElement" type="conceptual:ConceptualElement"/>
+  <xsd:complexType name="ConceptualRole">
+    <xsd:complexContent>
+      <xsd:extension base="conceptual:AbstractConceptualElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="conceptualElement" type="conceptual:AbstractConceptualElement"/>
+        </xsd:choice>
+        <xsd:attribute name="conceptualElement" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ConceptualRole" type="conceptual:ConceptualRole"/>
+</xsd:schema>

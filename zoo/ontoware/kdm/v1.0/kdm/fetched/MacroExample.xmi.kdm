@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:kdm="http://kdm.omg.org/kdm" name="Macro Directive Example">
+  <model xmi:id="id.0" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.1" xmi:type="code:CompilationUnit">
+      <codeElement xmi:id="id.2" xmi:type="code:MacroUnit" name="GMAX">
+        <source language="Cpreprocessor" snippet="#define GMAX(A,B) g=( GT(A,B) ? (A) : (B) )"/>
+        <codeRelation xmi:id="id.3" xmi:type="code:Expands" to="id.4" from="id.2"/>
+      </codeElement>
+      <codeElement xmi:id="id.4" xmi:type="code:MacroUnit" name="GT">
+        <source language="Cpreprocessor" snippet="#define GT(A,B) ((A) > (B))"/>
+      </codeElement>
+      <codeElement xmi:id="id.5" xmi:type="action:BlockUnit">
+        <codeElement xmi:id="id.6" xmi:type="code:StorableUnit" name="p" type="id.49"/>
+        <codeElement xmi:id="id.7" xmi:type="code:StorableUnit" name="q" type="id.49"/>
+        <codeElement xmi:id="id.8" xmi:type="code:StorableUnit" name="r" type="id.49"/>
+        <codeElement xmi:id="id.9" xmi:type="code:StorableUnit" name="s" type="id.49"/>
+        <codeElement xmi:id="id.10" xmi:type="code:StorableUnit" name="g" type="id.49"/>
+        <codeElement xmi:id="id.11" xmi:type="code:MacroDirective" name="m1">
+          <source xmi:id="id.12" language="Cpreprocessor" snippet="GMAX(p+q,r+s);"/>
+          <codeRelation xmi:id="id.13" xmi:type="code:Expands" to="id.2" from="id.11"/>
+        </codeElement>
+        <codeElement xmi:id="id.14" xmi:type="action:BlockUnit" name="bm1">
+          <codeRelation xmi:id="id.15" xmi:type="code:GeneratedFrom" to="id.11" from="id.14"/>
+          <codeElement xmi:id="id.16" xmi:type="action:ActionElement">
+            <source xmi:id="id.17" language="C" snippet="g=( ((p+q) > (r+s)) ? (p+q) : (r+s) );"/>
+            <codeElement xmi:id="id.18" xmi:type="action:ActionElement" name="a1" kind="Add">
+              <actionRelation xmi:id="id.19" xmi:type="action:Reads" to="id.6" from="id.18"/>
+              <actionRelation xmi:id="id.20" xmi:type="action:Reads" to="id.10" from="id.18"/>
+              <actionRelation xmi:id="id.21" xmi:type="action:Writes" to="id.47" from="id.18"/>
+              <actionRelation xmi:id="id.22" xmi:type="action:Flow" to="id.23" from="id.18"/>
+            </codeElement>
+            <codeElement xmi:id="id.23" xmi:type="action:ActionElement" name="a2" kind="Add">
+              <actionRelation xmi:id="id.24" xmi:type="action:Reads" to="id.8" from="id.23"/>
+              <actionRelation xmi:id="id.25" xmi:type="action:Reads" to="id.9" from="id.23"/>
+              <actionRelation xmi:id="id.26" xmi:type="action:Writes" to="id.48" from="id.23"/>
+              <actionRelation xmi:id="id.27" xmi:type="action:Flow" from="id.23"/>
+            </codeElement>
+            <codeElement xmi:id="id.28" xmi:type="action:ActionElement" name="a3" kind="GreaterThan">
+              <codeElement xmi:id="id.29" xmi:type="code:StorableUnit" name="c" type="id.50" kind="register"/>
+              <actionRelation xmi:id="id.30" xmi:type="action:Reads" to="id.47" from="id.28"/>
+              <actionRelation xmi:id="id.31" xmi:type="action:Reads" to="id.48" from="id.28"/>
+              <actionRelation xmi:id="id.32" xmi:type="action:Writes" to="id.29" from="id.28"/>
+              <actionRelation xmi:id="id.33" xmi:type="action:Flow" to="id.34" from="id.28"/>
+            </codeElement>
+            <codeElement xmi:id="id.34" xmi:type="action:ActionElement" name="a3.1" kind="Condition">
+              <actionRelation xmi:id="id.35" xmi:type="action:Reads" to="id.29" from="id.34"/>
+              <actionRelation xmi:id="id.36" xmi:type="action:TrueFlow" to="id.38" from="id.28"/>
+              <actionRelation xmi:id="id.37" xmi:type="action:FalseFlow" to="id.42" from="id.34"/>
+            </codeElement>
+            <codeElement xmi:id="id.38" xmi:type="action:ActionElement" name="a4" kind="Assign">
+              <actionRelation xmi:id="id.39" xmi:type="action:Reads" to="id.47" from="id.38"/>
+              <actionRelation xmi:id="id.40" xmi:type="action:Writes" to="id.10" from="id.38"/>
+              <actionRelation xmi:id="id.41" xmi:type="action:Flow" to="id.46" from="id.38"/>
+            </codeElement>
+            <codeElement xmi:id="id.42" xmi:type="action:ActionElement" name="a5" kind="Assign">
+              <actionRelation xmi:id="id.43" xmi:type="action:Reads" to="id.48" from="id.42"/>
+              <actionRelation xmi:id="id.44" xmi:type="action:Writes" to="id.7" from="id.42"/>
+              <actionRelation xmi:id="id.45" xmi:type="action:Flow" to="id.46" from="id.42"/>
+            </codeElement>
+            <codeElement xmi:id="id.46" xmi:type="action:ActionElement" name="a6" kind="Nop"/>
+            <codeElement xmi:id="id.47" xmi:type="code:StorableUnit" name="t1" type="id.49" kind="register"/>
+            <codeElement xmi:id="id.48" xmi:type="code:StorableUnit" name="t2" type="id.49" kind="register"/>
+          </codeElement>
+        </codeElement>
+        <codeElement xmi:id="id.49" xmi:type="code:IntegerType" name="int"/>
+        <codeElement xmi:id="id.50" xmi:type="code:BooleanType" name="boolean"/>
+      </codeElement>
+    </codeElement>
+  </model>
+</kdm:Segment>

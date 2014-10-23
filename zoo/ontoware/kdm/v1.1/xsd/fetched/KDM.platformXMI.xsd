@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:action="http://schema.omg.org/spec/KDM/1.1/action" xmlns:code="http://schema.omg.org/spec/KDM/1.1/code" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:platform="http://schema.omg.org/spec/KDM/1.1/platform" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/platform">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/code" schemaLocation="KDM.codeXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/action" schemaLocation="KDM.actionXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/source" schemaLocation="KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="platform:/resource/KDM.XMI/KDM.coreXMI.xsd"/>
+  <xsd:complexType abstract="true" name="AbstractPlatformElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+          <xsd:element name="relation" type="platform:AbstractPlatformRelationship"/>
+          <xsd:element name="abstraction" type="action:ActionElement"/>
+          <xsd:element name="implementation" type="code:AbstractCodeElement"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractPlatformElement" type="platform:AbstractPlatformElement"/>
+  <xsd:complexType name="PlatformModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="platformElement" type="platform:AbstractPlatformElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="PlatformModel" type="platform:PlatformModel"/>
+  <xsd:complexType abstract="true" name="AbstractPlatformRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractPlatformRelationship" type="platform:AbstractPlatformRelationship"/>
+  <xsd:complexType name="Requires">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:AbstractPlatformElement"/>
+          <xsd:element name="from" type="platform:DeployedComponent"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Requires" type="platform:Requires"/>
+  <xsd:complexType name="ResourceType">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="platformElement" type="platform:AbstractPlatformElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ResourceType" type="platform:ResourceType"/>
+  <xsd:complexType name="NamingResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="NamingResource" type="platform:NamingResource"/>
+  <xsd:complexType name="MarshalledResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="MarshalledResource" type="platform:MarshalledResource"/>
+  <xsd:complexType name="MessagingResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="MessagingResource" type="platform:MessagingResource"/>
+  <xsd:complexType name="FileResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="FileResource" type="platform:FileResource"/>
+  <xsd:complexType name="ExecutionResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExecutionResource" type="platform:ExecutionResource"/>
+  <xsd:complexType name="PlatformAction">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="platformElement" type="platform:PlatformEvent"/>
+        </xsd:choice>
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="PlatformAction" type="platform:PlatformAction"/>
+  <xsd:complexType name="ExternalActor">
+    <xsd:complexContent>
+      <xsd:extension base="platform:PlatformAction"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ExternalActor" type="platform:ExternalActor"/>
+  <xsd:complexType name="DataManager">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DataManager" type="platform:DataManager"/>
+  <xsd:complexType name="BindsTo">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:ResourceType"/>
+          <xsd:element name="from" type="platform:ResourceType"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BindsTo" type="platform:BindsTo"/>
+  <xsd:complexType name="PlatformElement">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="PlatformElement" type="platform:PlatformElement"/>
+  <xsd:complexType name="PlatformRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="platform:AbstractPlatformElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="PlatformRelationship" type="platform:PlatformRelationship"/>
+  <xsd:complexType name="PlatformEvent">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:attribute name="kind" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="PlatformEvent" type="platform:PlatformEvent"/>
+  <xsd:complexType name="LockResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="LockResource" type="platform:LockResource"/>
+  <xsd:complexType name="DeployedSoftwareSystem">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="groupedComponent" type="platform:DeployedComponent"/>
+        </xsd:choice>
+        <xsd:attribute name="groupedComponent" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DeployedSoftwareSystem" type="platform:DeployedSoftwareSystem"/>
+  <xsd:complexType name="Machine">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="deployedComponent" type="platform:DeployedComponent"/>
+          <xsd:element name="deployedResource" type="platform:DeployedResource"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Machine" type="platform:Machine"/>
+  <xsd:complexType name="DeployedComponent">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="groupedCode" type="code:Module"/>
+        </xsd:choice>
+        <xsd:attribute name="groupedCode" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DeployedComponent" type="platform:DeployedComponent"/>
+  <xsd:complexType name="DeployedResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="platformElement" type="platform:ResourceType"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DeployedResource" type="platform:DeployedResource"/>
+  <xsd:complexType name="Loads">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:DeployedComponent"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Loads" type="platform:Loads"/>
+  <xsd:complexType name="Spawns">
+    <xsd:complexContent>
+      <xsd:extension base="platform:AbstractPlatformRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:RuntimeResource"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Spawns" type="platform:Spawns"/>
+  <xsd:complexType name="RuntimeResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="RuntimeResource" type="platform:RuntimeResource"/>
+  <xsd:complexType name="Thread">
+    <xsd:complexContent>
+      <xsd:extension base="platform:RuntimeResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Thread" type="platform:Thread"/>
+  <xsd:complexType name="Process">
+    <xsd:complexContent>
+      <xsd:extension base="platform:RuntimeResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Process" type="platform:Process"/>
+  <xsd:complexType name="ReadsResource">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:ResourceType"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ReadsResource" type="platform:ReadsResource"/>
+  <xsd:complexType name="WritesResource">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:ResourceType"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="WritesResource" type="platform:WritesResource"/>
+  <xsd:complexType name="ManagesResource">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="platform:ResourceType"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="ManagesResource" type="platform:ManagesResource"/>
+  <xsd:complexType name="DefinedBy">
+    <xsd:complexContent>
+      <xsd:extension base="action:AbstractActionRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="code:CodeItem"/>
+          <xsd:element name="from" type="action:ActionElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DefinedBy" type="platform:DefinedBy"/>
+  <xsd:complexType name="StreamResource">
+    <xsd:complexContent>
+      <xsd:extension base="platform:ResourceType"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="StreamResource" type="platform:StreamResource"/>
+</xsd:schema>

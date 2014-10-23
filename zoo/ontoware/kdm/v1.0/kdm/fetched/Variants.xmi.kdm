@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kdm:Segment xmi:version="2.1" xmlns:xmi="http://www.omg.org/XMI" xmlns:action="http://kdm.omg.org/action" xmlns:code="http://kdm.omg.org/code" xmlns:kdm="http://kdm.omg.org/kdm" name="Variants Example">
+  <model xmi:id="id.0" xmi:type="code:CodeModel">
+    <codeElement xmi:id="id.1" xmi:type="code:MacroUnit" name="UNIX">
+      <source language="Cproprocessor" snippet="#define UNIX 1"/>
+    </codeElement>
+    <codeElement xmi:id="id.2" xmi:type="code:MacroUnit" name="DEBUG" kind="external"/>
+    <codeElement xmi:id="id.3" xmi:type="code:StorableUnit" name="g" type="id.4">
+      <codeElement xmi:id="id.4" xmi:type="code:IntegerType"/>
+    </codeElement>
+    <codeElement xmi:id="id.5" xmi:type="code:ConditionalDirective" name="c1">
+      <source language="Cpreprocessor" snippet="#if UNIX | DEBUG"/>
+      <codeRelation xmi:id="id.6" xmi:type="code:Expands" to="id.1" from="id.5"/>
+      <codeRelation xmi:id="id.7" xmi:type="code:Expands" to="id.2" from="id.5"/>
+    </codeElement>
+    <codeElement xmi:id="id.8" xmi:type="action:BlockUnit" name="b1">
+      <codeRelation xmi:id="id.9" xmi:type="code:GeneratedFrom" to="id.5" from="id.8"/>
+      <codeElement xmi:id="id.10" xmi:type="action:ActionElement" name="a1" kind="Assign">
+        <source xmi:id="id.11" language="C" snippet="g=123"/>
+        <codeElement xmi:id="id.12" xmi:type="code:Value" name="123" type="id.4"/>
+        <actionRelation xmi:id="id.13" xmi:type="action:Reads" to="id.12" from="id.10"/>
+        <actionRelation xmi:id="id.14" xmi:type="action:Writes" to="id.3" from="id.10"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xmi:id="id.15" xmi:type="code:ConditionalDirective" name="c2">
+      <source language="Cpreprocessor" snippet="#ifdef UNIX"/>
+      <codeRelation xmi:id="id.16" xmi:type="code:Expands" to="id.1" from="id.15"/>
+      <codeRelation xmi:id="id.17" xmi:type="code:VariantTo" to="id.25" from="id.15"/>
+    </codeElement>
+    <codeElement xmi:id="id.18" xmi:type="action:BlockUnit" name="b2">
+      <codeRelation xmi:id="id.19" xmi:type="code:GeneratedFrom" to="id.15" from="id.18"/>
+      <codeElement xmi:id="id.20" xmi:type="action:ActionElement" name="a2" kind="Assign">
+        <source xmi:id="id.21" language="C" snippet="g=123"/>
+        <codeElement xmi:id="id.22" xmi:type="code:Value" name="1" type="id.4"/>
+        <actionRelation xmi:id="id.23" xmi:type="action:Reads" to="id.22" from="id.20"/>
+        <actionRelation xmi:id="id.24" xmi:type="action:Writes" to="id.3" from="id.20"/>
+      </codeElement>
+    </codeElement>
+    <codeElement xmi:id="id.25" xmi:type="code:ConditionalDirective" name="c3">
+      <source language="Cpreprocessor" snippet="#else"/>
+      <codeRelation xmi:id="id.26" xmi:type="code:Expands" to="id.1" from="id.25"/>
+    </codeElement>
+    <codeElement xmi:id="id.27" xmi:type="action:BlockUnit" name="b3">
+      <codeRelation xmi:id="id.28" xmi:type="code:GeneratedFrom" to="id.25" from="id.27"/>
+      <codeElement xmi:id="id.29" xmi:type="action:ActionElement" name="a3" kind="Assign">
+        <source xmi:id="id.30" language="C" snippet="g=123"/>
+        <codeElement xmi:id="id.31" xmi:type="code:Value" name="2" type="id.4"/>
+        <actionRelation xmi:id="id.32" xmi:type="action:Reads" to="id.31" from="id.29"/>
+        <actionRelation xmi:id="id.33" xmi:type="action:Writes" to="id.3" from="id.29"/>
+      </codeElement>
+    </codeElement>
+  </model>
+</kdm:Segment>

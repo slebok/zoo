@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:build="http://schema.omg.org/spec/KDM/1.1/build" xmlns:core="http://schema.omg.org/spec/KDM/1.1/core" xmlns:kdm="http://schema.omg.org/spec/KDM/1.1/kdm" xmlns:source="http://schema.omg.org/spec/KDM/1.1/source" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://schema.omg.org/spec/KDM/1.1/build">
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/kdm" schemaLocation="KDM.kdmXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/source" schemaLocation="KDM.sourceXMI.xsd"/>
+  <xsd:import namespace="http://schema.omg.org/spec/KDM/1.1/core" schemaLocation="platform:/resource/KDM.XMI/KDM.coreXMI.xsd"/>
+  <xsd:complexType abstract="true" name="AbstractBuildElement">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMEntity">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="buildRelation" type="build:AbstractBuildRelationship"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractBuildElement" type="build:AbstractBuildElement"/>
+  <xsd:complexType name="BuildResource">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildElement">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="implementation" type="core:KDMEntity"/>
+          <xsd:element name="groupedBuild" type="build:AbstractBuildElement"/>
+          <xsd:element name="buildElement" type="build:AbstractBuildElement"/>
+        </xsd:choice>
+        <xsd:attribute name="implementation" type="xsd:string"/>
+        <xsd:attribute name="groupedBuild" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildResource" type="build:BuildResource"/>
+  <xsd:complexType name="BuildDescription">
+    <xsd:complexContent>
+      <xsd:extension base="build:BuildResource">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="source" type="source:SourceRef"/>
+        </xsd:choice>
+        <xsd:attribute name="text" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildDescription" type="build:BuildDescription"/>
+  <xsd:complexType name="SymbolicLink">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SymbolicLink" type="build:SymbolicLink"/>
+  <xsd:complexType abstract="true" name="AbstractBuildRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="core:KDMRelationship"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="AbstractBuildRelationship" type="build:AbstractBuildRelationship"/>
+  <xsd:complexType name="LinksTo">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:AbstractBuildElement"/>
+          <xsd:element name="from" type="build:SymbolicLink"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="LinksTo" type="build:LinksTo"/>
+  <xsd:complexType name="Consumes">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:AbstractBuildElement"/>
+          <xsd:element name="from" type="build:BuildStep"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Consumes" type="build:Consumes"/>
+  <xsd:complexType name="BuildModel">
+    <xsd:complexContent>
+      <xsd:extension base="kdm:KDMModel">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="buildElement" type="build:AbstractBuildElement"/>
+        </xsd:choice>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildModel" type="build:BuildModel"/>
+  <xsd:complexType name="BuildComponent">
+    <xsd:complexContent>
+      <xsd:extension base="build:BuildResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildComponent" type="build:BuildComponent"/>
+  <xsd:complexType name="Supplier">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Supplier" type="build:Supplier"/>
+  <xsd:complexType name="Tool">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Tool" type="build:Tool"/>
+  <xsd:complexType name="BuildElement">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildElement" type="build:BuildElement"/>
+  <xsd:complexType name="BuildRelationship">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="core:KDMEntity"/>
+          <xsd:element name="from" type="build:AbstractBuildElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildRelationship" type="build:BuildRelationship"/>
+  <xsd:complexType name="SuppliedBy">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:Supplier"/>
+          <xsd:element name="from" type="build:AbstractBuildElement"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SuppliedBy" type="build:SuppliedBy"/>
+  <xsd:complexType name="Library">
+    <xsd:complexContent>
+      <xsd:extension base="build:BuildResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Library" type="build:Library"/>
+  <xsd:complexType name="BuildStep">
+    <xsd:complexContent>
+      <xsd:extension base="build:BuildResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildStep" type="build:BuildStep"/>
+  <xsd:complexType name="Produces">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:AbstractBuildElement"/>
+          <xsd:element name="from" type="build:BuildStep"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="Produces" type="build:Produces"/>
+  <xsd:complexType name="SupportedBy">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:Tool"/>
+          <xsd:element name="from" type="build:BuildStep"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="SupportedBy" type="build:SupportedBy"/>
+  <xsd:complexType name="BuildProduct">
+    <xsd:complexContent>
+      <xsd:extension base="build:BuildResource"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="BuildProduct" type="build:BuildProduct"/>
+  <xsd:complexType name="DescribedBy">
+    <xsd:complexContent>
+      <xsd:extension base="build:AbstractBuildRelationship">
+        <xsd:choice maxOccurs="unbounded" minOccurs="0">
+          <xsd:element name="to" type="build:BuildDescription"/>
+          <xsd:element name="from" type="build:BuildStep"/>
+        </xsd:choice>
+        <xsd:attribute name="to" type="xsd:string"/>
+        <xsd:attribute name="from" type="xsd:string"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:element name="DescribedBy" type="build:DescribedBy"/>
+</xsd:schema>
