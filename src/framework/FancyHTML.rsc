@@ -84,10 +84,10 @@ public BodyElement footer()
 			_text(" license as well as on terms of any other license bound to the source of our research in a way that enforces its propagation to derivatives.")
 		])),
 		br(),
-		_text("The page is maintained by Dr. "),
+		_text("The page is created and maintained by Dr. "),
 		ahref( ("href":"http://grammarware.net/"), _text("Vadim Zaytsev")),
 		_text(" a.k.a. @"),
-		ahref( ("href":"http://twitter.com/grammarware"), _text("grammarware")),
+		ahref( ("href":"http://grammarware.github.io/"), _text("grammarware")),
 		_text("."),
 		lastupdated(),
 		makelinks([<"↑","#TOP">]),

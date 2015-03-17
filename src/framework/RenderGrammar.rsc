@@ -55,7 +55,10 @@ void rmain(bool force)
 				g = readBGF(framework::BackEnd::basedir+"<mydir>/grammar.bgf");
 				// NB: HACK!
 				// TODO: workaround - escaping in GrammarLab concrete syntax
-				g = visit(g){case nonterminal("DQUOTE") => terminal("\"")};
+				g = visit(g){
+					case nonterminal("DQUOTE") => terminal("\"")
+					case nonterminal("TDQUOTE") => terminal("\"\"\"")
+				};
 				//tk = txtbykey(zvs,"of");
 				//hm = bgf2html(tk, dir, g, z );
 				//iprintln(hm);

@@ -14,7 +14,7 @@ void main()
 	X = startTheClock();
 	writeHTML(
 		zooval2html(traversebase(), false),
-		|project://zoo/web/index.html|
+		framework::BackEnd::outdir+"index.html"
 	);
 	println("Running time: <formatDuration(X)>");
 }
@@ -32,12 +32,12 @@ HTML zooval2html(ZooEntry ze, bool debug)
 		//zentry(str where, list[ZooValue] meta, list[ZooEntry] inner)
 		body( ("style":"background-color:#9C9;"), [
 			div( ("style":"float:right;", "class":"box"), img( "grammarlab.png", "GrammarLab", "Powered by GrammarLab" ) ),
-			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "GrammarZoo logo", "" ) ),
+			div( ("style":"float:left;", "class":"box"), img( "grammarzoo.png", "Grammar Zoo logo", "" ) ),
 			heading(1, (), _seq([aname("TOP"),_text(txtbykey(ze,"name"))])),
 			div( ("class":"c"), em((),_text(txtbykey(ze,"subtitle"))) ),
 			heading(2, ("class":"fh"), _text("<countEntries(ze)> entries and counting")),
 			heading(3, ("class":"sh"), _text("<countGrammars(ze)> grammars: <countAllTypes(ze)>")),
-			div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
+			//div( ("class":"c"), _text("Bulk download of the whole corpus:") ),
 			heading(1, (), subsectionlinks(ze)),
 			hr(),
 			*[*lang2html(iz, debug) | iz <- ze.inner],
