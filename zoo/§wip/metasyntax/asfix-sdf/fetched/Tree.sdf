@@ -1,0 +1,27 @@
+module languages/asfix/syntax/Tree
+
+imports languages/asfix/syntax/Annotations
+imports languages/asfix/syntax/Symbol
+imports languages/asfix/syntax/Attributes
+
+exports
+
+sorts Tree Args Production
+
+context-free syntax
+
+appl(prod:Production,args:Args) -> Tree {cons("appl")}
+cycle(symbol:Symbol,length:NatCon)          -> Tree {cons("cycle")}
+amb(args:Args)                  -> Tree {cons("amb")}
+character:NatCon                -> Tree {cons("char")}
+
+"[" {Tree ","}* "]"             -> Args {cons("list")}
+
+"prod" "(" lhs:Symbols comma1:"," rhs:Symbol comma2:"," attributes:Attributes ")" -> Production {cons("default")}
+list(rhs:Symbol)                                   -> Production {cons("list")}
+
+hiddens
+
+context-free start-symbols
+  Tree
+

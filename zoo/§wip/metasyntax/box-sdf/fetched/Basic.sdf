@@ -1,0 +1,29 @@
+module languages/box/syntax/Basic
+
+imports basic/Comments
+imports basic/StrCon
+imports basic/NatCon
+        
+exports
+  sorts SpaceSymbol SpaceOption
+
+  context-free syntax
+    "hs"                    -> SpaceSymbol {cons("horizontal")}
+    "vs"                    -> SpaceSymbol {cons("vertical")}
+    "is"                    -> SpaceSymbol {cons("indentation")}
+    "ts"                    -> SpaceSymbol {cons("tabstop")}
+    SpaceSymbol "=" NatCon  -> SpaceOption     
+
+exports
+  sorts Box BoxOperator
+
+  context-free syntax
+    StrCon                                       -> Box {cons("string")}
+    operator:BoxOperator "[" list:Box* "]"       -> Box {cons("appl")}
+
+    "H" options:SpaceOption*                     -> BoxOperator {cons("h")}
+    "V" options:SpaceOption*                     -> BoxOperator {cons("v")}
+    "HV" options:SpaceOption*                    -> BoxOperator {cons("hv")}
+    "HOV" options:SpaceOption*                   -> BoxOperator {cons("hov")}
+    "I" options:SpaceOption*                     -> BoxOperator {cons("i")}
+    "WD"                                         -> BoxOperator {cons("wd")}

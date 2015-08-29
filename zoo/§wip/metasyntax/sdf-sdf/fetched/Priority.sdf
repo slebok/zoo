@@ -1,0 +1,34 @@
+%%% $Id: Priority.sdf 32385 2010-06-23 15:03:22Z bertl $   
+
+module languages/sdf2/syntax/Priority
+
+imports languages/sdf2/syntax/Kernel
+
+exports
+  sorts Associativity ArgumentIndicator Group Priority Priorities
+
+  context-free syntax
+    "left"      -> Associativity  {cons("left")}
+    "right"     -> Associativity  {cons("right")}
+    "non-assoc" -> Associativity  {cons("non-assoc")}
+    "assoc"     -> Associativity  {cons("assoc")}
+
+    "bracket"     -> Attribute  {cons("bracket")}
+    Associativity -> Attribute  {cons("assoc")}
+
+    "<" arguments:{NatCon ","}+ ">" -> ArgumentIndicator {cons("default")}
+
+    Group ArgumentIndicator               -> Group {non-assoc,cons("with-arguments")}
+    Group "."                             -> Group {non-assoc,cons("non-transitive")}
+
+    Production                            -> Group  {cons("simple-group")}
+    "{" Productions "}"                   -> Group  {cons("prods-group")}
+    "{" Associativity ":" Productions "}" -> Group  {cons("assoc-group")}
+
+    list:{Group ">"}+                                    -> Priority  {cons("chain")}
+    "left":Group Associativity "right":Group             -> Priority  {cons("assoc")}
+%%    Production "<" arguments:{NatCon ","}+ ">" ">" Group -> Priority  {cons("argument")}
+
+    list:{Priority  ","}* -> Priorities
+
+    "priorities" Priorities  -> Grammar  {cons("priorities")}

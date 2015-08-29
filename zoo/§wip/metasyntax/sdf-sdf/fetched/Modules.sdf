@@ -1,0 +1,50 @@
+%%% $Id: Modules.sdf 32385 2010-06-23 15:03:22Z bertl $
+                 
+module languages/sdf2/syntax/Modules
+
+imports languages/sdf2/syntax/Kernel 
+        languages/sdf2/syntax/Renaming
+
+hiddens
+  sorts ModuleWord
+exports
+  context-free start-symbols Module
+
+  sorts ModuleId ModuleName Import Imports
+        Section Sections Module Definition ImpSection
+
+  lexical syntax    
+    letters:[A-Za-z0-9\_\-]+ -> ModuleWord  {cons("word")}
+
+    ModuleWord              -> ModuleId  {cons("leaf")}
+    sep:"/" basename:ModuleId            -> ModuleId  {cons("root")}
+    dirname:ModuleWord sep:"/" basename:ModuleId -> ModuleId  {cons("path")}
+         
+  context-free syntax
+    list:Module* -> Definition
+
+    "module" ModuleName list:ImpSection* Sections -> Module  {cons("module")}
+
+    "exports" Grammar            -> Section  {cons("exports")}
+    "hiddens" Grammar            -> Section  {cons("hiddens")}
+
+    list:Section*                -> Sections
+
+    ModuleId                        -> ModuleName  {cons("unparameterized")}
+    ModuleId "[" params:Symbols "]" -> ModuleName  {cons("parameterized")}
+
+    "id" "(" ModuleName ")" -> Attribute  {cons("id")}
+
+    "imports" list:Imports -> ImpSection  {cons("imports")}
+
+    ImpSection -> Grammar  {cons("imp-section")}
+
+    list:Import* -> Imports
+
+    ModuleName            -> Import  {cons("module")}
+    ModuleName Renamings  -> Import  {cons("renamed-module")}
+    "(" Import ")"        -> Import  {bracket}
+
+  lexical restrictions
+    ModuleWord -/- [A-Za-z0-9\_\-]
+    ModuleId -/- [\/]

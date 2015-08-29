@@ -1,0 +1,33 @@
+module languages/box/syntax/Fonts
+
+imports languages/box/syntax/Basic
+imports basic/Comments
+
+exports
+  sorts FontId
+  lexical syntax
+    [A-Za-z]+ -> FontId {cons("default")}
+
+exports
+  sorts FontParam FontOption FontValue FontOperator
+  context-free syntax
+    NatCon                   -> FontValue {cons("natural")}
+    FontId                   -> FontValue {cons("font-id")}
+    FontParam "=" FontValue  -> FontOption
+    "F" FontOption*          -> BoxOperator {cons("font")}
+
+    "fn" -> FontParam {cons("name")}
+    "fm" -> FontParam {cons("family")}
+    "se" -> FontParam {cons("series")}
+    "sh" -> FontParam {cons("shape")}
+    "sz" -> FontParam {cons("size")}
+    "cl" -> FontParam {cons("color")}
+
+    "KW"      -> FontOperator {cons("keyword")}
+    "VAR"     -> FontOperator {cons("variable")}
+    "NUM"     -> FontOperator {cons("number")}
+    "MATH"    -> FontOperator {cons("math")}
+    "ESC"     -> FontOperator {cons("escape")}
+    "COMM"    -> FontOperator {cons("comment")}
+    "STRING"  -> FontOperator {cons("string")}
+

@@ -1,0 +1,34 @@
+module languages/ebnf/syntax/EBNF
+
+%% Simple Extended Backus-Naur Form (EBNF) notation for describing
+%% context-free grammar. This notation is very close to the notation
+%% as used in W3C standards
+
+imports
+  basic/Identifiers
+  basic/Strings
+exports
+  context-free start-symbols
+    Grammar
+  sorts Grammar Rule Expression HexChar CharRange CharClass
+  lexical syntax
+    "#x" [0-9A-Fa-f]+                 -> HexChar
+    HexChar "-" HexChar               -> CharRange
+    HexChar                           -> CharRange
+    "[" CharRange* "]"                -> CharClass            %% Character class
+    "[" "^" CharRange* "]"            -> CharClass            %% Negated character class
+  context-free syntax
+    Rule*                             -> Grammar              %% Complete grammar
+    IdCon "::=" Expression            -> Rule                 %% Grammar rule
+    IdCon                             -> Expression           %% Non-terminal
+    String                            -> Expression           %% Literal
+    "(" Expression ")"                -> Expression {bracket} %% Grouping
+    Expression "?"                    -> Expression           %% Optional
+    Expression "*"                    -> Expression           %% Zero or more repetitions
+    Expression "+"                    -> Expression           %% One or more repetitions
+    Expression "|" Expression         -> Expression {left}    %% Alternative operator
+    Expression Expression             -> Expression {left}    %% Sequential composition
+    
+  context-free priorities
+    Expression Expression -> Expression {left} >
+    Expression "|" Expression  -> Expression {left}

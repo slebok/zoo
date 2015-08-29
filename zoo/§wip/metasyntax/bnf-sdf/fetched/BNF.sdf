@@ -1,0 +1,42 @@
+module languages/bnf/syntax/BNF
+
+imports basic/Whitespace
+
+hiddens
+context-free start-symbols
+  Rules
+
+exports
+sorts Rule Rules NonTerminal Terminal Element Elements
+
+lexical syntax
+  "<" ~[\<\>]+ ">"               -> NonTerminal          
+  ~[\<\ \t\|\[\]\{\}] ~[\ \t\n]* -> Terminal             
+  "..."                          -> Terminal    {reject} 
+  "::="                          -> Terminal    {reject} 
+
+lexical restrictions
+  Terminal -/- ~[\ \t\n]
+
+context-free syntax
+  NonTerminal "::=" Elements -> Rule      
+  {Element "|"}+             -> Elements  
+  Rule*                      -> Rules     
+  NonTerminal                -> Element   
+  Terminal                   -> Element   
+  "[" {Element "|"}+ "]"     -> Element   
+  "{" {Element "|"}+ "}"     -> Element   
+
+context-free priorities
+  Element "..." -> Element >
+  Element Element -> Element {left},
+  { non-assoc: "|"             -> Element        
+               "["             -> Element        
+               "]"             -> Element        
+               "{"             -> Element        
+               "}"             -> Element        
+               "<"             -> Element        
+               ">"             -> Element        
+               "..."           -> Element        
+               "::="           -> Element        
+               Element Element -> Element {left}  }

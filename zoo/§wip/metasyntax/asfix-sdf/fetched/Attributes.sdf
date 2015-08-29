@@ -1,0 +1,28 @@
+module languages/asfix/syntax/Attributes
+
+imports languages/aterm/syntax/ATerms
+
+exports
+  sorts Attributes Attrs Attr Associativity
+
+  context-free syntax
+    "no-attrs"                       -> Attributes  {cons("no-attrs")}
+    "attrs" "(" attributes:Attrs ")" -> Attributes  {cons("attrs")}
+
+    "[" {Attr ","}+ "]" -> Attrs {cons("many")}
+
+    "assoc" "(" associativity:Associativity ")" -> Attr {cons("assoc")}
+    "term" "(" aterm:ATerm ")"                  -> Attr {cons("term")} 
+    "id" "(" module-name:StrCon ")"             -> Attr {cons("id")}
+
+    "bracket" -> Attr {cons("bracket")}
+    "reject"  -> Attr {cons("reject")}
+    "prefer"  -> Attr {cons("prefer")}
+    "avoid"   -> Attr {cons("avoid")}
+
+    "left"      -> Associativity {cons("left")}
+    "right"     -> Associativity {cons("right")}
+    "assoc"     -> Associativity {cons("assoc")}
+    "non-assoc" -> Associativity {cons("non-assoc")}
+
+

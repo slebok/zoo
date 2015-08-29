@@ -1,0 +1,25 @@
+module languages/box/syntax/Groups
+
+imports languages/box/syntax/Basic
+
+exports
+
+sorts GroupOption 
+
+context-free syntax
+"gs" "=" NatCon      -> GroupOption {cons("size")}
+"op" "=" BoxOperator -> GroupOption {cons("operator")}
+
+context-free syntax
+%% the group operator wraps another operator around every nth 
+%% elements of a list of boxes.
+
+"G"  group-options:GroupOption* -> BoxOperator {cons("grouping")}
+
+context-free syntax
+%% the SL operator is an abbreviation of G gs=4, which is typically
+%% applicable to separated lists
+
+"SL" group-options:GroupOption* -> BoxOperator {cons("separated-list")}
+
+

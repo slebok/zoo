@@ -1,0 +1,31 @@
+%%% $Id: Literals.sdf 32385 2010-06-23 15:03:22Z bertl $
+                                                  
+module languages/sdf2/syntax/Literals
+
+imports languages/sdf2/syntax/Kernel 
+imports basic/StrCon
+imports basic/IdentifierCon
+
+exports
+  sorts FunctionName SingleQuotedStrCon SingleQuotedStrChar
+  lexical syntax
+
+    "\\n"                      -> SingleQuotedStrChar {cons("newline")}
+    "\\t"                      -> SingleQuotedStrChar {cons("tab")}
+    "\\'"                      -> SingleQuotedStrChar {cons("quote")}
+    "\\\\"                     -> SingleQuotedStrChar {cons("backslash")}
+    "\\" a:[0-9]b:[0-9]c:[0-9] -> SingleQuotedStrChar {cons("decimal")}
+    ~[\0-\31\n\t\'\\]          -> SingleQuotedStrChar {cons("normal")}
+
+    [\'] chars:SingleQuotedStrChar* [\']   -> SingleQuotedStrCon  {cons("default")}
+
+  context-free syntax
+    IdCon  -> FunctionName {cons("unquoted-fun")}
+    StrCon -> FunctionName {cons("quoted-fun")}
+
+  context-free syntax
+    string:StrCon                -> Symbol {cons("lit")}
+    ci-string:SingleQuotedStrCon -> Symbol {cons("ci-lit")}
+
+    fun:FunctionName "(" arguments:{Symbol ","}* ")" "->" result:Symbol Attributes 
+	-> Production  {avoid, cons("prefix-fun")}

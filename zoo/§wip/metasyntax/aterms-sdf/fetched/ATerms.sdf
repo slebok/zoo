@@ -1,0 +1,29 @@
+module languages/aterm/syntax/ATerms
+
+imports languages/aterm/syntax/IntCon 
+        languages/aterm/syntax/RealCon
+	basic/StrCon
+	basic/IdentifierCon
+
+exports
+  sorts AFun ATerm Annotation
+
+  context-free syntax
+	StrCon 	-> AFun {cons("quoted")}
+	IdCon 	-> AFun {cons("unquoted")}
+
+  context-free syntax
+	IntCon 					-> ATerm {cons("int")}
+	RealCon					-> ATerm {cons("real")}
+	fun:AFun 				-> ATerm {cons("fun")}
+	fun:AFun "(" args:{ATerm ","}+ ")" 	-> ATerm {cons("appl")}
+	"<" type:ATerm ">" 			-> ATerm {cons("placeholder")}
+	"[" elems:{ATerm ","}* "]" 		-> ATerm {cons("list")}
+	trm:ATerm Annotation 			-> ATerm {cons("annotated")}
+
+  context-free syntax
+	"{" annos:{ ATerm ","}+ "}" 		-> Annotation {cons("default")}
+
+hiddens
+  context-free start-symbols 
+    ATerm

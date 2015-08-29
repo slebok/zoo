@@ -1,0 +1,21 @@
+module languages/box/syntax/Pretty[X]
+
+imports languages/box/syntax/Box
+
+exports
+  context-free start-symbols BoxModule
+  sorts BoxModule BoxDefinition BoxVar
+
+  lexical syntax
+    [\~\#\$]?[A-Za-z0-9\*\+]+ -> BoxVar
+
+  context-free syntax
+    "BOX" "[" BoxVar "]" -> Box
+    BOXVAR[[X]] -> X {prefer}
+    
+    "[" `X`? "]" X "=>" Box -> BoxDefinition
+    "box" "module" BoxDefinition* -> BoxModule
+
+  context-free syntax
+    "sort2box" "(" X ")" -> Box {to-box}
+    "box2sort" "(" Box ")" -> X {from-box}

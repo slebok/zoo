@@ -1,0 +1,31 @@
+%%% $Id: Restrictions.sdf 32385 2010-06-23 15:03:22Z bertl $
+               
+module languages/sdf2/syntax/Restrictions
+
+imports languages/sdf2/syntax/CC
+
+exports
+  sorts Lookahead Lookaheads Restriction Restrictions
+
+  context-free syntax
+    CharClass                          -> Lookahead  {cons("char-class")}
+    head:CharClass "." tail:Lookaheads -> Lookahead  {cons("seq")}
+
+    Lookahead                                -> Lookaheads  {cons("single")}
+    "left":Lookaheads "|" "right":Lookaheads -> Lookaheads  {cons("alt"),right}
+    "(" Lookaheads ")"                       -> Lookaheads  {bracket}
+    "[[" list:{Lookahead ","}* "]]"          -> Lookaheads  {cons("list")}
+
+    Symbols "-/-" Lookaheads -> Restriction  {cons("follow")}
+
+    list:Restriction* -> Restrictions
+
+    "restrictions" Restrictions -> Grammar  {cons("restrictions")}
+
+    "reject" -> Attribute  {cons("reject")}
+    "prefer" -> Attribute  {cons("prefer")}
+    "avoid"  -> Attribute  {cons("avoid")}
+
+  context-free priorities    
+    CharClass "." Lookaheads    -> Lookahead >
+    Lookaheads "|" Lookaheads   -> Lookaheads

@@ -1,0 +1,31 @@
+%%% $Id: Character-Class.sdf 32385 2010-06-23 15:03:22Z bertl $
+           
+module languages/sdf2/syntax/Character-Class
+
+imports languages/sdf2/syntax/Character
+
+exports
+  sorts CharClass CharRange CharRanges OptCharRanges 
+  context-free syntax 
+    Character                           -> CharRange
+    start:Character "-" end:Character   -> CharRange            {cons("range")}
+
+    CharRange                                   -> CharRanges
+    "left":CharRanges "right":CharRanges        -> CharRanges   {cons("conc"),right,memo}
+    "(" CharRanges ")"                          -> CharRanges   {bracket}
+
+                              -> OptCharRanges  {cons("absent")}
+    CharRanges                -> OptCharRanges  {cons("present")}
+
+    "[" OptCharRanges "]"                    -> CharClass  {cons("simple-charclass")}
+    "~" CharClass                            -> CharClass  {cons("comp")}
+    "left":CharClass "/" "right":CharClass   -> CharClass  {cons("diff"),left,memo}
+    "left":CharClass "/\\" "right":CharClass -> CharClass  {cons("isect"),left,memo}
+    "left":CharClass "\\/" "right":CharClass -> CharClass  {cons("union"),left}
+    "(" CharClass ")"                        -> CharClass  {bracket, avoid}
+
+  context-free priorities
+    "~" CharClass             -> CharClass >
+    CharClass "/" CharClass   -> CharClass >
+    CharClass "/\\" CharClass -> CharClass >
+    CharClass "\\/" CharClass -> CharClass           

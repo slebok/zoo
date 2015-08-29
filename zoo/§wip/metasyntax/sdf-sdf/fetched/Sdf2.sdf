@@ -1,0 +1,69 @@
+%%% $Id: Sdf2.sdf 32385 2010-06-23 15:03:22Z bertl $
+
+module languages/sdf2/syntax/Sdf2
+
+imports languages/sdf2/syntax/Sdf2-Syntax
+
+exports
+  lexical syntax
+    "LAYOUT"            -> Sort    {reject}
+
+  context-free syntax
+    "aliases"           -> ModuleName {reject}
+    "lexical"           -> ModuleName {reject}
+    "priorities"        -> ModuleName {reject}
+    "context-free"      -> ModuleName {reject}
+    "definition"        -> ModuleName {reject}
+    "syntax"            -> ModuleName {reject}
+    "variables"         -> ModuleName {reject}
+    "module"            -> ModuleName {reject}
+    "imports"           -> ModuleName {reject}
+    "exports"           -> ModuleName {reject}
+    "hiddens"           -> ModuleName {reject}
+    "left"              -> ModuleName {reject}
+    "right"             -> ModuleName {reject}
+    "assoc"             -> ModuleName {reject}
+    "non-assoc"         -> ModuleName {reject}
+    "bracket"           -> ModuleName {reject}
+    "sorts"             -> ModuleName {reject}
+    "bracket"           -> ModuleName {reject}
+    "sorts"             -> ModuleName {reject}
+    "restrictions"      -> ModuleName {reject}
+
+     StrCon "(" arguments:{Symbol ","}* ")" -> Symbols {reject}
+
+     Associativity -> Label   {reject}
+     Associativity -> ATermAttribute {reject}
+     "reject"      -> ATermAttribute {reject}
+     "prefer"      -> ATermAttribute {reject}
+     "avoid"       -> ATermAttribute {reject}
+     "bracket"     -> ATermAttribute {reject}
+     "id" "(" ModuleName ")" -> ATermAttribute {reject}
+
+  restrictions
+    <Sort -CF>
+    "aliases"
+    "lexical"
+    "priorities"
+    "context-free"
+    "definition"
+    "syntax"
+    "variables"
+    "module"
+    "imports"
+    "exports"
+    "hiddens"
+    "left"
+    "right"
+    "assoc"
+    "non-assoc"
+    "bracket"
+    "sorts"             -/- [A-Za-z0-9]
+    <NatCon -CF>        -/- [0-9]
+    <LAYOUT?-CF>        -/- [\ \t\n\%]
+    <NumChar -CF>       -/- [0-9]
+    <ModuleName -CF>    -/- [A-Za-z0-9\_\-]
+
+exports
+  context-free start-symbols
+    SDF Module

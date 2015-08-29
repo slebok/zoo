@@ -1,0 +1,26 @@
+%%% $Id: Regular.sdf 32385 2010-06-23 15:03:22Z bertl $  
+
+module languages/sdf2/syntax/Regular
+
+imports languages/sdf2/syntax/Kernel 
+imports languages/aterm/syntax/IntCon
+
+exports
+  context-free syntax
+    "(" ")"                                       -> Symbol {cons("empty")}
+    "(" head:Symbol tail:Symbol+ ")"              -> Symbol {cons("seq")}
+    Symbol "?"                                    -> Symbol {cons("opt")}
+    Symbol "+"                                    -> Symbol {cons("iter")}
+    Symbol "*"                                    -> Symbol {cons("iter-star")}
+    "{" Symbol sep:Symbol "}" "+"                 -> Symbol {cons("iter-sep")}
+    "{" Symbol sep:Symbol "}" "*"                 -> Symbol {cons("iter-star-sep")}
+    "<" head:Symbol "," rest:{Symbol ","}+ ">"    -> Symbol {cons("tuple")}
+    "(" arguments:Symbols "=>" results:Symbol ")" -> Symbol {cons("func")}
+    "left":Symbol "|" "right":Symbol              -> Symbol {right,cons("alt")}
+    "(" "left":Symbol "->" "right":Symbol ")"     -> Symbol {cons("strategy")}
+
+  context-free priorities
+    {Symbol "?"               -> Symbol
+    Symbol "*"                -> Symbol
+    Symbol "+"                -> Symbol} >
+    Symbol "|" Symbol         -> Symbol       

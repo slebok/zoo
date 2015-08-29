@@ -1,0 +1,16 @@
+module languages/aterm/syntax/RealCon
+
+imports languages/aterm/syntax/IntCon
+
+hiddens
+  context-free start-symbols 
+    RealCon
+
+exports
+  sorts OptExp RealCon
+
+  context-free syntax
+    "e" IntCon -> OptExp {cons("present")}
+               -> OptExp {cons("absent")}
+
+    base:IntCon "." decimal:NatCon exp:OptExp  -> RealCon {cons("real-con")}

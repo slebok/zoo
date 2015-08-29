@@ -1,0 +1,25 @@
+%%% $Id: Character.sdf 32525 2010-07-18 13:31:06Z paulk $
+                     
+module languages/sdf2/syntax/Character
+
+
+
+exports
+  sorts Character NumChar ShortChar
+  lexical syntax
+    [\\] number:[0-9]+                     -> NumChar   {cons("digits")}
+    character:[a-zA-Z0-9]                  -> ShortChar {cons("regular")}
+    [\\] escape:~[\0-\31A-Za-mo-qsu-z0-9]  -> ShortChar {cons("escaped")}
+
+  lexical restrictions
+    NumChar -/- [0-9]
+
+  context-free syntax
+    NumChar   -> Character {cons("numeric")}
+    ShortChar -> Character {cons("short")}
+    "\\TOP"   -> Character {cons("top")}
+    "\\EOF"   -> Character {cons("eof")}
+    "\\BOT"   -> Character {cons("bot")}
+    "\\LABEL_START" -> Character {cons("label_start")}
+
+   

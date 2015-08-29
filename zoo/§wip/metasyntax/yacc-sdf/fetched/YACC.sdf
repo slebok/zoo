@@ -1,0 +1,57 @@
+module languages/yacc/syntax/YACC
+imports basic/Integers
+imports basic/Strings
+imports languages/generic-cpp/syntax/CommentsAsLayout
+imports languages/generic-cpp/syntax/Whitespace
+
+exports
+  sorts Grammar Grammar-rules Rule Terminal NonTerminal Literal Expression 
+        C-declarations C-code CurlyFree Extra-C-code
+        Yacc-declarations Yacc-declaration
+  lexical syntax
+    [A-Z][a-zA-Z0-9]*                               -> Terminal
+    [a-z][a-zA-Z0-9]*                               -> NonTerminal
+    "'" ~[\'] "'"                                   -> Literal
+    "'" [\\] ~[] "'"                                -> Literal
+
+    "%{" ~[\%]* "%}"                                -> C-declarations
+     
+    ~[\{\}]+                                        -> CurlyFree
+    "{" (CurlyFree | C-code)* "}"                   -> C-code
+
+    ~[]*                                            -> Extra-C-code
+
+  lexical restrictions
+    Terminal -/- [a-zA-Z0-9]
+    NonTerminal -/- [a-zA-Z0-9]
+    CurlyFree -/- ~[\{\}]
+
+  context-free start-symbols
+    Grammar
+
+  context-free syntax
+    C-declarations 
+    Yacc-declarations 
+    "%%" 
+    Grammar-rules 
+    "%%" 
+    Extra-C-code                                    -> Grammar
+
+    ("%token" | "%left" | "%right" | "%nonassoc") 
+      (Terminal | Literal)+  String?                -> Yacc-declaration
+%%    ("%token" | "%left" | "%right" | "%nonassoc") 
+%%      Terminal Integer                              -> Yacc-declaration
+     "%start" Terminal                              -> Yacc-declaration
+
+    Yacc-declaration*                               -> Yacc-declarations
+    
+    Rule*                                           -> Grammar-rules
+    NonTerminal ":" { Expression? "|" }* ";"        -> Rule
+    
+    Terminal                                        -> Expression
+    NonTerminal                                     -> Expression
+    Literal                                         -> Expression
+    "%prec" Terminal                                -> Expression
+    C-code                                          -> Expression
+    Expression Expression                           -> Expression {left}
+    
