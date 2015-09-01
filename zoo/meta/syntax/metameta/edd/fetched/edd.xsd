@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:edd="http://planet-sl.org/edd" targetNamespace="http://planet-sl.org/edd">
+	<xsd:annotation>
+		<xsd:documentation>
+			EBNF Dialect Definition
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="config">
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element name="start-grammar-symbol" type="xsd:string"/>
+				<xsd:element name="end-grammar-symbol" type="xsd:string"/>
+				<xsd:element name="line-continuation-symbol" type="xsd:string"/>
+				<xsd:element name="tabulation-symbol" type="xsd:string"/>
+				<xsd:element name="start-label-symbol" type="xsd:string"/>
+				<xsd:element name="end-label-symbol" type="xsd:string"/>
+				<xsd:element name="defining-symbol" type="xsd:string"/>
+				<xsd:element name="multiple-defining-symbol" type="xsd:string"/>
+				<xsd:element name="terminator-symbol" type="xsd:string"/>
+				<xsd:element name="definition-separator-symbol" type="xsd:string"/>
+				<xsd:element name="concatenate-symbol" type="xsd:string"/>
+				<xsd:element name="start-comment-symbol" type="xsd:string"/>
+				<xsd:element name="end-comment-symbol" type="xsd:string"/>
+				<xsd:element name="start-group-symbol" type="xsd:string"/>
+				<xsd:element name="end-group-symbol" type="xsd:string"/>
+				<xsd:element name="start-option-symbol" type="xsd:string"/>
+				<xsd:element name="end-option-symbol" type="xsd:string"/>
+				<xsd:element name="start-terminal-symbol" type="xsd:string"/>
+				<xsd:element name="end-terminal-symbol" type="xsd:string"/>
+				<xsd:element name="start-nonterminal-symbol" type="xsd:string"/>
+				<xsd:element name="end-nonterminal-symbol" type="xsd:string"/>
+				<xsd:element name="start-seplist-star-symbol" type="xsd:string"/>
+				<xsd:element name="end-seplist-star-symbol" type="xsd:string"/>
+				<xsd:element name="start-seplist-plus-symbol" type="xsd:string"/>
+				<xsd:element name="end-seplist-plus-symbol" type="xsd:string"/>
+				<xsd:element name="start-repetition-star-symbol" type="xsd:string"/>
+				<xsd:element name="end-repetition-star-symbol" type="xsd:string"/>
+				<xsd:element name="start-repetition-plus-symbol" type="xsd:string"/>
+				<xsd:element name="end-repetition-plus-symbol" type="xsd:string"/>
+				<xsd:element name="postfix-option-symbol" type="xsd:string"/>
+				<xsd:element name="postfix-repetition-star-symbol" type="xsd:string"/>
+				<xsd:element name="postfix-repetition-plus-symbol" type="xsd:string"/>
+				<xsd:element name="nonterminals-may-start-with" type="xsd:string"/>
+				<xsd:element name="nonterminals-may-contain" type="xsd:string"/>
+				<xsd:element name="nonterminal-if-contains" type="xsd:string"/>
+				<xsd:element name="terminal-if-undefined" nillable="true">
+					<xsd:complexType>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element name="except" type="xsd:string"/>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="nonterminal-if-defined" nillable="true">
+					<xsd:complexType>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element name="except" type="xsd:string"/>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="decompose-symbols" nillable="true">
+					<xsd:complexType>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element name="except" type="xsd:string"/>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="terminal-if-uppercase" nillable="true"/>
+				<xsd:element name="terminal-if-lowercase" nillable="true"/>
+				<xsd:element name="terminal-if-mixedcase" nillable="true"/>
+				<xsd:element name="terminal-if-camelcase" nillable="true"/>
+				<xsd:element name="nonterminal-if-uppercase" nillable="true"/>
+				<xsd:element name="nonterminal-if-lowercase" nillable="true"/>
+				<xsd:element name="nonterminal-if-mixedcase" nillable="true"/>
+				<xsd:element name="nonterminal-if-camelcase" nillable="true"/>
+				<xsd:element name="glue-nonalphanumeric-terminals" nillable="true"/>
+				<xsd:element name="break-tokens-at-whitespace" nillable="true"/>
+				<xsd:element name="disregard-labels" nillable="true"/>
+				<xsd:element name="consider-indentation" nillable="true"/>
+				<xsd:element name="ignore">
+					<xsd:complexType>
+						<xsd:choice maxOccurs="unbounded">
+							<xsd:element name="newline" nillable="true"/>
+							<xsd:element name="space" nillable="true"/>
+							<xsd:element name="same-indentation" nillable="true"/>
+							<xsd:element name="lines-containing" type="xsd:string"/>
+						</xsd:choice>
+					</xsd:complexType>
+				</xsd:element>
+				<xsd:element name="mask">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="token" type="xsd:string"/>
+							<xsd:choice>
+								<xsd:element name="terminal" type="xsd:string"/>
+								<xsd:element name="epsilon" nillable="true"/>
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<!-- everything below this line is legacy :( -->
+	<xsd:element name="dialect">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="production" type="edd:ProductionStructure"/>
+				<xsd:element name="fragment" type="edd:FragmentStructure"/>
+				<xsd:element name="optionality" type="edd:SymbolOrPair"/>
+				<xsd:element name="repetition" type="edd:RepetitionStructure" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="nonterminal" type="edd:NonterminalStructure"/>
+				<xsd:element name="terminal" type="edd:TerminalStructure"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:complexType name="ProductionStructure">
+		<xsd:sequence>
+			<xsd:element name="reverse-order" nillable="true" minOccurs="0"/>
+			<xsd:element name="preface" type="edd:Symbol" minOccurs="0"/>
+			<xsd:element name="defining" type="edd:Symbol"/>
+			<xsd:element name="separator" type="edd:Symbol" minOccurs="0"/>
+			<xsd:element name="terminator" type="edd:Symbol"/>
+			<xsd:element name="line-continuation" type="edd:Symbol" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="FragmentStructure">
+		<xsd:sequence>
+			<xsd:element name="group" type="edd:SymbolPair" minOccurs="0"/>
+			<xsd:element name="choice-symbol" type="edd:Symbol" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="RepetitionStructure">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="markup" type="edd:SymbolOrPair"/>
+			<xsd:element name="min" type="edd:BorderType"/>
+			<xsd:element name="max" type="edd:BorderType"/>
+			<xsd:element name="separator" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="NonterminalStructure">
+		<xsd:sequence>
+			<xsd:element name="markup" type="edd:SymbolPair" minOccurs="0"/>
+			<xsd:element name="font" type="xsd:string" minOccurs="0"/>
+			<!-- still unclear -->
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="TerminalStructure">
+		<xsd:sequence>
+			<xsd:element name="markup" type="edd:SymbolPair" minOccurs="0"/>
+			<xsd:element name="font" type="xsd:string" minOccurs="0"/>
+			<!-- still unclear -->
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="Symbol">
+		<xsd:choice maxOccurs="unbounded">
+			<xsd:element name="text" type="xsd:string"/>
+			<xsd:element name="choice" type="edd:Symbol"/>
+			<xsd:element name="optional" type="edd:Symbol"/>
+			<xsd:element name="counter" type="xsd:string"/>
+			<xsd:element name="font" type="xsd:string"/>
+			<xsd:element name="layout" nillable="true"/>
+			<xsd:element name="newline" nillable="true"/>
+			<xsd:element name="less-indentation" nillable="true"/>
+			<xsd:element name="same-indentation" nillable="true"/>
+			<xsd:element name="more-indentation" nillable="true"/>
+			<xsd:element name="eight-spaces" nillable="true"/>
+			<xsd:element name="anything" nillable="true"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="SymbolPair">
+		<xsd:sequence>
+			<xsd:element name="start" type="edd:Symbol"/>
+			<xsd:element name="end" type="edd:Symbol"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="SymbolOrPair">
+		<xsd:choice>
+			<xsd:element name="symbol" type="edd:Symbol"/>
+			<xsd:sequence>
+				<xsd:element name="start" type="edd:Symbol"/>
+				<xsd:element name="end" type="edd:Symbol"/>
+			</xsd:sequence>
+		</xsd:choice>
+	</xsd:complexType>
+	<!-- <xsd:simpleType name="BorderType">
+		<xsd:union memberTypes="xsd:nonNegativeInteger edd:unbounded"/>
+	</xsd:simpleType> -->
+	<xsd:simpleType name="unbounded">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="unbounded"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
