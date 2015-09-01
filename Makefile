@@ -1,7 +1,9 @@
 all:
-
-include Makefile.language
-
-test:
-	ls -1 */*/*.bgf | xargs -n1 ../slps/shared/tools/validate bgf
-
+	rm -fr bulk
+	mkdir bulk
+	find zoo/ -name 'extracted' > exts
+	tools/mb.py
+	sh runthis
+	rm -f exts runthis
+	chmod 644 bulk/*.bgf
+	zip -9 bulk.zip bulk/*.bgf
