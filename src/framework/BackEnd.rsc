@@ -9,7 +9,6 @@ import lang::xml::DOM;
 import framework::Types;
 
 loc basedir = |home:///projects/webzoo-prep/zoo/|;
-//loc outdir = |home:///projects/zoo/web/|;
 loc outdir = |home:///projects/slebok/zoo/|;
 //str gitbasedir = "https://github.com/grammarware/zoo/tree/master/zoo/";
 str gitbasedir = "https://bitbucket.org/grammarware/zoobackup/src/master/zoo/";
