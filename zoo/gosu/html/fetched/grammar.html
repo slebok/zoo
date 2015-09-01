@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>The Gosu Programming Language</title>
+
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="/js/google-code-prettify/prettify.js"></script>
+	<script src="/js/site.js"></script>
+	<script src="/js/eval-gosu.js"></script>
+
+  <link rel="shortcut icon" href="/img/logo-gs-only.png" />
+	<link href='//fonts.googleapis.com/css?family=Russo+One' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+	<link href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/css/style.css">
+  <meta charset="utf-8">
+</head>
+
+<body>
+
+	<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"><img src="/img/logo-no-gs.png" style="width:75px"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="/">Home</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Docs <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="/docs.html">Getting Started</a></li>
+							<li><a href="/docs.html#basics">Basics</a></li>
+							<li><a href="/docs.html#gsp">Programs</a></li>
+							<li><a href="/docs.html#blocks">Blocks</a></li>
+							<li><a href="/docs.html#enhancements">Enhancements</a></li>
+							<li><a href="/docs.html#strings">Strings</a></li>
+							<li><a href="/docs.html#collections">Collections</a></li>
+              <li class="divider"></li>
+              <li><a href="/grammar.html">Grammar</a></li>
+              <li><a href="/doc/index.html" target="_blank">Long form documentation</a></li>
+						</ul>
+					</li>
+					<li><a href="/downloads.html">Downloads</a></li>
+					<li><a href="/resources.html">Resources</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Talk <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="http://webchat.freenode.net/?channels=gosulang">Chat on <em>#gosulang</em></a></li>
+							<li><a href="http://groups.google.com/group/gosu-lang">Newsgroup</a></li>
+							<li><a href="https://github.com/gosu-lang/gosu-lang/issues">Issue tracking</a></li>
+						</ul>
+					</li>
+          <li><a href="/play.html">Play</a></li>
+				</ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/blog.html">Blog</a></li>
+          <li><a href="https://github.com/gosu-lang/gosu-lang"><i class="fa fa-github"></i></a></li>
+        </ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div>
+
+	<div class="container content">
+		<div class="page-header">
+<h1>Grammar</h1>
+</div>
+
+<p>Here you can find the grammar for the Gosu programming language.
+  The grammar below uses the following EBNF-style conventions:
+<ul>
+<li> [x] denotes zero or one occurrences of x.
+<li> {x} denotes zero or more occurrences of x.
+<li> x | y means one of either x or y.
+</ul></p>
+    <p>For more information on this EBNF notation please refer to this wiki 
+      <a href="https://en.wikipedia.org/wiki/Wirth_syntax_notation">page</a>.</p>
+    <p>An ANTLR v3.x based grammar can be found 
+      <a href="https://github.com/gosu-lang/gosu-lang/blob/master/gosu-core/src/main/java/gw/internal/gosu/parser/ebnf">here</a>.</p>
+     <pre>
+<b>start</b> <b>=</b> header modifiers <b>(</b>gClass <b>|</b> gInterface <b>|</b> gEnum <b>|</b> gEnhancement<b>)</b> <b>.</b>
+<b>header</b> <b>=</b> <b>[</b><font color="green">"package"</font> namespaceStatement<b>]</b> <b>[</b>usesStatementList<b>]</b> <b>.</b>
+<b>annotation</b> <b>=</b> <font color="green">"@"</font> idAll <b>{</b><font color="green">"."</font> idAll<b>}</b> <b>[</b>typeVariableDefs annotationArguments<b>]</b> <b>.</b>
+<b>gClass</b> <b>=</b> <font color="green">"class"</font> id typeVariableDefs <b>[</b><font color="green">"extends"</font> classOrInterfaceType<b>]</b> <b>[</b><font color="green">"implements"</font> classOrInterfaceType <b>{</b><font color="green">","</font> classOrInterfaceType<b>}</b><b>]</b> classBody <b>.</b>
+<b>gInterface</b> <b>=</b> <font color="green">"interface"</font> id typeVariableDefs <b>[</b><b>(</b><font color="green">"extends"</font> <b>|</b> <font color="green">"implements"</font><b>)</b> classOrInterfaceType <b>{</b><font color="green">","</font> classOrInterfaceType<b>}</b><b>]</b> interfaceBody <b>.</b>
+<b>gEnum</b> <b>=</b> <font color="green">"enum"</font> id typeVariableDefs <b>[</b><font color="green">"implements"</font> classOrInterfaceType <b>{</b><font color="green">","</font> classOrInterfaceType<b>}</b><b>]</b> enumBody <b>.</b>
+<b>gEnhancement</b> <b>=</b> <font color="green">"enhancement"</font> id typeVariableDefs <font color="green">":"</font> classOrInterfaceType <b>{</b><font color="green">"["</font> <font color="green">"]"</font><b>}</b> enhancementBody <b>.</b>
+<b>classBody</b> <b>=</b> <font color="green">"{"</font> classMembers <font color="green">"}"</font> <b>.</b>
+<b>enhancementBody</b> <b>=</b> <font color="green">"{"</font> enhancementMembers <font color="green">"}"</font> <b>.</b>
+<b>interfaceBody</b> <b>=</b> <font color="green">"{"</font> interfaceMembers <font color="green">"}"</font> <b>.</b>
+<b>enumBody</b> <b>=</b> <font color="green">"{"</font> <b>[</b>enumConstants<b>]</b> classMembers <font color="green">"}"</font> <b>.</b>
+<b>enumConstants</b> <b>=</b> enumConstant <b>{</b><font color="green">","</font> enumConstant<b>}</b> <b>[</b><font color="green">","</font><b>]</b> <b>[</b><font color="green">";"</font><b>]</b> <b>.</b>
+<b>enumConstant</b> <b>=</b> <b>{</b>annotation<b>}</b> id optionalArguments <b>.</b>
+<b>interfaceMembers</b> <b>=</b> <b>{</b>modifiers <b>(</b>functionDefn <b>|</b> propertyDefn <b>|</b> fieldDefn <b>|</b> gClass <b>|</b> gInterface <b>|</b> gEnum<b>)</b> <b>[</b><font color="green">";"</font><b>]</b><b>}</b> <b>.</b>
+<b>classMembers</b> <b>=</b> <b>{</b>declaration<b>}</b> <b>.</b>
+<b>declaration</b> <b>=</b> modifiers <b>(</b>functionDefn <b>[</b>functionBody<b>]</b> <b>|</b> constructorDefn functionBody <b>|</b> propertyDefn <b>[</b>functionBody<b>]</b> <b>|</b> fieldDefn <b>|</b> delegateDefn <b>|</b> gClass <b>|</b> gInterface <b>|</b> gEnum<b>)</b> <b>[</b><font color="green">";"</font><b>]</b> <b>.</b>
+<b>enhancementMembers</b> <b>=</b> <b>{</b>modifiers <b>(</b>functionDefn functionBody <b>|</b> propertyDefn functionBody<b>)</b> <b>[</b><font color="green">";"</font><b>]</b><b>}</b> <b>.</b>
+<b>delegateDefn</b> <b>=</b> <font color="green">"delegate"</font> id delegateStatement <b>.</b>
+<b>delegateStatement</b> <b>=</b> <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <font color="green">"represents"</font> typeLiteral <b>{</b><font color="green">","</font> typeLiteral<b>}</b> <b>[</b><font color="green">"="</font> expression<b>]</b> <b>.</b>
+<b>optionalType</b> <b>=</b> <b>[</b><font color="green">":"</font> typeLiteral <b>|</b> blockTypeLiteral<b>]</b> <b>.</b>
+<b>fieldDefn</b> <b>=</b> <font color="green">"var"</font> id optionalType <b>[</b><font color="green">"as"</font> <b>[</b><font color="green">"readonly"</font><b>]</b> id<b>]</b> <b>[</b><font color="green">"="</font> expression<b>]</b> <b>.</b>
+<b>propertyDefn</b> <b>=</b> <font color="green">"property"</font> <b>(</b><font color="green">"get"</font> <b>|</b> <font color="green">"set"</font><b>)</b> id parameters <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <b>.</b>
+<b>dotPathWord</b> <b>=</b> id <b>{</b><font color="green">"."</font> id<b>}</b> <b>.</b>
+<b>namespaceStatement</b> <b>=</b> dotPathWord <b>{</b><font color="green">";"</font><b>}</b> <b>.</b>
+<b>usesStatementList</b> <b>=</b> <font color="green">"uses"</font> usesStatement <b>{</b><font color="green">"uses"</font> usesStatement<b>}</b> <b>.</b>
+<b>usesStatement</b> <b>=</b> dotPathWord <b>[</b><font color="green">"."</font> <font color="green">"*"</font><b>]</b> <b>{</b><font color="green">";"</font><b>}</b> <b>.</b>
+<b>typeVariableDefs</b> <b>=</b> <b>[</b><font color="green">"<"</font> typeVariableDefinition <b>{</b><font color="green">","</font> typeVariableDefinition<b>}</b> <font color="green">">"</font><b>]</b> <b>.</b>
+<b>typeVariableDefinition</b> <b>=</b> id <b>[</b><font color="green">"extends"</font> typeLiteralList<b>]</b> <b>.</b>
+<b>functionBody</b> <b>=</b> statementBlock <b>.</b>
+<b>parameters</b> <b>=</b> <font color="green">"("</font> <b>[</b>parameterDeclarationList<b>]</b> <font color="green">")"</font> <b>.</b>
+<b>functionDefn</b> <b>=</b> <font color="green">"function"</font> id typeVariableDefs parameters <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <b>.</b>
+<b>constructorDefn</b> <b>=</b> <font color="green">"construct"</font> parameters <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <b>.</b>
+<b>modifiers</b> <b>=</b> <b>{</b>annotation <b>|</b> <font color="green">"private"</font> <b>|</b> <font color="green">"internal"</font> <b>|</b> <font color="green">"protected"</font> <b>|</b> <font color="green">"public"</font> <b>|</b> <font color="green">"static"</font> <b>|</b> <font color="green">"abstract"</font> <b>|</b> <font color="green">"override"</font> <b>|</b> <font color="green">"final"</font> <b>|</b> <font color="green">"transient"</font><b>}</b> <b>.</b>
+<b>statement</b> <b>=</b> <b>(</b>ifStatement <b>|</b> tryCatchFinallyStatement <b>|</b> throwStatement <b>|</b> <font color="green">"continue"</font> <b>|</b> <font color="green">"break"</font> <b>|</b> returnStatement <b>|</b> forEachStatement <b>|</b> whileStatement <b>|</b> doWhileStatement <b>|</b> switchStatement <b>|</b> usingStatement <b>|</b> assertStatement <b>|</b> <font color="green">"final"</font> localVarStatement <b>|</b> localVarStatement <b>|</b> evalExpr <b>|</b> assignmentOrMethodCall <b>|</b> statementBlock<b>)</b> <b>[</b><font color="green">";"</font><b>]</b> <b>|</b> <font color="green">";"</font> <b>.</b>
+<b>ifStatement</b> <b>=</b> <font color="green">"if"</font> <font color="green">"("</font> expression <font color="green">")"</font> statement <b>[</b><font color="green">";"</font><b>]</b> <b>[</b><font color="green">"else"</font> statement<b>]</b> <b>.</b>
+<b>tryCatchFinallyStatement</b> <b>=</b> <font color="green">"try"</font> statementBlock <b>(</b>catchClause <b>{</b>catchClause<b>}</b> <b>[</b><font color="green">"finally"</font> statementBlock<b>]</b> <b>|</b> <font color="green">"finally"</font> statementBlock<b>)</b> <b>.</b>
+<b>catchClause</b> <b>=</b> <font color="green">"catch"</font> <font color="green">"("</font> <b>[</b><font color="green">"var"</font><b>]</b> id <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <font color="green">")"</font> statementBlock <b>.</b>
+<b>assertStatement</b> <b>=</b> <font color="green">"assert"</font> expression <b>[</b><font color="green">":"</font> expression<b>]</b> <b>.</b>
+<b>usingStatement</b> <b>=</b> <font color="green">"using"</font> <font color="green">"("</font> <b>(</b>localVarStatement <b>{</b><font color="green">","</font> localVarStatement<b>}</b> <b>|</b> expression<b>)</b> <font color="green">")"</font> statementBlock <b>[</b><font color="green">"finally"</font> statementBlock<b>]</b> <b>.</b>
+<b>returnStatement</b> <b>=</b> <font color="green">"return"</font> <b>[</b>expression<b>]</b> <b>.</b>
+<b>whileStatement</b> <b>=</b> <font color="green">"while"</font> <font color="green">"("</font> expression <font color="green">")"</font> statement <b>.</b>
+<b>doWhileStatement</b> <b>=</b> <font color="green">"do"</font> statement <font color="green">"while"</font> <font color="green">"("</font> expression <font color="green">")"</font> <b>.</b>
+<b>switchStatement</b> <b>=</b> <font color="green">"switch"</font> <font color="green">"("</font> expression <font color="green">")"</font> <font color="green">"{"</font> <b>{</b>switchBlockStatementGroup<b>}</b> <font color="green">"}"</font> <b>.</b>
+<b>switchBlockStatementGroup</b> <b>=</b> <b>(</b><font color="green">"case"</font> expression <font color="green">":"</font> <b>|</b> <font color="green">"default"</font> <font color="green">":"</font><b>)</b> <b>{</b>statement<b>}</b> <b>.</b>
+<b>throwStatement</b> <b>=</b> <font color="green">"throw"</font> expression <b>.</b>
+<b>localVarStatement</b> <b>=</b> <font color="green">"var"</font> id optionalType <b>[</b><font color="green">"="</font> expression<b>]</b> <b>.</b>
+<b>forEachStatement</b> <b>=</b> <b>(</b><font color="green">"foreach"</font> <b>|</b> <font color="green">"for"</font><b>)</b> <font color="green">"("</font> <b>(</b>expression <b>[</b>indexVar<b>]</b> <b>|</b> <b>[</b><font color="green">"var"</font><b>]</b> id <font color="green">"in"</font> expression <b>[</b>indexRest<b>]</b><b>)</b> <font color="green">")"</font> statement <b>.</b>
+<b>indexRest</b> <b>=</b> indexVar iteratorVar <b>|</b> iteratorVar indexVar <b>|</b> indexVar <b>|</b> iteratorVar <b>.</b>
+<b>indexVar</b> <b>=</b> <font color="green">"index"</font> id <b>.</b>
+<b>iteratorVar</b> <b>=</b> <font color="green">"iterator"</font> id <b>.</b>
+<b>thisSuperExpr</b> <b>=</b> <font color="green">"this"</font> <b>|</b> <font color="green">"super"</font> <b>.</b>
+<b>assignmentOrMethodCall</b> <b>=</b> <b>(</b><b>(</b>newExpr <b>|</b> thisSuperExpr <b>|</b> typeLiteralExpr <b>|</b> parenthExpr <b>|</b> StringLiteral<b>)</b> indirectMemberAccess<b>)</b> <b>[</b>incrementOp <b>|</b> assignmentOp expression<b>]</b> <b>.</b>
+<b>statementBlock</b> <b>=</b> statementBlockBody <b>.</b>
+<b>statementBlockBody</b> <b>=</b> <font color="green">"{"</font> <b>{</b>statement<b>}</b> <font color="green">"}"</font> <b>.</b>
+<b>blockTypeLiteral</b> <b>=</b> blockLiteral <b>.</b>
+<b>blockLiteral</b> <b>=</b> <font color="green">"("</font> <b>[</b>blockLiteralArg <b>{</b><font color="green">","</font> blockLiteralArg<b>}</b><b>]</b> <font color="green">")"</font> <b>[</b><font color="green">":"</font> typeLiteral<b>]</b> <b>.</b>
+<b>blockLiteralArg</b> <b>=</b> id <b>(</b><font color="green">"="</font> expression <b>|</b> blockTypeLiteral<b>)</b> <b>|</b> <b>[</b>id <font color="green">":"</font><b>]</b> typeLiteral <b>[</b><font color="green">"="</font> expression<b>]</b> <b>.</b>
+<b>typeLiteral</b> <b>=</b> type <b>{</b><font color="green">"&"</font> type<b>}</b> <b>.</b>
+<b>typeLiteralType</b> <b>=</b> typeLiteral <b>.</b>
+<b>typeLiteralExpr</b> <b>=</b> typeLiteral <b>.</b>
+<b>typeLiteralList</b> <b>=</b> typeLiteral <b>.</b>
+<b>type</b> <b>=</b> classOrInterfaceType <b>{</b><font color="green">"["</font> <font color="green">"]"</font><b>}</b> <b>|</b> <font color="green">"block"</font> blockLiteral <b>.</b>
+<b>classOrInterfaceType</b> <b>=</b> idclassOrInterfaceType typeArguments <b>{</b><font color="green">"."</font> id typeArguments<b>}</b> <b>.</b>
+<b>typeArguments</b> <b>=</b> <b>[</b><font color="green">"<"</font> typeArgument <b>{</b><font color="green">","</font> typeArgument<b>}</b> <font color="green">">"</font><b>]</b> <b>.</b>
+<b>typeArgument</b> <b>=</b> typeLiteralType <b>|</b> <font color="green">"?"</font> <b>[</b><b>(</b><font color="green">"extends"</font> <b>|</b> <font color="green">"super"</font><b>)</b> typeLiteralType<b>]</b> <b>.</b>
+<b>expression</b> <b>=</b> conditionalExpr <b>.</b>
+<b>conditionalExpr</b> <b>=</b> conditionalOrExpr <b>[</b><font color="green">"?"</font> conditionalExpr <font color="green">":"</font> conditionalExpr <b>|</b> <font color="green">"?:"</font> conditionalExpr<b>]</b> <b>.</b>
+<b>conditionalOrExpr</b> <b>=</b> conditionalAndExpr <b>{</b>orOp conditionalAndExpr<b>}</b> <b>.</b>
+<b>conditionalAndExpr</b> <b>=</b> bitwiseOrExpr <b>{</b>andOp bitwiseOrExpr<b>}</b> <b>.</b>
+<b>bitwiseOrExpr</b> <b>=</b> bitwiseXorExpr <b>{</b><font color="green">"|"</font> bitwiseXorExpr<b>}</b> <b>.</b>
+<b>bitwiseXorExpr</b> <b>=</b> bitwiseAndExpr <b>{</b><font color="green">"^"</font> bitwiseAndExpr<b>}</b> <b>.</b>
+<b>bitwiseAndExpr</b> <b>=</b> equalityExpr <b>{</b><font color="green">"&"</font> equalityExpr<b>}</b> <b>.</b>
+<b>equalityExpr</b> <b>=</b> relationalExpr <b>{</b>equalityOp relationalExpr<b>}</b> <b>.</b>
+<b>relationalExpr</b> <b>=</b> intervalExpr <b>{</b>relOp intervalExpr <b>|</b> <font color="green">"typeis"</font> typeLiteralType<b>}</b> <b>.</b>
+<b>intervalExpr</b> <b>=</b> bitshiftExpr <b>[</b>intervalOp bitshiftExpr<b>]</b> <b>.</b>
+<b>bitshiftExpr</b> <b>=</b> additiveExpr <b>{</b>bitshiftOp additiveExpr<b>}</b> <b>.</b>
+<b>additiveExpr</b> <b>=</b> multiplicativeExpr <b>{</b>additiveOp multiplicativeExpr<b>}</b> <b>.</b>
+<b>multiplicativeExpr</b> <b>=</b> typeAsExpr <b>{</b>multiplicativeOp typeAsExpr<b>}</b> <b>.</b>
+<b>typeAsExpr</b> <b>=</b> unaryExpr <b>{</b>typeAsOp typeLiteral<b>}</b> <b>.</b>
+<b>unaryExpr</b> <b>=</b> <b>(</b><font color="green">"+"</font> <b>|</b> <font color="green">"-"</font><b>)</b> unaryExprNotPlusMinus <b>|</b> unaryExprNotPlusMinus <b>.</b>
+<b>unaryExprNotPlusMinus</b> <b>=</b> unaryOp unaryExpr <b>|</b> <font color="green">"\"</font> blockExpr <b>|</b> evalExpr <b>|</b> primaryExpr <b>.</b>
+<b>blockExpr</b> <b>=</b> <b>[</b>parameterDeclarationList<b>]</b> <font color="green">"->"</font> <b>(</b>expression <b>|</b> statementBlock<b>)</b> <b>.</b>
+<b>parameterDeclarationList</b> <b>=</b> parameterDeclaration <b>{</b><font color="green">","</font> parameterDeclaration<b>}</b> <b>.</b>
+<b>parameterDeclaration</b> <b>=</b> <b>{</b>annotation<b>}</b> <b>[</b><font color="green">"final"</font><b>]</b> id <b>[</b><b>(</b><font color="green">":"</font> typeLiteral <b>[</b><font color="green">"="</font> expression<b>]</b><b>)</b> <b>|</b> blockTypeLiteral <b>|</b> <font color="green">"="</font> expression<b>]</b> <b>.</b>
+<b>annotationArguments</b> <b>=</b> arguments <b>.</b>
+<b>arguments</b> <b>=</b> <font color="green">"("</font> <b>[</b>argExpression <b>{</b><font color="green">","</font> argExpression<b>}</b><b>]</b> <font color="green">")"</font> <b>.</b>
+<b>optionalArguments</b> <b>=</b> <b>[</b>arguments<b>]</b> <b>.</b>
+<b>argExpression</b> <b>=</b> namedArgumentExpression <b>|</b> expression <b>.</b>
+<b>namedArgumentExpression</b> <b>=</b> <font color="green">":"</font> id <font color="green">"="</font> expression <b>.</b>
+<b>evalExpr</b> <b>=</b> <font color="green">"eval"</font> <font color="green">"("</font> expression <font color="green">")"</font> <b>.</b>
+<b>featureLiteral</b> <b>=</b> <font color="green">"#"</font> <b>(</b>id <b>|</b> <font color="green">"construct"</font><b>)</b> typeArguments optionalArguments <b>.</b>
+<b>standAloneDataStructureInitialization</b> <b>=</b> <font color="green">"{"</font> <b>[</b>initializerExpression<b>]</b> <font color="green">"}"</font> <b>.</b>
+<b>primaryExpr</b> <b>=</b> <b>(</b>newExpr <b>|</b> thisSuperExpr <b>|</b> literal <b>|</b> typeLiteralExpr <b>|</b> parenthExpr <b>|</b> standAloneDataStructureInitialization<b>)</b> indirectMemberAccess <b>.</b>
+<b>parenthExpr</b> <b>=</b> <font color="green">"("</font> expression <font color="green">")"</font> <b>.</b>
+<b>newExpr</b> <b>=</b> <font color="green">"new"</font> <b>[</b>classOrInterfaceType<b>]</b> <b>(</b><b>(</b>arguments <b>[</b><font color="green">"{"</font> <b>(</b>initializer <b>|</b> anonymousInnerClass<b>)</b> <font color="green">"}"</font><b>]</b><b>)</b> <b>|</b> <b>(</b><font color="green">"["</font> <b>(</b><font color="green">"]"</font> <b>{</b><font color="green">"["</font> <font color="green">"]"</font><b>}</b> arrayInitializer <b>|</b> expression <font color="green">"]"</font> <b>{</b><font color="green">"["</font> expression <font color="green">"]"</font><b>}</b> <b>{</b><font color="green">"["</font> <font color="green">"]"</font><b>}</b><b>)</b><b>)</b><b>)</b> <b>.</b>
+<b>anonymousInnerClass</b> <b>=</b> classMembers <b>.</b>
+<b>arrayInitializer</b> <b>=</b> <font color="green">"{"</font> <b>[</b>expression <b>{</b><font color="green">","</font> expression<b>}</b><b>]</b> <font color="green">"}"</font> <b>.</b>
+<b>initializer</b> <b>=</b> <b>[</b>initializerExpression <b>|</b> objectInitializer<b>]</b> <b>.</b>
+<b>initializerExpression</b> <b>=</b> mapInitializerList <b>|</b> arrayValueList <b>.</b>
+<b>arrayValueList</b> <b>=</b> expression <b>{</b><font color="green">","</font> expression<b>}</b> <b>.</b>
+<b>mapInitializerList</b> <b>=</b> expression <font color="green">"->"</font> expression <b>{</b><font color="green">","</font> expression <font color="green">"->"</font> expression<b>}</b> <b>.</b>
+<b>objectInitializer</b> <b>=</b> initializerAssignment <b>{</b><font color="green">","</font> initializerAssignment<b>}</b> <b>.</b>
+<b>initializerAssignment</b> <b>=</b> <font color="green">":"</font> id <font color="green">"="</font> expression <b>.</b>
+<b>indirectMemberAccess</b> <b>=</b> <b>{</b><b>(</b><font color="green">"."</font> <b>|</b> <font color="green">"?."</font> <b>|</b> <font color="green">"*."</font><b>)</b> idAll typeArguments <b>|</b> featureLiteral <b>|</b> <b>(</b><font color="green">"["</font> <b>|</b> <font color="green">"?["</font><b>)</b> expression <font color="green">"]"</font> <b>|</b> arguments<b>}</b> <b>.</b>
+<b>literal</b> <b>=</b> NumberLiteral <b>|</b> featureLiteral <b>|</b> StringLiteral <b>|</b> CharLiteral <b>|</b> <font color="green">"true"</font> <b>|</b> <font color="green">"false"</font> <b>|</b> <font color="green">"null"</font> <b>.</b>
+<b>orOp</b> <b>=</b> <font color="green">"||"</font> <b>|</b> <font color="green">"or"</font> <b>.</b>
+<b>andOp</b> <b>=</b> <font color="green">"&&"</font> <b>|</b> <font color="green">"and"</font> <b>.</b>
+<b>assignmentOp</b> <b>=</b> <font color="green">"="</font> <b>|</b> <font color="green">"+="</font> <b>|</b> <font color="green">"-="</font> <b>|</b> <font color="green">"*="</font> <b>|</b> <font color="green">"/="</font> <b>|</b> <font color="green">"&="</font> <b>|</b> <font color="green">"|="</font> <b>|</b> <font color="green">"^="</font> <b>|</b> <font color="green">"%="</font> <b>|</b> <font color="green">"<"</font> <font color="green">"<"</font> <font color="green">"="</font> <b>|</b> <font color="green">">"</font> <font color="green">">"</font> <font color="green">">"</font> <font color="green">"="</font> <b>|</b> <font color="green">">"</font> <font color="green">">"</font> <font color="green">"="</font> <b>.</b>
+<b>incrementOp</b> <b>=</b> <font color="green">"++"</font> <b>|</b> <font color="green">"--"</font> <b>.</b>
+<b>equalityOp</b> <b>=</b> <font color="green">"==="</font> <b>|</b> <font color="green">"!=="</font> <b>|</b> <font color="green">"=="</font> <b>|</b> <font color="green">"!="</font> <b>|</b> <font color="green">"<>"</font> <b>.</b>
+<b>intervalOp</b> <b>=</b> <font color="green">".."</font> <b>|</b> <font color="green">"|.."</font> <b>|</b> <font color="green">"..|"</font> <b>|</b> <font color="green">"|..|"</font> <b>.</b>
+<b>relOp</b> <b>=</b> <font color="green">"<"</font> <font color="green">"="</font> <b>|</b> <font color="green">">"</font> <font color="green">"="</font> <b>|</b> <font color="green">"<"</font> <b>|</b> <font color="green">">"</font> <b>.</b>
+<b>bitshiftOp</b> <b>=</b> <font color="green">"<"</font> <font color="green">"<"</font> <b>|</b> <font color="green">">"</font> <font color="green">">"</font> <font color="green">">"</font> <b>|</b> <font color="green">">"</font> <font color="green">">"</font> <b>.</b>
+<b>additiveOp</b> <b>=</b> <font color="green">"+"</font> <b>|</b> <font color="green">"-"</font> <b>|</b> <font color="green">"?+"</font> <b>|</b> <font color="green">"?-"</font> <b>.</b>
+<b>multiplicativeOp</b> <b>=</b> <font color="green">"*"</font> <b>|</b> <font color="green">"/"</font> <b>|</b> <font color="green">"%"</font> <b>|</b> <font color="green">"?*"</font> <b>|</b> <font color="green">"?/"</font> <b>|</b> <font color="green">"?%"</font> <b>.</b>
+<b>typeAsOp</b> <b>=</b> <font color="green">"typeas"</font> <b>|</b> <font color="green">"as"</font> <b>.</b>
+<b>unaryOp</b> <b>=</b> <font color="green">"~"</font> <b>|</b> <font color="green">"!"</font> <b>|</b> <font color="green">"not"</font> <b>|</b> <font color="green">"typeof"</font> <b>|</b> <font color="green">"statictypeof"</font> <b>.</b>
+<b>id</b> <b>=</b> Ident <b>.</b>
+<b>idclassOrInterfaceType</b> <b>=</b> Ident <b>.</b>
+<b>idAll</b> <b>=</b> Ident <b>.</b>
+<b>Ident</b> <b>=</b> Letter <b>{</b>Digit <b>|</b> Letter<b>}</b> <b>.</b>
+<b>NumberLiteral</b> <b>=</b> <font color="green">"NaN"</font> <b>|</b> <font color="green">"Infinity"</font> <b>|</b> HexLiteral <b>|</b> BinLiteral <b>|</b> IntOrFloatPointLiteral <b>.</b>
+<b>BinLiteral</b> <b>=</b> <b>(</b><font color="green">"0b"</font> <b>|</b> <font color="green">"0B"</font><b>)</b> <font color="green">"0"</font> <b>|</b> <font color="green">"1"</font> <b>{</b><font color="green">"0"</font> <b>|</b> <font color="green">"1"</font><b>}</b> <b>[</b>IntegerTypeSuffix<b>]</b> <b>.</b>
+<b>HexLiteral</b> <b>=</b> <b>(</b><font color="green">"0x"</font> <b>|</b> <font color="green">"0X"</font><b>)</b> HexDigit <b>{</b>HexDigit<b>}</b> <b>[</b><font color="green">"s"</font> <b>|</b> <font color="green">"S"</font> <b>|</b> <font color="green">"l"</font> <b>|</b> <font color="green">"L"</font><b>]</b> <b>.</b>
+<b>IntOrFloatPointLiteral</b> <b>=</b> <font color="green">"."</font> Digit <b>{</b>Digit<b>}</b> <b>[</b>FloatTypeSuffix<b>]</b> <b>|</b> Digit <b>{</b>Digit<b>}</b> <b>(</b><font color="green">"."</font> <b>{</b>Digit<b>}</b> <b>[</b>Exponent<b>]</b> <b>[</b>FloatTypeSuffix<b>]</b> <b>|</b> Exponent <b>[</b>FloatTypeSuffix<b>]</b> <b>|</b> FloatTypeSuffix <b>|</b> IntegerTypeSuffix <b>|</b><b>)</b> <b>.</b>
+<b>CharLiteral</b> <b>=</b> <font color="green">"'"</font> <b>(</b>EscapeSequence <b>|</b> any_character<b>)</b> <font color="green">"'"</font> <b>.</b>
+<b>StringLiteral</b> <b>=</b> <font color="green">"'"</font> <b>{</b>EscapeSequence <b>|</b> any_character<b>}</b> <font color="green">"'"</font> <b>|</b> <font color="green">"""</font> <b>{</b>EscapeSequence <b>|</b> any_character<b>}</b> <font color="green">"""</font> <b>.</b>
+<b>HexDigit</b> <b>=</b> Digit <b>|</b> <font color="green">"a"</font>..<font color="green">"f"</font> <b>|</b> <font color="green">"A"</font>..<font color="green">"F"</font> <b>.</b>
+<b>IntegerTypeSuffix</b> <b>=</b> <b>(</b><font color="green">"l"</font> <b>|</b> <font color="green">"L"</font> <b>|</b> <font color="green">"s"</font> <b>|</b> <font color="green">"S"</font> <b>|</b> <font color="green">"bi"</font> <b>|</b> <font color="green">"BI"</font> <b>|</b> <font color="green">"b"</font> <b>|</b> <font color="green">"B"</font><b>)</b> <b>.</b>
+<b>Letter</b> <b>=</b> <font color="green">"A"</font>..<font color="green">"Z"</font> <b>|</b> <font color="green">"a"</font>..<font color="green">"z"</font> <b>|</b> <font color="green">"_"</font> <b>|</b> <font color="green">"$"</font> <b>.</b>
+<b>Digit</b> <b>=</b> <font color="green">"0"</font> <b>|</b> <font color="green">"1"</font> <b>|</b> <font color="green">"2"</font> <b>|</b> <font color="green">"3"</font> <b>|</b> <font color="green">"4"</font> <b>|</b> <font color="green">"5"</font> <b>|</b> <font color="green">"6"</font> <b>|</b> <font color="green">"7"</font> <b>|</b> <font color="green">"8"</font> <b>|</b> <font color="green">"9"</font> <b>.</b>
+<b>NonZeroDigit</b> <b>=</b> <font color="green">"1"</font> <b>|</b> <font color="green">"2"</font> <b>|</b> <font color="green">"3"</font> <b>|</b> <font color="green">"4"</font> <b>|</b> <font color="green">"5"</font> <b>|</b> <font color="green">"6"</font> <b>|</b> <font color="green">"7"</font> <b>|</b> <font color="green">"8"</font> <b>|</b> <font color="green">"9"</font> <b>.</b>
+<b>ZeroToSeven</b> <b>=</b> <font color="green">"0"</font> <b>|</b> <font color="green">"1"</font> <b>|</b> <font color="green">"2"</font> <b>|</b> <font color="green">"3"</font> <b>|</b> <font color="green">"4"</font> <b>|</b> <font color="green">"5"</font> <b>|</b> <font color="green">"6"</font> <b>|</b> <font color="green">"7"</font> <b>.</b>
+<b>Exponent</b> <b>=</b> <b>(</b><font color="green">"e"</font> <b>|</b> <font color="green">"E"</font><b>)</b> <b>[</b><font color="green">"+"</font> <b>|</b> <font color="green">"-"</font><b>]</b> Digit <b>{</b>Digit<b>}</b> <b>.</b>
+<b>FloatTypeSuffix</b> <b>=</b> <b>(</b><font color="green">"f"</font> <b>|</b> <font color="green">"F"</font> <b>|</b> <font color="green">"d"</font> <b>|</b> <font color="green">"D"</font> <b>|</b> <font color="green">"bd"</font> <b>|</b> <font color="green">"BD"</font><b>)</b> <b>.</b>
+<b>EscapeSequence</b> <b>=</b> <font color="green">"\"</font> <b>(</b><font color="green">"v"</font> <b>|</b> <font color="green">"a"</font> <b>|</b> <font color="green">"b"</font> <b>|</b> <font color="green">"t"</font> <b>|</b> <font color="green">"n"</font> <b>|</b> <font color="green">"f"</font> <b>|</b> <font color="green">"r"</font> <b>|</b> <font color="green">"""</font> <b>|</b> <font color="green">"'"</font> <b>|</b> <font color="green">"\"</font> <b>|</b> <font color="green">"$"</font> <b>|</b> <font color="green">"<"</font><b>)</b> <b>|</b> UnicodeEscape <b>|</b> OctalEscape <b>.</b>
+<b>OctalEscape</b> <b>=</b> <font color="green">"\"</font> <b>(</b><font color="green">"0"</font> <b>|</b> <font color="green">"1"</font> <b>|</b> <font color="green">"2"</font> <b>|</b> <font color="green">"3"</font><b>)</b> ZeroToSeven ZeroToSeven</b> <b>|</b> <font color="green">"\"</font> ZeroToSeven ZeroToSeven <b>|</b> <font color="green">"\"</font> ZeroToSeven <b>.</b>
+<b>UnicodeEscape</b> <b>=</b> <font color="green">"\"</font> <font color="green">"u"</font> HexDigit HexDigit HexDigit HexDigit <b>.</b>
+<b>WS</b> <b>=</b> white_space <b>.</b>
+<b>COMMENT</b> <b>=</b> <font color="green">"/*"</font> <b>{</b>any_character<b>}</b> <font color="green">"*/"</font> <b>.</b>
+<b>LINE_COMMENT</b> <b>=</b> <font color="green">"//"</font> <b>{</b>any_character<b>}</b> <b>.</b>
+           </pre>   
+
+
+
+    <hr/>
+
+		<footer>
+			<p>&copy; <a href="http://www.guidewire.com">Guidewire Software</a> 2015</p>
+		</footer>
+
+	</div> <!-- /container -->
+
+	<script>
+  	prettyPrint();
+	</script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-53666500-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</body>
+</html>
+
