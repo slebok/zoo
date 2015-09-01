@@ -1,0 +1,114 @@
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:bgf="http://planet-sl.org/bgf"
+  xmlns:btf="http://planet-sl.org/btf"
+  targetNamespace="http://planet-sl.org/btf">
+
+  <xsd:annotation>
+    <xsd:documentation>
+      The BGF Tree Format
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:import namespace="http://planet-sl.org/bgf" schemaLocation="bgf.xsd"/>
+
+  <xsd:element name="root">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="bgf:grammar"/>
+        <xsd:element ref="btf:tree"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+
+  <xsd:element name="tree">
+    <xsd:complexType>
+      <xsd:choice>
+
+        <xsd:element name="epsilon">
+          <xsd:complexType/>
+        </xsd:element>
+
+        <xsd:element name="any">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:any processContents="skip"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="terminal" type="bgf:terminal"/>
+
+        <xsd:element name="nonterminal">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:production"/>
+              <xsd:element ref="btf:tree"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="selectable">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="selector" type="bgf:selector"/>
+              <xsd:element ref="btf:tree"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="value">
+          <xsd:complexType>
+            <xsd:choice>
+              <xsd:element name="int" type="xsd:int"/>
+              <xsd:element name="string" type="xsd:string"/>
+            </xsd:choice>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="sequence">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="btf:tree" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="choice">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="bgf:expression"/>
+              <xsd:element ref="btf:tree"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="optional">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="btf:tree" minOccurs="0" maxOccurs="1"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="plus">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="btf:tree" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+        <xsd:element name="star">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element ref="btf:tree" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+
+      </xsd:choice>
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>
