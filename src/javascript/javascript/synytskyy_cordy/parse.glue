@@ -1,0 +1,26 @@
+include |project://zoo/src/javascript/javascript/synytskyy_cordy/extract.glue|.
+// destroy all pretty-printing
+define NL ::= ε; .  inline NL . // newline
+define IN ::= ε; .  inline IN . // indent
+define EX ::= ε; .  inline EX . // exdent
+define SPON ::= ε;. inline SPON . // "spacing on"
+define SPOFF ::= ε;.inline SPOFF . // "spacing off"
+//define number ::=
+//	digit+ ("." digit*)? ( ("e" | "E") ("+" | "-")? digit+)?
+//	| "." digit+ ( ("e" | "E") ("+" | "-")? digit+)? ;
+//.
+RenameAllN from formal_parameter to FormalParameter.
+// the next ones should be covered by the mutation
+rename program to Program everywhere.
+// should we rename undefined nonterminals?
+rename comment to Comment everywhere.
+rename number to Number everywhere.
+rename id to Identifier everywhere.
+rename js_regexp to RegExp everywhere. // DropPrefixN doesn't work on undefined nts
+rename stringlit to StringLit everywhere.
+rename charlit to CharLit everywhere.
+rename js_hex_number to HexNumber everywhere.
+// DropSuffixN Js x.
+export BGF |project://zoo/src/javascript/javascript/synytskyy_cordy/grammar.bgf|.
+export RascalSyntax |project://zoo/src/javascript/javascript/synytskyy_cordy/JS_TXL.rsc|.
+export RascalADT |project://zoo/src/javascript/javascript/synytskyy_cordy/JS_ADT.rsc|.
