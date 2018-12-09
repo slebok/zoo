@@ -49,7 +49,7 @@ public BodyElement makelinks(lrel[str,str] links)
 tuple[str,str] makelink([keyvalue("uri", str uri),keyvalue("name", str name)])
 	= <name, uri>;
 tuple[str,str] makelink([keyvalue("doi", str doi)])
-	= <"DOI", "http://dx.doi.org/<doi>">;
+	= <"DOI", "https://doi.org/<doi>">;
 default tuple[str,str] makelink(list[ZooValue] kvs) = <"<kvs>","#">;
 
 public lrel[str,str] getlinks(list[ZooValue] zs) = [makelink(inner) | struct("link", list[ZooValue] inner) <- zs];
